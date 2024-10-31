@@ -1,6 +1,7 @@
 <script>
     import Navbar from "../components/navbar/Navbar.svelte";
     import FAQ from "../sections/FAQ.svelte";
+    import Footer from "../components/Footer.svelte";
     import Header from "../sections/Header.svelte";
     import Landing from "../sections/Landing.svelte";
 </script>
@@ -12,4 +13,5 @@
         <Header />
         <FAQ />
     </div>
+    <Footer />
 </div>
