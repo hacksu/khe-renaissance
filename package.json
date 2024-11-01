@@ -17,6 +17,7 @@
 		"@tailwindcss/typography": "^0.5.15",
 		"@types/moment": "^2.11.29",
 		"autoprefixer": "^10.4.20",
+		"remult": "^0.27.21",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^3.4.9",
