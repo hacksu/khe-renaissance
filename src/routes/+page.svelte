@@ -8,7 +8,7 @@
     import Map from "../sections/Map.svelte";
 </script>
 
-<div class="bg-black text-white">
+<div class="text-white">
     <Navbar />
     <div class="w-full h-full flex flex-col gap-24 px-56">
         <Landing />
