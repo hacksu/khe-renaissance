@@ -4,8 +4,11 @@
 
 </script>
 
-<div class="flex justify-center">
-    <div class="w-1/2">
+<div class="flex flex-col gap-2 items-center">
+    <div class="w-1/3">
+        <h3 class="font-bold text-xl">FREQUENTLY ASKED QUESTIONS</h3>
+    </div>
+    <div class="w-1/3">
         <Card>
             <Accordion>
                 <div slot="name">What is a hackathon?</div>

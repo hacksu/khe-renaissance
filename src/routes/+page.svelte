@@ -4,6 +4,7 @@
     import Footer from "../components/Footer.svelte";
     import Header from "../sections/Header.svelte";
     import Landing from "../sections/Landing.svelte";
+    import Sponsors from "../sections/Sponsors.svelte";
 </script>
 
 <div class="bg-black text-white">
@@ -12,6 +13,7 @@
         <Landing />
         <Header />
         <FAQ />
+        <Sponsors />
     </div>
     <Footer />
 </div>
