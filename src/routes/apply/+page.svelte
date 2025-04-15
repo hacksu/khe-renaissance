@@ -1,7 +1,7 @@
 <script>
 
     import Card from "../../components/Card.svelte";
-import Navbar from "../../components/navbar/Navbar.svelte";
+    import Navbar from "../../components/navbar/Navbar.svelte";
 
 </script>
 

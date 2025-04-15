@@ -22,9 +22,9 @@
   ];
 </script>
 
-<div class="flex flex-row gap-4 justify-center">
+<div class="flex flex-col lg:flex-row gap-4 items-center justify-center">
     {#each sponsors as { image, name, url}}
-        <a class="w-56" href={url} target="_blank">
+        <a class="w-96 lg:w-56" href={url} target="_blank">
             <img class="object-cover rounded-lg" src={image} alt={name} />
         </a>
     {/each}

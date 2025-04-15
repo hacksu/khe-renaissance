@@ -1,4 +1,4 @@
 
-<div class="border-2 border-white rounded-md bg-gray-700 text-white">
+<div class="border-2 border-white rounded-md h-full bg-gray-700 text-white">
     <slot />
 </div>
