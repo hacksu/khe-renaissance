@@ -4,7 +4,7 @@
 
 </script>
 
-<div class="flex flex-col gap-2 items-center">
+<div id="faq" class="flex flex-col gap-2 items-center">
     <div class="w-96">
         <h3 class="font-bold text-xl">FREQUENTLY ASKED QUESTIONS</h3>
     </div>
