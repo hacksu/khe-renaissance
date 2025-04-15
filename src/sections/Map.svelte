@@ -4,7 +4,7 @@
 </script>
 
 <div class="w-full flex flex-col lg:flex-row gap-5 justify-center items-center h-full">
-    <div class="w-96">
+    <div class="w-96 lg:self-stretch">
         <Card>
             <div class="flex flex-col gap-3 p-5">
                 <h1 class="font-bold text-xl">Where to go?</h1>
@@ -14,7 +14,7 @@
             </div>
         </Card>
     </div>
-    <div class="w-96 self-stretch">
+    <div class="w-96 h-96">
         <Card>
             <iframe class="w-full h-full" title="Map" src="https://map.concept3d.com/?id=568&amp;tbh&amp;sbh#!m/613809?lh/?ct/44418,5603" scrolling="no" frameborder="0" style="border: 0px;"></iframe>
         </Card>

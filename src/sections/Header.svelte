@@ -7,9 +7,9 @@
         <h1 class="text-6xl font-bold">KENT HACK ENOUGH</h1>
         <p class="text-4xl">2025</p>
     </div>
-    <div class="flex flex-row">
-        <img class="w-[60vw] max-w-[80vh]" src={Rocket} alt="Rocket" />
-        <div class="flex flex-col text-wrap text-right justify-around">
+    <div class="flex flex-col lg:flex-row">
+        <img class="w-[60vw] lg:max-w-[80vh]" src={Rocket} alt="Rocket" />
+        <div class="flex flex-col text-wrap gap-10 lg:text-right justify-around">
             <p class="text-3xl">
                 Kent Hack Enough is <span class="font-bold [text-shadow:0_0_10px_rgba(255_255_255/_0.6)]">turning its gaze to the stars</span>.
                 Come join us at this event as we work together to make outstanding projects!
