@@ -14,7 +14,12 @@ As you can see in the root of this repository, there is no package-lock.json. Th
 Once you have Bun installed, this project is really easy to get up and running:
 
 1. Install packages with `bun i`
-2. Configure your .env file. You will want to copy the default one and then change it to your local dev settings. If you don't have a database, you'll want to spin one up (usually I just do this with Docker). 
+2. Configure your .env file. You will want to copy the default one and then change it to your local dev settings. If you don't have a database:
+   - Download [Docker](https://www.docker.com/products/docker-desktop/) for your machine. **PLEASE DO NOT PAY FOR IT** - there is a free tier that has all the features
+   - Run `docker run --name dev-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres`
+   - Run `docker exec -it dev-postgres psql -U postgres`
+   - Once in the PSQL shell, run `CREATE DATABASE khe`
+   - Now you can set the `DATABASE_URL` to `postgresql://postgres:postgres@localhost/khe`
 3. Push the Prisma configuration to the database with `bunx prisma db push`
 4. Generate the Prisma types with `bunx prisma generate`
 5. Spin up the environment with `bun run dev`
