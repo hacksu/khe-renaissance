@@ -12,12 +12,10 @@ export const auth = betterAuth({
         discord: {
             clientId: env.DISCORD_CLIENT_ID,
             clientSecret: env.DISCORD_CLIENT_SECRET,
-            redirectURI: `${env.BETTER_AUTH_URL}/login/discord/callback`
         },
         github: {
             clientId: env.GITHUB_CLIENT_ID,
             clientSecret: env.GITHUB_CLIENT_SECRET,
-            redirectURI: `${env.BETTER_AUTH_URL}/login/github/callback`
         }
     }
 });
