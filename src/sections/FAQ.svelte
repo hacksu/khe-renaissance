@@ -5,7 +5,7 @@
 </script>
 
 <div id="faq" class="flex flex-col gap-2 items-center">
-    <div class="w-96">
+    <div class="">
         <h3 class="font-bold text-xl">FREQUENTLY ASKED QUESTIONS</h3>
     </div>
     <div class="w-96">

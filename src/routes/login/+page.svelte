@@ -8,12 +8,16 @@
 </script>
 
 
-<div class="p-24 h-screen flex flex-row items-center justify-center">
-    <div>
+<div class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 h-screen w-screen flex flex-row items-center justify-center">
+    <div class="w-full">
+        <h1 class="text-2xl mb-2">Login</h1>
         <Card>
-            <div class="p-5 w-full flex flex-col gap-3">
-                <Button onclick={async () => await authClient.signIn.social({ provider: "discord" })} ><Icon icon="logos:discord-icon" />Login with Discord</Button>
-                <Button onclick={async () => await authClient.signIn.social({ provider: "github" })} ><Icon icon="logos:github-icon"/>Login with Github</Button>
+            <div class="flex gap-2 p-4 items-center text-center w-full">
+                <p class="w-full text-xl">Welcome to Kent Hack Enough!</p>
+                <div class="w-full flex flex-col gap-2">
+                    <Button onclick={async () => await authClient.signIn.social({ provider: "discord" })} ><Icon icon="logos:discord-icon" />Login with Discord</Button>
+                    <Button onclick={async () => await authClient.signIn.social({ provider: "github" })} ><Icon icon="logos:github-icon"/>Login with Github</Button>
+                </div>
             </div>
         </Card>
     </div>

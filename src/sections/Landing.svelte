@@ -9,6 +9,6 @@
 <div class="h-[80vh] flex flex-col justify-center items-center gap-3 text-center">
     <h1 class="text-3xl">Kent Hack Enough will return <span class="font-bold">{returnDate}</span>...</h1>
     <div class="w-96">
-        <Button on:click={() => goto("/apply")}> But you can apply now 🚀 </Button>
+        <Button size="lg" onclick={() => goto("/login")}> But you can apply now 🚀 </Button>
     </div>
 </div>

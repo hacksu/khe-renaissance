@@ -8,7 +8,7 @@
     import Sponsors from "../sections/Sponsors.svelte";
 </script>
 
-<div class="text-white">
+<div class="text-black">
     <Navbar />
     <div class="w-full h-full flex flex-col gap-24 px-10 lg:px-56">
         <Landing />

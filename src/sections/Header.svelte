@@ -1,17 +1,18 @@
 <script lang="ts">
     import Rocket from "../assets/rocket.png";
+    import Highlight from "../components/Highlight.svelte";
 </script>
 
 <div class="h-full flex flex-col">
     <div class="flex flex-col gap-1">
         <h1 class="text-6xl font-bold">KENT HACK ENOUGH</h1>
-        <p class="text-4xl">2025</p>
+        <p class="text-4xl">2026</p>
     </div>
     <div class="flex flex-col lg:flex-row">
         <img class="w-[60vw] lg:max-w-[80vh]" src={Rocket} alt="Rocket" />
         <div class="flex flex-col text-wrap gap-10 lg:text-right justify-around">
             <p class="text-3xl">
-                Kent Hack Enough is <span class="font-bold [text-shadow:0_0_10px_rgba(255_255_255/_0.6)]">turning its gaze to the stars</span>.
+                Kent Hack Enough is <Highlight>turning its gaze to the stars</Highlight>.
                 Come join us at this event as we work together to make outstanding projects!
             </p>
             <p class="text-xl">

@@ -4,6 +4,6 @@
 
 </script>
 
-<a class="transition-colors duration-300 hover:text-gray-300" {...props}>
+<a class="transition-colors duration-300 hover:text-white" {...props}>
     {@render children?.()}
 </a>
