@@ -1,6 +1,5 @@
 <script>
     import Footer from "../components/Footer.svelte";
-    import Navbar from "../components/navbar/Navbar.svelte";
     import FAQ from "../sections/FAQ.svelte";
     import Header from "../sections/Header.svelte";
     import Landing from "../sections/Landing.svelte";
@@ -9,9 +8,8 @@
 </script>
 
 <div class="text-black">
-    <Navbar />
+    <Landing />
     <div class="w-full h-full flex flex-col gap-24 px-10 lg:px-56">
-        <Landing />
         <Header />
         <FAQ />
         <Sponsors />
