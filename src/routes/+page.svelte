@@ -1,5 +1,4 @@
 <script>
-    import Footer from "../components/Footer.svelte";
     import FAQ from "../sections/FAQ.svelte";
     import Header from "../sections/Header.svelte";
     import Landing from "../sections/Landing.svelte";
@@ -7,7 +6,7 @@
     import Sponsors from "../sections/Sponsors.svelte";
 </script>
 
-<div class="text-black">
+<div>
     <Landing />
     <div class="w-full h-full flex flex-col gap-24 px-10 lg:px-56">
         <Header />
@@ -15,5 +14,4 @@
         <Sponsors />
         <Map />
     </div>
-    <Footer />
 </div>

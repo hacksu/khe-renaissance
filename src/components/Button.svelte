@@ -9,7 +9,7 @@
 <div>
     <button
         {...others}
-        class="flex flex-row justify-center items-center gap-2 bg-accent rounded-lg px-2 py-2 w-full text-black text-{size} transition-colors duration-300 hover:bg-white disabled:opacity-25"
+        class="flex flex-row justify-center items-center gap-2 bg-accent rounded-lg px-2 py-2 w-full text-black text-{size} transition-opacity duration-300 hover:opacity-75 disabled:opacity-25"
     >
         {@render children?.()}
     </button>

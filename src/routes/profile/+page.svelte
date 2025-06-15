@@ -18,7 +18,6 @@
 <div
     class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 flex flex-col gap-4 justify-center text-black"
 >
-    <h1 class="text-2xl mb-2">Profile</h1>
     <Card padded>
         <div class="w-full">
             <h3 class="font-bold">Hi {user?.name}!</h3>
