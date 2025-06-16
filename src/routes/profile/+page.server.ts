@@ -2,25 +2,44 @@ import { auth } from "$lib/server/auth";
 import { prisma } from "$lib/server/prisma";
 import { Utils } from "$lib/util";
 import { error, redirect, type Actions } from "@sveltejs/kit";
+import fs from "fs/promises";
+import countries from "../../assets/json/countries.json";
+import schools from "../../assets/json/schools.json";
 import type { PageServerLoad } from "./$types";
 
-const saveApplication = async (userId: string, form: FormData) => {
+const saveApplication = async (userId: string, form: FormData) => { 
+    const formValues = Utils.formToDict(form);
     const data = {
-        firstName: form.get("first-name") as string,
-        lastName: form.get("last-name") as string,
-        phoneNumber: form.get("phone-number") as string,
-        email: form.get("email") as string,
-        countryOfResidence: form.get("country-of-residence") as string,
-        school: form.get("school") as string,
-        levelOfStudy: form.get("level-of-study") as string,
-        fieldOfStudy: form.get("field-of-study") as string,
-        linkedinUrl: form.get("linkedin-url") as string,
-        githubUrl: form.get("github-url") as string,
-        age: Utils.toNumber(form.get("age")),
+        firstName: formValues["first-name"],
+        lastName: formValues["last-name"],
+        phoneNumber: formValues["phone-number"],
+        email: formValues["email"],
+        countryOfResidence: formValues["country-of-residence"],
+        school: formValues["school"],
+        levelOfStudy: formValues["level-of-study"],
+        fieldOfStudy: formValues["field-of-study"],
+        githubUrl: formValues["github-url"],
+        age: Utils.toNumber(formValues["age"]),
+        dietaryRestriction: formValues["dietary-restriction"],
+        gender: formValues["gender"],
+        pronouns: formValues["pronouns"],
+        personalUrl: formValues["personal-url"],
+    }
+
+    // TODO: finish implementation for file save
+    const resume = form.get("resume") as File | null;
+    if (resume) {
+        const buffer = await resume.bytes();
+        await fs.writeFile("test.pdf", buffer);
     }
 
     return await prisma.application.upsert({
-        create: { ...data, userId },
+        create: { 
+            ...data,
+            user: {
+                connect: { id: userId }
+            }
+        },
         update: data,
         where: { userId }
     });
@@ -56,18 +75,14 @@ export const actions: Actions = {
     }
 };
 
-export const load: PageServerLoad = async ({ fetch, request }) => {
+export const load: PageServerLoad = async ({ request }) => {
     const session = await auth.api.getSession(request);
     if (!session) {
         throw error(401, "Your session has expired. Please re-login.");
     }
 
     const userId = session.user.id;
-    const schools = await fetch("https://raw.githubusercontent.com/MLH/mlh-policies/refs/heads/main/schools.csv")
-        .then(res => res.text())
-        .then(res => res.replaceAll(/"/g, "").split("\n"))
-        .catch(_ => [] as string[]);
-
+    
     const application = await prisma.application
         .findUnique({
             where: { userId },
@@ -79,5 +94,5 @@ export const load: PageServerLoad = async ({ fetch, request }) => {
         throw redirect(301, "/login");
     }
 
-    return { schools, application };
+    return { schools, application, countries };
 };

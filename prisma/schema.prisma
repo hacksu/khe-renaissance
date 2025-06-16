@@ -85,12 +85,15 @@ model Application {
   school             String   @default("")
   levelOfStudy       String   @default("")
   fieldOfStudy       String   @default("")
-  linkedinUrl        String   @default("")
   githubUrl          String   @default("")
+  personalUrl        String   @default("")
+  gender             String   @default("")
+  pronouns           String   @default("")
+  dietaryRestriction String   @default("")
   updatedAt          DateTime @default(now())
 
   submitted Boolean @default(false)
-  approved Boolean @default(false)
+  approved  Boolean @default(false)
 
   user   User   @relation(fields: [userId], references: [id])
   userId String

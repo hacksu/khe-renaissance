@@ -15,9 +15,7 @@
     let loading = $state(false);
 </script>
 
-<div
-    class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 flex flex-col gap-4 justify-center text-black"
->
+<div class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 flex flex-col gap-4 justify-center text-black">
     <Card padded>
         <div class="w-full">
             <h3 class="font-bold">Hi {user?.name}!</h3>
@@ -38,7 +36,7 @@
         </div>
     </Card>
     <Card padded>
-        <form method="POST" use:enhance={() => {
+        <form enctype="multipart/form-data" method="POST" use:enhance={() => {
             loading = true;
             return async ({ update }) => {
                 await update({ reset: false });
@@ -57,9 +55,12 @@
                         <Input label="Phone Number" name="phone-number" type="tel" value={application.phoneNumber} />
                         <Input label="Email" name="email" type="email" value={application.email || user?.email} />
                     </div>
-                    <Input label="Country of Residence" name="country-of-residence" value={application.countryOfResidence} />
+                    <Select label="Country of Residence" name="country-of-residence" value={application.countryOfResidence}>
+                        {#each Object.entries(data.countries) as [code, name]}
+                            <option value={code}>{name}</option>
+                        {/each}
+                    </Select>
                 </div>
-
                 <div>
                     <h3 class="font-bold">Education</h3>
                     <div class="flex flex-col sm:flex-row gap-2">
@@ -71,79 +72,54 @@
                         <Select label="Level of Study" name="level-of-study" value={application.levelOfStudy}>
                             <option>Less than Secondary / High School</option>
                             <option>Secondary / High School</option>
-                            <option
-                                >Undergraduate University (2 year - community
-                                college or similar)</option
-                            >
+                            <option>Undergraduate University (2 year - community college or similar)</option>
                             <option>Undergraduate University (3+ year)</option>
-                            <option
-                                >Graduate University (Masters, Professional,
-                                Doctoral, etc)</option
-                            >
+                            <option>Graduate University (Masters, Professional, Doctoral, etc)</option>
                             <option>Code School / Bootcamp</option>
-                            <option
-                                >Other Vocational / Trade Program or
-                                Apprenticeship</option
-                            >
+                            <option>Other Vocational / Trade Program or Apprenticeship</option>
                             <option>Post Doctorate</option>
                             <option>Other </option>
                             <option>I'm not currently a student</option>
                             <option>Prefer not to answer</option>
                         </Select>
-                        <Select label="Field of Study" name="field-of-study" value={application.fieldOfStudy}>
-                            <option
-                                >Computer science, computer engineering, or
-                                software engineering
-                            </option>
-                            <option
-                                >Another engineering discipline (such as civil,
-                                electrical, mechanical, etc.)</option
-                            >
-                            <option
-                                >Information systems, information technology, or
-                                system administration</option
-                            >
-                            <option
-                                >A natural science (such as biology, chemistry,
-                                physics, etc.)</option
-                            >
-                            <option>Mathematics or statistics</option>
-                            <option>Web development or web design</option>
-                            <option
-                                >Business discipline (such as accounting,
-                                finance, marketing, etc.)</option
-                            >
-                            <option
-                                >Humanities discipline (such as literature,
-                                history, philosophy, etc.)</option
-                            >
-                            <option
-                                >Social science (such as anthropology,
-                                psychology, political science, etc.)</option
-                            >
-                            <option
-                                >Fine arts or performing arts (such as graphic
-                                design, music, studio art, etc.)</option
-                            >
-                            <option
-                                >Health science (such as nursing, pharmacy,
-                                radiology, etc.)</option
-                            >
-                            <option>Other (please specify)</option>
-                            <option>Undecided / No Declared Major</option>
-                            <option
-                                >My school does not offer majors / primary areas
-                                of study</option
-                            >
-                            <option>Prefer not to answer</option>
-                        </Select>
+                        <Input label="Major" name="field-of-study" value={application.fieldOfStudy} />
                     </div>
                 </div>
                 <div>
-                    <h3 class="font-bold">URLs</h3>
+                    <h3 class="font-bold">Demographics</h3>
+                    <div class="flex gap-2 flex-col sm:flex-row">
+                        <Select label="Gender" name="gender" value={application.gender}>
+                            <option>Man</option>
+                            <option>Woman</option>
+                            <option>Non-Binary</option>
+                            <option>Prefer to self-describe</option>
+                            <option>Prefer Not to Answer</option>
+                        </Select>
+                        <Select label="Pronouns" name="pronouns" value={application.pronouns}>
+                            <option>She/Her</option>
+                            <option>He/Him</option>
+                            <option>They/Them</option>
+                            <option>She/They</option>
+                            <option>He/They</option>
+                            <option>Prefer Not to Answer</option>
+                            <option>Other</option>
+                        </Select>
+                    </div>
+                    <Select label="Dietary Restriction" name="dietary-restriction" value={application.dietaryRestriction}>
+                        <option>Vegetarian</option>
+                        <option>Vegan</option>
+                        <option>Celiac Disease</option>
+                        <option>Allergies</option>
+                        <option>Kosher</option>
+                        <option>Halal</option>
+                    </Select>
+                </div>
+                <div>
+                    <h3 class="font-bold">Portfolio</h3>
                     <div class="flex flex-col gap-2">
-                        <Input label="LinkedIn" name="linkedin-url" value={application.linkedinUrl} />
+                        <Input label="Personal Website" name="personal-url" value={application.personalUrl} />
                         <Input label="Github" name="github-url" value={application.githubUrl} />
+                        <Input label="Resume" name="resume" type="file" value={application.githubUrl} />
                     </div>
                 </div>
                 <div class="flex justify-end gap-2">
