@@ -3,12 +3,14 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev --host 0.0.0.0 --port 3000",
-		"build": "vite build",
-		"preview": "vite preview",
-		"acquire-urls": "hostile set 127.0.0.1 localhost.khe.io",
+		"dev": "bunx --bun vite dev --host 0.0.0.0 --port 3000",
+		"prod:build": "bunx prisma generate && bunx --bun vite build",
+		"prod:start": "bunx prisma migrate deploy && bun ./build/index.js",
+		"db:push": "bunx prisma db push",
+		"db:deploy": "bunx prisma migrate deploy",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"acquire-urls": "hostile set 127.0.0.1 localhost.khe.io"
 	},
 	"devDependencies": {
 		"@iconify/svelte": "^4.2.0",

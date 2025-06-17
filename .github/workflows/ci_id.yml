@@ -1,0 +1,42 @@
+# name: CI
+# on: [push, pull_request]
+# jobs:
+#   deploy:
+#     name: "Deploy to server"
+#     runs-on: ubuntu-latest
+#     if: github.event_name == 'push' && (github.ref == 'refs/heads/production' || github.ref == 'refs/heads/dev-main')
+#     # needs: test
+#     steps:
+#       - name: Configure SSH
+#         run: |
+#           mkdir -p ~/.ssh/
+#           echo "$SSH_PRIVATE_KEY" > ~/.ssh/oracle.key
+#           chmod 600 ~/.ssh/oracle.key
+#           cat >>~/.ssh/config <<END
+#           Host oracle_prod
+#             HostName $SSH_HOST
+#             User $SSH_USERNAME
+#             IdentityFile ~/.ssh/oracle.key
+#             StrictHostKeyChecking no
+
+#           Host oracle_dev
+#             HostName $SSH_HOST_DEV
+#             User $SSH_USERNAMEk
+#             IdentityFile ~/.ssh/oracle.key
+#             StrictHostKeyChecking no
+#           END
+#         env:
+#           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+#           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#           SSH_HOST: ${{ secrets.SSH_HOST }}
+#           SSH_HOST_DEV: ${{ secrets.SSH_HOST_DEV }}
+
+#       - name: Pull & Build for Production
+#         if: github.ref == 'refs/heads/production'
+#         run: |
+#           ssh oracle_prod 'cd /var/www/khe-revengeance/ && git fetch && git checkout production && git pull && yarn install && pm2 restart khe-revengeance'
+
+#       - name: Pull & Build for Dev
+#         if: github.ref == 'refs/heads/dev-main'
+#         run: |
+#           ssh oracle_dev 'cd /var/www/khe-revengeance/ && git fetch && git checkout dev-main && git stash && git pull && yarn install && pm2 restart khe-revengeance'
