@@ -36,6 +36,7 @@ services:
       - "traefik.http.services.khe-renaissance.loadbalancer.server.port=3000"
     networks:
       - app_internal
+      - traefik
 
 networks:
   app_internal:
