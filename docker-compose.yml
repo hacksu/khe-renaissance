@@ -27,11 +27,19 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/khe
       - ORIGIN=http://0.0.0.0:3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.myrouter.rule=Host(`dev.khe.io`)"
+      - "traefik.http.routers.myrouter.entrypoints=web"
     networks:
       - app_internal
+      - traefik
 
 networks:
   app_internal:
+  traefik:
+    external:
+      name: traefik
 
 volumes:
   db_data:
