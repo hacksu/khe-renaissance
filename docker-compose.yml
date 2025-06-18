@@ -33,6 +33,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.khe-renaissance.rule=Host(`dev.khe.io`)"
       - "traefik.http.routers.khe-renaissance.entrypoints=web"
+      - "traefik.http.services.khe-renaissance.loadbalancer.server.port=3000"
     networks:
       - app_internal
 
