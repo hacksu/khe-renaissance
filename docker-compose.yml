@@ -1,3 +1,5 @@
+name: "khe-renaissance"
+
 services:
   db:
     image: postgres:latest
@@ -33,13 +35,9 @@ services:
       - "traefik.http.routers.myrouter.entrypoints=web"
     networks:
       - app_internal
-      - traefik
 
 networks:
   app_internal:
-  traefik:
-    external:
-      name: traefik
 
 volumes:
   db_data:
