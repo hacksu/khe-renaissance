@@ -31,13 +31,15 @@ services:
       - ORIGIN=http://0.0.0.0:3000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.myrouter.rule=Host(`dev.khe.io`)"
-      - "traefik.http.routers.myrouter.entrypoints=web"
+      - "traefik.http.routers.khe-renaissance.rule=Host(`dev.khe.io`)"
+      - "traefik.http.routers.khe-renaissance.entrypoints=web"
     networks:
       - app_internal
 
 networks:
   app_internal:
+  traefik:
+    external: true
 
 volumes:
   db_data:
