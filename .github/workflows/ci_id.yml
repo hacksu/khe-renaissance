@@ -1,42 +1,45 @@
-# name: CI
-# on: [push, pull_request]
-# jobs:
-#   deploy:
-#     name: "Deploy to server"
-#     runs-on: ubuntu-latest
-#     if: github.event_name == 'push' && (github.ref == 'refs/heads/production' || github.ref == 'refs/heads/dev-main')
-#     # needs: test
-#     steps:
-#       - name: Configure SSH
-#         run: |
-#           mkdir -p ~/.ssh/
-#           echo "$SSH_PRIVATE_KEY" > ~/.ssh/oracle.key
-#           chmod 600 ~/.ssh/oracle.key
-#           cat >>~/.ssh/config <<END
-#           Host oracle_prod
-#             HostName $SSH_HOST
-#             User $SSH_USERNAME
-#             IdentityFile ~/.ssh/oracle.key
-#             StrictHostKeyChecking no
+name: Build and Deploy
 
-#           Host oracle_dev
-#             HostName $SSH_HOST_DEV
-#             User $SSH_USERNAMEk
-#             IdentityFile ~/.ssh/oracle.key
-#             StrictHostKeyChecking no
-#           END
-#         env:
-#           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-#           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-#           SSH_HOST: ${{ secrets.SSH_HOST }}
-#           SSH_HOST_DEV: ${{ secrets.SSH_HOST_DEV }}
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [master]
+  #pull_request:
+  #branches: [ master ]
 
-#       - name: Pull & Build for Production
-#         if: github.ref == 'refs/heads/production'
-#         run: |
-#           ssh oracle_prod 'cd /var/www/khe-revengeance/ && git fetch && git checkout production && git pull && yarn install && pm2 restart khe-revengeance'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
-#       - name: Pull & Build for Dev
-#         if: github.ref == 'refs/heads/dev-main'
-#         run: |
-#           ssh oracle_dev 'cd /var/www/khe-revengeance/ && git fetch && git checkout dev-main && git stash && git pull && yarn install && pm2 restart khe-revengeance'
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    concurrency:
+      group: automatic_deployment
+      cancel-in-progress: true
+
+    name: Deploy
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          #passphrase: ${{ secrets.KEY_PASSPHRASE }}
+          script: |
+            cd /var/www/khe-renaissance
+            echo "Fetching changes from Github"
+            git fetch
+            echo "Pulling Changes from Github"
+            git pull
+            echo "Take down docker compose stack"
+            docker compose down
+            echo "Start docker compose stack and rebuild"
+            docker compose up --build -d
