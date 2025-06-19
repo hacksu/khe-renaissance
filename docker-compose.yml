@@ -34,6 +34,7 @@ services:
       - "traefik.http.routers.khe-renaissance.entrypoints=websecure"
       - "traefik.http.routers.khe-renaissance.tls.certresolver=letsencrypt"
       - "traefik.http.services.khe-renaissance.loadbalancer.server.port=3000"
+      - "traefik.http.services.khe-renaissance.loadbalancer.server.scheme=http"
     networks:
       - app_internal
       - traefik
