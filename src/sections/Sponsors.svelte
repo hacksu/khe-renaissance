@@ -33,7 +33,7 @@
     {#each sponsors as { image, name, url}}
         <a class="w-96 lg:w-56" href={url} target="_blank">
             <img
-                class="rounded-lg w-[300px] h-[100px] object-contain transition-transform hover:scale-105"
+                class="rounded-lg object-contain transition-transform hover:scale-105"
                 src={image}
                 alt={name}
             />
