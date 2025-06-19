@@ -6,19 +6,18 @@
     image: any;
   }
 
-  import BawlsLogo from "../assets/sponsors/bawls.webp";
-  import KSULogo from "../assets/sponsors/department.png";
+  import Logo from "../assets/sponsors/bawls.webp";
 
   const sponsors: Sponsor[] = [
     {
-      image: KSULogo,
+      image: Logo,
       name: "Kent State University",
       url: "https://cs.kent.edu"
     },
     {
-      image: BawlsLogo,
-      name: "Bawls",
-      url: "https://bawls.com"
+      image: Logo,
+      name: "Enbasis",
+      url: "https://enbasis.com"
     }
   ];
 </script>
