@@ -25,7 +25,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file: "prod.env"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/khe
       - ORIGIN=http://0.0.0.0:3000
