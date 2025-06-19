@@ -7,8 +7,8 @@
 </script>
 
 <div class="bg-[url(/background.jpg)] bg-cover bg-center h-screen flex flex-col justify-center items-center gap-3 text-center">
-    <h1 class="text-3xl">Kent Hack Enough will return <span class="font-bold">{returnDate}</span>...</h1>
+    <h1 class="text-4xl">Kent Hack Enough will return <span class="font-bold">{returnDate}</span>...</h1>
     <div class="w-96">
-        <Button size="lg" onclick={() => goto("/login")}>Apply now</Button>
+        <Button size="lg" onclick={() => goto("/login")}>In the meantime, Apply now!</Button>
     </div>
 </div>
