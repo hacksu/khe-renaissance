@@ -95,6 +95,10 @@ model Application {
   submitted Boolean @default(false)
   approved  Boolean @default(false)
 
+  mlhCodeOfConduct Boolean @default(false)
+  mlhAuthorization Boolean @default(false)
+  mlhEmails        Boolean @default(false)
+
   user   User   @relation(fields: [userId], references: [id])
   userId String
 

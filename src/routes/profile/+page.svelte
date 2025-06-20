@@ -1,10 +1,12 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import Checkbox from "$components/form/Checkbox.svelte";
+    import Link from "$components/Link.svelte";
     import { authClient } from "$lib/client";
     import Button from "../../components/Button.svelte";
     import Card from "../../components/Card.svelte";
-    import Input from "../../components/Input.svelte";
-    import Select from "../../components/Select.svelte";
+    import Input from "../../components/form/Input.svelte";
+    import Select from "../../components/form/Select.svelte";
 
     const auth = authClient.useSession();
     const user = $derived($auth.data?.user);
@@ -120,6 +122,14 @@
                         <Input label="Personal Website" name="personal-url" value={application.personalUrl} />
                         <Input label="Github" name="github-url" value={application.githubUrl} />
                         <Input label="Resume" name="resume" type="file" accept=".pdf" />
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold">MLH</h3>
+                    <div class="mt-2 flex flex-col sm:flex-row justify-between">
+                        <Checkbox name="mlh-code" checked={application.mlhCodeOfConduct}>I have read and agree to the <Link href="https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md">MLH Code of Conduct</Link>.</Checkbox>
+                        <Checkbox name="mlh-authorization" checked={application.mlhAuthorization}>I authorize you to share my application/registration information with Major League Hacking for event administration, ranking, and MLH administration in-line with the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>. I further agree to the terms of both the <Link href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md">MLH Contest Terms and Conditions</Link> and the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>.</Checkbox>
+                        <Checkbox name="mlh-emails" checked={application.mlhEmails}>I authorize MLH to send me occasional emails about relevant events, career opportunities, and community announcements.</Checkbox>
                     </div>
                 </div>
                 <div class="flex justify-end gap-2">
