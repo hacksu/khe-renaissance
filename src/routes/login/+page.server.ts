@@ -23,6 +23,11 @@ const PROVIDERS: Provider[] = [
         icon: "google",
         name: "Google",
         provider: "google"
+    },
+    {
+        icon: "microsoft",
+        name: "Microsoft",
+        provider: "microsoft"
     }
 ]
 

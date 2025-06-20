@@ -10,7 +10,7 @@
 </script>
 
 
-<div class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 h-screen w-screen flex flex-row items-center justify-center">
+<div class="px-4 md:px-24 lg:px-60 xl:px-96 h-screen w-screen flex flex-row items-center justify-center">
     <div class="w-full h-1/2">
         <Card>
             <div class="h-full flex gap-2 p-4 items-center text-center w-full">
