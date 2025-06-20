@@ -16,6 +16,7 @@
                 <div class="w-full flex flex-col gap-2">
                     <Button onclick={async () => await authClient.signIn.social({ provider: "discord" })} ><Icon icon="logos:discord-icon" />Login with Discord</Button>
                     <Button onclick={async () => await authClient.signIn.social({ provider: "github" })} ><Icon icon="logos:github-icon"/>Login with Github</Button>
+                    <Button onclick={async () => await authClient.signIn.social({ provider: "google" })} ><Icon icon="logos:google-icon"/>Login with Google</Button>
                 </div>
             </div>
         </Card>
