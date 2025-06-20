@@ -31,9 +31,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.khe-renaissance.rule=Host(`khe.io`)"
-      - "traefik.http.routers.khe-renaissance.entrypoints=web"
+      - "traefik.http.routers.khe-renaissance.entrypoints=websecure"
+      - "traefik.http.routers.khe-renaissance.tls.certresolver=letsencrypt"
       - "traefik.http.services.khe-renaissance.loadbalancer.server.port=3000"
-      - "traefik.http.services.khe-renaissance.service=khe-renaissance"
     networks:
       - app_internal
       - traefik
