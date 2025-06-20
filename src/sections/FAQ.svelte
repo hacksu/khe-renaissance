@@ -22,7 +22,7 @@
                 {/snippet}
             </Accordion>
             <Accordion>
-                {#snippet name()}Can I participate?{/snippet}
+                {#snippet name()}Sounds cool, but how much does it cost?{/snippet}
                 {#snippet content()}
                     <p>$0.00!</p>
                     <p>Thanks to the generosity of our sponsors, we're able to put on events like this for free. We even pay for your meals for the weekend! Make sure to thank our sponsors - we couldn't do it without them!</p>
@@ -47,5 +47,8 @@
                 {/snippet}
             </Accordion>
         </Card>
+    </div>
+    <div class="mt-8 text-lg">
+        Hackathon Guide & Examples: <a href="/guide" class="text-blue-600 underline hover:text-blue-800">View Here</a>
     </div>
 </div>
