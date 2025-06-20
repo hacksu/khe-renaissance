@@ -78,12 +78,12 @@ export const actions: Actions = {
 export const load: PageServerLoad = async ({ request }) => {
     const session = await auth.api.getSession(request);
     if (!session) {
-        throw error(401, "Your session has expired. Please re-login.");
+        throw redirect(301, "/login");
     }
 
     const userId = session.user.id;
     
-    const application = await prisma.application
+    let application = await prisma.application
         .findUnique({
             where: { userId },
             omit: { userId: true }
@@ -91,7 +91,9 @@ export const load: PageServerLoad = async ({ request }) => {
         .catch(_ => null);
 
     if (!application) {
-        throw redirect(301, "/login");
+        application = await prisma.application.create({
+            data: { userId }
+        });
     }
 
     return { schools, application, countries };

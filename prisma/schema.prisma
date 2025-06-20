@@ -78,7 +78,7 @@ model Application {
   id                 String   @id @default(uuid())
   firstName          String   @default("")
   lastName           String   @default("")
-  age                Int
+  age                Int      @default(18)
   phoneNumber        String   @default("")
   email              String   @default("")
   countryOfResidence String   @default("")
