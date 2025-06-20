@@ -119,7 +119,7 @@
                     <div class="flex flex-col gap-2">
                         <Input label="Personal Website" name="personal-url" value={application.personalUrl} />
                         <Input label="Github" name="github-url" value={application.githubUrl} />
-                        <Input label="Resume" name="resume" type="file" value={application.githubUrl} />
+                        <Input label="Resume" name="resume" type="file" accept=".pdf" />
                     </div>
                 </div>
                 <div class="flex justify-end gap-2">

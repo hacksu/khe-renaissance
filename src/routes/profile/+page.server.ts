@@ -24,25 +24,21 @@ const saveApplication = async (userId: string, form: FormData) => {
         gender: formValues["gender"],
         pronouns: formValues["pronouns"],
         personalUrl: formValues["personal-url"],
+        submitted: false,
     }
 
-    // TODO: finish implementation for file save
-    const resume = form.get("resume") as File | null;
-    if (resume) {
-        const buffer = await resume.bytes();
-        await fs.writeFile("test.pdf", buffer);
-    }
-
-    return await prisma.application.upsert({
-        create: { 
-            ...data,
-            user: {
-                connect: { id: userId }
-            }
-        },
-        update: data,
+    const application = await prisma.application.update({
+        data,
         where: { userId }
     });
+
+    const resume = form.get("resume") as File | null;
+    if (resume && resume.type === "application/pdf") {
+        const buffer = await resume.bytes();
+        await fs.writeFile(`./resumes/${application.id}.pdf`, buffer);
+    }
+
+    return application;
 }
 
 export const actions: Actions = {
@@ -91,9 +87,7 @@ export const load: PageServerLoad = async ({ request }) => {
         .catch(_ => null);
 
     if (!application) {
-        application = await prisma.application.create({
-            data: { userId }
-        });
+        application = await prisma.application.create({ data: { userId } });
     }
 
     return { schools, application, countries };
