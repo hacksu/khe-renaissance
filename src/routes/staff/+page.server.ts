@@ -1,11 +1,11 @@
-import { auth } from '$lib/server/auth.js';
-import { redirect } from '@sveltejs/kit';
+import { prisma } from "$lib/server/prisma";
+import type { PageServerLoad } from "./$types";
 
-
-
-export const load = async ({ request }) => {
-    const session = await auth.api.getSession(request);
-    if (!session) {
-        throw redirect(301, "/auth/login");
-    }
-}
+export const load: PageServerLoad = async ({ request, parent }) => {
+    const applications = await prisma.application.findMany({
+        include: {
+            user: true
+        }
+    });
+    return { applications };
+};
