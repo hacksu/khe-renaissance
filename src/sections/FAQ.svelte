@@ -1,6 +1,9 @@
 <script lang="ts">
+    import Link from "$components/Link.svelte";
     import Accordion from "../components/Accordion.svelte";
     import Card from "../components/Card.svelte";
+
+    
 
 </script>
 
@@ -13,6 +16,8 @@
                     <p>A hackathon is a weekend-long event to meet smart creative people, make connections, learn, and build something awesome!</p>
                     <br />
                     <p>Attendees meet on Saturday, make a team, and have 24 hours to build a tech-related project. There will be optional lessons and talks, sponsors looking to hire smart, motivated people, and tons of free stuff!</p>
+                    <br />
+                    <p>We even have a nicely written guide for this, you can <Link href="/guide">view it here</Link>!</p>
                 {/snippet}
             </Accordion>
             <Accordion>
@@ -47,8 +52,5 @@
                 {/snippet}
             </Accordion>
         </Card>
-    </div>
-    <div class="mt-8 text-lg">
-        Hackathon Guide & Examples: <a href="/guide" class="text-blue-600 underline hover:text-blue-800">View Here</a>
     </div>
 </div>

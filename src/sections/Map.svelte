@@ -1,4 +1,5 @@
 <script>
+    import Link from "$components/Link.svelte";
     import Card from "../components/Card.svelte";
 
 </script>
@@ -9,7 +10,7 @@
             <div class="flex flex-col gap-3 p-5">
                 <h1 class="font-bold text-xl">Where to go?</h1>
                 <p>Kent Hack Enough is graciously hosted in the Kent State Design Innovation Hub: </p>
-                <a class="text-blue-600" href="https://goo.gl/maps/gNiw3U7YgymbPA1k6" target="_blank">Design Innovation Hub, Art Bldg, Kent, OH 44243</a>
+                <Link href="https://goo.gl/maps/gNiw3U7YgymbPA1k6">Design Innovation Hub, Art Bldg, Kent, OH 44243</Link >
                 <p>The easiest parking space to use will be the Student Center Visitor Lot, the R19 Lot or the R7 Lot directly next to Satterfield. After parking, walk towards the visitor center, and head left between the buildings. The DI Hub is located near the Honors College. </p>
             </div>
         </Card>
