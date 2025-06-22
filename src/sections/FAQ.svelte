@@ -17,7 +17,7 @@
                     <br />
                     <p>Attendees meet on Saturday, make a team, and have 24 hours to build a tech-related project. There will be optional lessons and talks, sponsors looking to hire smart, motivated people, and tons of free stuff!</p>
                     <br />
-                    <p>We even have a nicely written guide for this, you can <Link href="/guide">view it here</Link>!</p>
+                    <p>We even have a nicely written guide for this, you can <Link href="/guide" target="_self">view it here</Link>!</p>
                 {/snippet}
             </Accordion>
             <Accordion>
