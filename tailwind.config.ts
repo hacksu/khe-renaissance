@@ -11,8 +11,9 @@ export default {
         primary: "#b7a99a",
         secondary: "#504538",
         accent: "#00b4ff",
-        offwhite: "#acacac",
-        sand: "#dca75b"
+        offwhite: "#ede4d9",
+        sand: "#dca75b",
+        link: "#ff4500" // custom link color
       }
     }
   },
