@@ -7,7 +7,7 @@
         {
             title: "Escape Pursuit (HackPSU Spring 2024)",
             link: "https://devpost.com/software/escape-pursuit",
-            image: "/src/assets/example_projects/escape.jpg",
+            image: "/example_projects/escape.jpg",
             description: [
                 "This online game adds an online component to hide-and-seek: both the hider and the seekers bring up the game on their phones, and then when the hider hides, the seekers are shown a randomly-placed circle on the map that the hider is somewhere within. The hider can explore a wide range of possible hiding spots, across a whole college campus, for example, but the game stays fair.",
                 "This simple enhancement to an age-old pastime shows how technology can be integrated with the real world in a new way to create something fun."
@@ -17,7 +17,7 @@
         {
             title: "RTCL (KHE 2022)",
             link: "https://devpost.com/software/rtcl-article",
-            image: "/src/assets/example_projects/rtcl.jpg",
+            image: "/example_projects/rtcl.jpg",
             description: [
                 "This was a Python program that read PDFs and, with the help of a language model, created PowerPoint slides that summarized their contents.",
                 "These days, everyone knows AI can do this kind of thing, but back in October 2022, before ChatGPT, this blew people's minds. This project found an application of technology that people weren't used to yet."
@@ -27,7 +27,7 @@
         {
             title: "Single-Handed Typing (KHE 2022)",
             link: "https://devpost.com/software/singlehanded-typing-tech",
-            image: "/src/assets/example_projects/singlehanded.jpg",
+            image: "/example_projects/singlehanded.jpg",
             description: [
                 "This was a project created by someone who once broke their arm and wasn't able to type with one of their hands. To improve this kind of situation for everyone, they decided to try to implement an old idea for a dynamic one-handed keyboard layout they found.",
                 "This project wasn't completely original, but it did iterate on a forgotten concept that then only existed in old Linux config files. Sometimes you just need someone to actually make the thing."
@@ -37,7 +37,7 @@
         {
             title: "FaunaFinder (MakeUC 2023)",
             link: "https://devpost.com/software/faunafinder-ai-powered-animal-breed-recognition",
-            image: "/src/assets/example_projects/fauna.jpg",
+            image: "/example_projects/fauna.jpg",
             description: [
                 "This AI-based application recognizes pictures of animals, brings up information about the species of those animals, and tells you about related animals that you might also want to know about.",
                 "There is still a lot of untapped potential within the world of AI, probably, and this project used it to connect people with animals."
@@ -47,7 +47,7 @@
         {
             title: "Subway Cheese Chase (MakeUC 2023)",
             link: "https://devpost.com/software/subway-cheese-chase",
-            image: "/src/assets/example_projects/subway.jpg",
+            image: "/example_projects/subway.jpg",
             description: [
                 "This is simply a horror game about being in a dark Subway (restaurant) looking for your car keys.",
                 "Not every hackathon project has to be super serious!"
@@ -57,7 +57,7 @@
         {
             title: "CWRU Full-Text Class Search (KHE 2019)",
             link: "https://devpost.com/software/cwru-full-text-class-search",
-            image: "/src/assets/example_projects/cwru_classes.jpg",
+            image: "/example_projects/cwru_classes.jpg",
             description: [
                 "This was a project developed by students from Case Western Reserve University who disapproved of their university's portal for class searches. So, they scraped the content of the portal and made their own website out of it.",
                 "This project identified a part of our built environment that sucks and decided to try to fix it."
@@ -67,7 +67,7 @@
         {
             title: "Safe-Roads (MakeUC 2023)",
             link: "https://devpost.com/software/safe-roads",
-            image: "/src/assets/example_projects/safe_roads.jpg",
+            image: "/example_projects/safe_roads.jpg",
             description: [
                 "This project uses publicly-available maps and data to visualize how dangerous any given segment of road is. I imagine this is perfect for anyone who's already anxious about driving.",
                 "This project shows how useful public datasets from websites like Kaggle can be if given the right frame. The Internet has a ton of information on it that just needs a little bit of data science done to it to become relevant and accessible in people's lives."
@@ -151,7 +151,7 @@
             <div class="my-6">
                 <h3 class="text-2xl font-bold mb-2">Web Development</h3>
                 <p>This is the most common way to create apps, using centralized data and computation and convenient graphical user interfaces.</p>
-                <img src="/src/assets/technology_guide/www.gif" alt="A retro animated spinning globe." class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
+                <img src="/technology_guide/www.gif" alt="A retro animated spinning globe." class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
                 <p>The web technologies that were originally developed for the creation of Geocities pages and mailing list address forms eventually broke containment and infiltrated every single facet of the modern graphical user interface-based world.</p>
                 <p>Generally, to use them, you need to create a <strong>backend server application</strong> that can store data, make itself available on a network, and usually do most of the actual work that the thing you're making needs to do. When a web browser (aka a <strong>client</strong>) connects to it, the backend server will send <strong>client-side code</strong> to the browser that will tell the browser what to display to the user. The server application is known as the <strong>backend</strong>; the client-side code is called the <strong>frontend</strong>.</p>
                 <p>Here is a list of some of the more currently popular backend/frontend combos in very approximately escalating order of complexity:</p>
@@ -204,7 +204,7 @@
             </div>
             <div class="my-6">
                 <h3 class="text-2xl font-bold mb-2">APIs</h3>
-                <img src="/src/assets/technology_guide/api.jpg" alt="API illustration" class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
+                <img src="/technology_guide/api.jpg" alt="API illustration" class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
                 <p>API stands for Application Programming Interface and it is a very broad term that can refer to any agreed-upon system for enabling two computer programs or libraries to interact in a constructive way.</p>
                 <p>A lot of the time, though, an API is going to turn out to be a service that provides structured data over the Internet. A classic example is the <a href="https://openweathermap.org/api">OpenWeather API</a>. You can create an API call, which in this case requires you to identify yourself using a unique API key that you got by making an account with the service, and your program will get back data in some specified format like JSON or XML that informs it what the weather is, was, or is predicted to be in a certain area. It will handle a certain amount of requests for free, and then expect you to pay up for more. You can create a program that uses that data to do things like critique picnicking schedules.</p>
                 <p>This is essentially a backend web server (see the section above) that responds to network requests with raw data, instead of with client-side code that creates a graphical user interface. It is often useful to use an API to interact with fancy tools that you can't build yourself, like large language models (see the section below.)</p>
@@ -213,7 +213,7 @@
             </div>
             <div class="my-6">
                 <h3 class="text-2xl font-bold mb-2">Artificial Intelligence</h3>
-                <img src="/src/assets/technology_guide/ai.jpg" alt="AI illustration" class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
+                <img src="/technology_guide/ai.jpg" alt="AI illustration" class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
                 <p>This term typically refers to technology that can make sense out of the ambiguities involved in natural phenomena like language or images in a probabilistic way.</p>
                 <h4 class="font-bold mt-4">Using existing tools via APIs</h4>
                 <ul class="list-disc ml-6">
@@ -241,7 +241,7 @@
             </div>
             <div class="my-6">
                 <h3 class="text-2xl font-bold mb-2">Apps!</h3>
-                <img src="/src/assets/technology_guide/app.png" alt="App illustration" class="mx-auto my-4" style="max-width: 330px; width: 100%;" />
+                <img src="/technology_guide/app.png" alt="App illustration" class="mx-auto my-4" style="max-width: 330px; width: 100%;" />
                 <p>Native, installable apps can benefit in speed, look, and feel from being built to run on a specific kind of device. There are usually relatively straightforward recommended ways to build apps for a specific platform; there aren't a huge number of different ideas for how to deploy things crowding into the field. How you create your app depends largely on where you want it to run, so let's go through the possibilities:</p>
                 <h4 class="font-bold mt-4">Windows</h4>
                 <p>If you want to create an app for Windows, you should probably use the Windows Presentation Foundation (WPF) framework. It lets you create apps using XAML, which is like HTML but for Windows, and C#. The simplest way to use WPF is to create a new project with it in <a href="https://visualstudio.microsoft.com/vs/">Microsoft Visual Studio</a>.</p>
