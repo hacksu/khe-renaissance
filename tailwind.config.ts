@@ -13,7 +13,7 @@ export default {
         accent: "#00b4ff",
         offwhite: "#ede4d9",
         sand: "#dca75b",
-        link: "#ff4500" // custom link color
+        link: "#e73427" // custom link color
       }
     }
   },

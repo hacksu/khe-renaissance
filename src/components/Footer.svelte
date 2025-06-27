@@ -16,7 +16,8 @@
     </Link>
   </div>
   <div class="flex-1"></div>
-  <Link href="https://mlh.io" target="_blank" class="self-center">
+  <p class="font-bold text-2xl tracking-wide px-4">Code of Conduct:</p>
+  <Link href="https://mlh.io/code-of-conduct" target="_blank" class="self-center">
     <img
       src={MLHLogo}
       alt="MLH Logo"
