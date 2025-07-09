@@ -25,6 +25,8 @@ model User {
   accounts      Account[]
   Application   Application[]
 
+  role String?
+
   @@unique([email])
   @@map("user")
 }

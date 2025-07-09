@@ -2,8 +2,8 @@
 
     import { authClient } from "$lib/client";
     import Icon from "@iconify/svelte";
-    import Button from "../../components/Button.svelte";
-    import Card from "../../components/Card.svelte";
+    import Button from "../../../components/Button.svelte";
+    import Card from "../../../components/Card.svelte";
 
     const { data } = $props();
 
