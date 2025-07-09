@@ -6,3 +6,8 @@
     --font-family: "Inter", sans-serif;
     background-color: theme('colors.primary');
 }
+
+a {
+  @apply text-accent hover:text-primary transition-colors;
+  color: #ff4500;
+}

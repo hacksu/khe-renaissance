@@ -7,42 +7,39 @@ import countries from "../../assets/json/countries.json";
 import schools from "../../assets/json/schools.json";
 import type { PageServerLoad } from "./$types";
 
-const saveApplication = async (userId: string, form: FormData) => { 
+const saveApplication = async (userId: string, form: FormData) => {
     const formValues = Utils.formToDict(form);
-    const data = {
-        firstName: formValues["first-name"],
-        lastName: formValues["last-name"],
-        phoneNumber: formValues["phone-number"],
-        email: formValues["email"],
-        countryOfResidence: formValues["country-of-residence"],
-        school: formValues["school"],
-        levelOfStudy: formValues["level-of-study"],
-        fieldOfStudy: formValues["field-of-study"],
-        githubUrl: formValues["github-url"],
-        age: Utils.toNumber(formValues["age"]),
-        dietaryRestriction: formValues["dietary-restriction"],
-        gender: formValues["gender"],
-        pronouns: formValues["pronouns"],
-        personalUrl: formValues["personal-url"],
-    }
-
-    // TODO: finish implementation for file save
-    const resume = form.get("resume") as File | null;
-    if (resume) {
-        const buffer = await resume.bytes();
-        await fs.writeFile("test.pdf", buffer);
-    }
-
-    return await prisma.application.upsert({
-        create: { 
-            ...data,
-            user: {
-                connect: { id: userId }
-            }
+    const application = await prisma.application.update({
+        data: {
+            firstName: formValues["first-name"],
+            lastName: formValues["last-name"],
+            phoneNumber: formValues["phone-number"],
+            email: formValues["email"],
+            countryOfResidence: formValues["country-of-residence"],
+            school: formValues["school"],
+            levelOfStudy: formValues["level-of-study"],
+            fieldOfStudy: formValues["field-of-study"],
+            githubUrl: formValues["github-url"],
+            age: Utils.toNumber(formValues["age"]),
+            dietaryRestriction: formValues["dietary-restriction"],
+            gender: formValues["gender"],
+            pronouns: formValues["pronouns"],
+            personalUrl: formValues["personal-url"],
+            mlhCodeOfConduct: !!formValues["mlh-code"],
+            mlhAuthorization: !!formValues["mlh-authorization"],
+            mlhEmails: !!formValues["mlh-emails"],
+            submitted: false,
+            approved: false,
         },
-        update: data,
         where: { userId }
     });
+
+    const resume = form.get("resume") as File | null;
+    if (resume && resume.type === "application/pdf") {
+        const buffer = await resume.bytes();
+        await fs.writeFile(`./resumes/${application.id}.pdf`, buffer);
+    }
+    return application;
 }
 
 export const actions: Actions = {
@@ -66,8 +63,8 @@ export const actions: Actions = {
         const form = await request.formData();
         const application = await saveApplication(userId, form);
         await prisma.application.update({
-            data: { 
-                submitted: !application.submitted,
+            data: {
+                submitted: true,
                 approved: false
             },
             where: { id: application.id }
@@ -78,12 +75,12 @@ export const actions: Actions = {
 export const load: PageServerLoad = async ({ request }) => {
     const session = await auth.api.getSession(request);
     if (!session) {
-        throw error(401, "Your session has expired. Please re-login.");
+        throw redirect(301, "/login");
     }
 
     const userId = session.user.id;
-    
-    const application = await prisma.application
+
+    let application = await prisma.application
         .findUnique({
             where: { userId },
             omit: { userId: true }
@@ -91,7 +88,7 @@ export const load: PageServerLoad = async ({ request }) => {
         .catch(_ => null);
 
     if (!application) {
-        throw redirect(301, "/login");
+        application = await prisma.application.create({ data: { userId } });
     }
 
     return { schools, application, countries };

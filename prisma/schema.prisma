@@ -25,6 +25,8 @@ model User {
   accounts      Account[]
   Application   Application[]
 
+  role String?
+
   @@unique([email])
   @@map("user")
 }
@@ -78,7 +80,7 @@ model Application {
   id                 String   @id @default(uuid())
   firstName          String   @default("")
   lastName           String   @default("")
-  age                Int
+  age                Int      @default(18)
   phoneNumber        String   @default("")
   email              String   @default("")
   countryOfResidence String   @default("")
@@ -94,6 +96,10 @@ model Application {
 
   submitted Boolean @default(false)
   approved  Boolean @default(false)
+
+  mlhCodeOfConduct Boolean @default(false)
+  mlhAuthorization Boolean @default(false)
+  mlhEmails        Boolean @default(false)
 
   user   User   @relation(fields: [userId], references: [id])
   userId String

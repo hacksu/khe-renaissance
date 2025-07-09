@@ -5,4 +5,5 @@ export namespace Utils {
     export const formToDict = (form: FormData) => Array.from(form.entries())
         .filter(val => typeof val[1] === "string")
         .reduce((obj, val) => ({ ...obj, [val[0]]: val[1] }), {} as any)
+    export const concatExclude = (sep: string, ...items: string[]) => items.filter(x => !!x).join(sep);
 }
