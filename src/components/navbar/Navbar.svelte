@@ -29,8 +29,7 @@
         {#if $session.data}
             <NavbarItem href="/profile" class="text-2xl text-offwhite" style="margin-right: 4.5rem;">{$session.data.user.email}</NavbarItem>
         {:else}
-            <!-- <NavbarItem href="/login" class="text-2xl" style="margin-right: 4.5rem;"></NavbarItem> -->
-            <NavbarItem href="/auth/login" class="text-2xl">Login</NavbarItem>
+            <NavbarItem href="/login" class="text-2xl" style="margin-right: 4.5rem;">Login</NavbarItem>
         {/if}
         <NavbarItem href="https://mlh.io/seasons/2026/events" class="text-2xl">
             <img decoding="async" src="https://s3.amazonaws.com/logged-assets/trust-badge/2026/mlh-trust-badge-2026-red.svg" alt="Major League Hacking 2026 Hackathon Season" style="width: 5%; position: absolute; top: 0; right: 0;" class="self-center">
