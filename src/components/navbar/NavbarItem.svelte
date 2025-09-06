@@ -4,6 +4,6 @@
 
 </script>
 
-<a class="transition-opacity duration-300 hover:opacity-75" {...props}>
+<a class="transition-opacity  duration-300 hover:opacity-75" {...props}>
     {@render children?.()}
 </a>
