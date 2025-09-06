@@ -96,6 +96,7 @@ model Application {
 
   submitted Boolean @default(false)
   approved  Boolean @default(false)
+  checkedIn Boolean @default(false)
 
   mlhCodeOfConduct Boolean @default(false)
   mlhAuthorization Boolean @default(false)
