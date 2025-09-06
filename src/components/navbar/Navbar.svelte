@@ -34,9 +34,9 @@
     <div class="hidden lg:flex gap-4 justify-end items-center w-full">
         <NavbarItem href="https://kent-hack-enough-2026.devpost.com/" target="_blank" rel="noopener noreferrer"><img src={devPost} width={40} alt="DevPost" /></NavbarItem>
         {#if $session.data}
-            <NavbarItem href="/profile" class="text-2xl text-offwhite">{$session.data.user.email}</NavbarItem>
+            <NavbarItem href="/profile" class="text-xl text-offwhite">{$session.data.user.email}</NavbarItem>
         {:else}
-            <NavbarItem href="/auth/login" class="text-2xl">Login</NavbarItem>
+            <NavbarItem href="/auth/login" class="text-xl text-offwhite">Login</NavbarItem>
         {/if}
     </div>
 </div>
