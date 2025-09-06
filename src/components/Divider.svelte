@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    const { children } = $props();
+    const { children = undefined } = $props();
 
 </script>
 
