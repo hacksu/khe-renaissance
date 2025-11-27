@@ -5,6 +5,7 @@
     import { authClient } from "$lib/client";
     import Button from "../../components/Button.svelte";
     import Card from "../../components/Card.svelte";
+    import ConfirmationModal from "../../components/ConfirmationModal.svelte";
     import Input from "../../components/form/Input.svelte";
     import Select from "../../components/form/Select.svelte";
 
@@ -15,6 +16,8 @@
     const application = $derived(data.application);
     
     let loading = $state(false);
+    let showConfirmModal = $state(false);
+    let pendingAction = $state<string | null>(null);
 </script>
 
 <div class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 flex flex-col gap-4 justify-center text-black">
@@ -43,6 +46,17 @@
             return async ({ update }) => {
                 await update({ reset: false });
                 loading = false;
+            }
+        }} onsubmit={(e) => {
+            // If application is already approved, show confirmation modal
+            if (application.approved && !pendingAction) {
+                e.preventDefault();
+                const submitter = (e as SubmitEvent).submitter as HTMLButtonElement;
+                const action = submitter?.getAttribute('formaction');
+                pendingAction = action;
+                showConfirmModal = true;
+                loading = false;
+                return false;
             }
         }}>
             <div class="w-full flex flex-col gap-4">
@@ -141,3 +155,41 @@
         </form>
     </Card>
 </div>
+
+<ConfirmationModal 
+    show={showConfirmModal}
+    title="Warning: Approval Will Be Revoked"
+    confirmText="Proceed"
+    cancelText="Cancel"
+    onConfirm={() => {
+        showConfirmModal = false;
+        // Submit the form with the pending action
+        if (pendingAction) {
+            const form = document.querySelector('form') as HTMLFormElement;
+            const button = document.createElement('button');
+            button.setAttribute('formaction', pendingAction);
+            button.type = 'submit';
+            button.style.display = 'none';
+            form.appendChild(button);
+            button.click();
+            form.removeChild(button);
+            pendingAction = null;
+        }
+    }}
+    onCancel={() => {
+        showConfirmModal = false;
+        pendingAction = null;
+        loading = false;
+    }}
+>
+    <p class="mb-4">
+        Your application has already been <strong class="text-green-400">approved</strong>. 
+        Making changes will revoke your approval and you will need to wait for staff to re-approve your application.
+    </p>
+    <p>
+        You will receive an email notification confirming the revocation.
+    </p>
+    <p class="mt-4 font-semibold">
+        Are you sure you want to proceed?
+    </p>
+</ConfirmationModal>

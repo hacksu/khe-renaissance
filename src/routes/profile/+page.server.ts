@@ -1,5 +1,6 @@
 import { auth } from "$lib/server/auth";
 import { prisma } from "$lib/server/prisma";
+import { sendApprovalRevocationEmail } from "$lib/server/email";
 import { Utils } from "$lib/util";
 import { error, redirect, type Actions } from "@sveltejs/kit";
 import fs from "fs/promises";
@@ -9,6 +10,15 @@ import type { PageServerLoad } from "./$types";
 
 const saveApplication = async (userId: string, form: FormData) => {
     const formValues = Utils.formToDict(form);
+
+    // Check if application was previously approved
+    const existingApplication = await prisma.application.findUnique({
+        where: { userId },
+        include: { user: true }
+    });
+
+    const wasApproved = existingApplication?.approved || false;
+
     const application = await prisma.application.update({
         data: {
             firstName: formValues["first-name"],
@@ -39,7 +49,8 @@ const saveApplication = async (userId: string, form: FormData) => {
         const buffer = await resume.bytes();
         await fs.writeFile(`./resumes/${application.id}.pdf`, buffer);
     }
-    return application;
+
+    return { application, wasApproved };
 }
 
 export const actions: Actions = {
@@ -51,7 +62,12 @@ export const actions: Actions = {
 
         const userId = session.user.id;
         const form = await request.formData();
-        await saveApplication(userId, form);
+        const { application, wasApproved } = await saveApplication(userId, form);
+
+        // Send email if approval was revoked
+        if (wasApproved) {
+            await sendApprovalRevocationEmail(application.email || session.user.email);
+        }
     },
     submit: async ({ request }) => {
         const session = await auth.api.getSession(request);
@@ -61,7 +77,7 @@ export const actions: Actions = {
 
         const userId = session.user.id;
         const form = await request.formData();
-        const application = await saveApplication(userId, form);
+        const { application, wasApproved } = await saveApplication(userId, form);
         await prisma.application.update({
             data: {
                 submitted: true,
@@ -69,6 +85,11 @@ export const actions: Actions = {
             },
             where: { id: application.id }
         });
+
+        // Send email if approval was revoked
+        if (wasApproved) {
+            await sendApprovalRevocationEmail(application.email || session.user.email);
+        }
     }
 };
 
