@@ -14,9 +14,11 @@
   import Bawlslogo from "../assets/sponsors/bawls.png";
   import DeptLogo from "../assets/sponsors/CSLogo.png";
   import KSULogo from "../assets/sponsors/ksu-logo.svg";
+  import BentTreeLogo from "../assets/sponsors/bent_tree_coffee_roasters_logo.png";
+  import EnbasisLogo from "../assets/sponsors/enbasis_inc_logo.jpg";
 
   import OnePasswordLogo from "../assets/software/1password.svg";
-  import BalsamiqLogo from "../assets/software/balsamiq.webp";
+  import BalsamiqLogo from "../assets/software/Balsamiq_2025_logo.svg";
 
   const sponsors: Sponsor[] = [
     {
@@ -33,6 +35,16 @@
       image: Bawlslogo,
       name: "Bawls",
       url: "https://bawls.com",
+    },
+    {
+      image: BentTreeLogo,
+      name: "Bent Tree Coffee",
+      url: "https://www.benttreecoffee.com",
+    },
+    {
+      image: EnbasisLogo,
+      name: "Enbasis",
+      url: "https://enbasis.com",
     },
   ];
 
@@ -53,11 +65,11 @@
 <div class="flex flex-col gap-24">
   <div class="flex flex-col gap-4">
     <h2 class="text-center text-3xl font-bold">Sponsors</h2>
-    <div id="sponsors" class="flex flex-col lg:flex-row gap-4 justify-center items-center ">
+    <div id="sponsors" class="flex flex-wrap gap-8 justify-center items-center">
       {#each sponsors as { image, name, url }}
-        <a class="flex justify-center items-center w-96 lg:w-56" href={url} target="_blank">
+        <a class="flex justify-center items-center w-64 h-32 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" href={url} target="_blank">
           <img
-            class="w-[200px] h-[100px] object-contain transition-transform hover:scale-110"
+            class="w-full h-full object-contain transition-transform hover:scale-110"
             src={image}
             alt={name}
           />
@@ -67,11 +79,11 @@
   </div>
   <div class="flex flex-col gap-4">
     <h2 class="text-center text-3xl font-bold">Software License Providers</h2>
-    <div class="flex flex-col lg:flex-row gap-4 justify-center items-center ">
+    <div class="flex flex-wrap gap-8 justify-center items-center">
       {#each softwareLicenses as { image, name, url }}
-        <a class="flex justify-center items-center w-96 lg:w-56" href={url} target="_blank">
+        <a class="flex justify-center items-center w-64 h-32 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" href={url} target="_blank">
           <img
-            class="w-[200px] h-[100px] object-contain transition-transform hover:scale-110"
+            class="w-full h-full object-contain transition-transform hover:scale-110"
             src={image}
             alt={name}
           />
