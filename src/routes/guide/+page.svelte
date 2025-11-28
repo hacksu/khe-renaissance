@@ -1,9 +1,7 @@
 <script lang="ts">
-    import Accordion from "../../components/Accordion.svelte";
     import Card from "../../components/Card.svelte";
     import Link from "../../components/Link.svelte";
 
-    let selected = 0;
     const projects = [
         {
             title: "Escape Pursuit (HackPSU Spring 2024)",
@@ -78,193 +76,207 @@
     ];
 </script>
 
-<style>
-  /* Make all links in the guide use the custom link color, except those with a custom class or .table-link */
-  .guide-content a:not(.text-blue-600):not(.table-link) {
-    color: #ff8800; /* Custom link color from Tailwind config */
-    text-decoration: underline;
-    transition: color 0.15s;
-  }
-  .guide-content a:not(.text-blue-600):not(.table-link):hover {
-    color: #b7a99a; /* Tailwind's primary color as hover */
-  }
-  /* Table links: dark blue (default link color) */
-  .guide-content table a.table-link {
-    color: #1d4ed8; /* Tailwind's blue-700 */
-    text-decoration: underline;
-    transition: color 0.15s;
-  }
-  .guide-content table a.table-link:hover {
-    color: #2563eb; /* Tailwind's blue-600 */
-  }
-</style>
+<div class="py-12 px-4 md:px-12 lg:px-24 xl:px-36 flex flex-col gap-12 text-black guide-content text-left">
+    <!-- Header Section -->
+    <div class="text-center max-w-4xl mx-auto">
+        <h1 class="font-bold text-5xl mb-6 text-secondary">A Quickstart Guide to Hackathons</h1>
+        <p class="text-xl mb-4 leading-relaxed">
+            Throwing together a revolutionary new product that <strong>shakes the world to its core</strong> and <strong><em>permanently changes humans' relationship with technology</em></strong> in less than 24 hours might sound hard, <strong>but it's really not.</strong>
+        </p>
+        <p class="text-lg">
+            All you need is an idea and the tools to implement it. For example:
+        </p>
+    </div>
 
-<div class="py-24 px-4 md:px-24 lg:px-60 xl:px-36 flex flex-col gap-4 justify-center text-black guide-content text-left">
-    <Card padded>
-        <div class="w-full">
-            <h1 class="font-bold text-4xl mb-6">A Quickstart Guide to Hackathons</h1>
-            <p class="text-xl mb-4">
-                Throwing together a revolutionary new product that <strong>shakes the world to its core</strong> and <strong><em>permanently changes humans' relationship with technology</em></strong> in less than 24 hours might sound hard, <strong>but it's really not.</strong>
-            </p>
-            <p>
-                All you need is an idea and the tools to implement it. For example:
-            </p>
+    <!-- Previous Projects Section -->
+    <div>
+        <h2 class="text-4xl font-bold text-center mb-8 text-secondary">~ Previous Projects ~</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {#each projects as project}
+                <Card padded>
+                    <div class="flex flex-col h-full">
+                        <img src={project.image} alt={project.title} class="w-full h-48 object-cover rounded-md mb-4" />
+                        <h3 class="font-bold text-xl mb-2">{project.title}</h3>
+                        <div class="mb-4 flex-grow">
+                            {#each project.description as desc}
+                                <p class="mb-2 text-sm opacity-90">{desc}</p>
+                            {/each}
+                        </div>
+                        <div class="mt-auto">
+                            <p class="text-xs font-mono mb-3 opacity-75">
+                                <strong>Tech:</strong> {project.tech}
+                            </p>
+                            <Link href={project.link} target="_blank">View on Devpost</Link>
+                        </div>
+                    </div>
+                </Card>
+            {/each}
+        </div>
+        <p class="mt-8 text-center text-lg">
+            <Link href="https://devpost.com/software" target="_blank">For even more projects, browse the global project gallery on Devpost.</Link>
+        </p>
+    </div>
 
-            <h2 class="text-3xl text-center my-6">~ Previous Projects ~</h2>
-            <div class="flex justify-center mb-4 gap-2">
-                {#each projects as _, i}
-                    <button
-                        class="px-3 py-1 rounded border font-bold transition-colors duration-150 {selected === i ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 border-blue-600'}"
-                        on:click={() => selected = i}
-                        aria-label={`Show project ${i + 1}`}
-                    >
-                        {i + 1}
-                    </button>
-                {/each}
-            </div>
-            <div class="border rounded-lg p-4 shadow flex flex-col items-center">
-                <h3 class="font-bold text-lg">{projects[selected].title}</h3>
-                <Link href={projects[selected].link} target="_blank">View on Devpost</Link>
-                <img src={projects[selected].image} alt={projects[selected].title} class="my-2 rounded max-h-72 w-auto" style="max-width: 420px;" />
-                {#each projects[selected].description as desc}
-                    <p>{desc}</p>
-                {/each}
-                <p class="text-sm mt-2">
-                    <strong>Technologies used:</strong><br />
-                    {projects[selected].tech}
-                </p>
-            </div>
-
-            <p class="mt-6">
-                <Link href="https://devpost.com/software" target="_blank">For even more projects, browse the global project gallery on Devpost.</Link>
-            </p>
-
-            <h3 class="text-2xl font-bold mt-8">Key takeaways for success:</h3>
-            <ul class="list-disc ml-6">
+    <!-- Key Takeaways -->
+    <div class="max-w-4xl mx-auto w-full">
+        <Card padded>
+            <h3 class="text-2xl font-bold mb-4">Key takeaways for success:</h3>
+            <ul class="list-disc ml-6 space-y-2">
                 <li>Keep the scope of your project narrow - if you have an idea, try to just implement the core of it.</li>
                 <li><strong>Put a little hot sauce on that bad boy.</strong></li>
                 <li>Use libraries written in your chosen language that solve hard problems.</li>
                 <li>Use a high-level framework that takes care of the routine details of the kind of project you're working on.</li>
             </ul>
             <p class="mt-4">For more on those last two points, read on:</p>
+        </Card>
+    </div>
 
-            <h2 class="text-3xl font-bold mt-10 mb-4">Technologies</h2>
-            <div class="my-6">
-                <h3 class="text-2xl font-bold mb-2">Web Development</h3>
-                <p>This is the most common way to create apps, using centralized data and computation and convenient graphical user interfaces.</p>
-                <img src="/technology_guide/www.gif" alt="A retro animated spinning globe." class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
-                <p>The web technologies that were originally developed for the creation of Geocities pages and mailing list address forms eventually broke containment and infiltrated every single facet of the modern graphical user interface-based world.</p>
-                <p>Generally, to use them, you need to create a <strong>backend server application</strong> that can store data, make itself available on a network, and usually do most of the actual work that the thing you're making needs to do. When a web browser (aka a <strong>client</strong>) connects to it, the backend server will send <strong>client-side code</strong> to the browser that will tell the browser what to display to the user. The server application is known as the <strong>backend</strong>; the client-side code is called the <strong>frontend</strong>.</p>
-                <p>Here is a list of some of the more currently popular backend/frontend combos in very approximately escalating order of complexity:</p>
-                <div class="overflow-x-auto my-4">
-                    <table class="min-w-full border border-gray-400 rounded-lg">
-                        <thead class="bg-gray-700 text-black">
+    <!-- Technologies Section -->
+    <div>
+        <h2 class="text-4xl font-bold text-center mb-8 text-secondary">Technologies</h2>
+        
+        <div class="flex flex-col gap-8">
+            <!-- Web Development -->
+            <Card padded>
+                <h3 class="text-2xl font-bold mb-4">Web Development</h3>
+                <p class="mb-4">This is the most common way to create apps, using centralized data and computation and convenient graphical user interfaces.</p>
+                <img src="/technology_guide/www.gif" alt="A retro animated spinning globe." class="mx-auto my-6 rounded-md" style="max-width: 270px; width: 100%;" />
+                <p class="mb-4">The web technologies that were originally developed for the creation of Geocities pages and mailing list address forms eventually broke containment and infiltrated every single facet of the modern graphical user interface-based world.</p>
+                <p class="mb-4">Generally, to use them, you need to create a <strong>backend server application</strong> that can store data, make itself available on a network, and usually do most of the actual work that the thing you're making needs to do. When a web browser (aka a <strong>client</strong>) connects to it, the backend server will send <strong>client-side code</strong> to the browser that will tell the browser what to display to the user. The server application is known as the <strong>backend</strong>; the client-side code is called the <strong>frontend</strong>.</p>
+                
+                <p class="mb-2 font-semibold">Popular backend/frontend combos:</p>
+                <div class="overflow-x-auto my-4 rounded-lg border border-white/20">
+                    <table class="min-w-full text-left text-sm">
+                        <thead class="bg-black/20 text-white">
                             <tr>
-                                <th class="px-4 py-2 border-b border-gray-400 text-left">Backend</th>
-                                <th class="px-4 py-2 border-b border-gray-400 text-left">Frontend</th>
+                                <th class="px-4 py-3 font-bold">Backend</th>
+                                <th class="px-4 py-3 font-bold">Frontend</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="bg-gray-50 text-black">
-                                <td class="px-4 py-2 border-b border-gray-300">None</td>
-                                <td class="px-4 py-2 border-b border-gray-300"><Link href="https://developer.mozilla.org/en-US/docs/Learn/HTML" class="table-link" target="_blank">HTML files</Link></td>
+                        <tbody class="divide-y divide-white/10">
+                            <tr>
+                                <td class="px-4 py-3">None</td>
+                                <td class="px-4 py-3"><Link href="https://developer.mozilla.org/en-US/docs/Learn/HTML" target="_blank">HTML files</Link></td>
                             </tr>
-                            <tr class="bg-white text-black">
-                                <td class="px-4 py-2 border-b border-gray-300"><Link href="https://flask.palletsprojects.com/en/3.0.x/" class="table-link" target="_blank">Flask</Link> (Python library)</td>
-                                <td class="px-4 py-2 border-b border-gray-300"><Link href="https://jinja.palletsprojects.com/en/3.1.x/" class="table-link" target="_blank">Jinja HTML templates</Link></td>
+                            <tr>
+                                <td class="px-4 py-3"><Link href="https://flask.palletsprojects.com/en/3.0.x/" target="_blank">Flask</Link> (Python library)</td>
+                                <td class="px-4 py-3"><Link href="https://jinja.palletsprojects.com/en/3.1.x/" target="_blank">Jinja HTML templates</Link></td>
                             </tr>
-                            <tr class="bg-gray-50 text-black">
-                                <td class="px-4 py-2 border-b border-gray-300"><Link href="https://expressjs.com" class="table-link" target="_blank">Express.js</Link> (JavaScript library)</td>
-                                <td class="px-4 py-2 border-b border-gray-300">Interactive components using <Link href="https://vuejs.org/" class="table-link" target="_blank">Vue</Link> & <Link href="https://vitejs.dev/" class="table-link" target="_blank">Vite</Link> (more JavaScript)</td>
+                            <tr>
+                                <td class="px-4 py-3"><Link href="https://expressjs.com" target="_blank">Express.js</Link> (JavaScript library)</td>
+                                <td class="px-4 py-3">Interactive components using <Link href="https://vuejs.org/" target="_blank">Vue</Link> & <Link href="https://vitejs.dev/" target="_blank">Vite</Link></td>
                             </tr>
-                            <tr class="bg-white text-black">
-                                <td class="px-4 py-2 border-b border-gray-300" colspan="2"><Link href="https://nextjs.org/" class="table-link" target="_blank">Next.js</Link> (JavaScript backend + <Link href="https://react.dev/" class="table-link" target="_blank">React</Link> frontend components.)</td>
+                            <tr>
+                                <td class="px-4 py-3" colspan="2"><Link href="https://nextjs.org/" target="_blank">Next.js</Link> (JavaScript backend + <Link href="https://react.dev/" target="_blank">React</Link> frontend components.)</td>
                             </tr>
-                            <tr class="bg-gray-50 text-black">
-                                <td class="px-4 py-2 border-b border-gray-300">Serverless Functions, deployed to <Link href="https://vercel.com/" class="table-link" target="_blank">Vercel</Link> or <Link href="https://www.netlify.com/" class="table-link" target="_blank">Netlify</Link></td>
-                                <td class="px-4 py-2 border-b border-gray-300">Static site generation with a framework like <Link href="https://astro.build/" class="table-link" target="_blank">Astro</Link><br />(The <Link href="https://jamstack.org/" class="table-link" target="_blank">Jamstack</Link> approach)</td>
+                            <tr>
+                                <td class="px-4 py-3">Serverless Functions (<Link href="https://vercel.com/" target="_blank">Vercel</Link>/<Link href="https://www.netlify.com/" target="_blank">Netlify</Link>)</td>
+                                <td class="px-4 py-3">Static site generation with <Link href="https://astro.build/" target="_blank">Astro</Link> (The <Link href="https://jamstack.org/" target="_blank">Jamstack</Link>)</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <p><strong><Link href="https://flask.palletsprojects.com/en/3.0.x/" target="_blank">Flask with Jinja templates</Link></strong> is popular and highly recommended for fairly straightforward static websites.</p>
-                <p><strong><Link href="https://nextjs.org/" target="_blank">Next.js</Link></strong> is popular and highly recommended for somewhat more polished and complex user interfaces, if you're willing to deal with writing JavaScript for the frontend and backend at the same time.</p>
-                <h2 class="text-xl font-bold mt-6">Follow-up points:</h2>
-                <ul class="list-disc ml-6">
+
+                <div class="space-y-2 mt-4">
+                    <p><strong><Link href="https://flask.palletsprojects.com/en/3.0.x/" target="_blank">Flask with Jinja templates</Link></strong> is popular and highly recommended for fairly straightforward static websites.</p>
+                    <p><strong><Link href="https://nextjs.org/" target="_blank">Next.js</Link></strong> is popular and highly recommended for somewhat more polished and complex user interfaces.</p>
+                </div>
+
+                <h4 class="text-lg font-bold mt-6 mb-2">Follow-up points:</h4>
+                <ul class="list-disc ml-6 space-y-1 text-sm opacity-90">
                     <li>Yes, there are several zillion web development frameworks. We'll come up with one that leaves your sanity intact eventually.</li>
                     <li>Note that you need to download <Link href="https://nodejs.org/en" target="_blank">Node.js</Link> to run JavaScript outside of the browser just like you need to download <Link href="https://www.python.org/downloads/" target="_blank">Python</Link> to run Python.</li>
                     <li>Backend code can be written in any language that has a library that lets you communicate over a network. <Link href="https://github.com/yhirose/cpp-httplib" target="_blank">Even C++!</Link> But usually not C++.</li>
                     <li>You don't need backend code if you just stick frontend code in HTML files and open them with your web browser, but that does make it pretty much impossible to do things like persist data or communicate with an API over the Internet.</li>
-                    <li>Frontend code must be written in HTML, CSS, and JavaScript because those are the languages web browsers understand.
-                        <ul>
-                            <li style="font-size: 90%">Unless you're using a language that can be transformed into one of those languages, like <Link href="https://www.typescriptlang.org/" target="_blank">TypeScript</Link>.</li>
-                            <li style="font-size: 80%">Or you're compiling code from other languages into <Link href="https://webassembly.org/" target="_blank">WebAssembly</Link>. Look, I might be getting too detail-oriented here.</li>
-                        </ul>
-                    </li>
+                    <li>Frontend code must be written in HTML, CSS, and JavaScript because those are the languages web browsers understand.</li>
                 </ul>
-            </div>
-            <div class="my-6">
-                <h3 class="text-2xl font-bold mb-2">APIs</h3>
-                <img src="/technology_guide/api.jpg" alt="API illustration" class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
-                <p>API stands for Application Programming Interface and it is a very broad term that can refer to any agreed-upon system for enabling two computer programs or libraries to interact in a constructive way.</p>
-                <p>A lot of the time, though, an API is going to turn out to be a service that provides structured data over the Internet. A classic example is the <Link href="https://openweathermap.org/api" target="_blank">OpenWeather API</Link>. You can create an API call, which in this case requires you to identify yourself using a unique API key that you got by making an account with the service, and your program will get back data in some specified format like JSON or XML that informs it what the weather is, was, or is predicted to be in a certain area. It will handle a certain amount of requests for free, and then expect you to pay up for more. You can create a program that uses that data to do things like critique picnicking schedules.</p>
-                <p>This is essentially a backend web server (see the section above) that responds to network requests with raw data, instead of with client-side code that creates a graphical user interface. It is often useful to use an API to interact with fancy tools that you can't build yourself, like large language models (see the section below.)</p>
-                <p>Often, libraries exist that provide pre-programmed ways to request data from any given API, like <Link href="https://github.com/csparpa/pyowm" target="_blank">this</Link> Python library that lets you get weather data with simple function calls. Keep an eye out for libraries like this, because they can be helpful.</p>
+            </Card>
+
+            <!-- APIs -->
+            <Card padded>
+                <h3 class="text-2xl font-bold mb-4">APIs</h3>
+                <img src="/technology_guide/api.jpg" alt="API illustration" class="mx-auto my-6 rounded-md" style="max-width: 270px; width: 100%;" />
+                <p class="mb-4">API stands for Application Programming Interface and it is a very broad term that can refer to any agreed-upon system for enabling two computer programs or libraries to interact in a constructive way.</p>
+                <p class="mb-4">A lot of the time, though, an API is going to turn out to be a service that provides structured data over the Internet. A classic example is the <Link href="https://openweathermap.org/api" target="_blank">OpenWeather API</Link>. You can create an API call, which in this case requires you to identify yourself using a unique API key that you got by making an account with the service, and your program will get back data in some specified format like JSON or XML that informs it what the weather is, was, or is predicted to be in a certain area.</p>
+                <p class="mb-4">This is essentially a backend web server that responds to network requests with raw data, instead of with client-side code that creates a graphical user interface.</p>
+                <p class="mb-4">Often, libraries exist that provide pre-programmed ways to request data from any given API, like <Link href="https://github.com/csparpa/pyowm" target="_blank">this</Link> Python library that lets you get weather data with simple function calls.</p>
                 <p><Link href="https://github.com/public-api-lists/public-api-lists" target="_blank">Here is a big list I found that encompasses many web APIs.</Link></p>
-            </div>
-            <div class="my-6">
-                <h3 class="text-2xl font-bold mb-2">Artificial Intelligence</h3>
-                <img src="/technology_guide/ai.jpg" alt="AI illustration" class="mx-auto my-4" style="max-width: 270px; width: 100%;" />
-                <p>This term typically refers to technology that can make sense out of the ambiguities involved in natural phenomena like language or images in a probabilistic way.</p>
-                <h4 class="font-bold mt-4">Using existing tools via APIs</h4>
-                <ul class="list-disc ml-6">
-                    <li>As covered in the section above, APIs let you request data from other people's computers and use it in your own endeavors. The <Link href="https://platform.openai.com/docs/introduction" target="_blank">OpenAI API</Link>, which you can use to get freshly generated text or images or transcribed audio or various other things, is the basis of tons of products and projects. However, as such, it's not free.
-                        <ul>
-                            <li>If you haven't opened an OpenAI account before, you are granted $5 of free credit for signing up, which expires after three months; $5 doesn't sound like a lot, but if you look at <Link href="https://openai.com/pricing" target="_blank">OpenAI's pricing</Link>, it can go a fairly long way.</li>
+            </Card>
+
+            <!-- AI -->
+            <Card padded>
+                <h3 class="text-2xl font-bold mb-4">Artificial Intelligence</h3>
+                <img src="/technology_guide/ai.jpg" alt="AI illustration" class="mx-auto my-6 rounded-md" style="max-width: 270px; width: 100%;" />
+                <p class="mb-4">This term typically refers to technology that can make sense out of the ambiguities involved in natural phenomena like language or images in a probabilistic way.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Using existing tools via APIs</h4>
+                        <ul class="list-disc ml-6 space-y-2 text-sm opacity-90">
+                            <li><Link href="https://platform.openai.com/docs/introduction" target="_blank">OpenAI API</Link>: Text, images, audio. $5 free credit on sign-up.</li>
+                            <li><Link href="https://cloud.google.com/use-cases/free-ai-tools" target="_blank">Google AI Tools</Link>: Gemini 1.0 Pro is free (15 req/min).</li>
+                            <li><Link href="https://cohere.com/pricing" target="_blank">Cohere</Link>: Free trial access to their API.</li>
                         </ul>
-                    </li>
-                    <li>Google offers a lot more free credit for its <Link href="https://cloud.google.com/use-cases/free-ai-tools" target="_blank">AI tools</Link>, including <Link href="https://ai.google.dev/pricing" target="_blank">Gemini</Link>, its large language model. You can use Gemini 1.0 Pro for free at a maximum rate of 15 requests per minute - that won't let you deploy a product to hundreds of thousands of users, but it can be useful for a hackathon project here and there.</li>
-                    <li>Cohere, which has recently released a new large language model called Command R+ that has climbed the ranks on the Chatbot Arena Leaderboard, also <Link href="https://cohere.com/pricing" target="_blank">offers free trial access to their API</Link>.</li>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Using existing tools through libraries</h4>
+                        <ul class="list-disc ml-6 space-y-2 text-sm opacity-90">
+                            <li><Link href="https://github.com/ggerganov/llama.cpp" target="_blank">llama.cpp</Link>: Run LLMs locally.</li>
+                            <li><Link href="https://huggingface.co" target="_blank">Hugging Face</Link>: Vast array of models using the <Link href="https://github.com/huggingface/transformers" target="_blank">transformers</Link> library.</li>
+                            <li><Link href="https://www.ibm.com/topics/langchain" target="_blank">LangChain</Link>: Framework for building LLM apps.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">Training brand new models</h4>
+                <p class="mb-4 text-sm opacity-90">Although getting new machine learning models working takes quite a bit of ambition and patience, it is interesting to see how computers can turn data into the appearance of intelligence.</p>
+                <ul class="list-disc ml-6 space-y-2 text-sm opacity-90">
+                    <li><Link href="https://github.com/tensorflow/tensorflow" target="_blank">TensorFlow</Link>: Google's ML library.</li>
+                    <li><Link href="https://github.com/pytorch/pytorch" target="_blank">PyTorch</Link>: Popular in academia and industry.</li>
                 </ul>
-                <h4 class="font-bold mt-4">Using existing tools through libraries</h4>
-                <ul class="list-disc ml-6">
-                    <li>There are also many options for those ambitious enough to want to install a mechanical soul into their own actual computer. <Link href="https://github.com/ggerganov/llama.cpp" target="_blank">llama.cpp</Link> is a library that lets you run a variety of large language models locally for text completion and chat, although you'll be expected to have pretty decent specs to run the high-end ones.</li>
-                    <li><Link href="https://huggingface.co" target="_blank">Hugging Face</Link> provides a vast array of models for different use cases that involve handling text, images, and audio, most of which can be downloaded and utilised in a few lines of code using their <Link href="https://github.com/huggingface/transformers" target="_blank">transformers</Link> Python library. Again, you might have to be a little bit patient to get results on an ordinary computer, but it is more exciting to see things like speech recognition happen right there in front of you.</li>
-                    <li>Also, there exist higher-level libraries that can make use of local and non-local machine learning models, like <Link href="https://www.ibm.com/topics/langchain" target="_blank">LangChain</Link>, which is a popular framework for building applications around large language models using techniques like retrieval-augmented generation (RAG), where the AI is given the ability to skim through text that you provide to identify relevant information and answer your questions. (Basically.)</li>
-                </ul>
-                <h4 class="font-bold mt-4">Training brand new models</h4>
-                <p>Although getting new machine learning models working takes quite a bit of ambition and patience, it is interesting to see how computers can turn data into the appearance of intelligence, and there are two whole extremely popular Python libraries to do it with.</p>
-                <ul class="list-disc ml-6">
-                    <li><Link href="https://github.com/tensorflow/tensorflow" target="_blank">TensorFlow</Link> has more stars on Github so I'm putting it first. It is a machine learning library created by Google and later integrated with another library called Keras that provides a high-level interface to the problem of turning e.g. a gigantic number of pictures of birds into a machine learning model that can recognize species of bird. It also provides access to <Link href="https://www.tensorflow.org/hub" target="_blank">TensorFlow Hub</Link>, which provides many models pre-trained for things like image recognition, which can be customized to recognize specific kinds of images, like those of birds.</li>
-                    <li><Link href="https://github.com/pytorch/pytorch" target="_blank">PyTorch</Link> is used more by academics and is also perfectly capable of being used to create a bird recognizer. Although it seems to me like a lot of generalist usage of these libraries is centered around recognizing pictures of things, <Link href="https://www.youtube.com/watch?v=kCc8FmEb1nY" target="_blank">here</Link> is a YouTube video where a former OpenAI engineer uses PyTorch to build a GPT-style LLM, which is something.</li>
-                </ul>
-                <p>Note that <Link href="https://colab.research.google.com/" target="_blank">Google Colab</Link> and <Link href="https://www.kaggle.com/" target="_blank">Kaggle</Link> both provide <Link href="https://jupyter.org/" target="_blank">Jupyter Notebook</Link>-based Python environments that are commonly used to test out AI projects.</p>
-            </div>
-            <div class="my-6">
-                <h3 class="text-2xl font-bold mb-2">Apps!</h3>
-                <img src="/technology_guide/app.png" alt="App illustration" class="mx-auto my-4" style="max-width: 330px; width: 100%;" />
-                <p>Native, installable apps can benefit in speed, look, and feel from being built to run on a specific kind of device. There are usually relatively straightforward recommended ways to build apps for a specific platform; there aren't a huge number of different ideas for how to deploy things crowding into the field. How you create your app depends largely on where you want it to run, so let's go through the possibilities:</p>
-                <h4 class="font-bold mt-4">Windows</h4>
-                <p>If you want to create an app for Windows, you should probably use the Windows Presentation Foundation (WPF) framework. It lets you create apps using XAML, which is like HTML but for Windows, and C#. The simplest way to use WPF is to create a new project with it in <Link href="https://visualstudio.microsoft.com/vs/" target="_blank">Microsoft Visual Studio</Link>.</p>
-                <h4 class="font-bold mt-4">MacOS/iOS</h4>
-                <p>Apple's devices currently use the <Link href="https://developer.apple.com/xcode/swiftui/" target="_blank">SwiftUI</Link> framework for creating apps, which is built around the new-ish programming language called Swift.</p>
-                <h4 class="font-bold mt-4">Android</h4>
-                <p>Android apps are currently usually built in <Link href="https://developer.android.com/studio" target="_blank">Android Studio</Link> using a new-ish programming language called Kotlin.</p>
-                <h4 class="font-bold mt-4">Cross-Platform for Desktop</h4>
-                <p><Link href="https://www.qt.io/" target="_blank">Qt</Link> is a C++ library that is mostly used to make desktop apps for MacOS, Linux, and Windows by projects ranging from Maya to VLC Player. It also has a Python version.</p>
-                <h4 class="font-bold mt-4">Cross-Platform for Mobile</h4>
-                <p>Guess what, React Native is a popular way to create apps for phones that are not on the web but somehow still use JavaScript. God why.</p>
-                <h4 class="font-bold mt-4">Cross-platform in General</h4>
-                <p><Link href="https://flutter.dev/" target="_blank">Flutter</Link> is a new-ish framework created by Google that I've seen work well on desktop and on mobile.</p>
-            </div>
-            <h2 class="text-2xl font-bold mt-8">But:</h2>
-            <p>Don't let this list of technologies hold you back!</p>
-            <p>
-                The above is meant to be a survey of the most common ways to accomplish different tasks, not an exhaustive list of interesting bases for projects. You can ignore all of the above and build a GUI in <Link href="https://ziglang.org/" class="text-blue-600 underline" target="_blank">Zig</Link> or a command line app in Lisp, as long as it does something interesting and you learn something while doing it.
+                <p class="mt-4 text-sm">Note that <Link href="https://colab.research.google.com/" target="_blank">Google Colab</Link> and <Link href="https://www.kaggle.com/" target="_blank">Kaggle</Link> both provide <Link href="https://jupyter.org/" target="_blank">Jupyter Notebook</Link>-based Python environments.</p>
+            </Card>
+
+            <!-- Apps -->
+            <Card padded>
+                <h3 class="text-2xl font-bold mb-4">Apps!</h3>
+                <img src="/technology_guide/app.png" alt="App illustration" class="mx-auto my-6" style="max-width: 330px; width: 100%;" />
+                <p class="mb-6">Native, installable apps can benefit in speed, look, and feel from being built to run on a specific kind of device.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                        <h4 class="font-bold mb-1">Windows</h4>
+                        <p class="text-sm opacity-90">WPF (C# & XAML) in <Link href="https://visualstudio.microsoft.com/vs/" target="_blank">Visual Studio</Link>.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">MacOS/iOS</h4>
+                        <p class="text-sm opacity-90"><Link href="https://developer.apple.com/xcode/swiftui/" target="_blank">SwiftUI</Link> (Swift).</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">Android</h4>
+                        <p class="text-sm opacity-90"><Link href="https://developer.android.com/studio" target="_blank">Android Studio</Link> (Kotlin).</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">Desktop Cross-Platform</h4>
+                        <p class="text-sm opacity-90"><Link href="https://www.qt.io/" target="_blank">Qt</Link> (C++ or Python).</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">Mobile Cross-Platform</h4>
+                        <p class="text-sm opacity-90">React Native or <Link href="https://flutter.dev/" target="_blank">Flutter</Link>.</p>
+                    </div>
+                </div>
+            </Card>
+        </div>
+
+        <div class="mt-12 text-center max-w-2xl mx-auto">
+            <h2 class="text-2xl font-bold mb-4 text-secondary">But:</h2>
+            <p class="text-lg mb-4">Don't let this list of technologies hold you back!</p>
+            <p class="mb-4">
+                The above is meant to be a survey of the most common ways to accomplish different tasks, not an exhaustive list of interesting bases for projects. You can ignore all of the above and build a GUI in <Link href="https://ziglang.org/" target="_blank">Zig</Link> or a command line app in Lisp, as long as it does something interesting and you learn something while doing it.
             </p>
-            <p class="text-sm mt-4">
-                This content is released under the terms of <Link href="https://creativecommons.org/licenses/by/4.0/" class="text-blue-600 underline" target="_blank">CC-BY 4.0</Link>.
+            <p class="text-sm opacity-75">
+                This content is released under the terms of <Link href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0</Link>.
             </p>
         </div>
-    </Card>
+    </div>
 </div>
