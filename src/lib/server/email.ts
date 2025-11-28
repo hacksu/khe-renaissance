@@ -12,7 +12,6 @@ export const sendApprovalEmail = async (to: string) => {
             TextBody: "Congratulations! Your application to Kent Hack Enough has been approved. We look forward to seeing you there!",
             HtmlBody: "<p>Congratulations! Your application to <strong>Kent Hack Enough</strong> has been approved. We look forward to seeing you there!</p>",
         });
-        console.log(`Approval email sent to ${to}`);
     } catch (error: any) {
         console.error("Error sending approval email:", error);
         if (error.message) {
@@ -30,7 +29,6 @@ export const sendApprovalRevokedEmail = async (to: string) => {
             TextBody: "Your application to Kent Hack Enough has been updated, and your approval status has been revoked. Please re-submit your application if you wish to be considered again.",
             HtmlBody: "<p>Your application to <strong>Kent Hack Enough</strong> has been updated, and your approval status has been revoked. Please re-submit your application if you wish to be considered again.</p>",
         });
-        console.log(`Revocation email sent to ${to}`);
     } catch (error: any) {
         console.error("Error sending revocation email:", error);
         if (error.message) {
