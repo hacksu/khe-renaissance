@@ -40,8 +40,6 @@ const saveApplication = async (userId: string, form: FormData) => {
         currentApplication.mlhAuthorization !== !!formValues["mlh-authorization"] ||
         currentApplication.mlhEmails !== !!formValues["mlh-emails"];
 
-    console.log("Backend - Has changes:", hasChanges);
-
     // Update fields ONLY. Do not touch approved/submitted status here.
     const application = await prisma.application.update({
         data: {
@@ -99,7 +97,6 @@ export const actions: Actions = {
                 data: { approved: false }
             });
             await sendApprovalRevokedEmail(application.email);
-            console.log("Application unapproved due to changes. Email sent.");
         }
         // All other cases require no further action (fields are already saved by saveApplication)
     },
@@ -132,7 +129,6 @@ export const actions: Actions = {
                     approved: false // Always unapprove on unsubmit
                 }
             });
-            console.log("Application un-submitted and un-approved.");
         } else {
             // unaproved, submit: submit for approval.
             // (If approved and submit... shouldn't happen if UI is correct, but if it does, ensure submitted=true)
@@ -140,7 +136,6 @@ export const actions: Actions = {
                 where: { id: application.id },
                 data: { submitted: true }
             });
-            console.log("Application submitted.");
         }
     }
 };

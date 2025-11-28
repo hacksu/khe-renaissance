@@ -1,8 +1,10 @@
+```ts
 <script lang="ts">
     import { enhance } from "$app/forms";
     import Checkbox from "$components/form/Checkbox.svelte";
     import Link from "$components/Link.svelte";
     import { authClient } from "$lib/client";
+    import Modal from "../../components/Modal.svelte";
     import Button from "../../components/Button.svelte";
     import Card from "../../components/Card.svelte";
     import Input from "../../components/form/Input.svelte";
@@ -19,12 +21,15 @@
     // Store original application state for change detection
     let originalApplication = $state<any>(null);
     
+    // Modal state
+    let showWarningModal = $state(false);
+    let pendingSubmitter = $state<HTMLElement | null>(null);
+    let warningConfirmed = $state(false);
+    
     // Initialize original state on mount
     $effect(() => {
         if (application && !originalApplication) {
             originalApplication = { ...application };
-            console.log("Application loaded:", application);
-            console.log("Original application stored:", originalApplication);
         }
     });
     
@@ -61,7 +66,30 @@
         
         return false;
     }
+
+    function handleModalConfirm() {
+        warningConfirmed = true;
+        showWarningModal = false;
+        if (pendingSubmitter) {
+            // Re-trigger the click on the button that caused the submit
+            pendingSubmitter.click();
+        }
+    }
+
+    function handleModalCancel() {
+        showWarningModal = false;
+        pendingSubmitter = null;
+        warningConfirmed = false;
+    }
 </script>
+
+<Modal 
+    open={showWarningModal} 
+    title="Warning: Approval Will Be Revoked" 
+    message="Your application is currently approved. Making changes will revoke your approval and you will need to be re-approved. Do you want to continue?"
+    onConfirm={handleModalConfirm}
+    onCancel={handleModalCancel}
+/>
 
 <div class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 flex flex-col gap-4 justify-center text-black">
     <Card padded>
@@ -84,20 +112,23 @@
         </div>
     </Card>
     <Card padded>
-        <form enctype="multipart/form-data" method="POST" use:enhance={({ formData, cancel }) => {
+        <form enctype="multipart/form-data" method="POST" use:enhance={({ formData, cancel, submitter }) => {
             // Check for changes
             const hasChanges = hasFormChanges(formData);
             
             // If application is approved AND has changes, warn the user
-            if (application.approved && hasChanges) {
-                const confirmed = confirm(
-                    "Your application is currently approved. Making changes will revoke your approval and you will need to be re-approved. Do you want to continue?"
-                );
-                
-                if (!confirmed) {
-                    cancel();
-                    return;
-                }
+            // But ONLY if we haven't already confirmed the warning
+            if (application.approved && hasChanges && !warningConfirmed) {
+                cancel();
+                pendingSubmitter = submitter;
+                showWarningModal = true;
+                return;
+            }
+            
+            // Reset confirmation state after successful pass-through
+            if (warningConfirmed) {
+                warningConfirmed = false;
+                pendingSubmitter = null;
             }
 
             loading = true;
