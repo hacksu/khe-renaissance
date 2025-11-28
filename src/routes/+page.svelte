@@ -4,12 +4,14 @@
     import Landing from "../sections/Landing.svelte";
     import Map from "../sections/Map.svelte";
     import Sponsors from "../sections/Sponsors.svelte";
+    import Prizes from "../sections/Prizes.svelte";
 </script>
 
 <div>
     <Landing />
     <div class="w-full h-full flex flex-col gap-24 px-10 lg:px-56">
         <Header />
+        <Prizes />
         <FAQ />
         <Sponsors />
         <Map />
