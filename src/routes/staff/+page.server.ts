@@ -28,7 +28,7 @@ export const actions: Actions = {
         });
 
         if (newApprovedStatus) {
-            await sendApprovalEmail(application.user.email);
+            await sendApprovalEmail(application.email);
         }
     },
     checkIn: async ({ request }) => {
