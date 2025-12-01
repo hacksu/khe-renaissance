@@ -19,8 +19,7 @@
     ];
 </script>
 
-<div class="flex flex-col gap-12 text-black">
-    <!-- Header -->
+<div id="prizes" class="flex flex-col gap-12 text-black">
     <div class="text-center max-w-4xl mx-auto fade-in">
         <h1 class="font-bold text-5xl mb-6 text-secondary">Prizes</h1>
         <p class="text-xl mb-4 leading-relaxed">
@@ -28,7 +27,6 @@
         </p>
     </div>
 
-    <!-- Overall Winners -->
     <div class="fade-in" style="animation-delay: 0.1s;">
         <h2 class="text-4xl font-bold text-center mb-8 text-secondary">~ Overall Winners ~</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -48,7 +46,6 @@
         </div>
     </div>
 
-    <!-- Track Prizes -->
     <div class="fade-in" style="animation-delay: 0.4s;">
         <h2 class="text-4xl font-bold text-center mb-8 text-secondary">~ Track Winners ~</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -68,7 +65,6 @@
         </div>
     </div>
 
-    <!-- Special Prizes -->
     <div class="fade-in" style="animation-delay: 0.8s;">
         <h2 class="text-4xl font-bold text-center mb-8 text-secondary">~ Special Prizes ~</h2>
         <div class="max-w-md mx-auto fade-in" style="animation-delay: 0.9s;">
