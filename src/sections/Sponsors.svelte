@@ -19,6 +19,7 @@
 
   import OnePasswordLogo from "../assets/software/1password.svg";
   import BalsamiqLogo from "../assets/software/Balsamiq_2025_logo.svg";
+  import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png"
 
   const sponsors: Sponsor[] = [
     {
@@ -45,6 +46,11 @@
       image: EnbasisLogo,
       name: "Enbasis",
       url: "https://enbasis.com",
+    },
+    {
+      image: BoardAndBevyLogo,
+      name: "Board And Bevy",
+      url: "https://www.boardandbevy.com/",
     },
   ];
 
