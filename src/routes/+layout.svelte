@@ -5,8 +5,10 @@
     let { children } = $props();
 </script>
 
-<div class=" text-black bg-sand">
+<div class="text-black bg-sand">
     <Navbar />
-    {@render children()}
+    <div class="pt-24">
+        {@render children()}
+    </div>
     <Footer />
 </div>
