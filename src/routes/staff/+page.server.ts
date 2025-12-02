@@ -43,6 +43,19 @@ export const actions: Actions = {
             where: { id },
             data: { checkedIn: true }
         });
+    },
+    exportEmails: async () => {
+        const approvedApplications = await prisma.application.findMany({
+            where: { approved: true },
+            select: { email: true }
+        });
+
+        const emails = approvedApplications.map(app => app.email).join('\n');
+        
+        return {
+            success: true,
+            emails
+        };
     }
 };
 
@@ -50,9 +63,25 @@ export const load: PageServerLoad = async () => {
     const applications = await prisma.application.findMany({
         include: {
             user: true
-        }
+        },
+        orderBy: [
+            { approved: 'desc' },
+            { createdAt: 'desc' }
+        ]
     });
-    return { applications };
+
+    const totalApplications = applications.length;
+    const approvedApplications = applications.filter(app => app.approved).length;
+    const checkedInApplications = applications.filter(app => app.checkedIn).length;
+
+    return { 
+        applications,
+        stats: {
+            total: totalApplications,
+            approved: approvedApplications,
+            checkedIn: checkedInApplications
+        }
+    };
 };
 
 
