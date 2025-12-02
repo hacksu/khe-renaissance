@@ -15,6 +15,8 @@ services:
       retries: 5
     networks:
       - app_internal
+    volumes:
+      - postgres_data:/var/lib/postgresql
 
   app:
     depends_on:
@@ -28,6 +30,11 @@ services:
       - ORIGIN=http://0.0.0.0:3000
     networks:
       - app_internal
+    volumes:
+      - ./resumes:/app/resumes
 
 networks:
   app_internal:
+
+volumes:
+  postgres_data:
