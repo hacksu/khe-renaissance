@@ -19,6 +19,7 @@
 
   import OnePasswordLogo from "../assets/software/1password.svg";
   import BalsamiqLogo from "../assets/software/Balsamiq_2025_logo.svg";
+  import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png"
 
   const sponsors: Sponsor[] = [
     {
@@ -46,6 +47,11 @@
       name: "Enbasis",
       url: "https://enbasis.com",
     },
+    {
+      image: BoardAndBevyLogo,
+      name: "Board And Bevy",
+      url: "https://www.boardandbevy.com/",
+    },
   ];
 
   const softwareLicenses: SoftwareLisence[] = [
@@ -62,10 +68,10 @@
   ];
 </script>
 
-<div class="flex flex-col gap-24">
+<div id="sponsors" class="flex flex-col gap-24">
   <div class="flex flex-col gap-4">
     <h2 class="text-center text-3xl font-bold">Sponsors</h2>
-    <div id="sponsors" class="flex flex-wrap gap-8 justify-center items-center">
+    <div class="flex flex-wrap gap-8 justify-center items-center">
       {#each sponsors as { image, name, url }}
         <a class="flex justify-center items-center w-64 h-32 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" href={url} target="_blank">
           <img

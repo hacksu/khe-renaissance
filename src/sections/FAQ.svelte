@@ -8,7 +8,7 @@ import Link from "$components/Link.svelte";
 
 </script>
 
-<div class="flex flex-col gap-2 items-center">
+<div id="faq" class="flex flex-col gap-2 items-center">
     <div class="w-full">
         <Card>
             <Accordion>
