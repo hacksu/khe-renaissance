@@ -33,10 +33,9 @@
 	"dependencies": {
 		"@prisma/client": "^6.6.0",
 		"better-auth": "^1.2.10",
+		"googleapis": "^166.0.0",
 		"luxon": "^3.6.1",
 		"nanostores": "^1.0.1",
-		"postmark": "^4.0.5",
 		"svelte-adapter-bun": "^0.5.2"
 	}
 }
-

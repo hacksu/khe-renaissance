@@ -7,6 +7,12 @@ import { getRole } from "./external_roles";
 import { prisma } from "./prisma";
 
 export const auth = betterAuth({
+	basePath: "/api/auth",
+	trustedOrigins: [
+		"http://localhost:3000",
+		"https://khe.io",
+		"https://*.khe.io"
+	],
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
