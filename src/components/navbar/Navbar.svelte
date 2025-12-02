@@ -10,13 +10,6 @@
     let scrolled = $state(false);
     let mobileMenuOpen = $state(false);
 
-    // Debug logs
-    $effect(() => {
-        const pathname = $page.url.pathname;
-        const isHome = pathname === '/';
-        const paddingValue = isHome ? '0' : (scrolled ? '100px' : '0');
-        console.log('[Navbar Debug]', { pathname, isHome, scrolled, paddingValue });
-    });
 
     // Navigation links - some are pages, some are homepage sections, sorry, nothing I can do about that.
     const navLinks = [
