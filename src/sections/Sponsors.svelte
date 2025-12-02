@@ -30,7 +30,7 @@
     {
       image: DeptLogo,
       name: "Department of Computer Science",
-      url: "https://cs.kent.edu",
+      url: "https://www.kent.edu/cs",
     },
     {
       image: Bawlslogo,
