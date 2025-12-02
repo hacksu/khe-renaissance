@@ -12,10 +12,49 @@
     const searchedApplications = $derived(data.applications
         .filter(({ firstName, lastName }) => `${firstName} ${lastName}`.includes(term)))
 
+    async function exportEmails() {
+        const formData = new FormData();
+        const response = await fetch('?/exportEmails', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        if (result.type === 'success' && result.data?.emails) {
+            const blob = new Blob([result.data.emails], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `approved-emails-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    }
 </script>
 
 <div class="min-h-screen flex">
     <div class="p-2 mt-24 w-full h-full">
+        <div class="mb-4 p-4 bg-gray-100 rounded-lg flex justify-between items-center">
+            <div class="flex gap-8">
+                <div>
+                    <p class="text-sm text-gray-600">Total Applications</p>
+                    <p class="text-2xl font-bold">{data.stats.total}</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Approved</p>
+                    <p class="text-2xl font-bold text-green-600">{data.stats.approved}</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Checked In</p>
+                    <p class="text-2xl font-bold text-blue-600">{data.stats.checkedIn}</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Approval Rate</p>
+                    <p class="text-2xl font-bold">{data.stats.total > 0 ? Math.round((data.stats.approved / data.stats.total) * 100) : 0}%</p>
+                </div>
+            </div>
+            <Button onclick={exportEmails}>Export Approved Emails</Button>
+        </div>
         <Input placeholder="Search" bind:value={term} />
         <div class="mt-2 gap-2 flex flex-col sm:grid sm:grid-cols-3">
             {#each searchedApplications as application}
