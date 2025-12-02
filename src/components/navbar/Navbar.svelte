@@ -10,6 +10,7 @@
     let scrolled = $state(false);
     let mobileMenuOpen = $state(false);
 
+
     // Navigation links - some are pages, some are homepage sections, sorry, nothing I can do about that.
     const navLinks = [
         { href: "/", label: "Home", type: "page" },
@@ -21,7 +22,7 @@
 
     onMount(() => {
         const handleScroll = () => {
-            scrolled = window.scrollY > 50;
+            scrolled = window.scrollY > 100;
         };
 
         window.addEventListener("scroll", handleScroll);
@@ -52,7 +53,7 @@
     "
 >
     <div 
-        class="relative backdrop-blur-md bg-secondary bg-opacity-30 border border-white border-opacity-20 shadow-lg transition-all duration-500"
+        class="relative backdrop-blur-sm bg-white bg-opacity-30 border border-white border-opacity-20 shadow-lg transition-all duration-500"
         style="border-radius: inherit;"
     >
         <div 
@@ -61,11 +62,11 @@
         ></div>
 
         <div class="relative px-6 py-3 flex items-center justify-center gap-4">
-            <div class="hidden lg:flex items-center gap-1 flex-1 justify-end" style="padding-left: {scrolled ? '100px' : '0'};">
+            <div class="hidden lg:flex items-center gap-1 flex-1 justify-end" style="padding-left: {$page.url.pathname === '/' ? '0' : (scrolled ? '100px' : '0')};">
                 {#each navLinks.slice(1) as link}
                     <NavbarItem 
                         href={link.href}
-                        class="relative px-3 py-2 text-offwhite font-medium transition-all duration-300 hover:text-white group text-sm"
+                        class="relative px-3 py-2 text-gray-900 font-medium transition-all duration-300 hover:text-gray-600 group text-sm"
                     >
                         <span class="relative z-10">{link.label}</span>
                         
@@ -100,14 +101,14 @@
                 {#if $session.data}
                     <NavbarItem 
                         href="/profile" 
-                        class="px-4 py-2 text-offwhite font-medium bg-accent/20 hover:bg-accent/30 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/50 text-sm"
+                        class="px-4 py-2 text-gray-900 font-medium bg-accent/20 hover:bg-accent/30 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/50 text-sm"
                     >
                         {$session.data.user.email}
                     </NavbarItem>
                 {:else}
                     <NavbarItem 
                         href="/auth/login" 
-                        class="px-5 py-2 text-white font-semibold bg-accent rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/50 hover:scale-105 hover:bg-accent/80 text-sm"
+                        class="px-5 py-2 text-gray-900 font-semibold bg-accent rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/50 hover:scale-105 hover:bg-accent/80 text-sm"
                     >
                         Login
                     </NavbarItem>
@@ -153,7 +154,7 @@
                 {#each navLinks as link}
                     <NavbarItem 
                         href={link.href}
-                        class="block px-4 py-3 text-offwhite font-medium rounded-lg transition-all duration-300 hover:bg-white/10 hover:text-white hover:translate-x-2"
+                        class="block px-4 py-3 text-white font-medium rounded-lg transition-all duration-300 hover:bg-white/90 hover:translate-x-2"
                         onclick={() => mobileMenuOpen = false}
                     >
                         <span class="flex items-center gap-3">
@@ -171,7 +172,7 @@
                     href="https://kent-hack-enough-2026.devpost.com/" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    class="flex items-center gap-3 px-4 py-3 text-offwhite font-medium rounded-lg transition-all duration-300 hover:bg-white/10 hover:text-white"
+                    class="flex items-center gap-3 px-4 py-3 text-white font-medium rounded-lg transition-all duration-300 hover:bg-white/90"
                 >
                     <img src={devPost} width={24} alt="DevPost" />
                     Submit on DevPost
