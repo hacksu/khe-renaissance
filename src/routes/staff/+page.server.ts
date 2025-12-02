@@ -66,7 +66,7 @@ export const load: PageServerLoad = async () => {
         },
         orderBy: [
             { approved: 'desc' },
-            { createdAt: 'desc' }
+            { updatedAt: 'desc' }
         ]
     });
 
@@ -83,3 +83,5 @@ export const load: PageServerLoad = async () => {
         }
     };
 };
+
+

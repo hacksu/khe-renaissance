@@ -3,7 +3,7 @@
 
     const overallPrizes = [
         { place: "1st Place", item: "HyperX Cloud Alpha Wireless", color: "text-sand", delay: 0.2, detail: "Wireless Gaming Headset" },
-        { place: "2nd Place", item: "Redragon K732 Keyboard", color: "text-offwhite", delay: 0.3, detail: "Mechanical Gaming Keyboard" },
+        { place: "2nd Place", item: "Redragon K732 Keyboard", color: "text-offwhite", delay: 0.3 },
         { place: "3rd Place", item: "HyperX SoloCast", color: "text-primary", delay: 0.4, detail: "USB Condenser Microphone" }
     ];
 
