@@ -45,6 +45,23 @@ const REVOKED_EMAIL_HTML =
 <p>Thanks,<br>
 <strong>Kent Hack Enough 2026 Team</strong></p>`;
 
+const MANUALLY_REVOKED_EMAIL_TEXT =
+`Hi there,
+
+Due to a discrepancy in your application, we have had to revoke your approval for Kent Hack Enough 2026.
+Please review your application and make any necessary changes. Once updated, our staff will review your application again.
+
+If you have any questions, feel free to reach out.
+Thanks,
+Kent Hack Enough 2026 Team`;
+
+const MANUALLY_REVOKED_EMAIL_HTML =
+`<p>Hi there,</p>
+<p>Due to a discrepancy in your application, we have had to revoke your approval for <strong>Kent Hack Enough 2026</strong>.</p>
+<p>Please review your application and make any necessary changes. Once updated, our staff will review your application again.</p>
+<p>If you have any questions, feel free to reach out.</p>
+<p>Thanks,<br>
+<strong>Kent Hack Enough 2026 Team</strong></p>`;
 
 // Gmail API client for OAuth2
 const oauth2Client = new google.auth.OAuth2(
@@ -116,6 +133,31 @@ export const sendApprovalRevokedEmail = async (to: string) => {
     const subject = "Your KHE application approval has been revoked";
     const text = REVOKED_EMAIL_TEXT;
     const html = REVOKED_EMAIL_HTML;
+    
+    try {
+        const message = createEmailMessage(from, to, subject, text, html);
+        const encodedMessage = Buffer.from(message)
+            .toString("base64")
+            .replace(/\+/g, "-")
+            .replace(/\//g, "_")
+            .replace(/=+$/, "");
+        
+        await gmailClient.users.messages.send({
+            userId: "me",
+            requestBody: {
+                raw: encodedMessage,
+            },
+        });
+    } catch (error: any) {
+        // Silently fail - errors are handled by caller if needed
+    }
+};
+
+export const sendManualRevocationEmail = async (to: string) => {
+    const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
+    const subject = "Your KHE application approval has been revoked";
+    const text = MANUALLY_REVOKED_EMAIL_TEXT;
+    const html = MANUALLY_REVOKED_EMAIL_HTML;
     
     try {
         const message = createEmailMessage(from, to, subject, text, html);

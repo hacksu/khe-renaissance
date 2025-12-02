@@ -1,6 +1,6 @@
 import { prisma } from "$lib/server/prisma";
 import type { Actions, PageServerLoad } from "./$types";
-import { sendApprovalEmail } from "$lib/server/email";
+import { sendApprovalEmail, sendManualRevocationEmail } from "$lib/server/email";
 
 export const actions: Actions = {
     approve: async ({ request }) => {
@@ -24,11 +24,16 @@ export const actions: Actions = {
 
         await prisma.application.update({
             where: { id },
-            data: { approved: newApprovedStatus }
+            data: { 
+                approved: newApprovedStatus,
+                checkedIn: newApprovedStatus ? application.checkedIn : false
+            }
         });
 
         if (newApprovedStatus) {
             await sendApprovalEmail(application.email);
+        } else {
+            await sendManualRevocationEmail(application.email);
         }
     },
     checkIn: async ({ request }) => {

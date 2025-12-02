@@ -13,47 +13,51 @@
         .filter(({ firstName, lastName }) => `${firstName} ${lastName}`.includes(term)))
 
     async function exportEmails() {
-        const formData = new FormData();
-        const response = await fetch('?/exportEmails', {
-            method: 'POST',
-            body: formData
-        });
+        const approvedEmails = data.applications
+            .filter(app => app.approved)
+            .map(app => app.email)
+            .join('\n');
         
-        const result = await response.json();
-        if (result.type === 'success' && result.data?.emails) {
-            const blob = new Blob([result.data.emails], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `approved-emails-${new Date().toISOString().split('T')[0]}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
+        const blob = new Blob([approvedEmails], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `approved-emails-${new Date().toISOString().split('T')[0]}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
     }
 </script>
 
 <div class="min-h-screen flex">
     <div class="p-2 mt-24 w-full h-full">
-        <div class="mb-4 p-4 bg-gray-100 rounded-lg flex justify-between items-center">
-            <div class="flex gap-8">
-                <div>
-                    <p class="text-sm text-gray-600">Total Applications</p>
-                    <p class="text-2xl font-bold">{data.stats.total}</p>
+        <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">Application Statistics</h2>
+                <button 
+                    onclick={exportEmails}
+                    class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+                >
+                    Export Emails
+                </button>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Total</p>
+                    <p class="text-3xl font-bold text-gray-900">{data.stats.total}</p>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-600">Approved</p>
-                    <p class="text-2xl font-bold text-green-600">{data.stats.approved}</p>
+                <div class="text-center p-4 bg-green-50 rounded-lg">
+                    <p class="text-xs uppercase tracking-wide text-green-600 mb-1">Approved</p>
+                    <p class="text-3xl font-bold text-green-700">{data.stats.approved}</p>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-600">Checked In</p>
-                    <p class="text-2xl font-bold text-blue-600">{data.stats.checkedIn}</p>
+                <div class="text-center p-4 bg-blue-50 rounded-lg">
+                    <p class="text-xs uppercase tracking-wide text-blue-600 mb-1">Checked In</p>
+                    <p class="text-3xl font-bold text-blue-700">{data.stats.checkedIn}</p>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-600">Approval Rate</p>
-                    <p class="text-2xl font-bold">{data.stats.total > 0 ? Math.round((data.stats.approved / data.stats.total) * 100) : 0}%</p>
+                <div class="text-center p-4 bg-purple-50 rounded-lg">
+                    <p class="text-xs uppercase tracking-wide text-purple-600 mb-1">Approval Rate</p>
+                    <p class="text-3xl font-bold text-purple-700">{data.stats.total > 0 ? Math.round((data.stats.approved / data.stats.total) * 100) : 0}%</p>
                 </div>
             </div>
-            <Button onclick={exportEmails}>Export Approved Emails</Button>
         </div>
         <Input placeholder="Search" bind:value={term} />
         <div class="mt-2 gap-2 flex flex-col sm:grid sm:grid-cols-3">
@@ -95,7 +99,11 @@
                                     <input name="id" class="hidden" value={application.id} />
                                     {#if application.approved}
                                         <Button type="submit" formaction="?/approve">Un-approve</Button>
-                                        <Button type="submit" formaction="?/checkIn">Check In</Button>
+                                        {#if application.checkedIn}
+                                            <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">✓ Checked In</Button>
+                                        {:else}
+                                            <Button type="submit" formaction="?/checkIn">Check In</Button>
+                                        {/if}
                                     {:else}
                                         <Button type="submit" formaction="?/approve">Approve</Button>
                                     {/if}
