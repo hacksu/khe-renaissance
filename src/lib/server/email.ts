@@ -1,6 +1,56 @@
 import { env } from "$env/dynamic/private";
 import { google } from "googleapis";
 
+const APPROVAL_EMAIL_TEXT = 
+`Hi there,
+
+Great news! Your application to Kent Hack Enough 2026 has been approved.
+
+The event will take place on March 28–29th. More updates will be shared soon, so stay tuned.
+
+WHERE TO GO:
+Kent Hack Enough is graciously hosted in the Kent State Design Innovation Hub:
+
+Design Innovation Hub, Art Bldg, Kent, OH 44243
+
+The easiest parking space to use will be the Student Center Visitor Lot, the R19 Lot or the R7 Lot directly next to Satterfield. After parking, walk towards the visitor center, and head left between the buildings. The DI Hub is located near the Honors College.
+
+Map: https://map.concept3d.com/?id=568&tbh&sbh#!m/613809?lh/?ct/44418,5603
+
+In the meantime, be sure to join our community Discord:
+https://discord.gg/FHrw9AHtA8
+
+And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:
+https://kent-hack-enough-2026.devpost.com/
+
+If you have any questions at all, feel free to reach out. We are here to help.
+
+Thanks,
+Kent Hack Enough 2026 Team`;
+
+const APPROVAL_EMAIL_HTML = 
+`<p>Hi there,</p>
+<p>Great news! Your application to <strong>Kent Hack Enough 2026</strong> has been approved.</p>
+<p>The event will take place on <strong>March 28–29th</strong>. More updates will be shared soon, so stay tuned.</p>
+<p><strong>WHERE TO GO:</strong><br>
+Kent Hack Enough is graciously hosted in the Kent State Design Innovation Hub:</p>
+<p><strong>Design Innovation Hub, Art Bldg, Kent, OH 44243</strong></p>
+<p>The easiest parking space to use will be the Student Center Visitor Lot, the R19 Lot or the R7 Lot directly next to Satterfield. After parking, walk towards the visitor center, and head left between the buildings. The DI Hub is located near the Honors College.</p>
+<p><a href="https://map.concept3d.com/?id=568&tbh&sbh#!m/613809?lh/?ct/44418,5603">View Map</a></p>
+<p>In the meantime, be sure to join our community Discord:<br>
+<a href="https://discord.gg/FHrw9AHtA8">https://discord.gg/FHrw9AHtA8</a></p>
+<p>And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:<br>
+<a href="https://kent-hack-enough-2026.devpost.com/">https://kent-hack-enough-2026.devpost.com/</a></p>
+<p>If you have any questions at all, feel free to reach out. We are here to help.</p>
+<p>Thanks,<br>
+<strong>Kent Hack Enough 2026 Team</strong></p>`;
+
+const REVOKED_EMAIL_TEXT = 
+`Your application to Kent Hack Enough has been updated, and your approval status has been revoked. Please re-submit your application if you wish to be considered again.`;
+
+const REVOKED_EMAIL_HTML = 
+`<p>Your application to <strong>Kent Hack Enough</strong> has been updated, and your approval status has been revoked. Please re-submit your application if you wish to be considered again.</p>`;
+
 // Gmail API client for OAuth2
 const oauth2Client = new google.auth.OAuth2(
     env.GMAIL_CLIENT_ID,
@@ -44,8 +94,8 @@ const createEmailMessage = (from: string, to: string, subject: string, text: str
 export const sendApprovalEmail = async (to: string) => {
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
     const subject = "Your application to KHE has been approved!";
-    const text = "Congratulations! Your application to Kent Hack Enough has been approved. We look forward to seeing you there!";
-    const html = "<p>Congratulations! Your application to <strong>Kent Hack Enough</strong> has been approved. We look forward to seeing you there!</p>";
+    const text = APPROVAL_EMAIL_TEXT;
+    const html = APPROVAL_EMAIL_HTML;
     
     try {
         const message = createEmailMessage(from, to, subject, text, html);
@@ -69,8 +119,8 @@ export const sendApprovalEmail = async (to: string) => {
 export const sendApprovalRevokedEmail = async (to: string) => {
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
     const subject = "Your KHE application approval has been revoked";
-    const text = "Your application to Kent Hack Enough has been updated, and your approval status has been revoked. Please re-submit your application if you wish to be considered again.";
-    const html = "<p>Your application to <strong>Kent Hack Enough</strong> has been updated, and your approval status has been revoked. Please re-submit your application if you wish to be considered again.</p>";
+    const text = REVOKED_EMAIL_TEXT;
+    const html = REVOKED_EMAIL_HTML;
     
     try {
         const message = createEmailMessage(from, to, subject, text, html);
