@@ -31,6 +31,21 @@ const APPROVAL_EMAIL_HTML =
 <p>Thanks,<br>
 <strong>Kent Hack Enough 2026 Team</strong></p>`;
 
+const REVOKED_EMAIL_TEXT = 
+`Hi there, 
+You have made changes to your application and that has caused your approval to be revoked.
+Please wait for staff to review your application again. If you have any questions, feel free to reach out.
+Thanks,
+Kent Hack Enough 2026 Team`;
+
+const REVOKED_EMAIL_HTML =
+`<p>Hi there,</p>
+<p>You have made changes to your application and that has caused your approval to be revoked.</p>
+<p>Please wait for staff to review your application again. If you have any questions, feel free to reach out.</p>
+<p>Thanks,<br>
+<strong>Kent Hack Enough 2026 Team</strong></p>`;
+
+
 // Gmail API client for OAuth2
 const oauth2Client = new google.auth.OAuth2(
     env.GMAIL_CLIENT_ID,
