@@ -16,13 +16,28 @@
         const approvedEmails = data.applications
             .filter(app => app.approved)
             .map(app => app.email)
-            .join('\n');
+            .join(',\n');
         
-        const blob = new Blob([approvedEmails], { type: 'text/plain' });
+        const blob = new Blob([approvedEmails], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `approved-emails-${new Date().toISOString().split('T')[0]}.txt`;
+        a.download = `approved-emails-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    async function exportIdeas() {
+        const ideas = data.applications
+            .filter(app => app.projectIdea)
+            .map(app => `${app.firstName} ${app.lastName}: ${app.projectIdea}`)
+            .join('\n\n');
+        
+        const blob = new Blob([ideas], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `project-ideas-${new Date().toISOString().split('T')[0]}.txt`;
         a.click();
         URL.revokeObjectURL(url);
     }
@@ -39,6 +54,12 @@
                 >
                     Export Emails
                 </button>
+                <button 
+                    onclick={exportIdeas}
+                    class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
+                >
+                    Export Project Ideas
+                </button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="text-center p-4 bg-gray-50 rounded-lg">
@@ -54,8 +75,8 @@
                     <p class="text-3xl font-bold text-blue-700">{data.stats.checkedIn}</p>
                 </div>
                 <div class="text-center p-4 bg-purple-50 rounded-lg">
-                    <p class="text-xs uppercase tracking-wide text-purple-600 mb-1">Approval Rate</p>
-                    <p class="text-3xl font-bold text-purple-700">{data.stats.total > 0 ? Math.round((data.stats.approved / data.stats.total) * 100) : 0}%</p>
+                    <p class="text-xs uppercase tracking-wide text-purple-600 mb-1">Check In Rate</p>
+                    <p class="text-3xl font-bold text-purple-700">{data.stats.approved > 0 ? Math.round((data.stats.checkedIn / data.stats.approved) * 100) : 0}%</p>
                 </div>
             </div>
         </div>
@@ -83,22 +104,7 @@
                         <Divider>Portfolio</Divider>
                         <div class="flex justify-between"><p>Github:</p><p>{application.githubUrl}</p></div>
                         <div class="flex justify-between"><p>Personal:</p><p>{application.personalUrl}</p></div>
-                        <div class="flex justify-between items-center">
-                            <p>Resume:</p>
-                            <a 
-                                href={`/staff/resume/${application.id}`}
-                                target="_blank"
-                                class="text-blue-600 hover:text-blue-800 underline text-sm"
-                            >
-                                Download PDF
-                            </a>
-                        </div>
-                        {#if application.projectIdea}
-                            <div class="mt-2">
-                                <p class="text-sm font-semibold mb-1">Project Idea:</p>
-                                <p class="text-sm text-white whitespace-pre-wrap">{application.projectIdea}</p>
-                            </div>
-                        {/if}
+                        <div class="flex justify-between"><p>Resume:</p><p>{application.personalUrl}</p></div>
                         <Divider>MLH</Divider>
                         <div class="flex justify-between"><p>MLH Authorization:</p><p class={``}>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
                         <div class="flex justify-between"><p>MLH Code Of Conduct:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>

@@ -17,6 +17,10 @@
     const application = $derived(data.application);
     
     let loading = $state(false);
+    let mlhCodeChecked = $state(application?.mlhCodeOfConduct ?? false);
+    let mlhAuthChecked = $state(application?.mlhAuthorization ?? false);
+    
+    const canSubmit = $derived(mlhCodeChecked && mlhAuthChecked);
     
     // Store original application state for change detection
     let originalApplication = $state<any>(null);
@@ -222,15 +226,18 @@
                 <div>
                     <h3 class="font-bold">MLH</h3>
                     <div class="mt-2 flex flex-col sm:flex-row justify-between">
-                        <Checkbox name="mlh-code" checked={application.mlhCodeOfConduct}>I have read and agree to the <Link href="https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md">MLH Code of Conduct</Link>.</Checkbox>
-                        <Checkbox name="mlh-authorization" checked={application.mlhAuthorization}>I authorize you to share my application/registration information with Major League Hacking for event administration, ranking, and MLH administration in-line with the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>. I further agree to the terms of both the <Link href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md">MLH Contest Terms and Conditions</Link> and the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>.</Checkbox>
+                        <Checkbox name="mlh-code" checked={application.mlhCodeOfConduct} onchange={(e) => mlhCodeChecked = e.currentTarget.checked}>I have read and agree to the <Link href="https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md">MLH Code of Conduct</Link>. <span class="text-red-500">*</span></Checkbox>
+                        <Checkbox name="mlh-authorization" checked={application.mlhAuthorization} onchange={(e) => mlhAuthChecked = e.currentTarget.checked}>I authorize you to share my application/registration information with Major League Hacking for event administration, ranking, and MLH administration in-line with the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>. I further agree to the terms of both the <Link href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md">MLH Contest Terms and Conditions</Link> and the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>. <span class="text-red-500">*</span></Checkbox>
                         <Checkbox name="mlh-emails" checked={application.mlhEmails}>I authorize MLH to send me occasional emails about relevant events, career opportunities, and community announcements.</Checkbox>
                     </div>
+                    {#if !canSubmit}
+                        <p class="text-red-500 text-sm mt-2">* Required to submit application</p>
+                    {/if}
                 </div>
                 
                 <div class="flex justify-end gap-2">
                     <Button type="submit" formaction="?/save" disabled={loading}>Save</Button>
-                    <Button type="submit" formaction="?/submit" disabled={loading}>{application.submitted ? "Un-submit" : "Submit"}</Button>
+                    <Button type="submit" formaction="?/submit" disabled={loading || !canSubmit}>{application.submitted ? "Un-submit" : "Submit"}</Button>
                 </div>
             </div>
         </form>
