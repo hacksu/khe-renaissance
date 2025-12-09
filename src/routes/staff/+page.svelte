@@ -87,7 +87,7 @@
                         {#if application.projectIdea}
                             <div class="mt-2">
                                 <p class="text-sm font-semibold mb-1">Project Idea:</p>
-                                <p class="text-sm text-gray-700 whitespace-pre-wrap">{application.projectIdea}</p>
+                                <p class="text-sm text-white whitespace-pre-wrap">{application.projectIdea}</p>
                             </div>
                         {/if}
                         <Divider>MLH</Divider>
