@@ -47,6 +47,7 @@
             levelOfStudy: formData.get("level-of-study"),
             fieldOfStudy: formData.get("field-of-study"),
             githubUrl: formData.get("github-url"),
+            projectIdea: formData.get("project-idea"),
             age: parseInt(formData.get("age") as string) || 18,
             dietaryRestriction: formData.get("dietary-restriction"),
             gender: formData.get("gender"),
@@ -212,6 +213,7 @@
                 <div>
                     <h3 class="font-bold">Portfolio</h3>
                     <div class="flex flex-col gap-2">
+                        <Input label="What are you planning to build?" name="project-idea" value={application.projectIdea} />
                         <Input label="Personal Website" name="personal-url" value={application.personalUrl} />
                         <Input label="Github" name="github-url" value={application.githubUrl} />
                         <Input label="Resume" name="resume" type="file" accept=".pdf" />
