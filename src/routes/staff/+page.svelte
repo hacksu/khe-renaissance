@@ -104,7 +104,22 @@
                         <Divider>Portfolio</Divider>
                         <div class="flex justify-between"><p>Github:</p><p>{application.githubUrl}</p></div>
                         <div class="flex justify-between"><p>Personal:</p><p>{application.personalUrl}</p></div>
-                        <div class="flex justify-between"><p>Resume:</p><p>{application.personalUrl}</p></div>
+                         <div class="flex justify-between items-center">
+                            <p>Resume:</p>
+                            <a 
+                                href={`/staff/resume/${application.id}`}
+                                target="_blank"
+                                class="text-blue-600 hover:text-blue-800 underline text-sm"
+                            >
+                                Download PDF
+                            </a>
+                        </div>
+                        {#if application.projectIdea}
+                            <div class="mt-2">
+                                <p class="text-sm font-semibold mb-1">Project Idea:</p>
+                                <p class="text-sm text-white whitespace-pre-wrap">{application.projectIdea}</p>
+                            </div>
+                        {/if}
                         <Divider>MLH</Divider>
                         <div class="flex justify-between"><p>MLH Authorization:</p><p class={``}>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
                         <div class="flex justify-between"><p>MLH Code Of Conduct:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
