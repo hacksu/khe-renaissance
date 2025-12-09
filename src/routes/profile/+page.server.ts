@@ -160,6 +160,9 @@ export const load: PageServerLoad = async ({ request }) => {
     if (!application) {
         application = await prisma.application.create({ data: { userId } });
     }
+    const sortedSchools = [...schools].sort((a, b) => 
+        a.localeCompare(b)
+    );
 
-    return { schools, application, countries };
+    return { schools: sortedSchools, application, countries };
 };
