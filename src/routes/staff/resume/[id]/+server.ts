@@ -4,7 +4,6 @@ import { Role } from "$lib/server/external_roles";
 import { error } from "@sveltejs/kit";
 import type { RequestEvent } from "@sveltejs/kit";
 import fs from "fs/promises";
-import { join } from "path";
 
 export async function GET({ params, request }: RequestEvent) {
     // Check authentication and staff role
@@ -33,9 +32,9 @@ export async function GET({ params, request }: RequestEvent) {
     }
 
     // Construct file path
-    // In production, resumes are stored at /app/resumes (from Docker volume)
-    // In development, they're at ./resumes relative to project root
-    const resumePath = join(process.cwd(), "resumes", `${applicationId}.pdf`);
+    // Use the same relative path as when saving (./resumes/${applicationId}.pdf)
+    // This ensures consistency with previously uploaded resumes
+    const resumePath = `./resumes/${applicationId}.pdf`;
 
     try {
         // Check if file exists
