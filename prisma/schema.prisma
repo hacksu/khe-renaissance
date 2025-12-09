@@ -89,6 +89,7 @@ model Application {
   fieldOfStudy       String   @default("")
   githubUrl          String   @default("")
   personalUrl        String   @default("")
+  projectIdea        String   @default("")
   gender             String   @default("")
   pronouns           String   @default("")
   dietaryRestriction String   @default("")

@@ -31,6 +31,7 @@ const saveApplication = async (userId: string, form: FormData) => {
         currentApplication.levelOfStudy !== formValues["level-of-study"] ||
         currentApplication.fieldOfStudy !== formValues["field-of-study"] ||
         currentApplication.githubUrl !== formValues["github-url"] ||
+        currentApplication.projectIdea !== formValues["project-idea"] ||
         currentApplication.age !== Utils.toNumber(formValues["age"]) ||
         currentApplication.dietaryRestriction !== formValues["dietary-restriction"] ||
         currentApplication.gender !== formValues["gender"] ||
@@ -52,6 +53,7 @@ const saveApplication = async (userId: string, form: FormData) => {
             levelOfStudy: formValues["level-of-study"],
             fieldOfStudy: formValues["field-of-study"],
             githubUrl: formValues["github-url"],
+            projectIdea: formValues["project-idea"] ?? "",
             age: Utils.toNumber(formValues["age"]),
             dietaryRestriction: formValues["dietary-restriction"],
             gender: formValues["gender"],
