@@ -16,6 +16,7 @@
   import KSULogo from "../assets/sponsors/ksu-logo.svg";
   import BentTreeLogo from "../assets/sponsors/bent_tree_coffee_roasters_logo.png";
   import EnbasisLogo from "../assets/sponsors/enbasis_inc_logo.jpg";
+  import HacKSULogo from "../assets/sponsors/hacksu_logo.svg";
 
   import OnePasswordLogo from "../assets/software/1password.svg";
   import BalsamiqLogo from "../assets/software/Balsamiq_2025_logo.svg";
@@ -51,6 +52,11 @@
       image: BoardAndBevyLogo,
       name: "Board And Bevy",
       url: "https://www.boardandbevy.com/",
+    },
+    {
+      image: HacKSULogo,
+      name: "HacKSU",
+      url: "https://hacksu.com",
     },
   ];
 
