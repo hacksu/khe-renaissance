@@ -9,8 +9,7 @@
         <p class="text-4xl">2026</p>
     </div>
     <div class="flex flex-col gap-20 lg:flex-row">
-        <img class="w-[67%] h-auto" src={Dino} alt="Dinosaur" />
-        <div class="flex flex-col text-wrap gap-10 lg:text-right justify-center items-center lg:items-end">
+        <div class="flex flex-col text-wrap gap-10 lg:text-left justify-center items-center lg:items-start">
             <p class="text-3xl">
                 Kent Hack Enough is looking to the past this year, with our theme: <Highlight>Futuristic Cavemen</Highlight>. Wondering what that is? We are too! 
                 Come build with us and let's find out together.
@@ -21,5 +20,6 @@
                 weekend making something great with us!
             </p>
         </div>
+        <img class="w-[67%] h-auto self-end -scale-x-100 transition-transform hover:rotate-[20deg]" src={Dino} alt="Dinosaur" />
     </div>
 </div>
