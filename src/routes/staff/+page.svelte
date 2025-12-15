@@ -37,12 +37,13 @@
         if (emailExportFilter === 'approved') {
             emailsToExport = emailsToExport.filter(app => app.approved);
         } else if (emailExportFilter === 'submitted') {
-            emailsToExport = emailsToExport.filter(app => app.submitted);
+            emailsToExport = emailsToExport.filter(app => app.submitted && !app.approved);
         } else if (emailExportFilter === 'not-submitted') {
             emailsToExport = emailsToExport.filter(app => !app.submitted);
         }
         
         const emails = emailsToExport
+            .filter(app => app.email && app.email.trim() !== '')
             .map(app => app.email)
             .join(',\n');
 
