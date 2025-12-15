@@ -13,7 +13,12 @@
     
     const searchedApplications = $derived(
         data.applications
-            .filter(({ firstName, lastName }) => `${firstName} ${lastName}`.includes(term))
+            .filter(app => {
+                const fullName = `${app.firstName} ${app.lastName}`.toLowerCase();
+                const email = app.email.toLowerCase();
+                const searchTerm = term.toLowerCase();
+                return fullName.includes(searchTerm) || email.includes(searchTerm);
+            })
             .filter(app => {
                 if (statusFilter === 'checked-in') return app.checkedIn;
                 if (statusFilter === 'approved') return app.approved && !app.checkedIn;
@@ -29,8 +34,8 @@
             .map(app => app.email)
             .join(',\n');
 
-        console.log("Approved Emails:");
-        console.log(approvedEmails);
+        //console.log("Approved Emails:");
+        //console.log(approvedEmails);
         
         const blob = new Blob([approvedEmails], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
@@ -49,8 +54,8 @@
             return;
         }
 
-        console.log("Applications with ideas:");
-        console.log(applicationsWithIdeas);
+        //console.log("Applications with ideas:");
+        //console.log(applicationsWithIdeas);
         
         const ideas = applicationsWithIdeas
             .map(app => `"${app.projectIdea.replace(/"/g, '""')}"`)
@@ -105,7 +110,7 @@
         </div>
         
         <div class="mb-4 flex gap-2 items-center">
-            <Input placeholder="Search by name" bind:value={term} class="flex-1" />
+            <Input placeholder="Search by name or email" bind:value={term} class="flex-1" />
         </div>
         
         <div class="mb-4 flex gap-2 flex-wrap">
@@ -113,25 +118,25 @@
                 onclick={() => statusFilter = 'all'}
                 class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
             >
-                All ({data.stats.total})
+                All
             </button>
             <button 
                 onclick={() => statusFilter = 'checked-in'}
                 class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'checked-in' ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}"
             >
-                Checked In ({data.stats.checkedIn})
+                Checked In
             </button>
             <button 
                 onclick={() => statusFilter = 'approved'}
                 class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'approved' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}"
             >
-                Approved ({data.stats.approved - data.stats.checkedIn})
+                Approved
             </button>
             <button 
                 onclick={() => statusFilter = 'submitted'}
                 class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'submitted' ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}"
             >
-                Submitted ({data.stats.total - data.stats.approved})
+                Submitted
             </button>
             <button 
                 onclick={() => statusFilter = 'not-submitted'}
