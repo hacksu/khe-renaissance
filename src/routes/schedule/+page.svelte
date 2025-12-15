@@ -18,7 +18,7 @@
         { day: "Saturday", time: "10:00 PM", event: "Mini Event: Wiki Speedrun", type: "event" },
         { day: "Saturday", time: "12:00 AM", event: "Initial Devpost Checkpoint", type: "milestone" },
         { day: "Saturday", time: "12:00 AM", event: "Midnight Snack", type: "meal" },
-        { day: "Saturday", time: "2:00 AM", event: "Mini Event: YouTube Deep Dive", type: "event" },
+        { day: "Saturday", time: "3:00 AM", event: "Mini Event: YouTube Deep Dive", type: "event" },
         
         // Sunday
         { day: "Sunday", time: "9:00 AM", event: "Breakfast & Coffee", type: "meal" },
