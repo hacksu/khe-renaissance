@@ -11,7 +11,7 @@
 
     let term = $state("");
     let statusFilter = $state<'all' | 'checked-in' | 'approved' | 'submitted' | 'not-submitted'>('all');
-    let emailExportFilter = $state<'all' | 'checked-in' | 'approved' | 'submitted'>('approved');
+    let emailExportFilter = $state<'all' | 'approved' | 'submitted' | 'not-submitted'>('all');
     
     const searchedApplications = $derived(
         data.applications
@@ -34,12 +34,12 @@
         let emailsToExport = data.applications;
         
         // Filter based on selected export filter
-        if (emailExportFilter === 'checked-in') {
-            emailsToExport = emailsToExport.filter(app => app.checkedIn);
-        } else if (emailExportFilter === 'approved') {
+        if (emailExportFilter === 'approved') {
             emailsToExport = emailsToExport.filter(app => app.approved);
         } else if (emailExportFilter === 'submitted') {
             emailsToExport = emailsToExport.filter(app => app.submitted);
+        } else if (emailExportFilter === 'not-submitted') {
+            emailsToExport = emailsToExport.filter(app => !app.submitted);
         }
         
         const emails = emailsToExport
@@ -97,8 +97,8 @@
                     >
                         <option value="all">All</option>
                         <option value="approved">Approved</option>
-                        <option value="checked-in">Checked In</option>
                         <option value="submitted">Submitted</option>
+                        <option value="not-submitted">Not Submitted</option>
                     </select>
                     <button 
                         onclick={exportEmails}
