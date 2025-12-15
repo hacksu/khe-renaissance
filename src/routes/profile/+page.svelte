@@ -204,7 +204,7 @@
                             <option>Other</option>
                         </Select>
                     </div>
-                    <Select label="Dietary Restriction" name="dietary-restriction" value={application.dietaryRestriction} required>
+                    <Select label="Dietary Restriction" name="dietary-restriction" value={application.dietaryRestriction}>
                         <option value="">None</option>
                         <option>Vegetarian</option>
                         <option>Vegan</option>
