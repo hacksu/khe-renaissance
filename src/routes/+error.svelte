@@ -3,7 +3,7 @@
     import { goto } from "$app/navigation";
     import Card from "../components/Card.svelte";
     import Button from "../components/Button.svelte";
-    import Dino from "../assets/dino.svg";
+    import Meteor from "../assets/meteor.svg";
     
     type Props = {
         error?: Error & { status?: number; message?: string };
@@ -52,11 +52,11 @@
                     </h1>
                 </div>
                 
-                <!-- Dino Illustration -->
+                <!-- Meteor Illustration -->
                 <div class="my-4">
                     <img 
-                        src={Dino} 
-                        alt="Dinosaur" 
+                        src={Meteor} 
+                        alt="Meteor" 
                         class="w-32 md:w-48 h-auto -scale-x-100 transition-transform hover:rotate-[20deg]"
                     />
                 </div>
