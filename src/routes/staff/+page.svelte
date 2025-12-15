@@ -132,13 +132,7 @@
                     <p class="text-3xl font-bold text-purple-700">{data.stats.approved > 0 ? Math.round((data.stats.checkedIn / data.stats.approved) * 100) : 0}%</p>
                 </div>
             </div>
-        </div>
-        
-        <div class="mb-4 flex gap-2 items-center">
-            <Input placeholder="Search by name or email" bind:value={term} class="flex-1" />
-        </div>
-        
-        <div class="mb-4 flex gap-2 flex-wrap">
+            <div class="mb-4 flex gap-2 flex-wrap">
             <button 
                 onclick={() => statusFilter = 'all'}
                 class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
@@ -170,6 +164,12 @@
                 Not Submitted
             </button>
         </div>
+        </div>
+        
+        <div class="mb-4 flex gap-2 items-center">
+            <Input placeholder="Search by name or email" bind:value={term} class="flex-1" />
+        </div>
+        
         
         <div class="mt-2 gap-2 flex flex-col sm:grid sm:grid-cols-3">
             {#each searchedApplications as application}
