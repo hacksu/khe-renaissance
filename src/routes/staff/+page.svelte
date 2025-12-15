@@ -9,14 +9,28 @@
     const { data } = $props();
 
     let term = $state("");
-    const searchedApplications = $derived(data.applications
-        .filter(({ firstName, lastName }) => `${firstName} ${lastName}`.includes(term)))
+    let statusFilter = $state<'all' | 'checked-in' | 'approved' | 'submitted' | 'not-submitted'>('all');
+    
+    const searchedApplications = $derived(
+        data.applications
+            .filter(({ firstName, lastName }) => `${firstName} ${lastName}`.includes(term))
+            .filter(app => {
+                if (statusFilter === 'checked-in') return app.checkedIn;
+                if (statusFilter === 'approved') return app.approved && !app.checkedIn;
+                if (statusFilter === 'submitted') return app.submitted && !app.approved;
+                if (statusFilter === 'not-submitted') return !app.submitted;
+                return true;
+            })
+    )
 
     async function exportEmails() {
         const approvedEmails = data.applications
             .filter(app => app.approved)
             .map(app => app.email)
             .join(',\n');
+
+        console.log("Approved Emails:");
+        console.log(approvedEmails);
         
         const blob = new Blob([approvedEmails], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
@@ -34,9 +48,12 @@
             alert('No project ideas to export');
             return;
         }
+
+        console.log("Applications with ideas:");
+        console.log(applicationsWithIdeas);
         
         const ideas = applicationsWithIdeas
-            .map(app => `"${app.firstName} ${app.lastName}","${app.projectIdea.replace(/"/g, '""')}"`)
+            .map(app => `"${app.projectIdea.replace(/"/g, '""')}"`)
             .join('\n');
         
         const blob = new Blob([ideas], { type: 'text/csv' });
@@ -86,7 +103,44 @@
                 </div>
             </div>
         </div>
-        <Input placeholder="Search" bind:value={term} />
+        
+        <div class="mb-4 flex gap-2 items-center">
+            <Input placeholder="Search by name" bind:value={term} class="flex-1" />
+        </div>
+        
+        <div class="mb-4 flex gap-2 flex-wrap">
+            <button 
+                onclick={() => statusFilter = 'all'}
+                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
+            >
+                All ({data.stats.total})
+            </button>
+            <button 
+                onclick={() => statusFilter = 'checked-in'}
+                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'checked-in' ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}"
+            >
+                Checked In ({data.stats.checkedIn})
+            </button>
+            <button 
+                onclick={() => statusFilter = 'approved'}
+                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'approved' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}"
+            >
+                Approved ({data.stats.approved - data.stats.checkedIn})
+            </button>
+            <button 
+                onclick={() => statusFilter = 'submitted'}
+                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'submitted' ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}"
+            >
+                Submitted ({data.stats.total - data.stats.approved})
+            </button>
+            <button 
+                onclick={() => statusFilter = 'not-submitted'}
+                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'not-submitted' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-700 hover:bg-red-200'}"
+            >
+                Not Submitted
+            </button>
+        </div>
+        
         <div class="mt-2 gap-2 flex flex-col sm:grid sm:grid-cols-3">
             {#each searchedApplications as application}
                 <Card>
