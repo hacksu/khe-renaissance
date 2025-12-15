@@ -146,15 +146,15 @@
                 <div>
                     <h3 class="font-bold">Personal</h3>
                     <div class="flex gap-2 flex-col sm:flex-row">
-                        <Input label="First Name" name="first-name" value={application.firstName} />
-                        <Input label="Last Name" name="last-name" value={application.lastName} />
+                        <Input label="First Name" name="first-name" value={application.firstName} required />
+                        <Input label="Last Name" name="last-name" value={application.lastName} required />
                         <Input label="Age" name="age" type="number" value={application.age} />
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Input label="Phone Number" name="phone-number" type="tel" value={application.phoneNumber} />
+                        <Input label="Phone Number" name="phone-number" type="tel" value={application.phoneNumber} required />
                         <Input label="Email" name="email" type="email" value={application.email || user?.email} />
                     </div>
-                    <Select label="Country of Residence" name="country-of-residence" value={application.countryOfResidence}>
+                    <Select label="Country of Residence" name="country-of-residence" value={application.countryOfResidence} required>
                         {#each Object.entries(data.countries) as [code, name]}
                             <option value={code}>{name}</option>
                         {/each}
@@ -163,7 +163,7 @@
                 <div>
                     <h3 class="font-bold">Education</h3>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Select label="School" name="school" value={application.school}>
+                        <Select label="School" name="school" value={application.school} required>
                             {#each data.schools as school}
                                 <option>{school}</option>
                             {/each}
@@ -181,20 +181,20 @@
                             <option>I'm not currently a student</option>
                             <option>Prefer not to answer</option>
                         </Select>
-                        <Input label="Major" name="field-of-study" value={application.fieldOfStudy} />
+                        <Input label="Major" name="field-of-study" value={application.fieldOfStudy} required />
                     </div>
                 </div>
                 <div>
                     <h3 class="font-bold">Demographics</h3>
                     <div class="flex gap-2 flex-col sm:flex-row">
-                        <Select label="Gender" name="gender" value={application.gender}>
+                        <Select label="Gender" name="gender" value={application.gender} required>
                             <option>Man</option>
                             <option>Woman</option>
                             <option>Non-Binary</option>
                             <option>Prefer to self-describe</option>
                             <option>Prefer Not to Answer</option>
                         </Select>
-                        <Select label="Pronouns" name="pronouns" value={application.pronouns}>
+                        <Select label="Pronouns" name="pronouns" value={application.pronouns} required>
                             <option>She/Her</option>
                             <option>He/Him</option>
                             <option>They/Them</option>
@@ -204,7 +204,7 @@
                             <option>Other</option>
                         </Select>
                     </div>
-                    <Select label="Dietary Restriction" name="dietary-restriction" value={application.dietaryRestriction}>
+                    <Select label="Dietary Restriction" name="dietary-restriction" value={application.dietaryRestriction} required>
                         <option value="">None</option>
                         <option>Vegetarian</option>
                         <option>Vegan</option>
