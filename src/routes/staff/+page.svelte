@@ -43,8 +43,8 @@
         }
         
         const emails = emailsToExport
-            .filter(app => app.email && app.email.trim() !== '')
-            .map(app => app.email)
+            .map(app => app.email && app.email.trim() !== '' ? app.email : app.user.email)
+            .filter(email => email && email.trim() !== '')
             .join(',\n');
 
         if (emails.length === 0) {
