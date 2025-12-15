@@ -36,14 +36,14 @@
         }
         
         const ideas = applicationsWithIdeas
-            .map(app => `${app.firstName} ${app.lastName}: ${app.projectIdea}`)
-            .join('\n\n');
+            .map(app => `"${app.firstName} ${app.lastName}","${app.projectIdea.replace(/"/g, '""')}"`)
+            .join('\n');
         
-        const blob = new Blob([ideas], { type: 'text/plain' });
+        const blob = new Blob([ideas], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `project-ideas-${new Date().toISOString().split('T')[0]}.txt`;
+        a.download = `project-ideas-${new Date().toISOString().split('T')[0]}.csv`;
         a.click();
         URL.revokeObjectURL(url);
     }
