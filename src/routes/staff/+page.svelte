@@ -48,19 +48,14 @@
             return;
         }
         
-        const blob = new Blob([ideas], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
+        // Use data URI instead of blob
+        const dataStr = 'data:text/plain;charset=utf-8,' + encodeURIComponent(ideas);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = dataStr;
         a.download = `project-ideas-${new Date().toISOString().split('T')[0]}.txt`;
         document.body.appendChild(a);
         a.click();
-        
-        // Clean up after a delay to ensure download starts
-        setTimeout(() => {
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }, 100);
+        document.body.removeChild(a);
     }
 </script>
 
