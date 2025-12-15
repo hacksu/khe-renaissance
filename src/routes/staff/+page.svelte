@@ -5,11 +5,13 @@
     import Divider from "$components/Divider.svelte";
     import Input from "$components/form/Input.svelte";
     import { Utils } from "$lib/util";
+    import { dropbox } from "better-auth/social-providers";
 
     const { data } = $props();
 
     let term = $state("");
     let statusFilter = $state<'all' | 'checked-in' | 'approved' | 'submitted' | 'not-submitted'>('all');
+    let emailExportFilter = $state<'all' | 'checked-in' | 'approved' | 'submitted'>('approved');
     
     const searchedApplications = $derived(
         data.applications
@@ -29,19 +31,31 @@
     )
 
     async function exportEmails() {
-        const approvedEmails = data.applications
-            .filter(app => app.approved)
+        let emailsToExport = data.applications;
+        
+        // Filter based on selected export filter
+        if (emailExportFilter === 'checked-in') {
+            emailsToExport = emailsToExport.filter(app => app.checkedIn);
+        } else if (emailExportFilter === 'approved') {
+            emailsToExport = emailsToExport.filter(app => app.approved);
+        } else if (emailExportFilter === 'submitted') {
+            emailsToExport = emailsToExport.filter(app => app.submitted);
+        }
+        
+        const emails = emailsToExport
             .map(app => app.email)
             .join(',\n');
 
-        //console.log("Approved Emails:");
-        //console.log(approvedEmails);
+        if (emails.length === 0) {
+            alert(`No emails found for ${emailExportFilter} applications`);
+            return;
+        }
         
-        const blob = new Blob([approvedEmails], { type: 'text/csv' });
+        const blob = new Blob([emails], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `approved-emails-${new Date().toISOString().split('T')[0]}.csv`;
+        a.download = `${emailExportFilter}-emails-${new Date().toISOString().split('T')[0]}.csv`;
         a.click();
         URL.revokeObjectURL(url);
     }
@@ -76,18 +90,29 @@
         <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-semibold text-gray-800">Application Statistics</h2>
-                <button 
-                    onclick={exportEmails}
-                    class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
-                >
-                    Export Emails
-                </button>
-                <button 
-                    onclick={exportIdeas}
-                    class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
-                >
-                    Export Project Ideas
-                </button>
+                <div class="flex gap-2 items-center">
+                    <select 
+                        bind:value={emailExportFilter}
+                        class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="all">All</option>
+                        <option value="approved">Approved</option>
+                        <option value="checked-in">Checked In</option>
+                        <option value="submitted">Submitted</option>
+                    </select>
+                    <button 
+                        onclick={exportEmails}
+                        class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                        Export Emails
+                    </button>
+                    <button 
+                        onclick={exportIdeas}
+                        class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
+                    >
+                        Export Project Ideas
+                    </button>
+                </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="text-center p-4 bg-gray-50 rounded-lg">
