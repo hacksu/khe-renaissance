@@ -28,34 +28,24 @@
     }
 
     async function exportIdeas() {
-        console.log('Export ideas clicked');
-        console.log('Total applications:', data.applications.length);
-        
         const applicationsWithIdeas = data.applications.filter(app => app.projectIdea);
-        console.log('Applications with project ideas:', applicationsWithIdeas.length);
-        console.log('Sample ideas:', applicationsWithIdeas.slice(0, 3));
+        
+        if (applicationsWithIdeas.length === 0) {
+            alert('No project ideas to export');
+            return;
+        }
         
         const ideas = applicationsWithIdeas
             .map(app => `${app.firstName} ${app.lastName}: ${app.projectIdea}`)
             .join('\n\n');
         
-        console.log('Generated ideas text length:', ideas.length);
-        console.log('First 200 chars:', ideas.substring(0, 200));
-        
-        if (ideas.length === 0) {
-            console.log('No project ideas found!');
-            alert('No project ideas to export');
-            return;
-        }
-        
-        // Use data URI instead of blob
-        const dataStr = 'data:text/plain;charset=utf-8,' + encodeURIComponent(ideas);
+        const blob = new Blob([ideas], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = dataStr;
+        a.href = url;
         a.download = `project-ideas-${new Date().toISOString().split('T')[0]}.txt`;
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 </script>
 
