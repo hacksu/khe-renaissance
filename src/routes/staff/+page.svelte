@@ -133,37 +133,39 @@
                     <p class="text-3xl font-bold text-purple-700">{data.stats.approved > 0 ? Math.round((data.stats.checkedIn / data.stats.approved) * 100) : 0}%</p>
                 </div>
             </div>
-            <div class="mb-4 flex gap-2 flex-wrap">
-            <button 
-                onclick={() => statusFilter = 'all'}
-                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
-            >
-                All
-            </button>
-            <button 
-                onclick={() => statusFilter = 'checked-in'}
-                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'checked-in' ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}"
-            >
-                Checked In
-            </button>
-            <button 
-                onclick={() => statusFilter = 'approved'}
-                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'approved' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}"
-            >
-                Approved
-            </button>
-            <button 
-                onclick={() => statusFilter = 'submitted'}
-                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'submitted' ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}"
-            >
-                Submitted
-            </button>
-            <button 
-                onclick={() => statusFilter = 'not-submitted'}
-                class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'not-submitted' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-700 hover:bg-red-200'}"
-            >
-                Not Submitted
-            </button>
+            <br />
+            <div class="mb-4 flex gap-2 flex-wrap justify-center">
+                <h2 class="text-lg font-semibold text-gray-800 mr-4 justify-left">Filter by Status:</h2>
+                <button 
+                    onclick={() => statusFilter = 'all'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
+                >
+                    All
+                </button>
+                <button 
+                    onclick={() => statusFilter = 'checked-in'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'checked-in' ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}"
+                >
+                    Checked In
+                </button>
+                <button 
+                    onclick={() => statusFilter = 'approved'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'approved' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}"
+                >
+                    Approved
+                </button>
+                <button 
+                    onclick={() => statusFilter = 'submitted'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'submitted' ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}"
+                >
+                    Submitted
+                </button>
+                <button 
+                    onclick={() => statusFilter = 'not-submitted'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'not-submitted' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-700 hover:bg-red-200'}"
+                >
+                    Not Submitted
+                </button>
         </div>
         </div>
         
