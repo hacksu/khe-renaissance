@@ -15,7 +15,7 @@
         { day: "Saturday", time: "4:00 PM", event: "Workshop 2: Flask & MongoDB", type: "workshop" },
         { day: "Saturday", time: "6:00 PM", event: "Dinner", type: "meal" },
         { day: "Saturday", time: "8:00 PM", event: "Workshop 3: APIs", type: "workshop" },
-        { day: "Saturday", time: "10:00 PM", event: "Mini Event: Speed Programming", type: "event" },
+        { day: "Saturday", time: "10:00 PM", event: "Mini Event: Wiki Speedrun", type: "event" },
         { day: "Saturday", time: "12:00 AM", event: "Initial Devpost Checkpoint", type: "milestone" },
         { day: "Saturday", time: "12:00 AM", event: "Midnight Snack", type: "meal" },
         { day: "Saturday", time: "2:00 AM", event: "Mini Event: YouTube Deep Dive", type: "event" },
