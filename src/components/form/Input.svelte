@@ -7,7 +7,7 @@
 
 <div class="relative w-full">
   {#if label}
-    <label for={others.id} class="text-sm">{label}</label>
+    <label for={others.id} class="text-sm">{@html label}</label>
   {/if}
   <input
     bind:value
