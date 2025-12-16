@@ -1,4 +1,3 @@
-```ts
 <script lang="ts">
     import { enhance } from "$app/forms";
     import Checkbox from "$components/form/Checkbox.svelte";
@@ -146,15 +145,15 @@
                 <div>
                     <h3 class="font-bold">Personal</h3>
                     <div class="flex gap-2 flex-col sm:flex-row">
-                        <Input label="First Name" name="first-name" value={application.firstName} required />
-                        <Input label="Last Name" name="last-name" value={application.lastName} required />
+                        <Input label="First Name <span class='text-red-500'>*</span>" name="first-name" value={application.firstName} required />
+                        <Input label="Last Name <span class='text-red-500'>*</span>" name="last-name" value={application.lastName} required />
                         <Input label="Age" name="age" type="number" value={application.age} />
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Input label="Phone Number" name="phone-number" type="tel" value={application.phoneNumber} required />
+                        <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" value={application.phoneNumber} required />
                         <Input label="Email" name="email" type="email" value={application.email || user?.email} />
                     </div>
-                    <Select label="Country of Residence" name="country-of-residence" value={application.countryOfResidence} required>
+                    <Select label="Country of Residence <span class='text-red-500'>*</span>" name="country-of-residence" value={application.countryOfResidence} required>
                         {#each Object.entries(data.countries) as [code, name]}
                             <option value={code}>{name}</option>
                         {/each}
@@ -163,7 +162,7 @@
                 <div>
                     <h3 class="font-bold">Education</h3>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Select label="School" name="school" value={application.school} required>
+                        <Select label="School <span class='text-red-500'>*</span>" name="school" value={application.school} required>
                             {#each data.schools as school}
                                 <option>{school}</option>
                             {/each}
@@ -181,20 +180,20 @@
                             <option>I'm not currently a student</option>
                             <option>Prefer not to answer</option>
                         </Select>
-                        <Input label="Major" name="field-of-study" value={application.fieldOfStudy} required />
+                        <Input label="Major <span class='text-red-500'>*</span>" name="field-of-study" value={application.fieldOfStudy} required />
                     </div>
                 </div>
                 <div>
                     <h3 class="font-bold">Demographics</h3>
                     <div class="flex gap-2 flex-col sm:flex-row">
-                        <Select label="Gender" name="gender" value={application.gender} required>
+                        <Select label="Gender <span class='text-red-500'>*</span>" name="gender" value={application.gender} required>
                             <option>Man</option>
                             <option>Woman</option>
                             <option>Non-Binary</option>
                             <option>Prefer to self-describe</option>
                             <option>Prefer Not to Answer</option>
                         </Select>
-                        <Select label="Pronouns" name="pronouns" value={application.pronouns} required>
+                        <Select label="Pronouns <span class='text-red-500'>*</span>" name="pronouns" value={application.pronouns} required>
                             <option>She/Her</option>
                             <option>He/Him</option>
                             <option>They/Them</option>
