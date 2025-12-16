@@ -22,7 +22,7 @@
                 setTimeout(() => {
                     isShaking = false;
                     scheduleShake(); // Schedule next shake
-                }, 500); // Shake duration
+                }, 800); // Shake duration
             }, delay);
         };
         scheduleShake();
@@ -34,27 +34,25 @@
 </script>
 
 <div class="bg-[url(/background.jpg)] bg-cover bg-center h-screen flex flex-col justify-center items-center gap-3 text-center relative overflow-hidden">
-    <!-- Rock overlay (matches background positioning, shakes occasionally) -->
     <img 
         src={rockImg} 
         alt="Rock" 
-        class="absolute inset-0 w-full h-full object-cover object-center z-10 transition-transform duration-100 pointer-events-none"
+        class="absolute inset-0 w-full h-full object-cover object-center z-10 transition-transform duration-100 pointer-events-none overflow-hidden"
         class:animate-shake={isShaking}
+        style="transform-origin: center center;"
     />
     
-    <!-- Interactive Dino behind Rock -->
-    <!-- Position the dino where it appears in the background scene (adjust bottom/left values to match the actual position in your scene) -->
     <div 
         class="absolute bottom-[0%] left-[18%] cursor-pointer z-[5] p-8 -m-8"
         onmouseenter={() => isHovered = true}
         onmouseleave={() => isHovered = false}
     >
-        <!-- Dino (behind rock, pops out on hover) -->
         <img 
             src={dinoSvg} 
             alt="Dino" 
             class="w-32 md:w-48 h-auto transition-all duration-500 ease-out pointer-events-none dino-pop"
             class:dino-popped={isHovered}
+            class:dino-hidden={!isHovered}
         />
     </div>
 
@@ -68,29 +66,93 @@
     </div>
 </div>
 
+<!--I hate keyframes -->
 <style>
     @keyframes shake {
-        0%, 100% { transform: translateX(0) rotate(0deg); }
-        10% { transform: translateX(-5px) rotate(-2deg); }
-        20% { transform: translateX(5px) rotate(2deg); }
-        30% { transform: translateX(-5px) rotate(-2deg); }
-        40% { transform: translateX(5px) rotate(2deg); }
-        50% { transform: translateX(-3px) rotate(-1deg); }
-        60% { transform: translateX(3px) rotate(1deg); }
-        70% { transform: translateX(-3px) rotate(-1deg); }
-        80% { transform: translateX(3px) rotate(1deg); }
-        90% { transform: translateX(-2px) rotate(-0.5deg); }
+        0% { 
+            transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+        5% { 
+            transform: translate(-3px, -2px) rotate(-1deg) scale(1.002);
+        }
+        10% { 
+            transform: translate(3px, 2px) rotate(1deg) scale(1.001);
+        }
+        15% { 
+            transform: translate(-2px, 1px) rotate(-0.8deg) scale(1.001);
+        }
+        20% { 
+            transform: translate(2px, -1px) rotate(0.8deg) scale(1);
+        }
+        25% { 
+            transform: translate(-2px, 2px) rotate(-0.6deg) scale(1.001);
+        }
+        30% { 
+            transform: translate(2px, -2px) rotate(0.6deg) scale(1);
+        }
+        35% { 
+            transform: translate(-1px, 1px) rotate(-0.4deg) scale(1);
+        }
+        40% { 
+            transform: translate(1px, -1px) rotate(0.4deg) scale(1);
+        }
+        45% { 
+            transform: translate(-1px, 0px) rotate(-0.3deg) scale(1);
+        }
+        50% { 
+            transform: translate(1px, 1px) rotate(0.3deg) scale(1);
+        }
+        55% { 
+            transform: translate(-0.5px, -0.5px) rotate(-0.2deg) scale(1);
+        }
+        60% { 
+            transform: translate(0.5px, 0.5px) rotate(0.2deg) scale(1);
+        }
+        65% { 
+            transform: translate(-0.5px, 0px) rotate(-0.1deg) scale(1);
+        }
+        70% { 
+            transform: translate(0.5px, 0px) rotate(0.1deg) scale(1);
+        }
+        75% { 
+            transform: translate(-0.3px, 0px) rotate(-0.05deg) scale(1);
+        }
+        80% { 
+            transform: translate(0.3px, 0px) rotate(0.05deg) scale(1);
+        }
+        85% { 
+            transform: translate(-0.2px, 0px) rotate(-0.03deg) scale(1);
+        }
+        90% { 
+            transform: translate(0.2px, 0px) rotate(0.03deg) scale(1);
+        }
+        95% { 
+            transform: translate(-0.1px, 0px) rotate(-0.01deg) scale(1);
+        }
+        100% { 
+            transform: translate(0, 0) rotate(0deg) scale(1);
+        }
     }
 
     .animate-shake {
-        animation: shake 0.5s ease-in-out;
+        animation: shake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        transform-origin: center center;
     }
 
     .dino-pop {
         transform: translateY(0) translateX(0) scale(1);
+        opacity: 0;
+        visibility: hidden;
     }
 
     .dino-pop.dino-popped {
         transform: translateY(-60px) translateX(20px) scale(1.15);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .dino-pop.dino-hidden {
+        opacity: 0;
+        visibility: hidden;
     }
 </style>
