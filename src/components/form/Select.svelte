@@ -11,7 +11,7 @@
 
 <div class="relative w-full">
     {#if label}
-        <label for={others.id} class="text-sm block mb-1">{label}</label>
+        <label for={others.id} class="text-sm block mb-1">{@html label}</label>
     {/if}
     <select
         {...others}

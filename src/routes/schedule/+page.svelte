@@ -8,21 +8,21 @@
         { day: "Saturday", time: "10:30 AM", event: "Sponsor Tables", type: "event" },
         { day: "Saturday", time: "11:00 AM", event: "Team Formation", type: "event" },
         { day: "Saturday", time: "11:30 AM", event: "Opening Ceremony", type: "ceremony", highlight: true },
-        { day: "Saturday", time: "12:00 PM", event: "Start Hacking!", type: "event", highlight: true },
+        { day: "Saturday", time: "12:00 PM", event: "Start Hacking!", type: "milestone", highlight: true },
         { day: "Saturday", time: "12:15 PM", event: "Workshop 0", type: "workshop" },
         { day: "Saturday", time: "1:00 PM", event: "Lunch", type: "meal" },
-        { day: "Saturday", time: "2:00 PM", event: "Workshop 1", type: "workshop" },
-        { day: "Saturday", time: "4:00 PM", event: "Workshop 2", type: "workshop" },
+        { day: "Saturday", time: "2:00 PM", event: "Workshop 1: Svelte", type: "workshop" },
+        { day: "Saturday", time: "4:00 PM", event: "Workshop 2: Flask & MongoDB", type: "workshop" },
         { day: "Saturday", time: "6:00 PM", event: "Dinner", type: "meal" },
-        { day: "Saturday", time: "8:00 PM", event: "Workshop 3", type: "workshop" },
-        { day: "Saturday", time: "10:00 PM", event: "Mini Event", type: "event" },
-        { day: "Saturday", time: "12:00 AM", event: "Initial Devpost Checkpoint", type: "event" },
-        { day: "Saturday", time: "12:00 AM", event: "Snack", type: "meal" },
-        { day: "Saturday", time: "1:00 AM", event: "Mini Event: YouTube Deep Dive", type: "event" },
+        { day: "Saturday", time: "8:00 PM", event: "Workshop 3: APIs", type: "workshop" },
+        { day: "Saturday", time: "10:00 PM", event: "Mini Event: Wiki Speedrun", type: "event" },
+        { day: "Saturday", time: "12:00 AM", event: "Initial Devpost Checkpoint", type: "milestone" },
+        { day: "Saturday", time: "12:00 AM", event: "Midnight Snack", type: "meal" },
+        { day: "Saturday", time: "3:00 AM", event: "Mini Event: YouTube Deep Dive", type: "event" },
         
         // Sunday
         { day: "Sunday", time: "9:00 AM", event: "Breakfast & Coffee", type: "meal" },
-        { day: "Sunday", time: "12:00 PM", event: "Hacking Ends", type: "event", highlight: true },
+        { day: "Sunday", time: "12:00 PM", event: "Hacking Ends", type: "milestone", highlight: true },
         { day: "Sunday", time: "12:00 PM", event: "Lunch", type: "meal" },
         { day: "Sunday", time: "12:30 PM", event: "Judging", type: "event" },
         { day: "Sunday", time: "2:00 PM", event: "Closing Ceremony", type: "ceremony", highlight: true },
@@ -43,6 +43,8 @@
                 return "bg-accent"; // Blue for workshops
             case "event":
                 return "bg-primary"; // Beige for general events
+            case "milestone":
+                return "bg-green-500"; // Green for milestones
             default:
                 return "bg-white";
         }

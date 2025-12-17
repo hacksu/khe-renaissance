@@ -5,24 +5,82 @@
     import Divider from "$components/Divider.svelte";
     import Input from "$components/form/Input.svelte";
     import { Utils } from "$lib/util";
+    import { dropbox } from "better-auth/social-providers";
 
     const { data } = $props();
 
     let term = $state("");
-    const searchedApplications = $derived(data.applications
-        .filter(({ firstName, lastName }) => `${firstName} ${lastName}`.includes(term)))
+    let statusFilter = $state<'all' | 'checked-in' | 'approved' | 'submitted' | 'not-submitted'>('all');
+    let emailExportFilter = $state<'all' | 'approved' | 'submitted' | 'not-submitted'>('all');
+    
+    const searchedApplications = $derived(
+        data.applications
+            .filter(app => {
+                const fullName = `${app.firstName} ${app.lastName}`.toLowerCase();
+                const email = app.email.toLowerCase();
+                const searchTerm = term.toLowerCase();
+                return fullName.includes(searchTerm) || email.includes(searchTerm);
+            })
+            .filter(app => {
+                if (statusFilter === 'checked-in') return app.checkedIn;
+                if (statusFilter === 'approved') return app.approved && !app.checkedIn;
+                if (statusFilter === 'submitted') return app.submitted && !app.approved;
+                if (statusFilter === 'not-submitted') return !app.submitted;
+                return true;
+            })
+    )
 
     async function exportEmails() {
-        const approvedEmails = data.applications
-            .filter(app => app.approved)
-            .map(app => app.email)
-            .join('\n');
+        let emailsToExport = data.applications;
         
-        const blob = new Blob([approvedEmails], { type: 'text/plain' });
+        // Filter based on selected export filter
+        if (emailExportFilter === 'approved') {
+            emailsToExport = emailsToExport.filter(app => app.approved);
+        } else if (emailExportFilter === 'submitted') {
+            emailsToExport = emailsToExport.filter(app => app.submitted && !app.approved);
+        } else if (emailExportFilter === 'not-submitted') {
+            emailsToExport = emailsToExport.filter(app => !app.submitted);
+        }
+        
+        const emails = emailsToExport
+            .map(app => app.email && app.email.trim() !== '' ? app.email : app.user.email)
+            .filter(email => email && email.trim() !== '')
+            .join(',\n');
+
+        if (emails.length === 0) {
+            alert(`No emails found for ${emailExportFilter} applications`);
+            return;
+        }
+        
+        const blob = new Blob([emails], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `approved-emails-${new Date().toISOString().split('T')[0]}.txt`;
+        a.download = `${emailExportFilter}-emails-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    async function exportIdeas() {
+        const applicationsWithIdeas = data.applications.filter(app => app.projectIdea);
+        
+        if (applicationsWithIdeas.length === 0) {
+            alert('No project ideas to export');
+            return;
+        }
+
+        //console.log("Applications with ideas:");
+        //console.log(applicationsWithIdeas);
+        
+        const ideas = applicationsWithIdeas
+            .map(app => `"${app.projectIdea.replace(/"/g, '""')}"`)
+            .join('\n');
+        
+        const blob = new Blob([ideas], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `project-ideas-${new Date().toISOString().split('T')[0]}.csv`;
         a.click();
         URL.revokeObjectURL(url);
     }
@@ -33,12 +91,29 @@
         <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-semibold text-gray-800">Application Statistics</h2>
-                <button 
-                    onclick={exportEmails}
-                    class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
-                >
-                    Export Emails
-                </button>
+                <div class="flex gap-2 items-center">
+                    <select 
+                        bind:value={emailExportFilter}
+                        class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="all">All</option>
+                        <option value="approved">Approved</option>
+                        <option value="submitted">Submitted</option>
+                        <option value="not-submitted">Not Submitted</option>
+                    </select>
+                    <button 
+                        onclick={exportEmails}
+                        class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                        Export Emails
+                    </button>
+                    <button 
+                        onclick={exportIdeas}
+                        class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
+                    >
+                        Export Project Ideas
+                    </button>
+                </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="text-center p-4 bg-gray-50 rounded-lg">
@@ -54,12 +129,51 @@
                     <p class="text-3xl font-bold text-blue-700">{data.stats.checkedIn}</p>
                 </div>
                 <div class="text-center p-4 bg-purple-50 rounded-lg">
-                    <p class="text-xs uppercase tracking-wide text-purple-600 mb-1">Approval Rate</p>
-                    <p class="text-3xl font-bold text-purple-700">{data.stats.total > 0 ? Math.round((data.stats.approved / data.stats.total) * 100) : 0}%</p>
+                    <p class="text-xs uppercase tracking-wide text-purple-600 mb-1">Check In Rate</p>
+                    <p class="text-3xl font-bold text-purple-700">{data.stats.approved > 0 ? Math.round((data.stats.checkedIn / data.stats.approved) * 100) : 0}%</p>
                 </div>
             </div>
+            <br />
+            <div class="mb-4 flex gap-2 flex-wrap justify-center">
+                <h2 class="text-lg font-semibold text-gray-800 mr-4 justify-left">Filter by Status:</h2>
+                <button 
+                    onclick={() => statusFilter = 'all'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
+                >
+                    All
+                </button>
+                <button 
+                    onclick={() => statusFilter = 'checked-in'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'checked-in' ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}"
+                >
+                    Checked In
+                </button>
+                <button 
+                    onclick={() => statusFilter = 'approved'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'approved' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}"
+                >
+                    Approved
+                </button>
+                <button 
+                    onclick={() => statusFilter = 'submitted'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'submitted' ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}"
+                >
+                    Submitted
+                </button>
+                <button 
+                    onclick={() => statusFilter = 'not-submitted'}
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'not-submitted' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-700 hover:bg-red-200'}"
+                >
+                    Not Submitted
+                </button>
         </div>
-        <Input placeholder="Search" bind:value={term} />
+        </div>
+        
+        <div class="mb-4 flex gap-2 items-center">
+            <Input placeholder="Search by name or email" bind:value={term} class="flex-1" />
+        </div>
+        
+        
         <div class="mt-2 gap-2 flex flex-col sm:grid sm:grid-cols-3">
             {#each searchedApplications as application}
                 <Card>
@@ -83,7 +197,16 @@
                         <Divider>Portfolio</Divider>
                         <div class="flex justify-between"><p>Github:</p><p>{application.githubUrl}</p></div>
                         <div class="flex justify-between"><p>Personal:</p><p>{application.personalUrl}</p></div>
-                        <div class="flex justify-between"><p>Resume:</p><p>{application.personalUrl}</p></div>
+                         <div class="flex justify-between items-center">
+                            <p>Resume:</p>
+                            <a 
+                                href={`/staff/resume/${application.id}`}
+                                target="_blank"
+                                class="text-blue-600 hover:text-blue-800 underline text-sm"
+                            >
+                                Download PDF
+                            </a>
+                        </div>
                         {#if application.projectIdea}
                             <div class="mt-2">
                                 <p class="text-sm font-semibold mb-1">Project Idea:</p>
