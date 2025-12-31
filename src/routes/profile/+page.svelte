@@ -145,15 +145,15 @@
                 <div>
                     <h3 class="font-bold">Personal</h3>
                     <div class="flex gap-2 flex-col sm:flex-row">
-                        <Input label="First Name <span class='text-red-500'>*</span>" name="first-name" value={application.firstName} required />
+                        <Input label="First Name <span class='text-red-500'>*</span>" name="first-name" value={application.firstName} required <span class="text-red-500">*</span>/>
                         <Input label="Last Name <span class='text-red-500'>*</span>" name="last-name" value={application.lastName} required />
-                        <Input label="Age" name="age" type="number" value={application.age} required />
+                        <Input label="Age" name="age" type="number" value={application.age} required <span class="text-red-500">*</span>/>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" value={application.phoneNumber} required />
+                        <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" value={application.phoneNumber} required <span class="text-red-500">*</span>/>
                         <Input label="Email" name="email" type="email" value={application.email || user?.email} required />
                     </div>
-                    <Select label="Country of Residence <span class='text-red-500'>*</span>" name="country-of-residence" value={application.countryOfResidence} required>
+                    <Select label="Country of Residence <span class='text-red-500'>*</span>" name="country-of-residence" value={application.countryOfResidence} required <span class="text-red-500">*</span>>
                         {#each Object.entries(data.countries) as [code, name]}
                             <option value={code}>{name}</option>
                         {/each}
@@ -162,12 +162,12 @@
                 <div>
                     <h3 class="font-bold">Education</h3>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Select label="School <span class='text-red-500'>*</span>" name="school" value={application.school} required>
+                        <Select label="School <span class='text-red-500'>*</span>" name="school" value={application.school} required <span class="text-red-500">*</span>>
                             {#each data.schools as school}
                                 <option>{school}</option>
                             {/each}
                         </Select>
-                        <Select label="Level of Study" name="level-of-study" value={application.levelOfStudy} required>
+                        <Select label="Level of Study" name="level-of-study" value={application.levelOfStudy} required <span class="text-red-500">*</span>>
                             <option>Less than Secondary / High School</option>
                             <option>Secondary / High School</option>
                             <option>Undergraduate University (2 year - community college or similar)</option>
@@ -180,20 +180,20 @@
                             <option>I'm not currently a student</option>
                             <option>Prefer not to answer</option>
                         </Select>
-                        <Input label="Major <span class='text-red-500'>*</span>" name="field-of-study" value={application.fieldOfStudy} required />
+                        <Input label="Major <span class='text-red-500'>*</span>" name="field-of-study" value={application.fieldOfStudy} required <span class="text-red-500">*</span>/>
                     </div>
                 </div>
                 <div>
                     <h3 class="font-bold">Demographics</h3>
                     <div class="flex gap-2 flex-col sm:flex-row">
-                        <Select label="Gender <span class='text-red-500'>*</span>" name="gender" value={application.gender} required>
+                        <Select label="Gender <span class='text-red-500'>*</span>" name="gender" value={application.gender} required <span class="text-red-500">*</span>>
                             <option>Man</option>
                             <option>Woman</option>
                             <option>Non-Binary</option>
                             <option>Prefer to self-describe</option>
                             <option>Prefer Not to Answer</option>
                         </Select>
-                        <Select label="Pronouns <span class='text-red-500'>*</span>" name="pronouns" value={application.pronouns} required>
+                        <Select label="Pronouns <span class='text-red-500'>*</span>" name="pronouns" value={application.pronouns} required <span class="text-red-500">*</span>>
                             <option>She/Her</option>
                             <option>He/Him</option>
                             <option>They/Them</option>
@@ -218,8 +218,8 @@
                     <div class="flex flex-col gap-2">
                         <Input label="What are you planning to build?" name="project-idea" value={application.projectIdea} />
                         <Input label="Personal Website" name="personal-url" value={application.personalUrl} />
-                        <Input label="Github" name="github-url" value={application.githubUrl} required/>
-                        <Input label="Resume" name="resume" type="file" accept=".pdf" required/>
+                        <Input label="Github" name="github-url" value={application.githubUrl} required <span class="text-red-500">*</span>/>
+                        <Input label="Resume" name="resume" type="file" accept=".pdf" required <span class="text-red-500">*</span>/>
                     </div>
                 </div>
                 <div>
