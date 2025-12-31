@@ -30,7 +30,17 @@
             })
     )
 
-    async function exportEmails() {
+    function downloadCsv(content: string, filename: string) {
+        const blob = new Blob([content], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function exportEmails() {
         let emailsToExport = data.applications;
 
         // Filter based on selected export filter
@@ -43,25 +53,19 @@
         }
 
         const emails = emailsToExport
-            .map(app => app.email && app.email.trim() !== '' ? app.email : app.user.email)
-            .filter(email => email && email.trim() !== '')
-            .join(',\n');
+            .map(app => (app.email || "").trim() || (app.user.email || "").trim())
+            .filter(Boolean)
+            .join('\n');
 
-        if (emails.length === 0) {
+        if (!emails) {
             alert(`No emails found for ${emailExportFilter} applications`);
             return;
         }
 
-        const blob = new Blob([emails], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${emailExportFilter}-emails-${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        downloadCsv(emails, `${emailExportFilter}-emails-${new Date().toISOString().split('T')[0]}.csv`);
     }
 
-    async function exportIdeas() {
+    function exportIdeas() {
         const applicationsWithIdeas = data.applications.filter(app => app.projectIdea);
 
         if (applicationsWithIdeas.length === 0) {
@@ -69,20 +73,11 @@
             return;
         }
 
-        //console.log("Applications with ideas:");
-        //console.log(applicationsWithIdeas);
-
         const ideas = applicationsWithIdeas
             .map(app => `"${app.projectIdea.replace(/"/g, '""')}"`)
             .join('\n');
 
-        const blob = new Blob([ideas], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `project-ideas-${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        downloadCsv(ideas, `project-ideas-${new Date().toISOString().split('T')[0]}.csv`);
     }
 </script>
 
