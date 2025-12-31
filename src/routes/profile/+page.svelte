@@ -147,11 +147,11 @@
                     <div class="flex gap-2 flex-col sm:flex-row">
                         <Input label="First Name <span class='text-red-500'>*</span>" name="first-name" value={application.firstName} required />
                         <Input label="Last Name <span class='text-red-500'>*</span>" name="last-name" value={application.lastName} required />
-                        <Input label="Age" name="age" type="number" value={application.age} />
+                        <Input label="Age" name="age" type="number" value={application.age} required />
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" value={application.phoneNumber} required />
-                        <Input label="Email" name="email" type="email" value={application.email || user?.email} />
+                        <Input label="Email" name="email" type="email" value={application.email || user?.email} required />
                     </div>
                     <Select label="Country of Residence <span class='text-red-500'>*</span>" name="country-of-residence" value={application.countryOfResidence} required>
                         {#each Object.entries(data.countries) as [code, name]}
@@ -167,7 +167,7 @@
                                 <option>{school}</option>
                             {/each}
                         </Select>
-                        <Select label="Level of Study" name="level-of-study" value={application.levelOfStudy}>
+                        <Select label="Level of Study" name="level-of-study" value={application.levelOfStudy} required>
                             <option>Less than Secondary / High School</option>
                             <option>Secondary / High School</option>
                             <option>Undergraduate University (2 year - community college or similar)</option>
@@ -218,8 +218,8 @@
                     <div class="flex flex-col gap-2">
                         <Input label="What are you planning to build?" name="project-idea" value={application.projectIdea} />
                         <Input label="Personal Website" name="personal-url" value={application.personalUrl} />
-                        <Input label="Github" name="github-url" value={application.githubUrl} />
-                        <Input label="Resume" name="resume" type="file" accept=".pdf" />
+                        <Input label="Github" name="github-url" value={application.githubUrl} required/>
+                        <Input label="Resume" name="resume" type="file" accept=".pdf" required/>
                     </div>
                 </div>
                 <div>
