@@ -147,7 +147,7 @@
                     <div class="flex gap-2 flex-col sm:flex-row">
                         <Input label="First Name <span class='text-red-500'>*</span>" name="first-name" value={application.firstName} required />
                         <Input label="Last Name <span class='text-red-500'>*</span>" name="last-name" value={application.lastName} required />
-                        <Input label="Age" name="age" type="number" value={application.age} required />
+                        <Input label="Age <span class='text-red-500'>*</span>" name="age" type="number" value={application.age} required />
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" value={application.phoneNumber} required />
