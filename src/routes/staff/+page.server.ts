@@ -66,6 +66,24 @@ export const actions: Actions = {
       emails,
     };
   },
+  delete: async ({ request }) => {
+    const form = await request.formData();
+    const id = form.get("id") as string;
+
+    if (!id) {
+      return;
+    }
+
+    try {
+      await fs.unlink(`./resumes/${id}.pdf`);
+    } catch {
+      // Ignore if file doesn't exist
+    }
+
+    await prisma.application.delete({
+      where: { id },
+    });
+  },
 };
 
 export const load: PageServerLoad = async () => {

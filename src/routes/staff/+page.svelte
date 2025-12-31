@@ -4,6 +4,7 @@
     import Card from "$components/Card.svelte";
     import Divider from "$components/Divider.svelte";
     import Input from "$components/form/Input.svelte";
+    import Modal from "$components/Modal.svelte";
     import { Utils } from "$lib/util";
     import { dropbox } from "better-auth/social-providers";
 
@@ -12,6 +13,10 @@
     let term = $state("");
     let statusFilter = $state<'all' | 'checked-in' | 'approved' | 'submitted' | 'not-submitted'>('all');
     let emailExportFilter = $state<'all' | 'approved' | 'submitted' | 'not-submitted'>('all');
+
+    let showDeleteModal = $state(false);
+    let applicationToDelete = $state<string | null>(null);
+    let deleteForm: HTMLFormElement;
 
     const searchedApplications = $derived(
         data.applications
@@ -79,7 +84,24 @@
 
         downloadCsv(ideas, `project-ideas-${new Date().toISOString().split('T')[0]}.csv`);
     }
+
+    function handleDeleteConfirm() {
+        if (deleteForm) deleteForm.requestSubmit();
+        showDeleteModal = false;
+    }
 </script>
+
+<Modal
+    open={showDeleteModal}
+    title="Delete Application"
+    message="Are you sure you want to delete this application? This action cannot be undone."
+    onConfirm={handleDeleteConfirm}
+    onCancel={() => showDeleteModal = false}
+/>
+
+<form method="POST" action="?/delete" bind:this={deleteForm} use:enhance class="hidden">
+    <input type="hidden" name="id" value={applicationToDelete} />
+</form>
 
 <div class="min-h-screen flex">
     <div class="p-2 mt-24 w-full h-full">
@@ -216,28 +238,35 @@
                         <div class="flex justify-between"><p>MLH Authorization:</p><p class={``}>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
                         <div class="flex justify-between"><p>MLH Code Of Conduct:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
                         <div class="flex justify-between"><p>MLH Emails:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
-                        {#if application.submitted}
-                            <Divider />
-                            <form method="POST" use:enhance={() => {
-                                return async ({ update }) => {
-                                    await update({ reset: false })
-                                }
-                            }}>
-                                <div class="flex gap-2">
-                                    <input name="id" class="hidden" value={application.id} />
-                                    {#if application.approved}
-                                        <Button type="submit" formaction="?/approve">Un-approve</Button>
-                                        {#if application.checkedIn}
-                                            <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">✓ Checked In</Button>
+
+                        <Divider />
+                        <div class="flex gap-2 flex-wrap">
+                            {#if application.submitted}
+                                <form method="POST" use:enhance={() => {
+                                    return async ({ update }) => {
+                                        await update({ reset: false })
+                                    }
+                                }}>
+                                    <div class="flex gap-2">
+                                        <input name="id" class="hidden" value={application.id} />
+                                        {#if application.approved}
+                                            <Button type="submit" formaction="?/approve">Un-approve</Button>
+                                            {#if application.checkedIn}
+                                                <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">✓ Checked In</Button>
+                                            {:else}
+                                                <Button type="submit" formaction="?/checkIn">Check In</Button>
+                                            {/if}
                                         {:else}
-                                            <Button type="submit" formaction="?/checkIn">Check In</Button>
+                                            <Button type="submit" formaction="?/approve">Approve</Button>
                                         {/if}
-                                    {:else}
-                                        <Button type="submit" formaction="?/approve">Approve</Button>
-                                    {/if}
-                                </div>
-                            </form>
-                        {/if}
+                                    </div>
+                                </form>
+                            {/if}
+                            <Button type="button" class="bg-red-600 hover:bg-red-700" onclick={() => {
+                                applicationToDelete = application.id;
+                                showDeleteModal = true;
+                            }}>Delete</Button>
+                        </div>
                     </div>
                 </Card>
             {/each}
