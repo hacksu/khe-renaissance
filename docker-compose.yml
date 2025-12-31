@@ -31,10 +31,11 @@ services:
     networks:
       - app_internal
     volumes:
-      - ./resumes:/app/resumes
+      - resumes:/app/resumes
 
 networks:
   app_internal:
 
 volumes:
   postgres_data:
+  resumes:
