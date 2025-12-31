@@ -247,7 +247,9 @@
                         {#if application.projectIdea}
                             <div class="mt-2">
                                 <p class="text-sm font-semibold mb-1">Project Idea:</p>
-                                <p class="text-sm text-white whitespace-pre-wrap">{application.projectIdea}</p>
+                                <div class="max-h-32 overflow-y-auto rounded border border-gray-600 bg-black/20 p-2">
+                                    <p class="text-sm text-white whitespace-pre-wrap">{application.projectIdea}</p>
+                                </div>
                             </div>
                         {/if}
                         <Divider>MLH</Divider>
@@ -258,12 +260,12 @@
                         <Divider />
                         <div class="flex gap-2 flex-wrap">
                             {#if application.submitted}
-                                <form method="POST" use:enhance={() => {
+                                <form class="w-full" method="POST" use:enhance={() => {
                                     return async ({ update }) => {
                                         await update({ reset: false })
                                     }
                                 }}>
-                                    <div class="flex gap-2">
+                                    <div class="flex gap-2 w-full">
                                         <input name="id" class="hidden" value={application.id} />
                                         {#if application.approved}
                                             <Button type="submit" formaction="?/approve">Un-approve</Button>
