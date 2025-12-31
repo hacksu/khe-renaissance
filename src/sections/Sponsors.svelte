@@ -58,6 +58,11 @@
       name: "HacKSU",
       url: "https://hacksu.com",
     },
+    //{
+    //  image: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png",
+    //  name: "Amazon Web Services",
+    //  url: "https://aws.amazon.com",
+    //  }
   ];
 
   const softwareLicenses: SoftwareLisence[] = [
