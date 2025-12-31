@@ -151,7 +151,7 @@
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" value={application.phoneNumber} required />
-                        <Input label="Email" name="email" type="email" value={application.email || user?.email} required />
+                        <Input label="Email <span class='text-red-500'>*</span>" name="email" type="email" value={application.email || user?.email} required />
                     </div>
                     <Select label="Country of Residence <span class='text-red-500'>*</span>" name="country-of-residence" value={application.countryOfResidence} required>
                         {#each Object.entries(data.countries) as [code, name]}
