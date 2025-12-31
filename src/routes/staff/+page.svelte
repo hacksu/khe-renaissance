@@ -1,5 +1,6 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import Icon from "@iconify/svelte";
     import Button from "$components/Button.svelte";
     import Card from "$components/Card.svelte";
     import Divider from "$components/Divider.svelte";
@@ -195,8 +196,23 @@
             {#each searchedApplications as application}
                 <Card>
                     <div class="p-2 flex flex-col">
-                        <h3 class="font-bold text-xl">{application.user.email}</h3>
-                        <p class="text-xs">{application.id}</p>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-xl break-all">{application.user.email}</h3>
+                                <p class="text-xs text-gray-500">{application.id}</p>
+                            </div>
+                            <button
+                                type="button"
+                                class="text-gray-400 hover:text-red-600 transition-colors p-1"
+                                onclick={() => {
+                                    applicationToDelete = application.id;
+                                    showDeleteModal = true;
+                                }}
+                                title="Delete Application"
+                            >
+                                <Icon icon="mdi:trash-can-outline" width="20" height="20" />
+                            </button>
+                        </div>
                         <Divider>Personal</Divider>
                         <div class="flex justify-between">
                             <p>Name:</p>
@@ -262,10 +278,6 @@
                                     </div>
                                 </form>
                             {/if}
-                            <Button type="button" class="bg-red-600 hover:bg-red-700" onclick={() => {
-                                applicationToDelete = application.id;
-                                showDeleteModal = true;
-                            }}>Delete</Button>
                         </div>
                     </div>
                 </Card>
