@@ -122,7 +122,7 @@
         {#if isOpen && filteredOptions.length > 0}
             <ul
                 id={listId}
-                class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
+                class="text-black absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
                 role="listbox"
             >
                 {#each filteredOptions as option, i}
