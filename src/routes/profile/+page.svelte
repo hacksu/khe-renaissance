@@ -14,32 +14,32 @@
 
     const { data } = $props();
     const application = $derived(data.application);
-    
+
     let loading = $state(false);
     let mlhCodeChecked = $state(application?.mlhCodeOfConduct ?? false);
     let mlhAuthChecked = $state(application?.mlhAuthorization ?? false);
-    
+
     const canSubmit = $derived(mlhCodeChecked && mlhAuthChecked);
-    
+
     // Store original application state for change detection
     let originalApplication = $state<any>(null);
-    
+
     // Modal state
     let showWarningModal = $state(false);
     let pendingSubmitter = $state<HTMLElement | null>(null);
     let warningConfirmed = $state(false);
-    
+
     // Initialize original state on mount
     $effect(() => {
         if (application && !originalApplication) {
             originalApplication = { ...application };
         }
     });
-    
+
     // Function to detect if form has changes
     function hasFormChanges(formData: FormData): boolean {
         if (!originalApplication) return false;
-        
+
         const formValues: Record<string, any> = {
             firstName: formData.get("first-name"),
             lastName: formData.get("last-name"),
@@ -60,14 +60,14 @@
             mlhAuthorization: !!formData.get("mlh-authorization"),
             mlhEmails: !!formData.get("mlh-emails"),
         };
-        
+
         // Compare each field with original
         for (const [key, value] of Object.entries(formValues)) {
             if (originalApplication[key] !== value) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -87,9 +87,9 @@
     }
 </script>
 
-<Modal 
-    open={showWarningModal} 
-    title="Warning: Approval Will Be Revoked" 
+<Modal
+    open={showWarningModal}
+    title="Warning: Approval Will Be Revoked"
     message="Your application is currently approved. Making changes will revoke your approval and you will need to be re-approved. Do you want to continue?"
     onConfirm={handleModalConfirm}
     onCancel={handleModalCancel}
@@ -119,7 +119,7 @@
         <form enctype="multipart/form-data" method="POST" use:enhance={({ formData, cancel, submitter }) => {
             // Check for changes
             const hasChanges = hasFormChanges(formData);
-            
+
             // If application is approved AND has changes, warn the user
             // But ONLY if we haven't already confirmed the warning
             if (application.approved && hasChanges && !warningConfirmed) {
@@ -128,7 +128,7 @@
                 showWarningModal = true;
                 return;
             }
-            
+
             // Reset confirmation state after successful pass-through
             if (warningConfirmed) {
                 warningConfirmed = false;
@@ -219,7 +219,15 @@
                         <Input label="What are you planning to build?" name="project-idea" value={application.projectIdea} />
                         <Input label="Personal Website" name="personal-url" value={application.personalUrl} />
                         <Input label="Github <span class='text-red-500'>*</span>" name="github-url" value={application.githubUrl} required />
-                        <Input label="Resume <span class='text-red-500'>*</span>" name="resume" type="file" accept=".pdf" required />
+                        <Input
+                            label={data.hasResume
+                                ? "Resume (Submitted) - Upload to replace"
+                                : "Resume <span class='text-red-500'>*</span>"}
+                            name="resume"
+                            type="file"
+                            accept=".pdf"
+                            required={!data.hasResume}
+                        />
                     </div>
                 </div>
                 <div>
@@ -233,7 +241,7 @@
                         <p class="text-red-500 text-sm mt-2">* Required to submit application</p>
                     {/if}
                 </div>
-                
+
                 <div class="flex justify-end gap-2">
                     <Button type="submit" formaction="?/save" disabled={loading}>Save</Button>
                     <Button type="submit" formaction="?/submit" disabled={loading || !canSubmit}>{application.submitted ? "Un-submit" : "Submit"}</Button>

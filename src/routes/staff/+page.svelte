@@ -1,9 +1,11 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import Icon from "@iconify/svelte";
     import Button from "$components/Button.svelte";
     import Card from "$components/Card.svelte";
     import Divider from "$components/Divider.svelte";
     import Input from "$components/form/Input.svelte";
+    import Modal from "$components/Modal.svelte";
     import { Utils } from "$lib/util";
     import { dropbox } from "better-auth/social-providers";
 
@@ -12,7 +14,11 @@
     let term = $state("");
     let statusFilter = $state<'all' | 'checked-in' | 'approved' | 'submitted' | 'not-submitted'>('all');
     let emailExportFilter = $state<'all' | 'approved' | 'submitted' | 'not-submitted'>('all');
-    
+
+    let showDeleteModal = $state(false);
+    let applicationToDelete = $state<string | null>(null);
+    let deleteForm: HTMLFormElement;
+
     const searchedApplications = $derived(
         data.applications
             .filter(app => {
@@ -30,9 +36,19 @@
             })
     )
 
-    async function exportEmails() {
+    function downloadCsv(content: string, filename: string) {
+        const blob = new Blob([content], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function exportEmails() {
         let emailsToExport = data.applications;
-        
+
         // Filter based on selected export filter
         if (emailExportFilter === 'approved') {
             emailsToExport = emailsToExport.filter(app => app.approved);
@@ -41,50 +57,52 @@
         } else if (emailExportFilter === 'not-submitted') {
             emailsToExport = emailsToExport.filter(app => !app.submitted);
         }
-        
-        const emails = emailsToExport
-            .map(app => app.email && app.email.trim() !== '' ? app.email : app.user.email)
-            .filter(email => email && email.trim() !== '')
-            .join(',\n');
 
-        if (emails.length === 0) {
+        const emails = emailsToExport
+            .map(app => (app.email || "").trim() || (app.user.email || "").trim())
+            .filter(Boolean)
+            .join('\n');
+
+        if (!emails) {
             alert(`No emails found for ${emailExportFilter} applications`);
             return;
         }
-        
-        const blob = new Blob([emails], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${emailExportFilter}-emails-${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+
+        downloadCsv(emails, `${emailExportFilter}-emails-${new Date().toISOString().split('T')[0]}.csv`);
     }
 
-    async function exportIdeas() {
+    function exportIdeas() {
         const applicationsWithIdeas = data.applications.filter(app => app.projectIdea);
-        
+
         if (applicationsWithIdeas.length === 0) {
             alert('No project ideas to export');
             return;
         }
 
-        //console.log("Applications with ideas:");
-        //console.log(applicationsWithIdeas);
-        
         const ideas = applicationsWithIdeas
             .map(app => `"${app.projectIdea.replace(/"/g, '""')}"`)
             .join('\n');
-        
-        const blob = new Blob([ideas], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `project-ideas-${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+
+        downloadCsv(ideas, `project-ideas-${new Date().toISOString().split('T')[0]}.csv`);
+    }
+
+    function handleDeleteConfirm() {
+        if (deleteForm) deleteForm.requestSubmit();
+        showDeleteModal = false;
     }
 </script>
+
+<Modal
+    open={showDeleteModal}
+    title="Delete Application"
+    message="Are you sure you want to delete this application? This action cannot be undone."
+    onConfirm={handleDeleteConfirm}
+    onCancel={() => showDeleteModal = false}
+/>
+
+<form method="POST" action="?/delete" bind:this={deleteForm} use:enhance class="hidden">
+    <input type="hidden" name="id" value={applicationToDelete} />
+</form>
 
 <div class="min-h-screen flex">
     <div class="p-2 mt-24 w-full h-full">
@@ -92,7 +110,7 @@
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-semibold text-gray-800">Application Statistics</h2>
                 <div class="flex gap-2 items-center">
-                    <select 
+                    <select
                         bind:value={emailExportFilter}
                         class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
@@ -101,13 +119,13 @@
                         <option value="submitted">Submitted</option>
                         <option value="not-submitted">Not Submitted</option>
                     </select>
-                    <button 
+                    <button
                         onclick={exportEmails}
                         class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
                     >
                         Export Emails
                     </button>
-                    <button 
+                    <button
                         onclick={exportIdeas}
                         class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
                     >
@@ -136,31 +154,31 @@
             <br />
             <div class="mb-4 flex gap-2 flex-wrap justify-center">
                 <h2 class="text-lg font-semibold text-gray-800 mr-4 justify-left">Filter by Status:</h2>
-                <button 
+                <button
                     onclick={() => statusFilter = 'all'}
                     class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
                 >
                     All
                 </button>
-                <button 
+                <button
                     onclick={() => statusFilter = 'checked-in'}
                     class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'checked-in' ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}"
                 >
                     Checked In
                 </button>
-                <button 
+                <button
                     onclick={() => statusFilter = 'approved'}
                     class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'approved' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}"
                 >
                     Approved
                 </button>
-                <button 
+                <button
                     onclick={() => statusFilter = 'submitted'}
                     class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'submitted' ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}"
                 >
                     Submitted
                 </button>
-                <button 
+                <button
                     onclick={() => statusFilter = 'not-submitted'}
                     class="px-4 py-2 rounded-md text-sm font-medium transition-colors {statusFilter === 'not-submitted' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-700 hover:bg-red-200'}"
                 >
@@ -168,18 +186,33 @@
                 </button>
         </div>
         </div>
-        
+
         <div class="mb-4 flex gap-2 items-center">
             <Input placeholder="Search by name or email" bind:value={term} class="flex-1" />
         </div>
-        
-        
+
+
         <div class="mt-2 gap-2 flex flex-col sm:grid sm:grid-cols-3">
             {#each searchedApplications as application}
                 <Card>
                     <div class="p-2 flex flex-col">
-                        <h3 class="font-bold text-xl">{application.user.email}</h3>
-                        <p class="text-xs">{application.id}</p>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-xl break-all">{application.user.email}</h3>
+                                <p class="text-xs text-gray-500">{application.id}</p>
+                            </div>
+                            <button
+                                type="button"
+                                class="text-gray-400 hover:text-red-600 transition-colors p-1"
+                                onclick={() => {
+                                    applicationToDelete = application.id;
+                                    showDeleteModal = true;
+                                }}
+                                title="Delete Application"
+                            >
+                                <Icon icon="mdi:trash-can-outline" width="20" height="20" />
+                            </button>
+                        </div>
                         <Divider>Personal</Divider>
                         <div class="flex justify-between">
                             <p>Name:</p>
@@ -199,52 +232,58 @@
                         <div class="flex justify-between"><p>Personal:</p><p>{application.personalUrl}</p></div>
                          <div class="flex justify-between items-center">
                             <p>Resume:</p>
-                            <a 
-                                href={`/staff/resume/${application.id}`}
-                                target="_blank"
-                                class="text-blue-600 hover:text-blue-800 underline text-sm"
-                            >
-                                Download PDF
-                            </a>
+                            {#if application.hasResume}
+                                <a
+                                    href={`/staff/resume/${application.id}`}
+                                    target="_blank"
+                                    class="text-blue-600 hover:text-blue-800 underline text-sm"
+                                >
+                                    Download PDF
+                                </a>
+                            {:else}
+                                <p class="text-sm text-gray-400 italic">Not Submitted</p>
+                            {/if}
                         </div>
                         {#if application.projectIdea}
                             <div class="mt-2">
                                 <p class="text-sm font-semibold mb-1">Project Idea:</p>
-                                <p class="text-sm text-white whitespace-pre-wrap">{application.projectIdea}</p>
+                                <div class="max-h-32 overflow-y-auto rounded border border-gray-600 bg-black/20 p-2">
+                                    <p class="text-sm text-white whitespace-pre-wrap">{application.projectIdea}</p>
+                                </div>
                             </div>
                         {/if}
                         <Divider>MLH</Divider>
                         <div class="flex justify-between"><p>MLH Authorization:</p><p class={``}>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
                         <div class="flex justify-between"><p>MLH Code Of Conduct:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
                         <div class="flex justify-between"><p>MLH Emails:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
-                        {#if application.submitted}
-                            <Divider />
-                            <form method="POST" use:enhance={() => {
-                                return async ({ update }) => {
-                                    await update({ reset: false })
-                                }
-                            }}>
-                                <div class="flex gap-2">
-                                    <input name="id" class="hidden" value={application.id} />
-                                    {#if application.approved}
-                                        <Button type="submit" formaction="?/approve">Un-approve</Button>
-                                        {#if application.checkedIn}
-                                            <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">✓ Checked In</Button>
+
+                        <Divider />
+                        <div class="flex gap-2 flex-wrap">
+                            {#if application.submitted}
+                                <form class="w-full" method="POST" use:enhance={() => {
+                                    return async ({ update }) => {
+                                        await update({ reset: false })
+                                    }
+                                }}>
+                                    <div class="flex gap-2 w-full">
+                                        <input name="id" class="hidden" value={application.id} />
+                                        {#if application.approved}
+                                            <Button type="submit" formaction="?/approve">Un-approve</Button>
+                                            {#if application.checkedIn}
+                                                <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">✓ Checked In</Button>
+                                            {:else}
+                                                <Button type="submit" formaction="?/checkIn">Check In</Button>
+                                            {/if}
                                         {:else}
-                                            <Button type="submit" formaction="?/checkIn">Check In</Button>
+                                            <Button type="submit" formaction="?/approve">Approve</Button>
                                         {/if}
-                                    {:else}
-                                        <Button type="submit" formaction="?/approve">Approve</Button>
-                                    {/if}
-                                </div>
-                            </form>
-                        {/if}
+                                    </div>
+                                </form>
+                            {/if}
+                        </div>
                     </div>
                 </Card>
             {/each}
         </div>
     </div>
 </div>
-
-
-
