@@ -8,6 +8,7 @@
     import Card from "../../components/Card.svelte";
     import Input from "../../components/form/Input.svelte";
     import Select from "../../components/form/Select.svelte";
+    import Datalist from "../../components/form/Datalist.svelte";
 
     const auth = authClient.useSession();
     const user = $derived($auth.data?.user);
@@ -18,6 +19,8 @@
     let loading = $state(false);
     let mlhCodeChecked = $state(application?.mlhCodeOfConduct ?? false);
     let mlhAuthChecked = $state(application?.mlhAuthorization ?? false);
+    let schoolNotFound = $state(false);
+    let schoolValue = $state(application?.school ?? "");
 
     const canSubmit = $derived(mlhCodeChecked && mlhAuthChecked);
 
@@ -33,6 +36,15 @@
     $effect(() => {
         if (application && !originalApplication) {
             originalApplication = { ...application };
+        }
+    });
+
+    $effect(() => {
+        schoolValue = application?.school ?? "";
+        if (application?.school && !data.schools.includes(application.school)) {
+            schoolNotFound = true;
+        } else {
+            schoolNotFound = false;
         }
     });
 
@@ -162,11 +174,37 @@
                 <div>
                     <h3 class="font-bold">Education</h3>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Select label="School <span class='text-red-500'>*</span>" name="school" value={application.school} required>
-                            {#each data.schools as school}
-                                <option>{school}</option>
-                            {/each}
-                        </Select>
+                        <div class="flex flex-col gap-1 w-full">
+                            <div class={schoolNotFound ? "hidden" : "block"}>
+                                <Datalist
+                                    label="School <span class='text-red-500'>*</span>"
+                                    name={schoolNotFound ? "" : "school"}
+                                    options={data.schools}
+                                    placeholder="Search your school"
+                                    bind:value={schoolValue}
+                                    required={!schoolNotFound}
+                                />
+                            </div>
+
+                            <div class={schoolNotFound ? "block" : "hidden"}>
+                                <Input
+                                    label="School <span class='text-red-500'>*</span>"
+                                    name={schoolNotFound ? "school" : ""}
+                                    placeholder="Enter your school"
+                                    bind:value={schoolValue}
+                                    required={schoolNotFound}
+                                />
+                            </div>
+
+                            <div class="flex items-center gap-2 mt-1">
+                                <Checkbox
+                                    checked={schoolNotFound}
+                                    onchange={(e) => schoolNotFound = e.currentTarget.checked}
+                                >
+                                    I can't find my school
+                                </Checkbox>
+                            </div>
+                        </div>
                         <Select label="Level of Study <span class='text-red-500'>*</span>" name="level-of-study" value={application.levelOfStudy} required>
                             <option>Less than Secondary / High School</option>
                             <option>Secondary / High School</option>
