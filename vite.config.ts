@@ -3,6 +3,11 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [sveltekit()],
+	resolve: {
+		alias: {
+			$components: '/src/components',
+		}
+	},
 	server: {
 		allowedHosts: true
 	}
