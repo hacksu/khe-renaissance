@@ -17,7 +17,7 @@
   import BentTreeLogo from "../assets/sponsors/bent_tree_coffee_roasters_logo.png";
   import EnbasisLogo from "../assets/sponsors/enbasis_inc_logo.jpg";
   import HacKSULogo from "../assets/sponsors/hacksu_logo.svg";
-
+  import PureButtonsLogo from "../assets/sponsors/pure_buttons_logo.png"  
   import OnePasswordLogo from "../assets/software/1password.svg";
   import BalsamiqLogo from "../assets/software/Balsamiq_2025_logo.svg";
   import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png"
@@ -54,6 +54,12 @@
       url: "https://www.boardandbevy.com/",
     },
     {
+        image: PureButtonsLogo,
+        name: "Pure Buttons",
+        url: "https://mail.mlh.io/e/c/eyJlIjoxNTI0ODIsImVtYWlsX2lkIjoiZXhhbXBsZSIsImhyZWYiOiJodHRwczovL21saC5saW5rL01MSC1QdXJlQnV0dG9ucy1oYWNrYXRob25zP2Fqc191aWQ9MDE5NjNjZjEtNmZlNy00NmU1LThiOWItOWYzYjQ1ZTQ5YTQxXHUwMDI2dXRtX2NhbXBhaWduPU1lbWJlcitFdmVudCstK1B1cmUrQnV0dG9ucytJbnRyb1x1MDAyNnV0bV9jb250ZW50PVB1cmUrQnV0dG9ucytJbnRyb1x1MDAyNnV0bV9tZWRpdW09RW1haWxcdTAwMjZ1dG1fc291cmNlPUN1c3RvbWVyLmlvIiwidCI6MTc0NDgwNzUxMX0/465b97fffd84c977c1b3f1e4dc23b3c937dce616e1a19b195fbefe37581efec1",
+
+    },
+    {
       image: HacKSULogo,
       name: "HacKSU",
       url: "https://hacksu.com",
@@ -62,7 +68,7 @@
     //  image: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png",
     //  name: "Amazon Web Services",
     //  url: "https://aws.amazon.com",
-    //  }
+    //  },
   ];
 
   const softwareLicenses: SoftwareLisence[] = [
