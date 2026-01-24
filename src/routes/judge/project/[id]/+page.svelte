@@ -3,24 +3,16 @@
     import Icon from "@iconify/svelte";
     
     let { data } = $props();
-    const { project } = data;
-
-    // --- Configuration ---
-    const criteriaConfig = [
-        { key: 'creativity', label: 'Creativity' },
-        { key: 'mostLearned', label: 'Most Learned' },
-        { key: 'technicality', label: 'Technicality' },
-        { key: 'overall', label: 'Overall Score' },
-        { key: 'trackFit', label: 'Track Fit' }
-    ] as const;
+    const { project, criteria } = data;
 
     // --- State ---
-    let scores = $state(Object.fromEntries(criteriaConfig.map(c => [c.key, 0])) as Record<string, number>);
+    // Initialize scores map: id -> score
+    let scores = $state(Object.fromEntries(criteria.map(c => [c.id, 0])) as Record<string, number>);
 
     let progress = $derived(
         Object.values(scores).filter(s => s > 0).length
     );
-    let totalCriteria = criteriaConfig.length;
+    let totalCriteria = criteria.length;
     let progressPercent = $derived((progress / totalCriteria) * 100);
 
     function handleNext() {
@@ -57,17 +49,17 @@
     <!-- Scrollable Form Area -->
     <div class="flex-1 overflow-y-auto p-4 space-y-6 pb-24">
         
-        {#each criteriaConfig as criterion}
+        {#each criteria as criterion (criterion.id)}
             <div class="space-y-3">
                 <div class="flex justify-between items-end">
-                    <label class="font-bold text-secondary text-xl uppercase tracking-wide">{criterion.label}</label>
+                    <span class="font-bold text-secondary text-xl uppercase tracking-wide">{criterion.name}</span>
                 </div>
                 <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
                     {#each [1, 2, 3, 4, 5] as val}
                         <button 
                             class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
-                            {scores[criterion.key] === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
-                            onclick={() => scores[criterion.key] = val}
+                            {scores[criterion.id] === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
+                            onclick={() => scores[criterion.id] = val}
                         >
                             {val}
                         </button>

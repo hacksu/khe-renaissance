@@ -215,13 +215,10 @@
         <div class="grid grid-cols-2 gap-4">
              <div class="space-y-1">
                 <label class="text-sm font-bold text-secondary">Track</label>
-                <select name="track" class="w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent">
-                    <option value="General">General</option>
-                    <option value="Business Analytics">Business Analytics</option>
-                    <option value="Education Tech">Education Tech</option>
-                    <option value="Healthcare">Healthcare</option>
-                    <option value="Consumer">Consumer</option>
-                    <option value="New Frontiers">New Frontiers</option>
+                <select name="track" class="w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent text-black">
+                    {#each data.tracks as track}
+                        <option value={track.id}>{track.name}</option>
+                    {/each}
                 </select>
              </div>
             <Input name="tableNumber" label="Table #" placeholder="e.g. 12" />
@@ -274,13 +271,14 @@
             <div class="grid grid-cols-2 gap-4">
                  <div class="space-y-1">
                     <label class="text-sm font-bold text-secondary">Track</label>
-                    <select name="track" value={selectedProjectForEdit.track} class="w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent text-black">
-                        <option value="General">General</option>
-                        <option value="Business Analytics">Business Analytics</option>
-                        <option value="Education Tech">Education Tech</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Consumer">Consumer</option>
-                        <option value="New Frontiers">New Frontiers</option>
+                    <select 
+                        name="track" 
+                        value={selectedProjectForEdit.trackId || data.tracks.find(t => t.name === selectedProjectForEdit.track)?.id} 
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent text-black"
+                    >
+                        {#each data.tracks as track}
+                            <option value={track.id}>{track.name}</option>
+                        {/each}
                     </select>
                  </div>
                 <Input name="tableNumber" label="Table #" value={selectedProjectForEdit.tableNumber || ''} />

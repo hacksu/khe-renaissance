@@ -3,24 +3,19 @@ import type { Actions, PageServerLoad } from "./$types";
 import { fail } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async () => {
-    // Fetch all Projects with members
-    // Fetch all Checked-In Applications
-
-    // Use try-catch or just standard prisma calls. 
-    // Since I cannot verify with broken DB, I will assume it works or just leave it 'ready'.
-    // If I want to allow UI testing, I might need to mock if DB fails.
-    // But let's write the intended production code.
-
-    // In case DB is not pushed yet, I might default to empty arrays if it throws.
     let projects = [];
     let unassignedParticipants = [];
+    let tracks = [];
 
     try {
+        tracks = await prisma.track.findMany({ orderBy: { name: 'asc' } });
+
         projects = await prisma.project.findMany({
             include: {
                 members: {
                     include: { user: true }
-                }
+                },
+                Track: true
             },
             orderBy: { name: 'asc' }
         });
@@ -39,16 +34,24 @@ export const load: PageServerLoad = async () => {
         // Fallback for dev/demo if DB is down
         // Mock data
         projects = [
-            { id: '1', name: 'Mock Project A', track: 'General', tableNumber: '101', members: [] }
+            { id: '1', name: 'Mock Project A', track: 'General', tableNumber: '101', members: [], Track: { name: 'General' } }
         ];
         unassignedParticipants = [
-            { id: 'a1', firstName: 'John', lastName: 'Doe', email: 'john@example.com', user: { email: 'john@example.com' } }
+            { id: 'a1', firstName: 'John', lastName: 'Doe', email: 'john@example.com', school: 'KSU', user: { email: 'john@example.com' } }
+        ];
+        tracks = [
+            { id: 't1', name: 'General' },
+            { id: 't2', name: 'Healthcare' }
         ];
     }
 
     return {
-        projects,
-        unassignedParticipants
+        projects: projects.map(p => ({
+            ...p,
+            track: p.Track?.name || p.track // Normalize track name for UI
+        })),
+        unassignedParticipants,
+        tracks
     };
 };
 
@@ -56,16 +59,24 @@ export const actions: Actions = {
     createProject: async ({ request }) => {
         const form = await request.formData();
         const name = form.get("name") as string;
-        const track = form.get("track") as string;
+        const trackId = form.get("track") as string; // Form sends ID now
         const tableNumber = form.get("tableNumber") as string;
 
         if (!name) return fail(400, { missing: true });
 
         try {
+            // resolve track name for legacy
+            let trackName = "General";
+            if (trackId) {
+                const t = await prisma.track.findUnique({ where: { id: trackId } });
+                if (t) trackName = t.name;
+            }
+
             await prisma.project.create({
                 data: {
                     name,
-                    track: track || "General",
+                    track: trackName,
+                    trackId: trackId || undefined,
                     tableNumber
                 }
             });
@@ -109,17 +120,25 @@ export const actions: Actions = {
         const form = await request.formData();
         const id = form.get("id") as string;
         const name = form.get("name") as string;
-        const track = form.get("track") as string;
+        const trackId = form.get("track") as string;
         const tableNumber = form.get("tableNumber") as string;
 
         if (!id || !name) return fail(400, { missing: true });
 
         try {
+            // resolve track name for legacy
+            let trackName = "General";
+            if (trackId) {
+                const t = await prisma.track.findUnique({ where: { id: trackId } });
+                if (t) trackName = t.name;
+            }
+
             await prisma.project.update({
                 where: { id },
                 data: {
                     name,
-                    track,
+                    track: trackName,
+                    trackId: trackId || null,
                     tableNumber
                 }
             });

@@ -2,13 +2,26 @@
     import Button from "./Button.svelte";
     import Card from "./Card.svelte";
 
+    import type { Snippet } from 'svelte';
+
     let { 
         open = false, 
         title = "Warning", 
         message = "", 
+        confirmText = "Confirm",
+        cancelText = "Cancel",
         onConfirm, 
         onCancel,
         children
+    }: {
+        open?: boolean;
+        title?: string;
+        message?: string;
+        confirmText?: string;
+        cancelText?: string;
+        onConfirm?: () => void;
+        onCancel?: () => void;
+        children?: Snippet;
     } = $props();
 </script>
 
@@ -22,8 +35,8 @@
                 {/if}
                 {@render children?.()}
                 <div class="flex justify-end gap-2 mt-4">
-                    <Button type="button" onclick={onCancel} class="bg-gray-200 hover:bg-gray-300 text-black">Cancel</Button>
-                    <Button type="button" onclick={onConfirm} class="bg-red-600 hover:bg-red-700 text-white">Confirm</Button>
+                    <Button type="button" onclick={onCancel} class="bg-gray-200 hover:bg-gray-300 text-black">{cancelText}</Button>
+                    <Button type="button" onclick={onConfirm} class="bg-red-600 hover:bg-red-700 text-white">{confirmText}</Button>
                 </div>
             </Card>
         </div>

@@ -119,15 +119,44 @@ model Application {
 model Project {
   id          String   @id @default(uuid())
   name        String
-  track       String   @default("General")
   description String?
   tableNumber String?
+  
+  // Legacy track string (deprecated, use trackId relation)
+  track       String   @default("General")
+  
+  trackId     String?
+  Track       Track?   @relation(fields: [trackId], references: [id])
   
   members          Application[]
   judgements       Judgement[]
   judgeAssignments JudgeAssignment[]
   
   @@map("project")
+}
+
+model Track {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  
+  projects    Project[]
+  
+  @@map("track")
+}
+
+model JudgingCriterion {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  description String?
+  maxScore    Int      @default(5)
+  weight      Float    @default(1.0)
+  order       Int      @default(0)
+
+  scores      JudgementScore[]
+
+  @@map("judging_criterion")
 }
 
 model JudgeAssignment {
@@ -153,11 +182,8 @@ model Judgement {
   projectId    String
   project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   
-  creativity   Int
-  mostLearned  Int
-  technicality Int
-  overall      Int
-  trackFit     Int
+  // Dynamic Scores
+  scores       JudgementScore[]
   
   comment      String? // @db.Text is not needed for raw postgres usually unless specific, String is fine
   
@@ -166,4 +192,16 @@ model Judgement {
 
   @@unique([userId, projectId])
   @@map("judgement")
+}
+
+model JudgementScore {
+  id           String           @id @default(uuid())
+  judgementId  String
+  judgement    Judgement        @relation(fields: [judgementId], references: [id], onDelete: Cascade)
+  criterionId  String
+  criterion    JudgingCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
+  score        Int
+
+  @@unique([judgementId, criterionId])
+  @@map("judgement_score")
 }
