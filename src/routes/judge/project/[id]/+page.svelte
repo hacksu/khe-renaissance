@@ -57,7 +57,7 @@
             {#each criteria as criterion (criterion.id)}
                 <div class="space-y-3">
                     <div class="flex justify-between items-end">
-                        <span class="font-bold text-secondary text-xl uppercase tracking-wide">{criterion.name}</span>
+                        <span class="font-bold text-secondary text-2xl uppercase tracking-wide">{criterion.name}</span>
                     </div>
                     <!-- Hidden Input for Form Submission -->
                     <input type="hidden" name="score_{criterion.id}" value={scores[criterion.id]} />
@@ -66,7 +66,7 @@
                         {#each [1, 2, 3, 4, 5] as val}
                             <button 
                                 type="button"
-                                class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
+                                class="flex-1 text-xl aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
                                 {scores[criterion.id] === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
                                 onclick={() => scores[criterion.id] = val}
                             >
