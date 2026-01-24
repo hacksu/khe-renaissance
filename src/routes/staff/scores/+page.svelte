@@ -1,5 +1,7 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import { invalidateAll } from "$app/navigation";
+    import { onMount } from "svelte";
     import Button from "$components/Button.svelte";
     import Icon from "@iconify/svelte";
 
@@ -9,6 +11,14 @@
     const confirmClear = () => {
         return confirm("Are you sure? This will delete ALL judgements and assignments. This cannot be undone.");
     };
+
+    onMount(() => {
+        const interval = setInterval(() => {
+            invalidateAll();
+        }, 5000);
+
+        return () => clearInterval(interval);
+    });
 </script>
 
 <div class="p-6 pt-24 min-h-screen">
