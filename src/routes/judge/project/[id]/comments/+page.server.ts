@@ -1,19 +1,18 @@
-import { prisma } from '$lib/server/prisma';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from '@sveltejs/kit';
 
 import type { PageServerLoad } from './$types';
+import { Judging } from '$lib/server/judging';
 
 export const load: PageServerLoad = async ({ params }) => {
-    const project = await prisma.project.findUnique({
-        where: { id: params.id },
-        select: { name: true, tableNumber: true }
-    });
-    return { project };
+    // We can reuse getProjectForJudging to get the name/details
+    // Or just simple queries. Using the service is cleaner.
+    const result = await Judging.getProjectForJudging(params.id);
+    return { project: result?.project };
 };
 
 export const actions: Actions = {
-    saveComment: async ({ request, locals, params }) => {
+    saveComment: async ({ request, params }) => {
         const { auth } = await import('$lib/server/auth');
         const session = await auth.api.getSession(request);
         if (!session) return fail(401);
@@ -26,26 +25,7 @@ export const actions: Actions = {
         const comment = form.get('comment') as string;
 
         try {
-            // Update Judgement
-            await prisma.judgement.update({
-                where: {
-                    userId_projectId: { userId, projectId }
-                },
-                data: {
-                    comment: comment || null
-                }
-            });
-
-            // Mark Assignment as Completed
-            await prisma.judgeAssignment.update({
-                where: {
-                    userId_projectId: { userId, projectId }
-                },
-                data: {
-                    status: 'completed'
-                }
-            });
-
+            await Judging.submitComment(userId, projectId, comment);
         } catch (e) {
             console.error(e);
             return fail(500, { message: "Failed to save comment" });

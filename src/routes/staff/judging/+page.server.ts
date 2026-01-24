@@ -1,55 +1,14 @@
-import { prisma } from "$lib/server/prisma";
 import type { Actions, PageServerLoad } from "./$types";
 import { fail } from "@sveltejs/kit";
+import { Projects } from "$lib/server/projects";
 
 export const load: PageServerLoad = async () => {
-    let projects = [];
-    let unassignedParticipants = [];
-    let tracks = [];
-
-    try {
-        tracks = await prisma.track.findMany({ orderBy: { name: 'asc' } });
-
-        projects = await prisma.project.findMany({
-            include: {
-                members: {
-                    include: { user: true }
-                },
-                Track: true
-            },
-            orderBy: { name: 'asc' }
-        });
-
-        // Get checked-in applicants who are NOT in a project
-        unassignedParticipants = await prisma.application.findMany({
-            where: {
-                checkedIn: true,
-                projectId: null
-            },
-            include: { user: true },
-            orderBy: { firstName: 'asc' } // or whatever
-        });
-    } catch (e) {
-        console.error("DB Error or Schema not synced:", e);
-        // Fallback for dev/demo if DB is down
-        // Mock data
-        projects = [
-            { id: '1', name: 'Mock Project A', track: 'General', tableNumber: '101', members: [], Track: { name: 'General' } }
-        ];
-        unassignedParticipants = [
-            { id: 'a1', firstName: 'John', lastName: 'Doe', email: 'john@example.com', school: 'KSU', user: { email: 'john@example.com' } }
-        ];
-        tracks = [
-            { id: 't1', name: 'General' },
-            { id: 't2', name: 'Healthcare' }
-        ];
-    }
+    const projects = await Projects.getAllProjects();
+    const unassignedParticipants = await Projects.getUnassignedApplications();
+    const tracks = await Projects.getAllTracks();
 
     return {
-        projects: projects.map(p => ({
-            ...p,
-            track: p.Track?.name || p.track // Normalize track name for UI
-        })),
+        projects,
         unassignedParticipants,
         tracks
     };
@@ -65,21 +24,7 @@ export const actions: Actions = {
         if (!name) return fail(400, { missing: true });
 
         try {
-            // resolve track name for legacy
-            let trackName = "General";
-            if (trackId) {
-                const t = await prisma.track.findUnique({ where: { id: trackId } });
-                if (t) trackName = t.name;
-            }
-
-            await prisma.project.create({
-                data: {
-                    name,
-                    track: trackName,
-                    trackId: trackId || undefined,
-                    tableNumber
-                }
-            });
+            await Projects.createProject(name, trackId, tableNumber);
         } catch (e) {
             console.error("Failed to create project", e);
             return fail(500, { error: "Failed to create project" });
@@ -93,10 +38,7 @@ export const actions: Actions = {
         if (!applicationId || !projectId) return fail(400, { missing: true });
 
         try {
-            await prisma.application.update({
-                where: { id: applicationId },
-                data: { projectId }
-            });
+            await Projects.assignParticipant(applicationId, projectId);
         } catch (e) {
             return fail(500, { error: "Failed to assign" });
         }
@@ -108,10 +50,7 @@ export const actions: Actions = {
         if (!applicationId) return fail(400, { missing: true });
 
         try {
-            await prisma.application.update({
-                where: { id: applicationId },
-                data: { projectId: null }
-            });
+            await Projects.removeParticipant(applicationId);
         } catch (e) {
             return fail(500, { error: "Failed to remove" });
         }
@@ -126,22 +65,7 @@ export const actions: Actions = {
         if (!id || !name) return fail(400, { missing: true });
 
         try {
-            // resolve track name for legacy
-            let trackName = "General";
-            if (trackId) {
-                const t = await prisma.track.findUnique({ where: { id: trackId } });
-                if (t) trackName = t.name;
-            }
-
-            await prisma.project.update({
-                where: { id },
-                data: {
-                    name,
-                    track: trackName,
-                    trackId: trackId || null,
-                    tableNumber
-                }
-            });
+            await Projects.updateProject(id, name, trackId, tableNumber);
         } catch (e) {
             console.error("Failed to update project", e);
             return fail(500, { error: "Failed to update project" });
