@@ -154,6 +154,9 @@ export const Judging = {
     /**
      * Get aggregated scores for all projects (Leaderboard).
      */
+    /**
+     * Get aggregated scores for all projects (Leaderboard), grouped by track.
+     */
     getAllProjectScores: async () => {
         const projects = await prisma.project.findMany({
             include: {
@@ -164,7 +167,8 @@ export const Judging = {
             }
         });
 
-        return projects.map(p => {
+        // Calculate scores
+        const calculated = projects.map(p => {
             const totalScore = p.judgements.reduce((sum, j) => {
                 return sum + j.scores.reduce((s, score) => s + score.score, 0);
             }, 0);
@@ -181,7 +185,28 @@ export const Judging = {
                 totalScore,
                 averageScore: average
             };
-        }).sort((a, b) => Number(b.averageScore) - Number(a.averageScore));
+        });
+
+        // Group by track
+        const grouped: Record<string, typeof calculated> = {};
+
+        for (const p of calculated) {
+            const track = p.track || "General";
+            if (!grouped[track]) grouped[track] = [];
+            grouped[track].push(p);
+        }
+
+        // Sort each track
+        for (const track in grouped) {
+            grouped[track].sort((a, b) => Number(b.averageScore) - Number(a.averageScore));
+        }
+
+        // Sort tracks alphabetically (optional, but good for consistency)
+        // actually returning a sorted object is tricky in JS, but we can return entries
+        // or just let frontend handle track order.
+        // Let's return the Record and let frontend Iterate.
+
+        return grouped;
     },
 
     /**
