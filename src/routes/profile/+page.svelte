@@ -165,11 +165,17 @@
                         <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" value={application.phoneNumber} required />
                         <Input label="Email <span class='text-red-500'>*</span>" name="email" type="email" value={application.email || user?.email} required />
                     </div>
-                    <Select label="Country of Residence <span class='text-red-500'>*</span>" name="country-of-residence" value={application.countryOfResidence} required>
-                        {#each Object.entries(data.countries) as [code, name]}
-                            <option value={code}>{name}</option>
-                        {/each}
-                    </Select>
+
+                    <Datalist
+                        label="Country of Residence <span class='text-red-500'>*</span>"
+                        name="country-of-residence"
+                        placeholder="Search your country"
+                        options={Object.entries(data.countries).map(([code, name]) => ({ value: code, label: name }))}
+                        value={application.countryOfResidence}
+                        required
+                    />
+
+
                 </div>
                 <div>
                     <h3 class="font-bold">Education</h3>
