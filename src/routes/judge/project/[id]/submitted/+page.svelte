@@ -1,11 +1,10 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import { enhance } from "$app/forms";
     import Icon from "@iconify/svelte";
     
+    let { data } = $props();
     const projectId = $page.params.id;
-    // In a real app, calculate next project ID dynamically
-    const nextProjectId = 4; // Mock next
-    const remaining = 2; // Mock remaining
 </script>
 
 <div class="max-w-md mx-auto h-screen bg-sand flex flex-col items-center justify-center p-6 text-center">
@@ -21,16 +20,16 @@
 
     <div class="bg-white/50 rounded-xl p-4 w-full mb-8 border border-secondary/10">
         <p class="text-xs uppercase tracking-wider text-secondary/60 mb-1">Status</p>
-        <p class="text-secondary font-medium">You have <span class="font-bold text-accent">{remaining}</span> projects remaining.</p>
+        <p class="text-secondary font-medium">You have <span class="font-bold text-accent">{data.remaining}</span> projects remaining.</p>
     </div>
 
     <div class="w-full space-y-3">
-        <a 
-            href="/judge/project/{nextProjectId}"
-            class="block w-full py-4 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg hover:bg-secondary/90 transition-transform active:scale-[0.98]"
-        >
-            Judge Next Team (Team #{nextProjectId}) →
-        </a>
+        <form method="POST" action="/judge?/judgeNext" use:enhance>
+            <button class="w-full py-4 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg hover:bg-secondary/90 transition-transform active:scale-[0.98] flex items-center justify-center gap-2">
+                <span>Judge Next Team</span>
+                <Icon icon="mdi:arrow-right" width="16" height="16" />
+            </button>
+        </form>
 
         <a 
             href="/judge"

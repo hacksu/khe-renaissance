@@ -1,13 +1,16 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
+    import { goto } from "$app/navigation";
     import Icon from "@iconify/svelte";
     
     let { data } = $props();
     const { project, criteria } = data;
 
     // --- State ---
+    interface ScoreMap {
+        [key: string]: number;
+    }
     // Initialize scores map: id -> score
-    let scores = $state(Object.fromEntries(criteria.map(c => [c.id, 0])) as Record<string, number>);
+    let scores: ScoreMap = $state(Object.fromEntries(criteria.map((c: any) => [c.id, 0])));
 
     let progress = $derived(
         Object.values(scores).filter(s => s > 0).length
@@ -46,44 +49,51 @@
         </div>
     </div>
 
-    <!-- Scrollable Form Area -->
-    <div class="flex-1 overflow-y-auto p-4 space-y-6 pb-24">
-        
-        {#each criteria as criterion (criterion.id)}
-            <div class="space-y-3">
-                <div class="flex justify-between items-end">
-                    <span class="font-bold text-secondary text-xl uppercase tracking-wide">{criterion.name}</span>
+    <!-- Form Container -->
+    <form method="POST" action="?/saveScores" class="flex-1 flex flex-col relative overflow-hidden">
+        <!-- Scrollable Form Area -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-6 pb-24">
+            
+            {#each criteria as criterion (criterion.id)}
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <span class="font-bold text-secondary text-xl uppercase tracking-wide">{criterion.name}</span>
+                    </div>
+                    <!-- Hidden Input for Form Submission -->
+                    <input type="hidden" name="score_{criterion.id}" value={scores[criterion.id]} />
+                    
+                    <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
+                        {#each [1, 2, 3, 4, 5] as val}
+                            <button 
+                                type="button"
+                                class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
+                                {scores[criterion.id] === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
+                                onclick={() => scores[criterion.id] = val}
+                            >
+                                {val}
+                            </button>
+                        {/each}
+                    </div>
                 </div>
-                <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
-                    {#each [1, 2, 3, 4, 5] as val}
-                        <button 
-                            class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
-                            {scores[criterion.id] === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
-                            onclick={() => scores[criterion.id] = val}
-                        >
-                            {val}
-                        </button>
-                    {/each}
-                </div>
-            </div>
-        {/each}
+            {/each}
 
-        <div class="pt-8 text-center text-secondary/40 text-sm">
-            Scroll down for comments →
+            <div class="pt-8 text-center text-secondary/40 text-sm">
+                Scroll down for comments →
+            </div>
+
         </div>
 
-    </div>
-
-    <!-- Bottom Action Bar -->
-     <div class="flex-none p-4 bg-white/80 backdrop-blur-md border-t border-secondary/10 absolute bottom-0 w-full max-w-md">
-        <button 
-            onclick={handleNext}
-            disabled={progress < totalCriteria}
-            class="w-full py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        >
-            <span>Next: Comments</span>
-            <Icon icon="mdi:arrow-right" width="16" height="16" />
-        </button>
-    </div>
+        <!-- Bottom Action Bar -->
+        <div class="flex-none p-4 bg-white/80 backdrop-blur-md border-t border-secondary/10 absolute bottom-0 w-full max-w-md">
+            <button 
+                type="submit"
+                disabled={progress < totalCriteria}
+                class="w-full py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+                <span>Next: Comments</span>
+                <Icon icon="mdi:arrow-right" width="16" height="16" />
+            </button>
+        </div>
+    </form>
 
 </div>

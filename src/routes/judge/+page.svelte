@@ -1,13 +1,14 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import { enhance } from "$app/forms";
     import Icon from "@iconify/svelte";
     
     let { data } = $props();
-    let { assignments } = data;
+    let assignments = $derived(data.assignments);
     const judgeName = $page.data.session?.user?.name || "Judge";
 
-    const completed = assignments.filter(a => a.status === 'completed').length;
-    const remaining = assignments.length - completed;
+    const completed = $derived(assignments.filter(a => a.status === 'completed').length);
+    const remaining = $derived(assignments.filter(a => a.status === 'assigned').length);
 </script>
 
 <div class="max-w-md mx-auto p-4 flex flex-col h-full min-h-screen relative">
@@ -18,11 +19,22 @@
         <p class="text-secondary/80">Welcome, {judgeName}</p>
     </div>
 
+    <!-- Judge Next Button -->
+    <div class="mb-8">
+        <form method="POST" action="?/judgeNext" use:enhance>
+            <button class="w-full py-4 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-transform active:scale-[0.98] flex items-center justify-center gap-2 hover:bg-secondary/90">
+                <span>Judge Next Team</span>
+                <Icon icon="mdi:arrow-right" width="20" height="20" />
+            </button>
+        </form>
+        <p class="text-center text-xs text-secondary/50 mt-2">Get assigned a new team automatically.</p>
+    </div>
+
     <!-- Stats -->
     <div class="bg-white/50 backdrop-blur-sm rounded-xl p-4 mb-6 border border-secondary/10 shadow-sm">
         <div class="grid grid-cols-3 gap-2 text-center divide-x divide-secondary/10">
             <div>
-                <p class="text-xs uppercase tracking-wider text-secondary/60">Assigned</p>
+                <p class="text-xs uppercase tracking-wider text-secondary/60">Total</p>
                 <p class="text-xl font-bold text-secondary">{assignments.length}</p>
             </div>
             <div>
@@ -30,14 +42,14 @@
                 <p class="text-xl font-bold text-green-700">{completed}</p>
             </div>
             <div>
-                <p class="text-xs uppercase tracking-wider text-secondary/60">Left</p>
+                <p class="text-xs uppercase tracking-wider text-secondary/60">Active</p>
                 <p class="text-xl font-bold text-orange-600">{remaining}</p>
             </div>
         </div>
     </div>
 
     <!-- Assigned Projects List -->
-    <h2 class="text-xs font-bold uppercase tracking-widest text-secondary/50 mb-3">Assigned Projects</h2>
+    <h2 class="text-xs font-bold uppercase tracking-widest text-secondary/50 mb-3">Your History</h2>
     
     <div class="space-y-3 pb-20">
         {#each assignments as assignment}
@@ -57,12 +69,17 @@
                 
                 <div class="flex items-center text-xs font-medium {assignment.status === 'completed' ? 'text-green-600' : 'text-accent'}">
                     {#if assignment.status === 'completed'}
-                        Tap to specific details
+                        Review Score
                     {:else}
-                        Tap to judge →
+                        Continue Judging →
                     {/if}
                 </div>
             </a>
         {/each}
+        {#if assignments.length === 0}
+            <div class="text-center py-8 text-secondary/40 italic">
+                No history yet. Start judging!
+            </div>
+        {/if}
     </div>
 </div>
