@@ -1,37 +1,19 @@
-import { prisma } from '$lib/server/prisma';
-import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import { error, fail, redirect } from '@sveltejs/kit';
+import type { PageServerLoad, Actions } from './$types';
+import { Judging } from '$lib/server/judging';
 
 export const load: PageServerLoad = async ({ params }) => {
-    const projectId = params.id;
+    const result = await Judging.getProjectForJudging(params.id);
 
-    const project = await prisma.project.findUnique({
-        where: { id: projectId },
-        include: { Track: true }
-    });
-
-    if (!project) {
+    if (!result) {
         throw error(404, "Project not found");
     }
 
-    const criteria = await prisma.judgingCriterion.findMany({
-        orderBy: { order: 'asc' }
-    });
-
-    return {
-        project: {
-            ...project,
-            track: project.Track?.name || project.track // Fallback to legacy string if relation missing
-        },
-        criteria
-    };
+    return result;
 };
 
-import type { Actions } from './$types';
-import { fail, redirect } from '@sveltejs/kit';
-
 export const actions: Actions = {
-    saveScores: async ({ request, locals, params }) => {
+    saveScores: async ({ request, params }) => {
         const { auth } = await import('$lib/server/auth');
         const session = await auth.api.getSession(request);
         if (!session) return fail(401);
@@ -57,31 +39,7 @@ export const actions: Actions = {
         }
 
         try {
-            // Upsert Judgement
-            // If exists (partial?), update it.
-            // unique([userId, projectId])
-            const judgement = await prisma.judgement.upsert({
-                where: {
-                    userId_projectId: { userId, projectId }
-                },
-                update: {
-                    // Update scores: Delete old, insert new (simplest for now)
-                    scores: {
-                        deleteMany: {},
-                        create: scores
-                    }
-                },
-                create: {
-                    userId,
-                    projectId,
-                    scores: {
-                        create: scores
-                    },
-                }
-            });
-
-            // Status limit:
-            // We don't mark assignment completed yet, wait for comments.
+            await Judging.submitScore(userId, projectId, scores);
         } catch (e) {
             console.error(e);
             return fail(500, { message: "Failed to save scores" });

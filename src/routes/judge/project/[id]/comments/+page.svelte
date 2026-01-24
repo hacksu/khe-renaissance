@@ -3,6 +3,8 @@
    import { enhance } from "$app/forms";
    import Icon from "@iconify/svelte";
 
+   let { data } = $props();
+
    const projectId = $page.params.id;
    
    let comment = $state("");
