@@ -1,36 +1,31 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
+    import Icon from "@iconify/svelte";
     
     let { data } = $props();
     const { project } = data;
 
+    // --- Configuration ---
+    const criteriaConfig = [
+        { key: 'creativity', label: 'Creativity' },
+        { key: 'mostLearned', label: 'Most Learned' },
+        { key: 'technicality', label: 'Technicality' },
+        { key: 'overall', label: 'Overall Score' },
+        { key: 'trackFit', label: 'Track Fit' }
+    ] as const;
+
     // --- State ---
-    let scores = $state({
-        creativity: 0,
-        mostLearned: 0,
-        technicality: 0,
-        overall: 0,
-        trackFit: 0
-    });
+    let scores = $state(Object.fromEntries(criteriaConfig.map(c => [c.key, 0])) as Record<string, number>);
 
     let progress = $derived(
         Object.values(scores).filter(s => s > 0).length
     );
-    let totalCriteria = 5;
+    let totalCriteria = criteriaConfig.length;
     let progressPercent = $derived((progress / totalCriteria) * 100);
-
-    // --- Components ---
-    // Inline Score Input Component for simplicity in this file
-    // Ideally this would be in a separate file if reused heavily
-    const ScoreInput = (label: string, key: keyof typeof scores, description?: string) => {
-        // We can't use functions to render components easily without snippets in Svelte 5 cleanly inline for this logic
-        // So I'll just use the markup below.
-    };
 
     function handleNext() {
         if (progress < totalCriteria) {
-             // Optional: warn user? For now just allow flow or maybe block.
-             // "Next" button usually implies moving forward.
+             // Optional logic
         }
         goto(`/judge/project/${project.id}/comments`);
     }
@@ -52,7 +47,6 @@
         <div class="mt-4">
             <div class="flex justify-between text-xs text-secondary/60 mb-1">
                 <span>Progress</span>
-                <span>{progress}/{totalCriteria} scores</span>
             </div>
             <div class="h-2 bg-secondary/10 rounded-full overflow-hidden">
                 <div class="h-full bg-accent transition-all duration-300 ease-out" style="width: {progressPercent}%"></div>
@@ -63,100 +57,24 @@
     <!-- Scrollable Form Area -->
     <div class="flex-1 overflow-y-auto p-4 space-y-6 pb-24">
         
-        <!-- Criteria 1: Creativity -->
-        <div class="space-y-3">
-            <div class="flex justify-between items-end">
-                <label class="font-bold text-secondary text-sm uppercase tracking-wide">Creativity</label>
-                <span class="text-xs text-secondary/50 font-mono">{scores.creativity || '-'}/5</span>
+        {#each criteriaConfig as criterion}
+            <div class="space-y-3">
+                <div class="flex justify-between items-end">
+                    <label class="font-bold text-secondary text-xl uppercase tracking-wide">{criterion.label}</label>
+                </div>
+                <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
+                    {#each [1, 2, 3, 4, 5] as val}
+                        <button 
+                            class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
+                            {scores[criterion.key] === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
+                            onclick={() => scores[criterion.key] = val}
+                        >
+                            {val}
+                        </button>
+                    {/each}
+                </div>
             </div>
-            <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
-                {#each [1, 2, 3, 4, 5] as val}
-                    <button 
-                        class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
-                        {scores.creativity === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
-                        onclick={() => scores.creativity = val}
-                    >
-                        {val}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <!-- Criteria 2: Most Learned -->
-        <div class="space-y-3">
-            <div class="flex justify-between items-end">
-                <label class="font-bold text-secondary text-sm uppercase tracking-wide">Most Learned</label>
-                <span class="text-xs text-secondary/50 font-mono">{scores.mostLearned || '-'}/5</span>
-            </div>
-            <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
-                {#each [1, 2, 3, 4, 5] as val}
-                    <button 
-                        class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
-                        {scores.mostLearned === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
-                        onclick={() => scores.mostLearned = val}
-                    >
-                        {val}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <!-- Criteria 3: Technicality -->
-        <div class="space-y-3">
-             <div class="flex justify-between items-end">
-                <label class="font-bold text-secondary text-sm uppercase tracking-wide">Technicality</label>
-                <span class="text-xs text-secondary/50 font-mono">{scores.technicality || '-'}/5</span>
-            </div>
-            <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
-                {#each [1, 2, 3, 4, 5] as val}
-                    <button 
-                        class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
-                        {scores.technicality === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
-                        onclick={() => scores.technicality = val}
-                    >
-                        {val}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <!-- Criteria 4: Overall Score -->
-        <div class="space-y-3">
-             <div class="flex justify-between items-end">
-                <label class="font-bold text-secondary text-sm uppercase tracking-wide">Overall Score</label>
-                <span class="text-xs text-secondary/50 font-mono">{scores.overall || '-'}/5</span>
-            </div>
-            <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
-                {#each [1, 2, 3, 4, 5] as val}
-                    <button 
-                        class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
-                        {scores.overall === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
-                        onclick={() => scores.overall = val}
-                    >
-                        {val}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <!-- Criteria 5: Track Fit -->
-        <div class="space-y-3">
-             <div class="flex justify-between items-end">
-                <label class="font-bold text-secondary text-sm uppercase tracking-wide">Track Fit</label>
-                <span class="text-xs text-secondary/50 font-mono">{scores.trackFit || '-'}/5</span>
-            </div>
-            <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
-                {#each [1, 2, 3, 4, 5] as val}
-                    <button 
-                        class="flex-1 aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
-                        {scores.trackFit === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
-                        onclick={() => scores.trackFit = val}
-                    >
-                        {val}
-                    </button>
-                {/each}
-            </div>
-        </div>
+        {/each}
 
         <div class="pt-8 text-center text-secondary/40 text-sm">
             Scroll down for comments →
@@ -172,9 +90,7 @@
             class="w-full py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
             <span>Next: Comments</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
+            <Icon icon="mdi:arrow-right" width="16" height="16" />
         </button>
     </div>
 

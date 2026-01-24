@@ -1,6 +1,7 @@
 <script lang="ts">
    import { page } from "$app/stores";
    import { goto } from '$app/navigation';
+   import Icon from "@iconify/svelte";
 
    const projectId = $page.params.id;
    
@@ -47,9 +48,7 @@
                 onclick={handleSave}
                 class="flex-[2] py-3 px-4 bg-green-700 text-white font-bold rounded-xl shadow-lg hover:bg-green-800 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
+                <Icon icon="mdi:check" width="20" height="20" />
                 <span>Submit Score</span>
             </button>
         </div>

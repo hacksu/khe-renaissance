@@ -7,7 +7,8 @@
         title = "Warning", 
         message = "", 
         onConfirm, 
-        onCancel 
+        onCancel,
+        children
     } = $props();
 </script>
 
@@ -16,8 +17,11 @@
         <div class="w-full max-w-md">
             <Card padded>
                 <h3 class="text-xl font-bold mb-2 text-red-600">{title}</h3>
-                <p class="mb-6 text-gray-100">{message}</p>
-                <div class="flex justify-end gap-2">
+                {#if message}
+                    <p class="mb-6 text-gray-100">{message}</p>
+                {/if}
+                {@render children?.()}
+                <div class="flex justify-end gap-2 mt-4">
                     <Button type="button" onclick={onCancel} class="bg-gray-200 hover:bg-gray-300 text-black">Cancel</Button>
                     <Button type="button" onclick={onConfirm} class="bg-red-600 hover:bg-red-700 text-white">Confirm</Button>
                 </div>

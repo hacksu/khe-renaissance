@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import Icon from "@iconify/svelte";
     
     const projectId = $page.params.id;
     // In a real app, calculate next project ID dynamically
@@ -10,9 +11,7 @@
 <div class="max-w-md mx-auto h-screen bg-sand flex flex-col items-center justify-center p-6 text-center">
     
     <div class="mb-8 scale-150 text-green-700">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg>
+        <Icon icon="mdi:check-circle-outline" width="80" height="80" />
     </div>
 
     <h1 class="text-3xl font-bold text-secondary mb-2">Saved!</h1>
