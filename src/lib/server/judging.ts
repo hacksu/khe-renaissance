@@ -82,7 +82,10 @@ export const Judging = {
     /**
      * Get a specific assignment/project details for judging.
      */
-    getProjectForJudging: async (projectId: string) => {
+    /**
+     * Get a specific assignment/project details for judging.
+     */
+    getProjectForJudging: async (projectId: string, userId?: string) => {
         const project = await prisma.project.findUnique({
             where: { id: projectId },
             include: { Track: true }
@@ -94,12 +97,21 @@ export const Judging = {
             orderBy: { order: 'asc' }
         });
 
+        let judgement = null;
+        if (userId) {
+            judgement = await prisma.judgement.findUnique({
+                where: { userId_projectId: { userId, projectId } },
+                include: { scores: true }
+            });
+        }
+
         return {
             project: {
                 ...project,
                 track: project.Track?.name || project.track
             },
-            criteria
+            criteria,
+            judgement
         };
     },
 
