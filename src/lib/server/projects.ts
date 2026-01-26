@@ -123,5 +123,19 @@ export const Projects = {
             where: { id: applicationId },
             data: { projectId: null }
         });
+    },
+
+    /**
+     * Find a project by table number.
+     */
+    getByTableNumber: async (tableNumber: string) => {
+        return await prisma.project.findFirst({
+            where: {
+                tableNumber: {
+                    equals: tableNumber,
+                    mode: 'insensitive'
+                }
+            }
+        });
     }
 };
