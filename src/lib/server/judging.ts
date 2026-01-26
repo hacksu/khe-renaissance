@@ -152,9 +152,6 @@ export const Judging = {
     },
 
     /**
-     * Get aggregated scores for all projects (Leaderboard).
-     */
-    /**
      * Get aggregated scores for all projects (Leaderboard), grouped by track.
      */
     getAllProjectScores: async () => {
@@ -201,12 +198,56 @@ export const Judging = {
             grouped[track].sort((a, b) => Number(b.averageScore) - Number(a.averageScore));
         }
 
-        // Sort tracks alphabetically (optional, but good for consistency)
-        // actually returning a sorted object is tricky in JS, but we can return entries
-        // or just let frontend handle track order.
-        // Let's return the Record and let frontend Iterate.
-
         return grouped;
+    },
+
+    /**
+     * Get all projects with detailed feedback for emailing.
+     */
+    getProjectsWithFeedback: async () => {
+        const projects = await prisma.project.findMany({
+            include: {
+                judgements: {
+                    include: {
+                        scores: {
+                            include: { criterion: true }
+                        }
+                    }
+                },
+                Track: true,
+                members: {
+                    include: { user: true }
+                }
+            }
+        });
+
+        return projects.map(p => {
+            const feedbacks = p.judgements.map((j, index) => {
+                const scores = j.scores.map(s => ({
+                    name: s.criterion.name,
+                    value: s.score,
+                    max: s.criterion.maxScore
+                }));
+
+                return {
+                    judgeLabel: `Judge ${index + 1}`,
+                    scores,
+                    comment: j.comment
+                };
+            });
+
+            // Get team emails
+            const emails = p.members
+                .map(m => m.email || m.user.email)
+                .filter(e => e && e.trim().length > 0);
+
+            return {
+                id: p.id,
+                name: p.name,
+                emails,
+                feedbacks
+            };
+        });
     },
 
     /**
