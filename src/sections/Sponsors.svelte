@@ -35,11 +35,11 @@
       name: "Bent Tree Coffee",
       url: "https://www.benttreecoffee.com",
     },
-    {
-      image: EnbasisLogo,
-      name: "Enbasis",
-      url: "https://enbasis.com",
-    },
+    // {
+    //   image: EnbasisLogo,
+    //   name: "Enbasis",
+    //   url: "https://enbasis.com",
+    // },
     {
       image: BoardAndBevyLogo,
       name: "Board And Bevy",
