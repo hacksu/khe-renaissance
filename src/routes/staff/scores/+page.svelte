@@ -19,6 +19,18 @@
         showEmailModal = false;
     };
 
+    let showSingleEmailModal = $state(false);
+    let selectedTeamId = $state<string>("");
+    let selectedTeamName = $state<string>("");
+    let isSendingSingleEmail = $state(false);
+    let singleEmailForm: HTMLFormElement;
+
+    const handleSingleEmailConfirm = () => {
+        if (singleEmailForm) singleEmailForm.requestSubmit();
+        showSingleEmailModal = false;
+    };
+
+
     const confirmClear = () => {
         return confirm("Are you sure? This will delete ALL judgements and assignments. This cannot be undone.");
     };
@@ -40,6 +52,27 @@
     onConfirm={handleEmailConfirm}
     onCancel={() => showEmailModal = false}
 />
+
+<Modal
+    open={showSingleEmailModal}
+    title={`Email ${selectedTeamName}?`}
+    message="This will send an email to the team members with their score breakdown and comments."
+    confirmText={isSendingSingleEmail ? "Sending..." : "Send Email"}
+    onConfirm={handleSingleEmailConfirm}
+    onCancel={() => showSingleEmailModal = false}
+/>
+
+<!-- Hidden form for single team email -->
+<form method="POST" action="?/emailTeam" bind:this={singleEmailForm} use:enhance={() => {
+    isSendingSingleEmail = true;
+    return async ({ update }) => {
+        isSendingSingleEmail = false;
+        await update();
+        alert(`Email sent to ${selectedTeamName} successfully!`);
+    };
+}} class="hidden">
+    <input type="hidden" name="id" value={selectedTeamId} />
+</form>
 
 <div class="p-6 pt-24 min-h-screen">
     <div class="flex justify-between items-center mb-6">
@@ -101,6 +134,7 @@
                                 <th class="p-4 font-bold">Team</th>
                                 <th class="p-4 font-bold text-center w-24">Judges</th>
                                 <th class="p-4 font-bold text-right w-32">Avg Score</th>
+                                <th class="p-4 font-bold text-right w-24">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-secondary/5">
@@ -120,6 +154,19 @@
                                     </td>
                                     <td class="p-4 text-right font-mono font-bold text-lg text-accent">
                                         {result.averageScore}
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <button 
+                                            onclick={() => {
+                                                selectedTeamId = result.id;
+                                                selectedTeamName = result.name;
+                                                showSingleEmailModal = true;
+                                            }}
+                                            class="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition-colors"
+                                            title="Send feedback email to this team"
+                                        >
+                                            Email Feedback
+                                        </button>
                                     </td>
                                 </tr>
                             {/each}

@@ -1,4 +1,5 @@
 import { prisma } from '$lib/server/prisma';
+import { sendJudgeFeedbackEmail } from '$lib/server/email';
 
 export const Judging = {
     /**
@@ -203,9 +204,13 @@ export const Judging = {
 
     /**
      * Get all projects with detailed feedback for emailing.
+     * Optionally filter by a single projectId.
      */
-    getProjectsWithFeedback: async () => {
+    getProjectsWithFeedback: async (projectId?: string) => {
+        const whereClause = projectId ? { id: projectId } : {};
+
         const projects = await prisma.project.findMany({
+            where: whereClause,
             include: {
                 judgements: {
                     include: {
@@ -248,6 +253,58 @@ export const Judging = {
                 feedbacks
             };
         });
+    },
+
+    /**
+     * Send feedback emails to a project team.
+     */
+    sendFeedbackEmailToProject: async (project: {
+        name: string,
+        emails: string[],
+        feedbacks: {
+            judgeLabel: string,
+            scores: { name: string, value: number, max: number }[],
+            comment: string | null
+        }[]
+    }) => {
+        if (project.emails.length === 0) return;
+
+        // Format Feedback
+        let feedbackText = "";
+        let feedbackHtml = "";
+
+        if (project.feedbacks.length === 0) {
+            feedbackText = "No feedback was recorded for this project.";
+            feedbackHtml = "<p>No feedback was recorded for this project.</p>";
+        } else {
+            for (const feedback of project.feedbacks) {
+                feedbackText += `\n${feedback.judgeLabel}:\n`;
+                feedbackHtml += `<h3>${feedback.judgeLabel}</h3>`;
+
+                // Scores
+                feedbackText += "Scores:\n";
+                feedbackHtml += "<h4>Scores</h4><ul>";
+                for (const s of feedback.scores) {
+                    feedbackText += `- ${s.name}: ${s.value}/${s.max}\n`;
+                    feedbackHtml += `<li><strong>${s.name}</strong>: ${s.value}/${s.max}</li>`;
+                }
+                feedbackHtml += "</ul>";
+
+                // Comment
+                if (feedback.comment) {
+                    feedbackText += `Comment: ${feedback.comment}\n`;
+                    feedbackHtml += `<h4>Comment</h4><p>${feedback.comment}</p>`;
+                }
+
+                feedbackText += "\n--------------------------------\n";
+                feedbackHtml += "<hr>";
+            }
+        }
+
+        // Send to all members concurrently
+        await Promise.all(project.emails.map(email =>
+            sendJudgeFeedbackEmail(email, project.name, feedbackText, feedbackHtml)
+        ));
     },
 
     /**
