@@ -3,7 +3,7 @@
     import { enhance } from "$app/forms";
     import Icon from "@iconify/svelte";
     
-    let { data } = $props();
+    let { data, form } = $props();
     let assignments = $derived(data.assignments);
     const judgeName = $page.data.session?.user?.name || "Judge";
 
@@ -20,7 +20,7 @@
     </div>
 
     <!-- Judge Next Button -->
-    <div class="mb-8">
+    <div class="mb-4">
         <form method="POST" action="?/judgeNext" use:enhance>
             <button class="w-full py-4 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-transform active:scale-[0.98] flex items-center justify-center gap-2 hover:bg-secondary/90">
                 <span>Judge Next Team</span>
@@ -28,6 +28,26 @@
             </button>
         </form>
         <p class="text-center text-xs text-secondary/50 mt-2">Get assigned a new team automatically.</p>
+    </div>
+
+    <!-- Manual Entry -->
+    <div class="mb-8 border-t border-secondary/10 pt-4">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-secondary/50 mb-3 text-center">Or Enter Manual Team #</h3>
+        <form method="POST" action="?/manualEntry" use:enhance class="flex gap-2">
+            <input 
+                type="text" 
+                name="tableNumber" 
+                placeholder="Table #" 
+                class="flex-1 bg-white rounded-lg px-4 py-2 border border-secondary/20 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent text-secondary placeholder:text-secondary/30"
+                required
+            />
+            <button class="px-4 py-2 bg-secondary/10 text-secondary font-bold rounded-lg hover:bg-secondary/20 transition-colors">
+                Go
+            </button>
+        </form>
+        {#if form?.manualEntryError}
+            <p class="text-red-600 text-xs mt-2 text-center">{form.manualEntryError}</p>
+        {/if}
     </div>
 
     <!-- Stats -->

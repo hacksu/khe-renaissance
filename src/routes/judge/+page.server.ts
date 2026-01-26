@@ -31,5 +31,23 @@ export const actions: Actions = {
             console.error(e);
             return fail(500, { message: "Failed to assign project" });
         }
+    },
+
+    manualEntry: async ({ request }) => {
+        const { Projects } = await import('$lib/server/projects');
+        const data = await request.formData();
+        const tableNumber = data.get('tableNumber')?.toString();
+
+        if (!tableNumber) {
+            return fail(400, { manualEntryError: "Please enter a table number." });
+        }
+
+        const project = await Projects.getByTableNumber(tableNumber);
+
+        if (!project) {
+            return fail(404, { manualEntryError: `Project with table #${tableNumber} not found.` });
+        }
+
+        throw redirect(303, `/judge/project/${project.id}`);
     }
 };
