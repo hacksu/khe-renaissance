@@ -34,7 +34,10 @@ export const actions: Actions = {
     },
 
     manualEntry: async ({ request }) => {
-        const { Projects } = await import('$lib/server/projects');
+        const { auth } = await import('$lib/server/auth');
+        const session = await auth.api.getSession(request);
+        if (!session) return fail(401);
+
         const data = await request.formData();
         const tableNumber = data.get('tableNumber')?.toString();
 
@@ -42,12 +45,15 @@ export const actions: Actions = {
             return fail(400, { manualEntryError: "Please enter a table number." });
         }
 
-        const project = await Projects.getByTableNumber(tableNumber);
+        try {
+            const assignment = await Judging.assignJudgeToTable(session.user.id, tableNumber);
+            if (!assignment) return fail(404, { manualEntryError: `Project with table #${tableNumber} not found.` });
 
-        if (!project) {
-            return fail(404, { manualEntryError: `Project with table #${tableNumber} not found.` });
+            throw redirect(303, `/judge/project/${assignment.projectId}`);
+        } catch (e) {
+            if ((e as any)?.status === 303) throw e;
+            console.error(e);
+            return fail(404, { manualEntryError: "Failed to find or assign project." });
         }
-
-        throw redirect(303, `/judge/project/${project.id}`);
     }
 };
