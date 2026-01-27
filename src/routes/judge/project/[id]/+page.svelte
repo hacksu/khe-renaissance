@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
     import Icon from "@iconify/svelte";
     
     let { data } = $props();
@@ -9,21 +8,28 @@
     interface ScoreMap {
         [key: string]: number;
     }
+    
     // Initialize scores map: id -> score
-    let scores: ScoreMap = $state(Object.fromEntries(criteria.map((c: any) => [c.id, 0])));
+    let initialScores: ScoreMap = {};
+    if (data.judgement?.scores) {
+        data.judgement.scores.forEach((s: any) => {
+            initialScores[s.criterionId] = s.score;
+        });
+    }
+
+    // Default 0 for unassigned
+    criteria.forEach((c: any) => {
+        if (initialScores[c.id] === undefined) initialScores[c.id] = 0;
+    });
+
+    let scores: ScoreMap = $state(initialScores);
+    let comment = $state(data.judgement?.comment || "");
 
     let progress = $derived(
         Object.values(scores).filter(s => s > 0).length
     );
     let totalCriteria = criteria.length;
     let progressPercent = $derived((progress / totalCriteria) * 100);
-
-    function handleNext() {
-        if (progress < totalCriteria) {
-             // Optional logic
-        }
-        goto(`/judge/project/${project.id}/comments`);
-    }
 
 </script>
 
@@ -77,8 +83,17 @@
                 </div>
             {/each}
 
-            <div class="pt-8 text-center text-secondary/40 text-sm">
-                Scroll down for comments →
+            <!-- Comment Section -->
+            <div class="pt-8 border-t border-secondary/10">
+                <h2 class="text-xl font-bold font-serif text-secondary mb-2">Comments</h2>
+                <p class="text-secondary/60 text-sm mb-4">Optional feedback for <span class="font-bold">{project.name}</span></p>
+                
+                <textarea
+                    name="comment"
+                    class="w-full h-32 p-4 bg-white/50 border border-secondary/10 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-secondary/20 placeholder:text-secondary/30 text-secondary"
+                    placeholder="Add feedback, suggestions, or mentions of what you liked..."
+                    bind:value={comment}
+                ></textarea>
             </div>
 
         </div>
@@ -90,8 +105,8 @@
                 disabled={progress < totalCriteria}
                 class="w-full py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-                <span>Next: Comments</span>
-                <Icon icon="mdi:arrow-right" width="16" height="16" />
+                <Icon icon="mdi:check" width="20" height="20" />
+                <span>Submit Score</span>
             </button>
         </div>
     </form>

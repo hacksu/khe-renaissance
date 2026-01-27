@@ -32,6 +32,21 @@ export const Judging = {
      * Find and assign the next optimal project for a user to judge.
      */
     assignNextProject: async (userId: string) => {
+        // 0. Check for existing 'assigned' projects (Forced assignments)
+        const existingAssignment = await prisma.judgeAssignment.findFirst({
+            where: {
+                userId,
+                status: 'assigned'
+            },
+            orderBy: {
+                project: { tableNumber: 'asc' } // Optional: Do them in order
+            }
+        });
+
+        if (existingAssignment) {
+            return existingAssignment;
+        }
+
         // 1. Get IDs of projects user has already touched
         const userHistory = await prisma.judgeAssignment.findMany({
             where: { userId },
@@ -82,7 +97,10 @@ export const Judging = {
     /**
      * Get a specific assignment/project details for judging.
      */
-    getProjectForJudging: async (projectId: string) => {
+    /**
+     * Get a specific assignment/project details for judging.
+     */
+    getProjectForJudging: async (projectId: string, userId?: string) => {
         const project = await prisma.project.findUnique({
             where: { id: projectId },
             include: { Track: true }
@@ -94,12 +112,21 @@ export const Judging = {
             orderBy: { order: 'asc' }
         });
 
+        let judgement = null;
+        if (userId) {
+            judgement = await prisma.judgement.findUnique({
+                where: { userId_projectId: { userId, projectId } },
+                include: { scores: true }
+            });
+        }
+
         return {
             project: {
                 ...project,
                 track: project.Track?.name || project.track
             },
-            criteria
+            criteria,
+            judgement
         };
     },
 
@@ -315,5 +342,129 @@ export const Judging = {
             prisma.judgement.deleteMany({}),
             prisma.judgeAssignment.deleteMany({})
         ]);
+    },
+
+    /**
+     * Get all users who are capable of being judges (Staff role).
+     */
+    getAllJudges: async () => {
+        // Fetch both 'staff' and 'judge' roles to support future OTP-authenticated judges
+        return await prisma.user.findMany({
+            where: {
+                role: { in: ['staff', 'judge'] }
+            },
+            include: {
+                judgeAssignments: {
+                    include: {
+                        project: true
+                    },
+                    where: {
+                        status: 'assigned'
+                    }
+                }
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        });
+    },
+
+    /**
+     * Assign a judge to specific teams by table number string.
+     * @param userId The ID of the judge (User)
+     * @param tableNumbersString Comma separated string of table numbers (e.g. "1, 2, 5-10")
+     */
+    assignJudgeToTeams: async (userId: string, tableNumbersString: string) => {
+        // 1. Parse table numbers
+        const parts = tableNumbersString.split(',').map(s => s.trim()).filter(s => s);
+        const tableNumbers: string[] = [];
+
+        for (const part of parts) {
+            if (part.includes('-')) {
+                const [start, end] = part.split('-').map(n => parseInt(n));
+                if (!isNaN(start) && !isNaN(end)) {
+                    for (let i = start; i <= end; i++) {
+                        tableNumbers.push(i.toString());
+                    }
+                }
+            } else {
+                tableNumbers.push(part);
+            }
+        }
+
+        if (tableNumbers.length === 0) {
+            // If empty, maybe we want to clear assignments? 
+            // For now, let's treat it as *setting* the assignments to ONLY these.
+            // So we delete existing assigned ones and create new ones.
+        }
+
+        // 2. Find projects
+        const projects = await prisma.project.findMany({
+            where: {
+                tableNumber: { in: tableNumbers }
+            }
+        });
+
+        // 3. Update Assignments
+        // Strategy: We want the user to be assigned *exactly* these.
+        // But maybe they have completed some? We shouldn't delete completed ones.
+        // Let's delete all 'assigned' ones, and create new 'assigned' ones for the requested list.
+        // If they already have a 'completed' assignment for a project, we skip it?
+        // Or do we force re-assignment? Usually completed is final.
+
+        return await prisma.$transaction(async (tx) => {
+            // Delete existing 'assigned' tasks for this user
+            await tx.judgeAssignment.deleteMany({
+                where: {
+                    userId,
+                    status: 'assigned'
+                }
+            });
+
+            // Create new assignments
+            // Filter out projects they might have already completed?
+            const completed = await tx.judgeAssignment.findMany({
+                where: {
+                    userId,
+                    projectId: { in: projects.map(p => p.id) },
+                    status: 'completed'
+                },
+                select: { projectId: true }
+            });
+
+            const completedIds = new Set(completed.map(c => c.projectId));
+
+            const toCreate = projects.filter(p => !completedIds.has(p.id));
+
+            if (toCreate.length > 0) {
+                await tx.judgeAssignment.createMany({
+                    data: toCreate.map(p => ({
+                        userId,
+                        projectId: p.id,
+                        status: 'assigned'
+                    }))
+                });
+            }
+        });
+    },
+
+    /**
+     * Get all projects with table numbers for UI selection.
+     */
+    getAllProjectsWithTables: async () => {
+        return await prisma.project.findMany({
+            where: {
+                tableNumber: { not: null }
+            },
+            select: {
+                id: true,
+                name: true,
+                tableNumber: true
+            },
+            orderBy: {
+                // ordering by table number string might be weird ("1", "10", "2"), but okay for now
+                tableNumber: 'asc'
+            }
+        });
     }
 };
