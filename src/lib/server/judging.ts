@@ -47,6 +47,21 @@ export const Judging = {
             return existingAssignment;
         }
 
+        // 0.5 Check if user is in "Manual Mode"
+        // If they have ANY assignment (past or present) that is manual, they are a manual judge.
+        // We do NOT want to give them auto-assigned projects.
+        const manualAssignments = await prisma.judgeAssignment.count({
+            where: {
+                userId,
+                isManual: true
+            }
+        });
+
+        if (manualAssignments > 0) {
+            // STRICT MODE: You only get what you are assigned.
+            return null;
+        }
+
         // 1. Get IDs of projects user has already touched
         const userHistory = await prisma.judgeAssignment.findMany({
             where: { userId },
@@ -87,7 +102,8 @@ export const Judging = {
             data: {
                 userId,
                 projectId: candidate.id,
-                status: 'assigned'
+                status: 'assigned',
+                isManual: false
             }
         });
 
@@ -412,6 +428,7 @@ export const Judging = {
         // If they already have a 'completed' assignment for a project, we skip it?
         // Or do we force re-assignment? Usually completed is final.
 
+        // Manual assignment implies we want these specific ones.
         return await prisma.$transaction(async (tx) => {
             // Delete existing 'assigned' tasks for this user
             await tx.judgeAssignment.deleteMany({
@@ -441,9 +458,55 @@ export const Judging = {
                     data: toCreate.map(p => ({
                         userId,
                         projectId: p.id,
-                        status: 'assigned'
+                        status: 'assigned',
+                        isManual: true // MARK AS MANUAL
                     }))
                 });
+            }
+        });
+    },
+
+    /**
+     * Self-assign a judge to a specific table number.
+     * This bypasses the manual check (or rather, creates a manual-like assignment).
+     */
+    assignJudgeToTable: async (userId: string, tableNumber: string) => {
+        // 1. Find project by table
+        const project = await prisma.project.findFirst({
+            where: { tableNumber }
+        });
+
+        if (!project) {
+            throw new Error(`No project found at table ${tableNumber}`);
+        }
+
+        // 2. Check if already completed
+        const completed = await prisma.judgeAssignment.findUnique({
+            where: {
+                userId_projectId: { userId, projectId: project.id }
+            }
+        });
+
+        if (completed && completed.status === 'completed') {
+            // Already done, redirect there?
+            return completed;
+        }
+
+        // 3. Create or update assignment
+        // We upsert to ensure we don't duplicate if already assigned
+        return await prisma.judgeAssignment.upsert({
+            where: {
+                userId_projectId: { userId, projectId: project.id }
+            },
+            update: {
+                status: 'assigned',
+                isManual: false
+            },
+            create: {
+                userId,
+                projectId: project.id,
+                status: 'assigned',
+                isManual: false
             }
         });
     },
