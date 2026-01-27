@@ -223,3 +223,49 @@ export const sendJudgeFeedbackEmail = async (to: string, projectName: string, fe
         console.error("Failed to send feedback email to " + to, error);
     }
 };
+
+const REMINDER_EMAIL_TEXT =
+    `Hi there,
+
+We noticed you have started an account but haven't submitted your application for Kent Hack Enough 2026 yet!
+
+The deadline is approaching fast, so please head over to our website and complete your application as soon as possible.
+
+If you have any questions or need assistance, feel free to reply to this email.
+
+Best,
+Kent Hack Enough 2026 Team`;
+
+const REMINDER_EMAIL_HTML =
+    `<p>Hi there,</p>
+<p>We noticed you have started an account but haven't submitted your application for <strong>Kent Hack Enough 2026</strong> yet!</p>
+<p>The deadline is approaching fast, so please head over to our website and complete your application as soon as possible.</p>
+<p>If you have any questions or need assistance, feel free to reply to this email.</p>
+<p>Best,<br>
+<strong>Kent Hack Enough 2026 Team</strong></p>`;
+
+export const sendReminderEmail = async (to: string) => {
+    const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
+    const subject = "Don't forget to submit your application for KHE 2026!";
+    const text = REMINDER_EMAIL_TEXT;
+    const html = REMINDER_EMAIL_HTML;
+
+    try {
+        const message = createEmailMessage(from, to, subject, text, html);
+        const encodedMessage = Buffer.from(message)
+            .toString("base64")
+            .replace(/\+/g, "-")
+            .replace(/\//g, "_")
+            .replace(/=+$/, "");
+
+        await gmailClient.users.messages.send({
+            userId: "me",
+            requestBody: {
+                raw: encodedMessage,
+            },
+        });
+
+    } catch (error: any) {
+        console.error("Failed to send reminder email:", error);
+    }
+};
