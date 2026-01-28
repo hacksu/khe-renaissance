@@ -224,6 +224,19 @@
                     </select>
                 </div>
             </div>
+
+            <!-- Curve Input -->
+            <div class="space-y-1 pt-4 border-t border-white/10">
+                <label class="text-xs font-bold text-white/70 uppercase tracking-wider block">Judge Curve (Score Modifier)</label>
+                <p class="text-[10px] text-white/50 mb-1">Added to EACH category score.</p>
+                <input 
+                    type="number" 
+                    name="curve" 
+                    step="0.1" 
+                    value={selectedJudge?.curve || 0} 
+                    class="w-full rounded-md border-white/20 bg-white/10 text-white shadow-sm focus:border-accent focus:ring-accent text-sm placeholder-white/50"
+                />
+            </div>
         </form>
     {/if}
 </Modal>

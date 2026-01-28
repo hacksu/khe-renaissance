@@ -18,6 +18,15 @@ export const actions: Actions = {
 
         try {
             await Judging.assignJudgeToTeams(userId, tableNumbers || "");
+
+            const curve = form.get("curve");
+            if (curve !== null) {
+                const curveValue = parseFloat(curve.toString());
+                if (!isNaN(curveValue)) {
+                    await Judging.updateJudgeCurve(userId, curveValue);
+                }
+            }
+
             return { success: true };
         } catch (e) {
             console.error(e);
