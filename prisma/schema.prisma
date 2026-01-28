@@ -29,6 +29,7 @@ model User {
   judgements       Judgement[]
 
   role String?
+  curve Float   @default(0.0)
 
   @@unique([email])
   @@map("user")

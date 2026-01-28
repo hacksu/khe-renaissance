@@ -204,7 +204,6 @@ export const sendJudgeFeedbackEmail = async (to: string, projectName: string, fe
     const subject = JUDGE_FEEDBACK_EMAIL_SUBJECT;
     const text = createFeedbackEmailText(projectName, feedbackText);
     const html = createFeedbackEmailHtml(projectName, feedbackHtml);
-
     try {
         const message = createEmailMessage(from, to, subject, text, html);
         const encodedMessage = Buffer.from(message)

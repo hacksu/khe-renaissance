@@ -18,10 +18,6 @@ export const actions: Actions = {
     emailResults: async ({ request }) => {
         try {
             const projects = await Judging.getProjectsWithFeedback();
-
-            // Iterate and send emails
-            // We do this sequentially per project to avoid hitting Gmail rate limits with a massive burst,
-            // but we send to all team members of a single project concurrently.
             for (const project of projects) {
                 await Judging.sendFeedbackEmailToProject(project);
             }

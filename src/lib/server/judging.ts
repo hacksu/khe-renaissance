@@ -132,7 +132,10 @@ export const Judging = {
         if (userId) {
             judgement = await prisma.judgement.findUnique({
                 where: { userId_projectId: { userId, projectId } },
-                include: { scores: true }
+                include: {
+                    scores: true,
+                    user: { select: { curve: true } }
+                }
             });
         }
 
@@ -202,7 +205,10 @@ export const Judging = {
         const projects = await prisma.project.findMany({
             include: {
                 judgements: {
-                    include: { scores: true }
+                    include: {
+                        scores: true,
+                        user: { select: { curve: true } }
+                    }
                 },
                 Track: true
             }
@@ -211,7 +217,8 @@ export const Judging = {
         // Calculate scores
         const calculated = projects.map(p => {
             const totalScore = p.judgements.reduce((sum, j) => {
-                return sum + j.scores.reduce((s, score) => s + score.score, 0);
+                const curve = j.user.curve || 0;
+                return sum + j.scores.reduce((s, score) => s + score.score + curve, 0);
             }, 0);
 
             const count = p.judgements.length;
@@ -259,7 +266,8 @@ export const Judging = {
                     include: {
                         scores: {
                             include: { criterion: true }
-                        }
+                        },
+                        user: { select: { curve: true } }
                     }
                 },
                 Track: true,
@@ -271,9 +279,10 @@ export const Judging = {
 
         return projects.map(p => {
             const feedbacks = p.judgements.map((j, index) => {
+                const curve = j.user.curve || 0;
                 const scores = j.scores.map(s => ({
                     name: s.criterion.name,
-                    value: s.score,
+                    value: s.score + curve,
                     max: s.criterion.maxScore
                 }));
 
@@ -364,10 +373,9 @@ export const Judging = {
      * Get all users who are capable of being judges (Staff role).
      */
     getAllJudges: async () => {
-        // Fetch both 'staff' and 'judge' roles to support future OTP-authenticated judges
         return await prisma.user.findMany({
             where: {
-                role: { in: ['staff', 'judge'] }
+                role: 'judge'
             },
             include: {
                 judgeAssignments: {
@@ -409,9 +417,6 @@ export const Judging = {
         }
 
         if (tableNumbers.length === 0) {
-            // If empty, maybe we want to clear assignments? 
-            // For now, let's treat it as *setting* the assignments to ONLY these.
-            // So we delete existing assigned ones and create new ones.
         }
 
         // 2. Find projects
@@ -422,11 +427,6 @@ export const Judging = {
         });
 
         // 3. Update Assignments
-        // Strategy: We want the user to be assigned *exactly* these.
-        // But maybe they have completed some? We shouldn't delete completed ones.
-        // Let's delete all 'assigned' ones, and create new 'assigned' ones for the requested list.
-        // If they already have a 'completed' assignment for a project, we skip it?
-        // Or do we force re-assignment? Usually completed is final.
 
         // Manual assignment implies we want these specific ones.
         return await prisma.$transaction(async (tx) => {
@@ -525,9 +525,17 @@ export const Judging = {
                 tableNumber: true
             },
             orderBy: {
-                // ordering by table number string might be weird ("1", "10", "2"), but okay for now
                 tableNumber: 'asc'
             }
+        });
+    },
+    /**
+     * Update a judge's curve.
+     */
+    updateJudgeCurve: async (userId: string, curve: number) => {
+        return await prisma.user.update({
+            where: { id: userId },
+            data: { curve }
         });
     }
 };
