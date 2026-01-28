@@ -10,6 +10,11 @@ export const load: LayoutServerLoad = async ({ request }) => {
     }
 
     const role = session.user.role;
+
+    if (role === Role.JUDGE) {
+        throw redirect(303, "/judge");
+    }
+
     if (role != Role.STAFF) {
         throw error(401, "You do not have the permissions to access this page.");
     }
