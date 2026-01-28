@@ -4,6 +4,8 @@
     import Modal from "$components/Modal.svelte";
     import Icon from "@iconify/svelte";
     import { Utils } from "$lib/util";
+    import { authClient } from "$lib/client";
+    import { invalidateAll } from "$app/navigation";
 
     let { data } = $props();
 
@@ -12,6 +14,32 @@
     let selectedTables = $state<number[]>([]);
     let isSubmitting = $state(false);
     let assignForm: HTMLFormElement;
+
+    // Add Judge State
+    let showAddJudgeModal = $state(false);
+    let newJudgeEmail = $state("");
+    let isAddingJudge = $state(false);
+
+    async function addJudge() {
+        if (!newJudgeEmail) return;
+        isAddingJudge = true;
+        try {
+            await authClient.signIn.magicLink({ 
+                email: newJudgeEmail, 
+                callbackURL: "/judge",
+                name: newJudgeEmail.split("@")[0]
+            });
+            alert("Invitation sent!");
+            showAddJudgeModal = false;
+            newJudgeEmail = "";
+            await invalidateAll();
+        } catch (e) {
+            alert("Failed to send invitation");
+            console.error(e);
+        } finally {
+            isAddingJudge = false;
+        }
+    }
 
     // Derived list of available tables (excluding already selected ones)
     let availableTables = $derived(
@@ -69,6 +97,9 @@
             <h1 class="text-2xl font-bold font-serif text-secondary">Judge Assignments</h1>
             <p class="text-secondary/70">Assign specific tables to judges.</p>
         </div>
+        <Button onclick={() => showAddJudgeModal = true} class="bg-primary text-white">
+            <Icon icon="mdi:plus" /> Add Judge
+        </Button>
     </div>
 
     <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
@@ -195,4 +226,27 @@
             </div>
         </form>
     {/if}
+</Modal>
+
+<Modal
+    open={showAddJudgeModal}
+    title="Invite Judge"
+    confirmText={isAddingJudge ? "Sending..." : "Send Invitation"}
+    onConfirm={addJudge}
+    onCancel={() => showAddJudgeModal = false}
+>
+    <div class="space-y-4">
+        <p class="text-sm text-white/70">
+            Enter the judge's email address. They will receive a magic link to log in.
+        </p>
+        <div>
+            <label class="text-xs font-bold text-white/70 uppercase tracking-wider block mb-1">Email Address</label>
+            <input 
+                bind:value={newJudgeEmail}
+                type="email" 
+                placeholder="judge@example.com"
+                class="w-full rounded-md border-white/20 bg-white/10 text-white shadow-sm focus:border-accent focus:ring-accent text-sm placeholder-white/50"
+            />
+        </div>
+    </div>
 </Modal>

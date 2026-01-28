@@ -10,8 +10,14 @@ export const load: LayoutServerLoad = async ({ request }) => {
     }
 
     const role = session.user.role;
-    // Allow STAFF to also access judge pages for testing/fallback
-    if (role !== Role.JUDGE && role !== Role.STAFF) {
+
+    // Redirect staff to staff area
+    if (role === Role.STAFF) {
+        throw redirect(303, "/staff/judges");
+    }
+
+    // Only allow JUDGE access
+    if (role !== Role.JUDGE) {
         throw error(401, "You do not have the permissions to access the judging platform.");
     }
 
