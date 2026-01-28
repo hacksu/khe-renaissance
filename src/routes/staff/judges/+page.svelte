@@ -211,10 +211,7 @@
                     <label class="text-xs font-bold text-white/70 uppercase tracking-wider">Add Table</label>
                     <select 
                         class="w-full rounded-md border-white/20 bg-white/10 text-white shadow-sm focus:border-accent focus:ring-accent text-sm placeholder-white/50"
-                        onclick={(e) => {
-                             // This is tricky because we want 'onchange' but if user selects same thing twice?
-                             // But wait, we remove it from list so they can't select same thing twice.
-                        }}
+                        onclick={(e) => { }}
                         onchange={addTable}
                     >
                         <option value="" class="text-secondary">Select a table to add...</option>
