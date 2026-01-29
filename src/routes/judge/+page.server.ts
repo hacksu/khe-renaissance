@@ -31,5 +31,29 @@ export const actions: Actions = {
             console.error(e);
             return fail(500, { message: "Failed to assign project" });
         }
+    },
+
+    manualEntry: async ({ request }) => {
+        const { auth } = await import('$lib/server/auth');
+        const session = await auth.api.getSession(request);
+        if (!session) return fail(401);
+
+        const data = await request.formData();
+        const tableNumber = data.get('tableNumber')?.toString();
+
+        if (!tableNumber) {
+            return fail(400, { manualEntryError: "Please enter a table number." });
+        }
+
+        try {
+            const assignment = await Judging.assignJudgeToTable(session.user.id, tableNumber);
+            if (!assignment) return fail(404, { manualEntryError: `Project with table #${tableNumber} not found.` });
+
+            throw redirect(303, `/judge/project/${assignment.projectId}`);
+        } catch (e) {
+            if ((e as any)?.status === 303) throw e;
+            console.error(e);
+            return fail(404, { manualEntryError: "Failed to find or assign project." });
+        }
     }
 };

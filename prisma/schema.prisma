@@ -29,6 +29,7 @@ model User {
   judgements       Judgement[]
 
   role String?
+  curve Float   @default(0.0)
 
   @@unique([email])
   @@map("user")
@@ -168,6 +169,7 @@ model JudgeAssignment {
   
   status    String   @default("assigned") // 'assigned', 'completed', 'skipped'
   priority  Int      @default(0)
+  isManual  Boolean  @default(false)
 
   createdAt DateTime @default(now())
 

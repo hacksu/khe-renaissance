@@ -4,9 +4,32 @@
     import { onMount } from "svelte";
     import Button from "$components/Button.svelte";
     import Icon from "@iconify/svelte";
+    import Modal from "$components/Modal.svelte";
 
     let { data } = $props();
     let isClearing = $state(false);
+    let isEmailing = $state(false);
+    
+    let showEmailModal = $state(false);
+    let emailForm: HTMLFormElement;
+
+    // We can rely on correct form behavior with the modal
+    const handleEmailConfirm = () => {
+        if (emailForm) emailForm.requestSubmit();
+        showEmailModal = false;
+    };
+
+    let showSingleEmailModal = $state(false);
+    let selectedTeamId = $state<string>("");
+    let selectedTeamName = $state<string>("");
+    let isSendingSingleEmail = $state(false);
+    let singleEmailForm: HTMLFormElement;
+
+    const handleSingleEmailConfirm = () => {
+        if (singleEmailForm) singleEmailForm.requestSubmit();
+        showSingleEmailModal = false;
+    };
+
 
     const confirmClear = () => {
         return confirm("Are you sure? This will delete ALL judgements and assignments. This cannot be undone.");
@@ -21,6 +44,36 @@
     });
 </script>
 
+<Modal
+    open={showEmailModal}
+    title="Email All Teams?"
+    message="This will send an email to ALL team members with their score breakdown and comments. This action cannot be undone."
+    confirmText="Send Emails"
+    onConfirm={handleEmailConfirm}
+    onCancel={() => showEmailModal = false}
+/>
+
+<Modal
+    open={showSingleEmailModal}
+    title={`Email ${selectedTeamName}?`}
+    message="This will send an email to the team members with their score breakdown and comments."
+    confirmText={isSendingSingleEmail ? "Sending..." : "Send Email"}
+    onConfirm={handleSingleEmailConfirm}
+    onCancel={() => showSingleEmailModal = false}
+/>
+
+<!-- Hidden form for single team email -->
+<form method="POST" action="?/emailTeam" bind:this={singleEmailForm} use:enhance={() => {
+    isSendingSingleEmail = true;
+    return async ({ update }) => {
+        isSendingSingleEmail = false;
+        await update();
+        alert(`Email sent to ${selectedTeamName} successfully!`);
+    };
+}} class="hidden">
+    <input type="hidden" name="id" value={selectedTeamId} />
+</form>
+
 <div class="p-6 pt-24 min-h-screen">
     <div class="flex justify-between items-center mb-6">
         <div>
@@ -28,22 +81,42 @@
             <p class="text-secondary/70">Live ranking of teams based on average judge scores.</p>
         </div>
         
-        <form method="POST" action="?/clearAll" use:enhance={() => {
-            if(!confirmClear()) return ({ update }) => update({ reset: false }); // Cancel
-            isClearing = true;
-            return async ({ update }) => {
-                isClearing = false;
-                await update();
-            };
-        }}>
-            <button class="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors font-bold text-sm">
-                <Icon icon="mdi:trash-can-outline" />
-                Clear All Scores
+        <div class="flex gap-2">
+            <!-- Email Form (Hidden) -->
+            <form method="POST" action="?/emailResults" bind:this={emailForm} use:enhance={() => {
+                isEmailing = true;
+                return async ({ update }) => {
+                    isEmailing = false;
+                    await update();
+                    alert("Emails sent successfully!");
+                };
+            }} class="hidden"></form>
+
+            <button 
+                onclick={() => showEmailModal = true}
+                disabled={isEmailing}
+                class="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors font-bold text-sm disabled:opacity-50"
+            >
+                <Icon icon="mdi:email-outline" />
+                {isEmailing ? "Sending..." : "Email Results"}
             </button>
-        </form>
+
+            <form method="POST" action="?/clearAll" use:enhance={() => {
+                if(!confirmClear()) return ({ update }) => update({ reset: false }); // Cancel
+                isClearing = true;
+                return async ({ update }) => {
+                    isClearing = false;
+                    await update();
+                };
+            }}>
+                <button class="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors font-bold text-sm">
+                    <Icon icon="mdi:trash-can-outline" />
+                    Clear All Scores
+                </button>
+            </form>
+        </div>
     </div>
 
-    <!-- Leaderboard Table -->
     <!-- Leaderboard Table -->
     <div class="space-y-12">
         {#each Object.entries(data.results) as [track, results]}
@@ -61,6 +134,7 @@
                                 <th class="p-4 font-bold">Team</th>
                                 <th class="p-4 font-bold text-center w-24">Judges</th>
                                 <th class="p-4 font-bold text-right w-32">Avg Score</th>
+                                <th class="p-4 font-bold text-right w-24">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-secondary/5">
@@ -80,6 +154,19 @@
                                     </td>
                                     <td class="p-4 text-right font-mono font-bold text-lg text-accent">
                                         {result.averageScore}
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <button 
+                                            onclick={() => {
+                                                selectedTeamId = result.id;
+                                                selectedTeamName = result.name;
+                                                showSingleEmailModal = true;
+                                            }}
+                                            class="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition-colors"
+                                            title="Send feedback email to this team"
+                                        >
+                                            Email Feedback
+                                        </button>
                                     </td>
                                 </tr>
                             {/each}
