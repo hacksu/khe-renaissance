@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "user" ADD COLUMN     "curve" DOUBLE PRECISION NOT NULL DEFAULT 0.0;

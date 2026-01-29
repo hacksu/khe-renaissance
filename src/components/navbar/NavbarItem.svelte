@@ -1,6 +1,10 @@
 <script lang="ts">
 
-    const { children, ...props } = $props();
+    import type { Snippet } from 'svelte';
+    import type { HTMLAnchorAttributes } from 'svelte/elements';
+
+    type Props = { children?: Snippet };
+    let { children, ...props }: Props & HTMLAnchorAttributes = $props();
 
 </script>
 

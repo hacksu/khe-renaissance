@@ -24,13 +24,15 @@ const handlers: Partial<Record<SocialProvider, ExternalRoleHandler>> = {
             .catch(_ => null);
 
         const hasLeaderRole = member?.roles?.some((role: string) => DISCORD_ROLES.includes(role));
+        if (hasLeaderRole) return Role.STAFF; // Staff implies Judge access usually, or we can make them distinct. 
         return hasLeaderRole ? Role.STAFF : Role.USER;
     }
 }
 
 export enum Role {
     USER = "user",
-    STAFF = "staff"
+    STAFF = "staff",
+    JUDGE = "judge"
 }
 
 export const getRole = async (provider: SocialProvider, request: Request, session: Session): Promise<Role> => {
