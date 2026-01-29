@@ -204,7 +204,6 @@ export const sendJudgeFeedbackEmail = async (to: string, projectName: string, fe
     const subject = JUDGE_FEEDBACK_EMAIL_SUBJECT;
     const text = createFeedbackEmailText(projectName, feedbackText);
     const html = createFeedbackEmailHtml(projectName, feedbackHtml);
-
     try {
         const message = createEmailMessage(from, to, subject, text, html);
         const encodedMessage = Buffer.from(message)
@@ -264,8 +263,50 @@ export const sendReminderEmail = async (to: string) => {
                 raw: encodedMessage,
             },
         });
-
     } catch (error: any) {
         console.error("Failed to send reminder email:", error);
+    }
+};
+
+const MAGIC_LINK_EMAIL_TEXT = (url: string) => `Hi there,
+
+Here is your magic link to log in to Kent Hack Enough 2026:
+${url}
+
+If you did not request this, you can ignore this email.
+
+Thanks,
+Kent Hack Enough 2026 Team`;
+
+const MAGIC_LINK_EMAIL_HTML = (url: string) => `<p>Hi there,</p>
+<p>Here is your magic link to log in to <strong>Kent Hack Enough 2026</strong>:</p>
+<p><a href="${url}" style="display:inline-block;background:#E11D48;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:bold;">Login to KHE 2026</a></p>
+<p>Or copy and paste this link: <a href="${url}">${url}</a></p>
+<p>If you did not request this, you can ignore this email.</p>
+<p>Thanks,<br>
+<strong>Kent Hack Enough 2026 Team</strong></p>`;
+
+export const sendMagicLinkEmail = async (to: string, url: string) => {
+    const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
+    const subject = "Login to Kent Hack Enough 2026";
+    const text = MAGIC_LINK_EMAIL_TEXT(url);
+    const html = MAGIC_LINK_EMAIL_HTML(url);
+
+    try {
+        const message = createEmailMessage(from, to, subject, text, html);
+        const encodedMessage = Buffer.from(message)
+            .toString("base64")
+            .replace(/\+/g, "-")
+            .replace(/\//g, "_")
+            .replace(/=+$/, "");
+
+        await gmailClient.users.messages.send({
+            userId: "me",
+            requestBody: {
+                raw: encodedMessage,
+            },
+        });
+    } catch (error: any) {
+        console.error("Failed to send magic link email:", error);
     }
 };
