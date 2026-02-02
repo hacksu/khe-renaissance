@@ -5,6 +5,7 @@
     import Map from "../sections/Map.svelte";
     import Sponsors from "../sections/Sponsors.svelte";
     import Prizes from "../sections/Prizes.svelte";
+    import Tools from "../sections/Tools.svelte";
 </script>
 
 <div>
@@ -13,6 +14,7 @@
         <Header />
         <Prizes />
         <FAQ />
+        <Tools />
         <Sponsors />
         <Map />
     </div>
