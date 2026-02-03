@@ -86,9 +86,6 @@ export const actions: Actions = {
     });
   },
   sendReminders: async () => {
-    // Find users who definitely DO NOT have a submitted application
-    // This includes users with no application at all, or users with an unsubmitted application
-    // Logic: Users where NOT EXISTS "an application where submitted is true"
     const usersToRemind = await prisma.user.findMany({
       where: {
         NOT: {
