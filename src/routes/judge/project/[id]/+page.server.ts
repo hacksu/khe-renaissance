@@ -3,14 +3,8 @@ import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
 
 export const load: PageServerLoad = async ({ params, locals, request }) => {
-    // We need to get the session here to pass the user ID
-    // We can use the auth helper we use in actions, or locals if available.
-    // Assuming standard auth pattern for this project where we might need to import auth.
     const { auth } = await import('$lib/server/auth');
     const session = await auth.api.getSession(request);
-
-    // If not logged in, they probably shouldn't be here, but let's handle it gracefully or let the layout handle auth.
-    // The service handles optional userId, so we can pass undefined if no session.
 
     const result = await Judging.getProjectForJudging(params.id, session?.user?.id);
 

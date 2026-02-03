@@ -4,6 +4,8 @@
   import BambuLab from "../assets/software/BambuLab.png";
   import HakkoLogo from "../assets/software/hakko.webp";
   import KeySightLogo from "../assets/software/keysight.webp";
+  // import TokenCompany from "../assets/software/tokenCompany.svg";
+  import MLHHardwareKit from "../assets/mlh.svg";
 
   interface Tool {
     name: string;
@@ -30,7 +32,10 @@
       url: "https://bambulab.com/en-us/a1-mini",
       image: BambuLab
     },
-    // { name: "MLH Hardware Kit" },
+    // { name: "Hardware Kit",
+    //   url: "https://mlh.io/hardware-kit",
+    //   image: MLHHardwareKit},
+    // { name: "The Token Company",
   ];
 
   const softwareLicenses: SoftwareLicense[] = [

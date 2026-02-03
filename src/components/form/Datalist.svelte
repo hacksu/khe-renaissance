@@ -53,7 +53,6 @@
 
     // Filter options based on input text
     let filteredOptions = $derived.by(() => {
-        // Show all on focus if minChars 0? Or just filter.
         if (text.length < minChars) return [];
 
         const lowerText = text.toLowerCase();
@@ -65,22 +64,10 @@
     function handleInput(e: Event) {
         isOpen = true;
         activeIndex = -1;
-        // If simply typing, value becomes text if option format is string, 
-        // OR we might clear value if strict? 
-        // For backwards compat with "School" (string[]), value should sync with text.
-        // For "Country" (objects), value should ideally wait for selection or be "undefined"?
-        // But the previous implementation bound value directly.
-        // Heuristic: If ANY option is object, assume strict/mapped mode? 
-        // Or better: Just always sync value = text IF options are strings. 
-        // If options are objects, typing "Uni" shouldn't set value="Uni" (code).
-        
         const isStringOptions = options.length > 0 && typeof options[0] === 'string';
         if (isStringOptions) {
             value = text;
         } else {
-            // Object mode: Clear value on input modification? To force re-selection?
-            // Or keep old value? Clearing is safer against invalid codes.
-            // But let's check if userInput exactly matches a label.
             const exactMatch = normalizedOptions.find(o => o.label.toLowerCase() === text.toLowerCase());
             if (exactMatch) {
                 value = exactMatch.value;
@@ -111,7 +98,7 @@
                 e.preventDefault();
                 selectOption(filteredOptions[activeIndex]);
             } else if (filteredOptions.length > 0 && text) {
-                 // Auto-select first match on enter? Optional UX.
+                 // Ignore
             }
         } else if (e.key === "Escape") {
             isOpen = false;

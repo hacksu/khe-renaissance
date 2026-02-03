@@ -18,7 +18,7 @@ export const actions: Actions = {
     createProject: async ({ request }) => {
         const form = await request.formData();
         const name = form.get("name") as string;
-        const trackId = form.get("track") as string; // Form sends ID now
+        const trackId = form.get("track") as string; 
         const tableNumber = form.get("tableNumber") as string;
 
         if (!name) return fail(400, { missing: true });
