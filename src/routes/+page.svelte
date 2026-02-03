@@ -14,8 +14,8 @@
         <Header />
         <Prizes />
         <FAQ />
-        <Tools />
         <Sponsors />
+        <Tools />
         <Map />
     </div>
 </div>
