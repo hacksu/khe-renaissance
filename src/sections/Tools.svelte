@@ -63,8 +63,8 @@
       <div class="flex flex-wrap gap-4 justify-center">
         {#each physicalTools as tool}
           {#if tool.url && tool.image}
-            <a href={tool.url} target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center gap-1 w-48 h-24 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
-              <img src={tool.image} alt={tool.name} class="w-full h-12 object-contain transition-transform hover:scale-110" />
+            <a href={tool.url} target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center gap-1 w-60 h-32 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+              <img src={tool.image} alt={tool.name} class="w-full h-16 object-contain transition-transform hover:scale-110" />
               <span class="text-sm">{tool.name}</span>
             </a>
           {:else}
@@ -80,7 +80,7 @@
       <h3 class="text-center text-2xl font-semibold">Software Licenses</h3>
       <div class="flex flex-wrap gap-8 justify-center items-center">
         {#each softwareLicenses as { image, name, url }}
-          <a class="flex justify-center items-center w-48 h-24 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" href={url} target="_blank">
+          <a class="flex justify-center items-center w-60 h-32 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" href={url} target="_blank">
             <img
               class="w-full h-full object-contain transition-transform hover:scale-110"
               src={image}

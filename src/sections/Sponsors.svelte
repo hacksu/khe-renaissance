@@ -68,7 +68,7 @@
   <h2 class="text-center text-3xl font-bold">Sponsors</h2>
   <div class="flex flex-wrap gap-8 justify-center items-center">
     {#each sponsors as { image, name, url }}
-      <a class="flex justify-center items-center w-64 h-32 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" href={url} target="_blank">
+      <a class="flex justify-center items-center w-72 h-36 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" href={url} target="_blank">
         <img
           class="w-full h-full object-contain transition-transform hover:scale-110"
           src={image}
