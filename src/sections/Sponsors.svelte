@@ -39,7 +39,7 @@
     },
     {
         image: BarrioLogo,
-        name: "Barrio Mexican Kitchen and Bar"
+        name: "Barrio Mexican Kitchen and Bar",
         url: "https://barrio-tacos.com/locations/kent/"
     },
     {
