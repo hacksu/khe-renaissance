@@ -90,6 +90,14 @@
         if (deleteForm) deleteForm.requestSubmit();
         showDeleteModal = false;
     }
+
+    let showReminderModal = $state(false);
+    let reminderForm: HTMLFormElement;
+
+    function handleReminderConfirm() {
+        if (reminderForm) reminderForm.requestSubmit();
+        showReminderModal = false;
+    }
 </script>
 
 <Modal
@@ -102,6 +110,23 @@
 
 <form method="POST" action="?/delete" bind:this={deleteForm} use:enhance class="hidden">
     <input type="hidden" name="id" value={applicationToDelete} />
+</form>
+
+<Modal
+    open={showReminderModal}
+    title="Send Reminder Emails"
+    message="Are you sure you want to send reminder emails to ALL users who haven't submitted an application? This cannot be undone."
+    onConfirm={handleReminderConfirm}
+    onCancel={() => showReminderModal = false}
+/>
+
+<form method="POST" action="?/sendReminders" bind:this={reminderForm} use:enhance={() => {
+    return async ({ result }) => {
+        if (result.type === 'success' && result.data) {
+             alert(`Successfully processed ${result.data.sentCount} reminder emails.`);
+        }
+    }
+}} class="hidden">
 </form>
 
 <div class="min-h-screen flex">
@@ -130,6 +155,12 @@
                         class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
                     >
                         Export Project Ideas
+                    </button>
+                    <button
+                        onclick={() => showReminderModal = true}
+                        class="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700 transition-colors"
+                    >
+                        Send Reminder Emails
                     </button>
                 </div>
             </div>
@@ -270,7 +301,7 @@
                                         {#if application.approved}
                                             <Button type="submit" formaction="?/approve">Un-approve</Button>
                                             {#if application.checkedIn}
-                                                <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">✓ Checked In</Button>
+                                                <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">Checked In</Button>
                                             {:else}
                                                 <Button type="submit" formaction="?/checkIn">Check In</Button>
                                             {/if}

@@ -1,10 +1,12 @@
 <script lang="ts">
     import type { HTMLInputAttributes } from "svelte/elements";
 
+    type Option = string | { label: string; value: any };
+
     type Props = {
         label?: string;
-        value: string;
-        options: string[];
+        value: any;
+        options: Option[];
         minChars?: number;
         maxItems?: number;
     };
@@ -13,7 +15,7 @@
         label,
         value = $bindable(),
         options,
-        minChars = 2,
+        minChars = 0,
         maxItems = 100,
         ...others
     }: HTMLInputAttributes & Props = $props();
@@ -23,27 +25,62 @@
     let inputElement: HTMLInputElement;
     const listId = `datalist-${Math.random().toString(36).substr(2, 9)}`;
 
-    // Filter options based on input value
-    let filteredOptions = $derived.by(() => {
-        if (value.length < minChars) return [];
+    // Input text state (separate from value for object mode)
+    let text = $state("");
+    
+    // Normalize options to { label, value } format
+    function normalize(opt: Option) {
+        return typeof opt === 'string' ? { label: opt, value: opt } : opt;
+    }
 
-        const lowerValue = value.toLowerCase();
-        return options
-            .filter((opt) => opt.toLowerCase().includes(lowerValue))
+    // Sync text with value when value changes externally
+    $effect(() => {
+        if (value) {
+            const found = options.find(o => {
+                const n = normalize(o);
+                return n.value == value;
+            });
+            if (found) {
+                text = normalize(found).label;
+            } else if (typeof value === 'string') {
+                // If value not found in options but is string, assume it's custom input (e.g. school)
+                text = value; 
+            }
+        }
+    });
+
+    let normalizedOptions = $derived(options.map(normalize));
+
+    // Filter options based on input text
+    let filteredOptions = $derived.by(() => {
+        if (text.length < minChars) return [];
+
+        const lowerText = text.toLowerCase();
+        return normalizedOptions
+            .filter((opt) => opt.label.toLowerCase().includes(lowerText))
             .slice(0, maxItems);
     });
 
-    function handleInput() {
+    function handleInput(e: Event) {
         isOpen = true;
         activeIndex = -1;
+        const isStringOptions = options.length > 0 && typeof options[0] === 'string';
+        if (isStringOptions) {
+            value = text;
+        } else {
+            const exactMatch = normalizedOptions.find(o => o.label.toLowerCase() === text.toLowerCase());
+            if (exactMatch) {
+                value = exactMatch.value;
+            } else {
+                value = undefined; // Invalid/Custom input doesn't map to a code
+            }
+        }
     }
 
     function handleKeydown(e: KeyboardEvent) {
         if (!isOpen) {
             if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                if (value.length >= minChars) {
-                    isOpen = true;
-                }
+                isOpen = true;
             }
             return;
         }
@@ -58,12 +95,18 @@
             scrollToActive();
         } else if (e.key === "Enter") {
             if (activeIndex >= 0) {
-                e.preventDefault(); // Prevent form submission if selecting
+                e.preventDefault();
                 selectOption(filteredOptions[activeIndex]);
+            } else if (filteredOptions.length > 0 && text) {
+                 // Ignore
             }
         } else if (e.key === "Escape") {
             isOpen = false;
         } else if (e.key === "Tab") {
+            // Select active if any?
+            if (activeIndex >= 0) {
+                selectOption(filteredOptions[activeIndex]);
+            }
             isOpen = false;
         }
     }
@@ -78,23 +121,21 @@
         }
     }
 
-    function selectOption(option: string) {
-        value = option;
+    function selectOption(option: { label: string, value: any }) {
+        text = option.label;
+        value = option.value;
         isOpen = false;
         activeIndex = -1;
     }
 
     function handleBlur() {
-        // Small delay to allow click events to process
         setTimeout(() => {
             isOpen = false;
         }, 150);
     }
 
     function handleFocus() {
-        if (value.length >= minChars) {
-            isOpen = true;
-        }
+        isOpen = true;
     }
 </script>
 
@@ -105,7 +146,7 @@
     <div class="relative">
         <input
             bind:this={inputElement}
-            bind:value
+            bind:value={text}
             type="text"
             autocomplete="off"
             {...others}
@@ -134,7 +175,7 @@
                         onclick={() => selectOption(option)}
                         onmouseenter={() => activeIndex = i}
                     >
-                        {option}
+                        {option.label}
                     </li>
                 {/each}
             </ul>

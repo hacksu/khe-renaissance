@@ -5,17 +5,26 @@ import { createAuthMiddleware } from "better-auth/api";
 import type { SocialProvider } from "better-auth/social-providers";
 import { getRole } from "./external_roles";
 import { prisma } from "./prisma";
+import { magicLink } from "better-auth/plugins";
+import { sendMagicLinkEmail } from "./email";
 
 export const auth = betterAuth({
-	basePath: "/api/auth",
-	trustedOrigins: [
-		"http://localhost:3000",
-		"https://khe.io",
-		"https://*.khe.io"
-	],
+    basePath: "/api/auth",
+    trustedOrigins: [
+        "http://localhost:3000",
+        "https://khe.io",
+        "https://*.khe.io"
+    ],
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
+    plugins: [
+        magicLink({
+            sendMagicLink: async ({ email, url }) => {
+                await sendMagicLinkEmail(email, url);
+            }
+        })
+    ],
     user: {
         additionalFields: {
             role: {
@@ -29,12 +38,28 @@ export const auth = betterAuth({
     hooks: {
         after: createAuthMiddleware(async ctx => {
             const { path, request, params, context: { newSession } } = ctx;
+
+            if (path === "/magic-link/verify" || path === "/sign-in/magic-link/verify") {
+                if (request && newSession) {
+                    try {
+                        const { user } = newSession;
+                        await prisma.user.update({
+                            data: { role: "judge" },
+                            where: { id: user.id }
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+                return;
+            }
+
             if (path != "/callback/:id") {
                 return;
             }
             const provider = params.id as SocialProvider;
             if (request && newSession) {
-                const { session, user }= newSession;
+                const { session, user } = newSession;
                 let role = await getRole(provider, request, session);
                 await prisma.user.update({
                     data: { role },

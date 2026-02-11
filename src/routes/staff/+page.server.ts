@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import {
   sendApprovalEmail,
   sendManualRevocationEmail,
+  sendReminderEmail,
 } from "$lib/server/email";
 import fs from "fs/promises";
 
@@ -83,6 +84,35 @@ export const actions: Actions = {
     await prisma.application.delete({
       where: { id },
     });
+  },
+  sendReminders: async () => {
+    const usersToRemind = await prisma.user.findMany({
+      where: {
+        NOT: {
+          Application: {
+            some: {
+              submitted: true,
+            },
+          },
+        },
+      },
+      select: {
+        email: true,
+      },
+    });
+
+    let sentCount = 0;
+    for (const user of usersToRemind) {
+      if (user.email) {
+        await sendReminderEmail(user.email);
+        sentCount++;
+      }
+    }
+
+    return {
+      success: true,
+      sentCount,
+    };
   },
 };
 
