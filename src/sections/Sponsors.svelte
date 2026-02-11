@@ -11,12 +11,18 @@
   import BentTreeLogo from "../assets/sponsors/bent_tree_coffee_roasters_logo.png";
   import BarrioLogo from "../assets/sponsors/barrio_logo.webp";
   import EnbasisLogo from "../assets/sponsors/enbasis_inc_logo.jpg";
+  // import DaveyTreeLogo from "../assets/sponsors/daveytree_logo.png";
   import HacKSULogo from "../assets/sponsors/hacksu_logo.svg";
   import PureButtonsLogo from "../assets/sponsors/pure_buttons_logo.png"
   import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png"
 
 
   const sponsors: Sponsor[] = [
+   // {
+   //   image: DaveyTreeLogo,
+   //   name: "DaveyTree",
+   //   url: "https://www.davey.com/",
+   // },    
     {
       image: EnbasisLogo,
       name: "Enbasis",
