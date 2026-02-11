@@ -18,14 +18,14 @@
 
   const sponsors: Sponsor[] = [
     {
-      image: KSULogo,
-      name: "Kent State University",
-      url: "https://www.kent.edu",
-    },
+      image: EnbasisLogo,
+      name: "Enbasis",
+      url: "https://enbasis.com",
+    },    
     {
-      image: DeptLogo,
-      name: "Department of Computer Science",
-      url: "https://www.kent.edu/cs",
+      image: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png",
+      name: "Amazon Web Services",
+      url: "https://aws.amazon.com",
     },
     {
       image: Bawlslogo,
@@ -38,15 +38,11 @@
       url: "https://www.benttreecoffee.com",
     },
     {
-        image: BarrioLogo,
-        name: "Barrio Mexican Kitchen and Bar",
-        url: "https://barrio-tacos.com/locations/kent/"
+      image: BarrioLogo,
+      name: "Barrio Mexican Kitchen and Bar",
+      url: "https://barrio-tacos.com/locations/kent/"
     },
-    {
-      image: EnbasisLogo,
-      name: "Enbasis",
-      url: "https://enbasis.com",
-    },
+
     {
       image: BoardAndBevyLogo,
       name: "Board And Bevy",
@@ -63,10 +59,16 @@
       name: "HacKSU",
       url: "https://hacksu.com",
     },
+
     {
-      image: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png",
-      name: "Amazon Web Services",
-      url: "https://aws.amazon.com",
+      image: KSULogo,
+      name: "Kent State University",
+      url: "https://www.kent.edu",
+    },
+    {
+      image: DeptLogo,
+      name: "Department of Computer Science",
+      url: "https://www.kent.edu/cs",
     },
   ];
 </script>
