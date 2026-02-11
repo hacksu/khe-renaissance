@@ -9,12 +9,10 @@
   import DeptLogo from "../assets/sponsors/CSLogo.png";
   import KSULogo from "../assets/sponsors/ksu-logo.svg";
   import BentTreeLogo from "../assets/sponsors/bent_tree_coffee_roasters_logo.png";
-  import BarrioLogo from "../assets/sponsors/barrio_logo.webp";
   import EnbasisLogo from "../assets/sponsors/enbasis_inc_logo.jpg";
   import HacKSULogo from "../assets/sponsors/hacksu_logo.svg";
   import PureButtonsLogo from "../assets/sponsors/pure_buttons_logo.png"
   import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png"
-
 
   const sponsors: Sponsor[] = [
     {
@@ -36,11 +34,6 @@
       image: BentTreeLogo,
       name: "Bent Tree Coffee",
       url: "https://www.benttreecoffee.com",
-    },
-    {
-        image: BarrioLogo,
-        name: "Barrio Mexican Kitchen and Bar"
-        url: "https://barrio-tacos.com/locations/kent/"
     },
     {
       image: EnbasisLogo,
