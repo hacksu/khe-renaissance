@@ -19,7 +19,7 @@
         <div class="max-w-4xl mx-auto flex justify-around p-2">
             {#each links as link}
                 {@const active = $page.url.pathname === link.href || ($page.url.pathname.startsWith(link.href) && link.href !== "/staff")}
-                <a 
+                <a
                     href={link.href}
                     class="flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 group
                     {active ? 'text-accent bg-accent/5' : 'text-secondary/60 hover:text-secondary hover:bg-secondary/5'}"
