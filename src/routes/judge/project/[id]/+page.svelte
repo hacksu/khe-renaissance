@@ -78,9 +78,9 @@
                     
                     <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
                         {#each [1, 2, 3, 4, 5] as val}
-                            <button 
+                            <button
                                 type="button"
-                                class="flex-1 text-xl aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
+                                class="flex-1 text-xl aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200
                                 {scores[criterion.id] === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
                                 onclick={() => scores[criterion.id] = val}
                             >
@@ -88,6 +88,15 @@
                             </button>
                         {/each}
                     </div>
+                    {#if scores[criterion.id] > 0}
+                        <button
+                            type="button"
+                            class="text-xs text-secondary/40 hover:text-secondary/70 transition-colors"
+                            onclick={() => scores[criterion.id] = 0}
+                        >
+                            Reset
+                        </button>
+                    {/if}
                 </div>
             {/each}
 
