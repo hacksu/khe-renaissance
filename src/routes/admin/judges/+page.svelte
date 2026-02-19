@@ -24,8 +24,13 @@
         if (!newJudgeEmail) return;
         isAddingJudge = true;
         try {
-            await authClient.signIn.magicLink({ 
-                email: newJudgeEmail, 
+            await fetch("/api/invite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: newJudgeEmail, role: "judge" })
+            });
+            await authClient.signIn.magicLink({
+                email: newJudgeEmail,
                 callbackURL: "/judge",
                 name: newJudgeEmail.split("@")[0]
             });
@@ -89,6 +94,16 @@
             assignForm.requestSubmit();
         }
     }
+
+    // Remove Judge State
+    let showRemoveJudgeModal = $state(false);
+    let judgeToRemove = $state<any>(null);
+    let removeJudgeForm: HTMLFormElement;
+
+    function handleRemoveConfirm() {
+        if (removeJudgeForm) removeJudgeForm.requestSubmit();
+        showRemoveJudgeModal = false;
+    }
 </script>
 
 <div class="p-6 pt-24 min-h-screen">
@@ -144,12 +159,18 @@
                                 <span class="text-secondary/30 italic">No assignments</span>
                             {/if}
                         </td>
-                        <td class="p-4 text-right">
-                             <Button 
-                                class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary border-none shadow-none" 
+                        <td class="p-4 text-right flex gap-1 justify-end">
+                             <Button
+                                class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary border-none shadow-none"
                                 onclick={() => openEditModal(judge)}
                             >
                                 Assign
+                            </Button>
+                            <Button
+                                class="text-xs py-1 px-3 bg-red-100 hover:bg-red-200 text-red-600 border-none shadow-none"
+                                onclick={() => { judgeToRemove = judge; showRemoveJudgeModal = true; }}
+                            >
+                                Remove
                             </Button>
                         </td>
                     </tr>
@@ -237,6 +258,18 @@
         </form>
     {/if}
 </Modal>
+
+<form method="POST" action="?/removeJudge" bind:this={removeJudgeForm} use:enhance class="hidden">
+    <input type="hidden" name="userId" value={judgeToRemove?.id ?? ""} />
+</form>
+
+<Modal
+    open={showRemoveJudgeModal}
+    title="Remove Judge"
+    message={`Are you sure you want to remove ${judgeToRemove?.name}? Their role will be reverted and all table assignments will be cleared.`}
+    onConfirm={handleRemoveConfirm}
+    onCancel={() => showRemoveJudgeModal = false}
+/>
 
 <Modal
     open={showAddJudgeModal}

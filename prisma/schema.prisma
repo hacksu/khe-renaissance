@@ -80,6 +80,17 @@ model Verification {
   @@map("verification")
 }
 
+model Invite {
+  id        String   @id @default(uuid())
+  email     String
+  role      String
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+
+  @@unique([email, role])
+  @@map("invite")
+}
+
 model Application {
   id                 String   @id @default(uuid())
   firstName          String   @default("")
