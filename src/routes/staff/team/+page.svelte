@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { enhance } from "$app/forms";
     import Button from "$components/Button.svelte";
     import Modal from "$components/Modal.svelte";
     import Icon from "@iconify/svelte";
@@ -36,7 +37,35 @@
             isInviting = false;
         }
     }
+
+    // Remove Staff State
+    let showRemoveModal = $state(false);
+    let memberToRemove = $state<any>(null);
+    let removeForm: HTMLFormElement;
+
+    function handleRemoveConfirm() {
+        if (removeForm) removeForm.requestSubmit();
+        showRemoveModal = false;
+    }
+
+    // Revoke Invite State
+    let showRevokeModal = $state(false);
+    let inviteToRevoke = $state<any>(null);
+    let revokeForm: HTMLFormElement;
+
+    function handleRevokeConfirm() {
+        if (revokeForm) revokeForm.requestSubmit();
+        showRevokeModal = false;
+    }
 </script>
+
+<form method="POST" action="?/removeStaff" bind:this={removeForm} use:enhance class="hidden">
+    <input type="hidden" name="userId" value={memberToRemove?.id ?? ""} />
+</form>
+
+<form method="POST" action="?/revokeInvite" bind:this={revokeForm} use:enhance class="hidden">
+    <input type="hidden" name="inviteId" value={inviteToRevoke?.id ?? ""} />
+</form>
 
 <div class="p-6 pt-24 min-h-screen">
     <div class="flex justify-between items-center mb-6">
@@ -55,6 +84,7 @@
                 <tr>
                     <th class="p-4 font-bold">Name</th>
                     <th class="p-4 font-bold">Email</th>
+                    <th class="p-4 font-bold text-right">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-secondary/5">
@@ -62,11 +92,19 @@
                     <tr class="hover:bg-white/50 transition-colors">
                         <td class="p-4 font-bold text-secondary">{member.name}</td>
                         <td class="p-4 text-secondary/70">{member.email}</td>
+                        <td class="p-4 text-right">
+                            <Button
+                                class="text-xs py-1 px-3 bg-red-100 hover:bg-red-200 text-red-600 border-none shadow-none"
+                                onclick={() => { memberToRemove = member; showRemoveModal = true; }}
+                            >
+                                Remove
+                            </Button>
+                        </td>
                     </tr>
                 {/each}
                 {#if data.staffMembers.length === 0}
                     <tr>
-                        <td colspan="2" class="p-8 text-center text-secondary/40 italic">
+                        <td colspan="3" class="p-8 text-center text-secondary/40 italic">
                             No staff members found.
                         </td>
                     </tr>
@@ -83,6 +121,7 @@
                     <tr>
                         <th class="p-4 font-bold">Email</th>
                         <th class="p-4 font-bold">Invited</th>
+                        <th class="p-4 font-bold text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-secondary/5">
@@ -90,6 +129,14 @@
                         <tr class="hover:bg-white/50 transition-colors">
                             <td class="p-4 text-secondary">{invite.email}</td>
                             <td class="p-4 text-secondary/50">{new Date(invite.createdAt).toLocaleDateString()}</td>
+                            <td class="p-4 text-right">
+                                <Button
+                                    class="text-xs py-1 px-3 bg-red-100 hover:bg-red-200 text-red-600 border-none shadow-none"
+                                    onclick={() => { inviteToRevoke = invite; showRevokeModal = true; }}
+                                >
+                                    Revoke
+                                </Button>
+                            </td>
                         </tr>
                     {/each}
                 </tbody>
@@ -97,6 +144,22 @@
         </div>
     {/if}
 </div>
+
+<Modal
+    open={showRemoveModal}
+    title="Remove Staff Member"
+    message={`Are you sure you want to remove ${memberToRemove?.name}? Their role will be reverted to a regular user.`}
+    onConfirm={handleRemoveConfirm}
+    onCancel={() => showRemoveModal = false}
+/>
+
+<Modal
+    open={showRevokeModal}
+    title="Revoke Invitation"
+    message={`Are you sure you want to revoke the invitation for ${inviteToRevoke?.email}?`}
+    onConfirm={handleRevokeConfirm}
+    onCancel={() => showRevokeModal = false}
+/>
 
 <Modal
     open={showInviteModal}
