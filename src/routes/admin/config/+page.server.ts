@@ -47,6 +47,7 @@ export const actions: Actions = {
         const name = form.get("name") as string;
         const maxScore = Number(form.get("maxScore"));
         const order = Number(form.get("order"));
+        const optional = form.get("optional") === "on";
         // create a slug from name
         const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
 
@@ -54,7 +55,7 @@ export const actions: Actions = {
 
         try {
             await prisma.judgingCriterion.create({
-                data: { name, slug, maxScore: maxScore || 5, order: order || 0 }
+                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional }
             });
         } catch (e) {
             return fail(500, { error: "Failed to create criterion" });

@@ -64,6 +64,9 @@
                             <div class="flex gap-2 items-center">
                                 <span class="font-bold text-secondary">{criterion.name}</span>
                                 <span class="text-xs bg-secondary/10 px-1 rounded font-mono">Max: {criterion.maxScore}</span>
+                                {#if criterion.optional}
+                                    <span class="text-xs bg-amber-100 text-amber-700 px-1 rounded font-bold">Optional</span>
+                                {/if}
                             </div>
                             <p class="text-xs text-secondary/60">Slug: {criterion.slug}</p>
                         </div>
@@ -87,6 +90,10 @@
                         <Input name="maxScore" label="Max Score" type="number" value="5" />
                         <Input name="order" label="Order" type="number" value="0" />
                     </div>
+                    <label class="flex items-center gap-2 text-sm text-secondary cursor-pointer">
+                        <input type="checkbox" name="optional" class="rounded border-secondary/30 text-accent focus:ring-accent" />
+                        <span>Optional (judges can submit without scoring this)</span>
+                    </label>
                     <div class="pt-2">
                         <Button class="w-full">Create Criterion</Button>
                     </div>
