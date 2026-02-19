@@ -43,10 +43,21 @@ export const auth = betterAuth({
                 if (request && newSession) {
                     try {
                         const { user } = newSession;
+                        const invite = await prisma.invite.findFirst({
+                            where: { email: user.email, used: false },
+                            orderBy: { createdAt: "desc" }
+                        });
+                        const role = invite?.role ?? "judge";
                         await prisma.user.update({
-                            data: { role: "judge" },
+                            data: { role },
                             where: { id: user.id }
                         });
+                        if (invite) {
+                            await prisma.invite.update({
+                                where: { id: invite.id },
+                                data: { used: true }
+                            });
+                        }
                     } catch (e) {
                         console.error(e);
                     }

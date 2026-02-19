@@ -4,6 +4,7 @@
 
     let links = [
         { href: "/staff", label: "Dashboard", icon: "mdi:view-dashboard" },
+        { href: "/staff/team", label: "Team", icon: "mdi:shield-account" },
         { href: "/staff/judging", label: "Judging", icon: "mdi:gavel" },
         { href: "/staff/judges", label: "Judges", icon: "mdi:account-group" },
         { href: "/staff/scores", label: "Results", icon: "mdi:podium" },
