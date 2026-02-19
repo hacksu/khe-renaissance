@@ -24,8 +24,13 @@
         if (!newJudgeEmail) return;
         isAddingJudge = true;
         try {
-            await authClient.signIn.magicLink({ 
-                email: newJudgeEmail, 
+            await fetch("/api/invite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: newJudgeEmail, role: "judge" })
+            });
+            await authClient.signIn.magicLink({
+                email: newJudgeEmail,
                 callbackURL: "/judge",
                 name: newJudgeEmail.split("@")[0]
             });
