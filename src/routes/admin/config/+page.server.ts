@@ -32,6 +32,23 @@ export const actions: Actions = {
             return fail(500, { error: "Failed to create track" });
         }
     },
+    updateTrack: async ({ request }) => {
+        const form = await request.formData();
+        const id = form.get("id") as string;
+        const name = form.get("name") as string;
+        const description = form.get("description") as string;
+
+        if (!id || !name) return fail(400, { missing: true });
+
+        try {
+            await prisma.track.update({
+                where: { id },
+                data: { name, description: description || null }
+            });
+        } catch (e) {
+            return fail(500, { error: "Failed to update track" });
+        }
+    },
     deleteTrack: async ({ request }) => {
         const form = await request.formData();
         const id = form.get("id") as string;
@@ -59,6 +76,27 @@ export const actions: Actions = {
             });
         } catch (e) {
             return fail(500, { error: "Failed to create criterion" });
+        }
+    },
+    updateCriterion: async ({ request }) => {
+        const form = await request.formData();
+        const id = form.get("id") as string;
+        const name = form.get("name") as string;
+        const maxScore = Number(form.get("maxScore"));
+        const order = Number(form.get("order"));
+        const optional = form.get("optional") === "on";
+
+        if (!id || !name) return fail(400, { missing: true });
+
+        const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
+
+        try {
+            await prisma.judgingCriterion.update({
+                where: { id },
+                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional }
+            });
+        } catch (e) {
+            return fail(500, { error: "Failed to update criterion" });
         }
     },
     deleteCriterion: async ({ request }) => {

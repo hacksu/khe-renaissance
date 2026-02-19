@@ -70,7 +70,7 @@
                     <div class="flex justify-between items-end">
                         <span class="font-bold text-secondary text-2xl uppercase tracking-wide">{criterion.name}</span>
                         {#if criterion.optional}
-                            <span class="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-bold">Optional</span>
+                            <span class="text-xs bg-secondary/10 text-secondary/60 px-1.5 py-0.5 rounded font-bold">Optional</span>
                         {/if}
                     </div>
                     <!-- Hidden Input for Form Submission -->
