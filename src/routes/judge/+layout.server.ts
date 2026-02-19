@@ -13,7 +13,7 @@ export const load: LayoutServerLoad = async ({ request }) => {
 
     // Redirect staff to staff area
     if (role === Role.STAFF) {
-        throw redirect(303, "/staff/judges");
+        throw redirect(303, "/admin/judges");
     }
 
     // Only allow JUDGE access
