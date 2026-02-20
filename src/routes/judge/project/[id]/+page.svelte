@@ -25,11 +25,16 @@
     let scores: ScoreMap = $state(initialScores);
     let comment = $state(data.judgement?.comment || "");
 
+    let requiredCriteria = criteria.filter((c: any) => !c.optional);
     let progress = $derived(
         Object.values(scores).filter(s => s > 0).length
     );
+    let requiredProgress = $derived(
+        requiredCriteria.filter((c: any) => scores[c.id] > 0).length
+    );
     let totalCriteria = criteria.length;
     let progressPercent = $derived((progress / totalCriteria) * 100);
+    let canSubmit = $derived(requiredProgress >= requiredCriteria.length);
 
 </script>
 
@@ -64,15 +69,18 @@
                 <div class="space-y-3">
                     <div class="flex justify-between items-end">
                         <span class="font-bold text-secondary text-2xl uppercase tracking-wide">{criterion.name}</span>
+                        {#if criterion.optional}
+                            <span class="text-xs bg-secondary/10 text-secondary/60 px-1.5 py-0.5 rounded font-bold">Optional</span>
+                        {/if}
                     </div>
                     <!-- Hidden Input for Form Submission -->
                     <input type="hidden" name="score_{criterion.id}" value={scores[criterion.id]} />
                     
                     <div class="flex justify-between gap-2 p-1 bg-white/40 rounded-xl">
                         {#each [1, 2, 3, 4, 5] as val}
-                            <button 
+                            <button
                                 type="button"
-                                class="flex-1 text-xl aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 
+                                class="flex-1 text-xl aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200
                                 {scores[criterion.id] === val ? 'bg-secondary text-offwhite shadow-lg scale-105' : 'bg-white text-secondary hover:bg-white/80'}"
                                 onclick={() => scores[criterion.id] = val}
                             >
@@ -80,6 +88,15 @@
                             </button>
                         {/each}
                     </div>
+                    {#if scores[criterion.id] > 0}
+                        <button
+                            type="button"
+                            class="text-xs text-secondary/40 hover:text-secondary/70 transition-colors"
+                            onclick={() => scores[criterion.id] = 0}
+                        >
+                            Reset
+                        </button>
+                    {/if}
                 </div>
             {/each}
 
@@ -102,7 +119,7 @@
         <div class="flex-none p-4 bg-white/80 backdrop-blur-md border-t border-secondary/10 absolute bottom-0 w-full max-w-md">
             <button 
                 type="submit"
-                disabled={progress < totalCriteria}
+                disabled={!canSubmit}
                 class="w-full py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
                 <Icon icon="mdi:check" width="20" height="20" />
