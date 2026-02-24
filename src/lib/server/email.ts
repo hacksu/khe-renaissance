@@ -228,7 +228,7 @@ const REMINDER_EMAIL_TEXT =
 
 We noticed you have started an account but haven't submitted your application for Kent Hack Enough 2026 yet!
 
-The deadline is approaching fast, so please head over to our website and complete your application as soon as possible.
+The deadline is approaching fast, so please head over to our website (https://khe.io/profile) and complete your application as soon as possible.
 
 If you have any questions or need assistance, feel free to reply to this email.
 
@@ -238,7 +238,7 @@ Kent Hack Enough 2026 Team`;
 const REMINDER_EMAIL_HTML =
     `<p>Hi there,</p>
 <p>We noticed you have started an account but haven't submitted your application for <strong>Kent Hack Enough 2026</strong> yet!</p>
-<p>The deadline is approaching fast, so please head over to our website and complete your application as soon as possible.</p>
+<p>The deadline is approaching fast, so please head over to our website (<a href="https://khe.io/profile">khe.io/profile</a>) and complete your application as soon as possible.</p>
 <p>If you have any questions or need assistance, feel free to reply to this email.</p>
 <p>Best,<br>
 <strong>Kent Hack Enough 2026 Team</strong></p>`;
