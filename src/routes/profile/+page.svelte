@@ -10,8 +10,15 @@
     import Select from "../../components/form/Select.svelte";
     import Datalist from "../../components/form/Datalist.svelte";
 
+    import { goto } from "$app/navigation";
+
     const auth = authClient.useSession();
     const user = $derived($auth.data?.user);
+
+    async function logout() {
+        await authClient.signOut();
+        goto("/auth/login");
+    }
 
     const { data } = $props();
     const application = $derived(data.application);
@@ -110,7 +117,10 @@
 <div class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 flex flex-col gap-4 justify-center text-black">
     <Card padded>
         <div class="w-full">
-            <h3 class="font-bold">Hi {user?.name}!</h3>
+            <div class="flex justify-between items-start">
+                <h3 class="font-bold">Hi {user?.name}!</h3>
+                <button onclick={logout} class="text-xs text-white/60 hover:text-white transition-colors">Log out</button>
+            </div>
             <p>
                 Welcome to your Kent Hack Enough profile. You can edit and
                 submit your application from here. If you submit your
