@@ -202,54 +202,100 @@ export const Judging = {
      * Get aggregated scores for all projects (Leaderboard), grouped by track.
      */
     getAllProjectScores: async () => {
+        const allCriteria = await prisma.judgingCriterion.findMany({
+            orderBy: { order: 'asc' }
+        });
+
+        const optionalCriteria = allCriteria.filter(c => c.optional);
+
         const projects = await prisma.project.findMany({
             include: {
                 judgements: {
                     include: {
-                        scores: true,
-                        user: { select: { curve: true } }
+                        scores: { include: { criterion: true } },
+                        user: { select: { name: true, curve: true } }
                     }
                 },
                 Track: true
             }
         });
 
-        // Calculate scores
         const calculated = projects.map(p => {
-            const totalScore = p.judgements.reduce((sum, j) => {
-                const curve = j.user.curve || 0;
-                return sum + j.scores.reduce((s, score) => s + score.score + curve, 0);
-            }, 0);
+            const judgementCount = p.judgements.length;
 
-            const count = p.judgements.length;
-            const average = count > 0 ? (totalScore / count).toFixed(2) : "0.00";
+            const coreTotal = p.judgements.reduce((sum, j) => {
+                const curve = j.user.curve || 0;
+                const judgeCore = j.scores
+                    .filter(s => !s.criterion.optional)
+                    .reduce((s, score) => s + score.score + curve, 0);
+                return sum + judgeCore;
+            }, 0);
+            const coreScore = judgementCount > 0 ? coreTotal / judgementCount : 0;
+
+            const optionalScores: Record<string, number | null> = {};
+            for (const criterion of optionalCriteria) {
+                const scoringJudgements = p.judgements.filter(j =>
+                    j.scores.some(s => s.criterionId === criterion.id)
+                );
+                if (scoringJudgements.length === 0) {
+                    optionalScores[criterion.id] = null;
+                } else {
+                    const total = scoringJudgements.reduce((sum, j) => {
+                        const curve = j.user.curve || 0;
+                        const s = j.scores.find(s => s.criterionId === criterion.id);
+                        return sum + (s ? s.score + curve : 0);
+                    }, 0);
+                    optionalScores[criterion.id] = total / scoringJudgements.length;
+                }
+            }
+
+            const judgeBreakdowns = p.judgements.map(j => {
+                const curve = j.user.curve || 0;
+                return {
+                    judgeName: j.user.name,
+                    scores: j.scores.map(s => ({
+                        criterionId: s.criterionId,
+                        criterionName: s.criterion.name,
+                        isOptional: s.criterion.optional,
+                        curvedScore: s.score + curve
+                    }))
+                };
+            });
 
             return {
                 id: p.id,
                 name: p.name,
                 track: p.Track?.name || p.track,
                 tableNumber: p.tableNumber,
-                judgementCount: count,
-                totalScore,
-                averageScore: average
+                judgementCount,
+                coreScore,
+                optionalScores,
+                judgeBreakdowns
             };
         });
 
         // Group by track
         const grouped: Record<string, typeof calculated> = {};
-
         for (const p of calculated) {
             const track = p.track || "General";
             if (!grouped[track]) grouped[track] = [];
             grouped[track].push(p);
         }
 
-        // Sort each track
+        // Default sort: core score descending
         for (const track in grouped) {
-            grouped[track].sort((a, b) => Number(b.averageScore) - Number(a.averageScore));
+            grouped[track].sort((a, b) => b.coreScore - a.coreScore);
         }
 
-        return grouped;
+        return {
+            results: grouped,
+            optionalCriteria: optionalCriteria.map(c => ({
+                id: c.id,
+                slug: c.slug,
+                name: c.name,
+                maxScore: c.maxScore
+            }))
+        };
     },
 
     /**

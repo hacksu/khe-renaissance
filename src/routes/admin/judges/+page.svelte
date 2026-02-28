@@ -13,7 +13,7 @@
     let selectedJudge = $state<any>(null);
     let selectedTables = $state<number[]>([]);
     let isSubmitting = $state(false);
-    let assignForm: HTMLFormElement;
+    let assignForm = $state<HTMLFormElement | undefined>();
 
     // Add Judge State
     let showAddJudgeModal = $state(false);
@@ -98,7 +98,7 @@
     // Remove Judge State
     let showRemoveJudgeModal = $state(false);
     let judgeToRemove = $state<any>(null);
-    let removeJudgeForm: HTMLFormElement;
+    let removeJudgeForm = $state<HTMLFormElement | undefined>();
 
     function handleRemoveConfirm() {
         if (removeJudgeForm) removeJudgeForm.requestSubmit();
