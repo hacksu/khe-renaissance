@@ -34,6 +34,24 @@ export const actions: Actions = {
             return fail(500, { error: "Failed to update assignments" });
         }
     },
+    updateCurve: async ({ request }) => {
+        const form = await request.formData();
+        const userId = form.get("userId") as string;
+        const curve = form.get("curve");
+
+        if (!userId) return fail(400, { missing: true });
+
+        const curveValue = parseFloat(curve?.toString() ?? "0");
+        if (isNaN(curveValue)) return fail(400, { error: "Invalid curve value" });
+
+        try {
+            await Judging.updateJudgeCurve(userId, curveValue);
+            return { success: true };
+        } catch (e) {
+            console.error(e);
+            return fail(500, { error: "Failed to update curve" });
+        }
+    },
     removeJudge: async ({ request }) => {
         const form = await request.formData();
         const userId = form.get("userId") as string;

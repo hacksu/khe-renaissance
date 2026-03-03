@@ -86,7 +86,11 @@
 
                 <h3 class="font-bold text-lg text-secondary group-hover:text-accent transition-colors">{assignment.project?.name}</h3>
                 <p class="text-sm text-secondary/70 mb-2">{assignment.project?.track}</p>
-                
+
+                {#if assignment.status === 'completed' && assignment.comment}
+                    <p class="text-xs text-secondary/60 italic mb-2 line-clamp-2">"{assignment.comment}"</p>
+                {/if}
+
                 <div class="flex items-center text-xs font-medium {assignment.status === 'completed' ? 'text-green-600' : 'text-accent'}">
                     {#if assignment.status === 'completed'}
                         Review Score

@@ -13,9 +13,9 @@
   import EnbasisLogo from "../assets/sponsors/enbasis_inc_logo.jpg";
   // import DaveyTreeLogo from "../assets/sponsors/daveytree_logo.png";
   import HacKSULogo from "../assets/sponsors/hacksu_logo.svg";
-  import PureButtonsLogo from "../assets/sponsors/pure_buttons_logo.png"
-  import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png"
-
+  import PureButtonsLogo from "../assets/sponsors/pure_buttons_logo.png";
+  import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png";
+  // import ProgressiveLogo from "../assets/sponsors/progressive.png";
 
   const sponsors: Sponsor[] = [
    // {
@@ -48,7 +48,11 @@
       name: "Barrio Mexican Kitchen and Bar",
       url: "https://barrio-tacos.com/locations/kent/"
     },
-
+    // {
+    //   image: ProgressiveLogo,
+    //   name: "Progressive Insurance",
+    //   url: "https://progressive.com/",
+    // },
     {
       image: BoardAndBevyLogo,
       name: "Board And Bevy",
