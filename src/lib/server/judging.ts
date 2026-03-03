@@ -10,7 +10,13 @@ export const Judging = {
             where: { userId },
             include: {
                 project: {
-                    include: { Track: true }
+                    include: {
+                        Track: true,
+                        judgements: {
+                            where: { userId },
+                            select: { comment: true }
+                        }
+                    }
                 }
             },
             orderBy: [
@@ -21,6 +27,7 @@ export const Judging = {
 
         return assignments.map(a => ({
             ...a,
+            comment: a.project.judgements[0]?.comment ?? null,
             project: {
                 ...a.project,
                 track: a.project.Track?.name || a.project.track

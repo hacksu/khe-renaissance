@@ -6,14 +6,34 @@ export const load: PageServerLoad = async ({ parent }) => {
     const { session } = await parent();
     if (!session) throw redirect(301, "/auth/login");
 
+    const userId = session.user.id;
+
     const assignments = await prisma.judgeAssignment.findMany({
-        where: {
-            userId: session.user.id,
-            status: 'assigned'
-        }
+        where: { userId, status: 'assigned' }
     });
 
-    return {
-        remaining: assignments.length
-    };
+    const remaining = assignments.length;
+
+    // Check if judge is in manual mode (has any manual assignment)
+    const manualCount = await prisma.judgeAssignment.count({
+        where: { userId, isManual: true }
+    });
+    const isManual = manualCount > 0;
+
+    let hasMore = remaining > 0;
+
+    if (!isManual && !hasMore) {
+        // Auto-judge: check if there are any untouched projects left
+        const history = await prisma.judgeAssignment.findMany({
+            where: { userId },
+            select: { projectId: true }
+        });
+        const touchedIds = history.map(h => h.projectId);
+        const untouchedCount = await prisma.project.count({
+            where: { id: { notIn: touchedIds } }
+        });
+        hasMore = untouchedCount > 0;
+    }
+
+    return { remaining, hasMore };
 };
