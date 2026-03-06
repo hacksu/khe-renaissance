@@ -260,6 +260,7 @@ export const Judging = {
                 const curve = j.user.curve || 0;
                 return {
                     judgeName: j.user.name,
+                    comment: j.comment ?? null,
                     scores: j.scores.map(s => ({
                         criterionId: s.criterionId,
                         criterionName: s.criterion.name,

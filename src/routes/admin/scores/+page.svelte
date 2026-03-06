@@ -276,6 +276,9 @@
                                                                 <span class="font-mono font-bold text-secondary">{score.curvedScore.toFixed(1)}</span>
                                                             </div>
                                                         {/each}
+                                                        {#if breakdown.comment}
+                                                            <p class="mt-2 pt-2 border-t border-secondary/10 text-secondary/60 italic">{breakdown.comment}</p>
+                                                        {/if}
                                                     </div>
                                                 {/each}
                                             </div>
