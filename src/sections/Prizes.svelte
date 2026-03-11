@@ -15,7 +15,10 @@
     ];
 
     const specialPrizes = [
-        { name: "Hackathon Theme", item: "Dinosaur 3-in-1 Lego Set", delay: 0.9 }
+        { name: "Hackathon Theme", item: "Dinosaur 3-in-1 Lego Set", delay: 0.9 },
+        { name: "Best Solo Hack", item: "Yxk Portable Monitor", delay: 1.0 },
+        { name: "Coolest Hack", item: "Copper Dino Statue", delay: 1.1 },
+        { name: "Biggest Failure", item: "Dino Nugget Plush", delay: 1.2 }
     ];
 </script>
 
@@ -67,13 +70,17 @@
 
     <div class="fade-in" style="animation-delay: 0.8s;">
         <h2 class="text-4xl font-bold text-center mb-8 text-secondary">~ Special Prizes ~</h2>
-        <div class="max-w-md mx-auto fade-in" style="animation-delay: 0.9s;">
-            <Card padded>
-                <div class="flex flex-col items-center text-center gap-3 py-4">
-                    <h3 class="text-3xl font-bold text-link">{specialPrizes[0].name}</h3>
-                    <p class="text-2xl font-semibold text-white">{specialPrizes[0].item}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            {#each specialPrizes as prize}
+                <div class="fade-in" style="animation-delay: {prize.delay}s;">
+                    <Card padded>
+                        <div class="flex flex-col items-center text-center gap-3 py-4">
+                            <h3 class="text-2xl font-bold text-link">{prize.name}</h3>
+                            <p class="text-xl font-semibold text-white">{prize.item}</p>
+                        </div>
+                    </Card>
                 </div>
-            </Card>
+            {/each}
         </div>
     </div>
 </div>
