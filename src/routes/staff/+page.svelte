@@ -156,6 +156,12 @@
                     >
                         Export Project Ideas
                     </button>
+                    <a
+                        href="/staff/export"
+                        class="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 transition-colors"
+                    >
+                        Export Participants
+                    </a>
                     <button
                         onclick={() => showReminderModal = true}
                         class="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700 transition-colors"
