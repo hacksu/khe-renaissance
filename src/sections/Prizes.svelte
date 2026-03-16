@@ -29,8 +29,8 @@
     const specialPrizes = [
         { name: "Hackathon Theme", item: "LEGO Creator 3-in-1 Dinosaur Set", detail: "Top 5 teams", delay: 0.9, img: legoDino },
         { name: "Best Solo Hack", item: "Yxk Portable Monitor", detail: "", delay: 1.0, img: yxkMonitor },
-        { name: "Coolest Hack", item: "Dino Nugget Pillow Plush", detail: "Organizer Selected", delay: 1.1, img: dinoNuggetPlush },
-        { name: "Best Attempt", item: "Solid Copper Dinosaur Skeleton", detail: "Organizer Selected", delay: 1.2, img: copperDino }
+        { name: "Best Attempt", item: "Dino Nugget Pillow Plush", detail: "Organizer Selected", delay: 1.1, img: dinoNuggetPlush },
+        { name: "Coolest Hack", item: "Solid Copper Dinosaur Skeleton", detail: "Organizer Selected", delay: 1.2, img: copperDino }
     ];
 </script>
 
