@@ -34,6 +34,11 @@
       url: "https://aws.amazon.com",
     },
     {
+      image: ProgressiveLogo,
+      name: "Progressive Insurance",
+      url: "https://progressive.com/",
+    },
+    {
       image: Bawlslogo,
       name: "Bawls",
       url: "https://bawls.com",
@@ -44,19 +49,14 @@
       url: "https://www.benttreecoffee.com",
     },
     {
-      image: BarrioLogo,
-      name: "Barrio Mexican Kitchen and Bar",
-      url: "https://barrio-tacos.com/locations/kent/"
-    },
-    {
-      image: ProgressiveLogo,
-      name: "Progressive Insurance",
-      url: "https://progressive.com/",
-    },
-    {
       image: BoardAndBevyLogo,
       name: "Board And Bevy",
       url: "https://www.boardandbevy.com/",
+    },
+    {
+      image: BarrioLogo,
+      name: "Barrio Mexican Kitchen and Bar",
+      url: "https://barrio-tacos.com/locations/kent/"
     },
     {
         image: PureButtonsLogo,
@@ -65,15 +65,14 @@
 
     },
     {
-      image: HacKSULogo,
-      name: "HacKSU",
-      url: "https://hacksu.com",
-    },
-
-    {
       image: KSULogo,
       name: "Kent State University",
       url: "https://www.kent.edu",
+    },
+    {
+      image: HacKSULogo,
+      name: "HacKSU",
+      url: "https://hacksu.com",
     },
     {
       image: DeptLogo,
