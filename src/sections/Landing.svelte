@@ -3,17 +3,35 @@
     import { goto } from "$app/navigation";
     import { DateTime } from "luxon";
     import { onMount } from "svelte";
-    const day = "March 28-29th, 2026" 
+    const day = "March 28-29th, 2026"
     import Button from "../components/Button.svelte";
     import dinoSvg from "../assets/dino.svg";
     import rockImg from "../assets/rock.png";
+    import QRCode from "qrcode";
     // const returnDate = DateTime.fromFormat("03/28/2026", "MM/dd/yyyy").toRelativeCalendar();
 
     let isShaking = $state(false);
     let isHovered = $state(false);
     let shakeTimeout: ReturnType<typeof setTimeout> | null = null;
+    let hash = $state("");
+    let qrDataUrl = $state("");
 
-    onMount(() => {
+    const isQrMode = $derived(hash === "#qr");
+
+    onMount(async () => {
+        hash = window.location.hash;
+        const handleHashChange = () => { hash = window.location.hash; };
+        window.addEventListener("hashchange", handleHashChange);
+
+        qrDataUrl = await QRCode.toDataURL("https://khe.io", {
+            width: 364,
+            margin: 2,
+            color: {
+                dark: "#504538",
+                light: "#ede4d9",
+            },
+        });
+
         // Shake the rock occasionally (every 5-8 seconds)
         const scheduleShake = () => {
             const delay = 5000 + Math.random() * 3000; // 5-8 seconds
@@ -29,6 +47,7 @@
 
         return () => {
             if (shakeTimeout) clearTimeout(shakeTimeout);
+            window.removeEventListener("hashchange", handleHashChange);
         };
     });
 </script>
@@ -57,12 +76,23 @@
     </div>
 
     <!-- Content overlay (above rock and dino) -->
-    <div class="relative z-30 flex flex-col items-center gap-3 text-center">
+    <div class="relative z-30 flex flex-col items-center gap-3 text-center" id="qr">
         <h1 class="text-4xl">Kent Hack Enough returns <span class="font-bold">{day}</span></h1>
-        <div class="flex flex-col md:flex-row gap-3 w-96">
-            <Button size="lg" onclick={() => goto("/auth/login")}>Apply now!</Button>
-            <Button size="lg" onclick={() => goto("/schedule")}>View Schedule</Button>
-        </div>
+        {#if isQrMode}
+            <div class="flex flex-col items-center gap-3 mt-1">
+                {#if qrDataUrl}
+                    <div class="bg-offwhite p-3 rounded-2xl shadow-2xl border-4 border-sand/60">
+                        <img src={qrDataUrl} alt="QR Code to khe.io" class="w-72 h-72 rounded-lg" />
+                    </div>
+                {/if}
+                <p class="text-offwhite/90 text-xl font-semibold tracking-widest drop-shadow">khe.io</p>
+            </div>
+        {:else}
+            <div class="flex flex-col md:flex-row gap-3 w-96">
+                <Button size="lg" onclick={() => goto("/auth/login")}>Apply now!</Button>
+                <Button size="lg" onclick={() => goto("/schedule")}>View Schedule</Button>
+            </div>
+        {/if}
     </div>
 </div>
 
