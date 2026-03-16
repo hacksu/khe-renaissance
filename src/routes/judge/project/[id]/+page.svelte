@@ -26,14 +26,9 @@
     let comment = $state(data.judgement?.comment || "");
 
     let requiredCriteria = criteria.filter((c: any) => !c.optional);
-    let progress = $derived(
-        Object.values(scores).filter(s => s > 0).length
-    );
     let requiredProgress = $derived(
         requiredCriteria.filter((c: any) => scores[c.id] > 0).length
     );
-    let totalCriteria = criteria.length;
-    let progressPercent = $derived((progress / totalCriteria) * 100);
     let canSubmit = $derived(requiredProgress >= requiredCriteria.length);
 
 </script>
@@ -49,15 +44,6 @@
         <h1 class="text-xl font-bold text-secondary truncate">{project.name}</h1>
         <p class="text-xs text-secondary/70 truncate">{project.track}</p>
 
-        <!-- Progress Bar -->
-        <div class="mt-4">
-            <div class="flex justify-between text-xs text-secondary/60 mb-1">
-                <span>Progress</span>
-            </div>
-            <div class="h-2 bg-secondary/10 rounded-full overflow-hidden">
-                <div class="h-full bg-accent transition-all duration-300 ease-out" style="width: {progressPercent}%"></div>
-            </div>
-        </div>
     </div>
 
     <!-- Form Container -->

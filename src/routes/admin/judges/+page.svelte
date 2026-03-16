@@ -13,7 +13,7 @@
     let selectedJudge = $state<any>(null);
     let selectedTables = $state<number[]>([]);
     let isSubmitting = $state(false);
-    let assignForm: HTMLFormElement;
+    let assignForm = $state<HTMLFormElement | undefined>();
 
     // Add Judge State
     let showAddJudgeModal = $state(false);
@@ -98,12 +98,35 @@
     // Remove Judge State
     let showRemoveJudgeModal = $state(false);
     let judgeToRemove = $state<any>(null);
-    let removeJudgeForm: HTMLFormElement;
+    let removeJudgeForm = $state<HTMLFormElement | undefined>();
 
     function handleRemoveConfirm() {
         if (removeJudgeForm) removeJudgeForm.requestSubmit();
         showRemoveJudgeModal = false;
     }
+
+    // Curve State
+    let showCurveModal = $state(false);
+    let curveJudge = $state<any>(null);
+    let curveForm = $state<HTMLFormElement | undefined>();
+
+    function openCurveModal(judge: any) {
+        curveJudge = judge;
+        showCurveModal = true;
+    }
+
+    function handleCurveConfirm() {
+        if (curveForm) curveForm.requestSubmit();
+    }
+
+    const submitCurve = () => {
+        return async ({ result, update }: { result: any, update: any }) => {
+            if (result.type === 'success') {
+                showCurveModal = false;
+            }
+            await update();
+        };
+    };
 </script>
 
 <div class="p-6 pt-24 min-h-screen">
@@ -165,6 +188,12 @@
                                 onclick={() => openEditModal(judge)}
                             >
                                 Assign
+                            </Button>
+                            <Button
+                                class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary border-none shadow-none"
+                                onclick={() => openCurveModal(judge)}
+                            >
+                                Curve: {judge.curve ?? 0}
                             </Button>
                             <Button
                                 class="text-xs py-1 px-3 bg-red-100 hover:bg-red-200 text-red-600 border-none shadow-none"
@@ -243,18 +272,6 @@
                 </div>
             </div>
 
-            <!-- Curve Input -->
-            <div class="space-y-1 pt-4 border-t border-white/10">
-                <label class="text-xs font-bold text-white/70 uppercase tracking-wider block">Judge Curve (Score Modifier)</label>
-                <p class="text-[10px] text-white/50 mb-1">Added to EACH category score.</p>
-                <input 
-                    type="number" 
-                    name="curve" 
-                    step="0.1" 
-                    value={selectedJudge?.curve || 0} 
-                    class="w-full rounded-md border-white/20 bg-white/10 text-white shadow-sm focus:border-accent focus:ring-accent text-sm placeholder-white/50"
-                />
-            </div>
         </form>
     {/if}
 </Modal>
@@ -262,6 +279,37 @@
 <form method="POST" action="?/removeJudge" bind:this={removeJudgeForm} use:enhance class="hidden">
     <input type="hidden" name="userId" value={judgeToRemove?.id ?? ""} />
 </form>
+
+<Modal
+    open={showCurveModal}
+    title={`Curve for ${curveJudge?.name}`}
+    confirmText="Save"
+    onConfirm={handleCurveConfirm}
+    onCancel={() => showCurveModal = false}
+>
+    {#if curveJudge}
+        <form
+            bind:this={curveForm}
+            method="POST"
+            action="?/updateCurve"
+            use:enhance={submitCurve}
+            class="space-y-3"
+        >
+            <input type="hidden" name="userId" value={curveJudge.id} />
+            <p class="text-sm text-white/70">Score modifier added to each category score for this judge.</p>
+            <div class="space-y-1">
+                <label class="text-xs font-bold text-white/70 uppercase tracking-wider block">Curve</label>
+                <input
+                    type="number"
+                    name="curve"
+                    step="0.1"
+                    value={curveJudge.curve ?? 0}
+                    class="w-full rounded-md border-white/20 bg-white/10 text-white shadow-sm focus:border-accent focus:ring-accent text-sm"
+                />
+            </div>
+        </form>
+    {/if}
+</Modal>
 
 <Modal
     open={showRemoveJudgeModal}

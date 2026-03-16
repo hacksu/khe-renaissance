@@ -19,9 +19,9 @@
    let selectedProjectForEdit = $state<any>(null);
    let isSubmitting = $state(false);
    
-   let createForm: HTMLFormElement;
-   let editForm: HTMLFormElement;
-   let assignForm: HTMLFormElement;
+   let createForm = $state<HTMLFormElement | undefined>();
+   let editForm = $state<HTMLFormElement | undefined>();
+   let assignForm = $state<HTMLFormElement | undefined>();
 
    let searchTerm = $state("");
    // Filter unassigned
