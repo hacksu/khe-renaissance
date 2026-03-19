@@ -84,7 +84,9 @@
                     </div>
                 {/if}
 
-                <h3 class="font-bold text-lg text-secondary group-hover:text-accent transition-colors">{assignment.project?.name}</h3>
+                <h3 class="font-bold text-lg text-secondary group-hover:text-accent transition-colors">
+                    {assignment.project?.name}{#if assignment.project?.tableNumber} <span class="font-normal text-secondary/50">(#{assignment.project?.tableNumber})</span>{/if}
+                </h3>
                 <p class="text-sm text-secondary/70 mb-2">{assignment.project?.track}</p>
 
                 {#if assignment.status === 'completed' && assignment.comment}
