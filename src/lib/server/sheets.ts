@@ -24,7 +24,7 @@ function getSheets() {
 export async function syncJudgingSheet(): Promise<void> {
     const spreadsheetId = env.SHEETS_SPREADSHEET_ID;
     if (!spreadsheetId || !env.SHEETS_CLIENT_EMAIL || !env.SHEETS_PRIVATE_KEY) {
-        // Sheets not configured — skip silently
+        console.error("Sheets is not configured");
         return;
     }
 
@@ -58,7 +58,6 @@ export async function syncJudgingSheet(): Promise<void> {
         const trackName = project.Track?.name || project.track || 'General';
 
         if (project.judgements.length === 0) {
-            // Show the project even if no judgements yet
             rows.push([
                 project.name,
                 project.tableNumber ?? '',
@@ -90,13 +89,10 @@ export async function syncJudgingSheet(): Promise<void> {
         }
     }
 
+    const SHEET_ROWS = 500;
+    const emptyRow = Array(headers.length).fill('');
     const values = [headers, ...rows];
-
-    // Clear sheet and rewrite
-    await sheets.spreadsheets.values.clear({
-        spreadsheetId,
-        range: 'Sheet1',
-    });
+    while (values.length < SHEET_ROWS) values.push(emptyRow);
 
     await sheets.spreadsheets.values.update({
         spreadsheetId,
