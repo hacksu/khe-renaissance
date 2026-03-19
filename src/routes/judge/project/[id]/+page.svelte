@@ -41,7 +41,9 @@
             <a href="/judge" class="text-sm font-medium text-secondary/60 hover:text-primary">← Dashboard</a>
             <span class="text-xs font-bold uppercase text-secondary/40">Judging</span>
         </div>
-        <h1 class="text-xl font-bold text-secondary truncate">{project.name}</h1>
+        <h1 class="text-xl font-bold text-secondary truncate">
+            {project.name}{#if project.tableNumber} <span class="font-normal text-secondary/50">(#{project.tableNumber})</span>{/if}
+        </h1>
         <p class="text-xs text-secondary/70 truncate">{project.track}</p>
 
     </div>
@@ -89,7 +91,7 @@
             <!-- Comment Section -->
             <div class="pt-8 border-t border-secondary/10">
                 <h2 class="text-xl font-bold font-serif text-secondary mb-2">Comments</h2>
-                <p class="text-secondary/60 text-sm mb-4">Optional feedback for <span class="font-bold">{project.name}</span></p>
+                <p class="text-secondary/60 text-sm mb-4">Optional feedback for <span class="font-bold">{project.name}{#if project.tableNumber} (#{project.tableNumber}){/if}</span></p>
                 
                 <textarea
                     name="comment"

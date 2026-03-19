@@ -225,10 +225,7 @@
                                 <tr class="hover:bg-white/50 transition-colors">
                                     <td class="p-4 font-mono text-secondary/50 text-center">#{i + 1}</td>
                                     <td class="p-4 font-bold text-secondary">
-                                        {result.name}
-                                        {#if result.tableNumber}
-                                            <span class="ml-2 text-xs font-normal text-secondary/50 bg-secondary/5 px-1.5 py-0.5 rounded">T-{result.tableNumber}</span>
-                                        {/if}
+                                        {result.name}{#if result.tableNumber} <span class="font-normal text-secondary/50">(#{result.tableNumber})</span>{/if}
                                     </td>
                                     <td class="p-4 text-center">
                                         <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-secondary/10 text-xs font-bold text-secondary">

@@ -117,6 +117,19 @@ export const Projects = {
     },
 
     /**
+     * Delete a project and clean up all related data.
+     */
+    deleteProject: async (id: string) => {
+        return await prisma.$transaction([
+            prisma.application.updateMany({ where: { projectId: id }, data: { projectId: null } }),
+            prisma.judgementScore.deleteMany({ where: { judgement: { projectId: id } } }),
+            prisma.judgement.deleteMany({ where: { projectId: id } }),
+            prisma.judgeAssignment.deleteMany({ where: { projectId: id } }),
+            prisma.project.delete({ where: { id } }),
+        ]);
+    },
+
+    /**
      * Find a project by table number.
      */
     getByTableNumber: async (tableNumber: string) => {

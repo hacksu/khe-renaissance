@@ -55,6 +55,19 @@ export const actions: Actions = {
             return fail(500, { error: "Failed to remove" });
         }
     },
+    deleteProject: async ({ request }) => {
+        const form = await request.formData();
+        const id = form.get("id") as string;
+
+        if (!id) return fail(400, { missing: true });
+
+        try {
+            await Projects.deleteProject(id);
+        } catch (e) {
+            console.error("Failed to delete project", e);
+            return fail(500, { error: "Failed to delete project" });
+        }
+    },
     updateProject: async ({ request }) => {
         const form = await request.formData();
         const id = form.get("id") as string;
