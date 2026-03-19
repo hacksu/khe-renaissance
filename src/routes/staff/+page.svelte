@@ -313,8 +313,8 @@
                         {/if}
                         <Divider>MLH</Divider>
                         <div class="flex justify-between"><p>MLH Authorization:</p><p class={``}>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
-                        <div class="flex justify-between"><p>MLH Code Of Conduct:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
-                        <div class="flex justify-between"><p>MLH Emails:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
+                        <div class="flex justify-between"><p>MLH Code Of Conduct:</p><p>{application.mlhCodeOfConduct ? "Yes" : "No"}</p></div>
+                        <div class="flex justify-between"><p>MLH Emails:</p><p>{application.mlhEmails ? "Yes" : "No"}</p></div>
 
                         <Divider />
                         <div class="flex gap-2 flex-wrap">
