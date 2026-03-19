@@ -166,13 +166,9 @@
                             {#if judge.judgeAssignments.length > 0}
                                 <div class="flex flex-wrap gap-1">
                                     {#each judge.judgeAssignments.slice(0, 10) as assignment}
-                                         {#if assignment.project?.tableNumber}
-                                            <span class="bg-white border border-secondary/10 text-secondary px-1.5 py-0.5 rounded text-xs font-mono">
-                                                {assignment.project.tableNumber}
-                                            </span>
-                                         {:else}
-                                             <span class="bg-white border border-secondary/10 text-secondary px-1.5 py-0.5 rounded text-xs font-mono">?</span>
-                                         {/if}
+                                        <span class="bg-white border border-secondary/10 text-secondary px-1.5 py-0.5 rounded text-xs font-mono">
+                                            {assignment.project?.name ?? '?'}{#if assignment.project?.tableNumber} (#{assignment.project.tableNumber}){/if}
+                                        </span>
                                     {/each}
                                     {#if judge.judgeAssignments.length > 10}
                                         <span class="text-xs text-secondary/50">+{judge.judgeAssignments.length - 10} more</span>

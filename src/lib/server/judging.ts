@@ -1,5 +1,6 @@
 import { prisma } from '$lib/server/prisma';
 import { sendJudgeFeedbackEmail } from '$lib/server/email';
+import { syncJudgingSheet } from '$lib/server/sheets';
 
 export const Judging = {
     /**
@@ -160,7 +161,7 @@ export const Judging = {
      * Submit scores for a project.
      */
     submitScore: async (userId: string, projectId: string, scores: { criterionId: string, score: number }[]) => {
-        return await prisma.judgement.upsert({
+        const judgement = await prisma.judgement.upsert({
             where: {
                 userId_projectId: { userId, projectId }
             },
@@ -178,6 +179,8 @@ export const Judging = {
                 },
             }
         });
+        syncJudgingSheet().catch(console.error);
+        return judgement;
     },
 
     /**
@@ -203,6 +206,8 @@ export const Judging = {
                 status: 'completed'
             }
         });
+
+        syncJudgingSheet().catch(console.error);
     },
 
     /**

@@ -23,6 +23,14 @@
     // sortBy: 'display' uses the current display score; a criterion id sorts by that optional column
     let sortBy = $state('display');
     let expandAll = $state(false);
+    let viewMode = $state<'tracks' | 'overall'>('tracks');
+
+    let allResults = $derived(
+        getSortedResults(Object.values(data.results).flat())
+    );
+
+    const THEME_MATCH_ID = $derived(data.optionalCriteria.find(c => c.slug === 'theme-match')?.id ?? null);
+    const THEME_THRESHOLD = 3.5;
 
     function toggleOptional(criterionId: string) {
         if (toggledOptional.includes(criterionId)) {
@@ -48,8 +56,22 @@
             }
             const aScore = a.optionalScores[sortBy] ?? -Infinity;
             const bScore = b.optionalScores[sortBy] ?? -Infinity;
+            // Theme Match: qualify at ≥3.5, rank by theme, tiebreak by core
+            if (sortBy === THEME_MATCH_ID) {
+                const aQualifies = aScore >= THEME_THRESHOLD;
+                const bQualifies = bScore >= THEME_THRESHOLD;
+                if (aQualifies !== bQualifies) return aQualifies ? -1 : 1;
+                if (aScore !== bScore) return bScore - aScore;
+                return b.coreScore - a.coreScore;
+            }
             return bScore - aScore;
         });
+    }
+
+    function belowThreshold(result: (typeof data.results)[string][number]): boolean {
+        if (sortBy !== THEME_MATCH_ID) return false;
+        const score = result.optionalScores[THEME_MATCH_ID!] ?? -Infinity;
+        return score < THEME_THRESHOLD;
     }
 
     const handleEmailConfirm = () => {
@@ -123,6 +145,21 @@
                 };
             }} class="hidden"></form>
 
+            <div class="flex items-center rounded-lg overflow-hidden border border-secondary/15 text-sm font-bold">
+                <button
+                    onclick={() => viewMode = 'tracks'}
+                    class="px-3 py-2 transition-colors {viewMode === 'tracks' ? 'bg-secondary text-white' : 'bg-white/60 text-secondary/60 hover:bg-secondary/10'}"
+                >
+                    By Track
+                </button>
+                <button
+                    onclick={() => viewMode = 'overall'}
+                    class="px-3 py-2 transition-colors {viewMode === 'overall' ? 'bg-secondary text-white' : 'bg-white/60 text-secondary/60 hover:bg-secondary/10'}"
+                >
+                    Overall
+                </button>
+            </div>
+
             <button
                 onclick={() => expandAll = !expandAll}
                 class="flex items-center gap-2 px-4 py-2 bg-secondary/10 text-secondary rounded-lg hover:bg-secondary/20 transition-colors font-bold text-sm"
@@ -192,117 +229,126 @@
 
     <!-- Leaderboard -->
     <div class="space-y-12">
-        {#each Object.entries(data.results) as [track, results]}
-            {@const sorted = getSortedResults(results)}
-            <div class="space-y-4">
-                <div class="flex items-center gap-4">
-                    <h2 class="text-xl font-bold font-serif text-secondary">{track}</h2>
-                    <div class="h-px flex-1 bg-secondary/10"></div>
-                </div>
 
-                <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-secondary/5 border-b border-secondary/10 text-secondary/60 uppercase tracking-widest text-xs">
-                            <tr>
-                                <th class="p-4 font-bold w-16 text-center">Rank</th>
-                                <th class="p-4 font-bold">Team</th>
-                                <th class="p-4 font-bold text-center w-24">Judges</th>
-                                {#each data.optionalCriteria as criterion}
-                                    {#if toggledOptional.includes(criterion.id) || sortBy === criterion.id}
-                                        <th class="p-4 font-bold text-right w-32 text-accent/70">
-                                            {criterion.name}
-                                        </th>
-                                    {/if}
-                                {/each}
-                                <th class="p-4 font-bold text-right w-32">
-                                    {toggledOptional.length > 0 ? 'Score' : 'Final Score'}
-                                </th>
-                                <th class="p-4 font-bold text-right w-24">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-secondary/5">
-                            {#each sorted as result, i}
-                                <tr class="hover:bg-white/50 transition-colors">
-                                    <td class="p-4 font-mono text-secondary/50 text-center">#{i + 1}</td>
-                                    <td class="p-4 font-bold text-secondary">
-                                        {result.name}
-                                        {#if result.tableNumber}
-                                            <span class="ml-2 text-xs font-normal text-secondary/50 bg-secondary/5 px-1.5 py-0.5 rounded">T-{result.tableNumber}</span>
-                                        {/if}
-                                    </td>
-                                    <td class="p-4 text-center">
-                                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-secondary/10 text-xs font-bold text-secondary">
-                                            {result.judgementCount}
-                                        </span>
-                                    </td>
-                                    {#each data.optionalCriteria as criterion}
-                                        {#if toggledOptional.includes(criterion.id) || sortBy === criterion.id}
-                                            <td class="p-4 text-right font-mono text-sm text-accent/70">
-                                                {result.optionalScores[criterion.id] != null
-                                                    ? result.optionalScores[criterion.id]!.toFixed(2)
-                                                    : '—'}
-                                            </td>
-                                        {/if}
-                                    {/each}
-                                    <td class="p-4 text-right font-mono font-bold text-lg text-accent">
-                                        {getDisplayScore(result).toFixed(2)}
-                                    </td>
-                                    <td class="p-4 text-right">
-                                        <button
-                                            onclick={() => {
-                                                selectedTeamId = result.id;
-                                                selectedTeamName = result.name;
-                                                showSingleEmailModal = true;
-                                            }}
-                                            class="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition-colors"
-                                            title="Send feedback email to this team"
-                                        >
-                                            Email
-                                        </button>
-                                    </td>
-                                </tr>
-                                {#if expandAll && result.judgeBreakdowns.length > 0}
-                                    <tr class="bg-secondary/[0.02]">
-                                        <td colspan="99" class="px-8 pb-4 pt-2">
-                                            <div class="flex flex-wrap gap-4">
-                                                {#each result.judgeBreakdowns as breakdown}
-                                                    <div class="bg-white/80 rounded-lg border border-secondary/10 p-3 text-xs min-w-40">
-                                                        <p class="font-bold text-secondary mb-2">{breakdown.judgeName}</p>
-                                                        {#each breakdown.scores as score}
-                                                            <div class="flex justify-between gap-4 text-secondary/70">
-                                                                <span class="{score.isOptional ? 'italic text-accent/60' : ''}">
-                                                                    {score.criterionName}{score.isOptional ? ' *' : ''}
-                                                                </span>
-                                                                <span class="font-mono font-bold text-secondary">{score.curvedScore.toFixed(1)}</span>
-                                                            </div>
-                                                        {/each}
-                                                        {#if breakdown.comment}
-                                                            <p class="mt-2 pt-2 border-t border-secondary/10 text-secondary/60 italic">{breakdown.comment}</p>
-                                                        {/if}
-                                                    </div>
-                                                {/each}
-                                            </div>
-                                        </td>
-                                    </tr>
+        {#snippet resultsTable(results: typeof allResults, showTrack: boolean)}
+            <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-secondary/5 border-b border-secondary/10 text-secondary/60 uppercase tracking-widest text-xs">
+                        <tr>
+                            <th class="p-4 font-bold w-16 text-center">Rank</th>
+                            <th class="p-4 font-bold">Team</th>
+                            {#if showTrack}<th class="p-4 font-bold">Track</th>{/if}
+                            <th class="p-4 font-bold text-center w-24">Judges</th>
+                            {#each data.optionalCriteria as criterion}
+                                {#if toggledOptional.includes(criterion.id) || sortBy === criterion.id}
+                                    <th class="p-4 font-bold text-right w-32 text-accent/70">{criterion.name}</th>
                                 {/if}
                             {/each}
-                            {#if results.length === 0}
-                                <tr>
-                                    <td colspan="99" class="p-8 text-center text-secondary/40 italic">
-                                        No scores recorded yet.
+                            <th class="p-4 font-bold text-right w-32">
+                                {toggledOptional.length > 0 ? 'Score' : 'Final Score'}
+                            </th>
+                            <th class="p-4 font-bold text-right w-24">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-secondary/5">
+                        {#each results as result, i}
+                            <tr class="hover:bg-white/50 transition-colors {belowThreshold(result) ? 'opacity-30' : ''}">
+                                <td class="p-4 font-mono text-secondary/50 text-center">#{i + 1}</td>
+                                <td class="p-4 font-bold text-secondary">
+                                    {result.name}{#if result.tableNumber} <span class="font-normal text-secondary/50">(#{result.tableNumber})</span>{/if}
+                                </td>
+                                {#if showTrack}
+                                    <td class="p-4 text-xs text-secondary/60 font-mono">{result.track}</td>
+                                {/if}
+                                <td class="p-4 text-center">
+                                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-secondary/10 text-xs font-bold text-secondary">
+                                        {result.judgementCount}
+                                    </span>
+                                </td>
+                                {#each data.optionalCriteria as criterion}
+                                    {#if toggledOptional.includes(criterion.id) || sortBy === criterion.id}
+                                        <td class="p-4 text-right font-mono text-sm text-accent/70">
+                                            {result.optionalScores[criterion.id] != null
+                                                ? result.optionalScores[criterion.id]!.toFixed(2)
+                                                : '—'}
+                                        </td>
+                                    {/if}
+                                {/each}
+                                <td class="p-4 text-right font-mono font-bold text-lg text-accent">
+                                    {getDisplayScore(result).toFixed(2)}
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button
+                                        onclick={() => {
+                                            selectedTeamId = result.id;
+                                            selectedTeamName = result.name;
+                                            showSingleEmailModal = true;
+                                        }}
+                                        class="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition-colors"
+                                        title="Send feedback email to this team"
+                                    >
+                                        Email
+                                    </button>
+                                </td>
+                            </tr>
+                            {#if expandAll && result.judgeBreakdowns.length > 0}
+                                <tr class="bg-secondary/[0.02]">
+                                    <td colspan="99" class="px-8 pb-4 pt-2">
+                                        <div class="flex flex-wrap gap-4">
+                                            {#each result.judgeBreakdowns as breakdown}
+                                                <div class="bg-white/80 rounded-lg border border-secondary/10 p-3 text-xs min-w-40">
+                                                    <p class="font-bold text-secondary mb-2">{breakdown.judgeName}</p>
+                                                    {#each breakdown.scores as score}
+                                                        <div class="flex justify-between gap-4 text-secondary/70">
+                                                            <span class="{score.isOptional ? 'italic text-accent/60' : ''}">
+                                                                {score.criterionName}{score.isOptional ? ' *' : ''}
+                                                            </span>
+                                                            <span class="font-mono font-bold text-secondary">{score.curvedScore.toFixed(1)}</span>
+                                                        </div>
+                                                    {/each}
+                                                    {#if breakdown.comment}
+                                                        <p class="mt-2 pt-2 border-t border-secondary/10 text-secondary/60 italic">{breakdown.comment}</p>
+                                                    {/if}
+                                                </div>
+                                            {/each}
+                                        </div>
                                     </td>
                                 </tr>
                             {/if}
-                        </tbody>
-                    </table>
-                </div>
+                        {/each}
+                        {#if results.length === 0}
+                            <tr>
+                                <td colspan="99" class="p-8 text-center text-secondary/40 italic">No scores recorded yet.</td>
+                            </tr>
+                        {/if}
+                    </tbody>
+                </table>
             </div>
-        {/each}
+        {/snippet}
 
-        {#if Object.keys(data.results).length === 0}
-            <div class="text-center py-20 text-secondary/40 italic">
-                No projects found.
+        {#if viewMode === 'overall'}
+            <div class="space-y-4">
+                <div class="flex items-center gap-4">
+                    <h2 class="text-xl font-bold font-serif text-secondary">Overall</h2>
+                    <div class="h-px flex-1 bg-secondary/10"></div>
+                </div>
+                {@render resultsTable(allResults, true)}
             </div>
+        {:else}
+            {#each Object.entries(data.results) as [track, results]}
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-xl font-bold font-serif text-secondary">{track}</h2>
+                        <div class="h-px flex-1 bg-secondary/10"></div>
+                    </div>
+                    {@render resultsTable(getSortedResults(results), false)}
+                </div>
+            {/each}
+
+            {#if Object.keys(data.results).length === 0}
+                <div class="text-center py-20 text-secondary/40 italic">No projects found.</div>
+            {/if}
         {/if}
+
     </div>
 </div>
