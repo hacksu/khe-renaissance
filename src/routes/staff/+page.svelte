@@ -86,20 +86,20 @@
         downloadCsv(ideas, `project-ideas-${new Date().toISOString().split('T')[0]}.csv`);
     }
 
-    // export approved user's names
+    // export checked-in user's names
     function exportNames() {
-        const approvedApplications = data.applications.filter(app => app.approved);
-    
-        if (approvedApplications.length === 0) {
-            alert('No approved participants to export');
+        const checkedInApplications = data.applications.filter(app => app.checkedIn);
+
+        if (checkedInApplications.length === 0) {
+            alert('No checked-in participants to export');
             return;
         }
-    
-        const participants = approvedApplications
+
+        const participants = checkedInApplications
             .map(app => `"${Utils.concatExclude(" ", app.firstName, app.lastName)}"`)
             .join('\n');
-    
-        downloadCsv(participants, `approved-participants-${new Date().toISOString().split('T')[0]}.csv`);
+
+        downloadCsv(participants, `checked-in-participants-${new Date().toISOString().split('T')[0]}.csv`);
     }
 
     function handleDeleteConfirm() {
