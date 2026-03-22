@@ -54,6 +54,19 @@ export const actions: Actions = {
       data: { checkedIn: true },
     });
   },
+  unCheckIn: async ({ request }) => {
+    const form = await request.formData();
+    const id = form.get("id") as string;
+
+    if (!id) {
+      return;
+    }
+
+    await prisma.application.update({
+      where: { id },
+      data: { checkedIn: false },
+    });
+  },
   exportEmails: async () => {
     const approvedApplications = await prisma.application.findMany({
       where: { approved: true },

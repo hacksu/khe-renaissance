@@ -329,7 +329,7 @@
                                         {#if application.approved}
                                             <Button type="submit" formaction="?/approve">Un-approve</Button>
                                             {#if application.checkedIn}
-                                                <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">Checked In</Button>
+                                                <Button type="submit" formaction="?/unCheckIn" class="bg-green-600 hover:bg-red-600">Checked In</Button>
                                             {:else}
                                                 <Button type="submit" formaction="?/checkIn">Check In</Button>
                                             {/if}
