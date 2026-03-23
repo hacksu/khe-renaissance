@@ -16,6 +16,21 @@ export const load: PageServerLoad = async ({ params, locals, request }) => {
 };
 
 export const actions: Actions = {
+    skip: async ({ request, params }) => {
+        const { auth } = await import('$lib/server/auth');
+        const session = await auth.api.getSession(request);
+        if (!session) return fail(401);
+
+        try {
+            await Judging.skipProject(session.user.id, params.id);
+        } catch (e) {
+            console.error(e);
+            return fail(500, { message: "Failed to skip project" });
+        }
+
+        throw redirect(303, '/judge');
+    },
+
     saveScores: async ({ request, params }) => {
         const { auth } = await import('$lib/server/auth');
         const session = await auth.api.getSession(request);

@@ -104,14 +104,23 @@
         </div>
 
         <!-- Bottom Action Bar -->
-        <div class="flex-none p-4 bg-white/80 backdrop-blur-md border-t border-secondary/10 absolute bottom-0 w-full max-w-md">
-            <button 
+        <div class="flex-none p-4 bg-white/80 backdrop-blur-md border-t border-secondary/10 absolute bottom-0 w-full max-w-md flex gap-3">
+            <button
                 type="submit"
                 disabled={!canSubmit}
-                class="w-full py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                class="flex-1 py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
                 <Icon icon="mdi:check" width="20" height="20" />
                 <span>Submit Score</span>
+            </button>
+            <button
+                type="submit"
+                formaction="?/skip"
+                class="py-3.5 px-4 bg-secondary/10 text-secondary/70 font-bold rounded-xl transition-all active:scale-[0.98] hover:bg-secondary/20 flex items-center justify-center gap-1"
+                title="Skip this project"
+            >
+                <Icon icon="mdi:skip-next" width="20" height="20" />
+                <span>Skip</span>
             </button>
         </div>
     </form>

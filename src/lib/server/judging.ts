@@ -184,6 +184,16 @@ export const Judging = {
     },
 
     /**
+     * Skip a project assignment without counting it toward the project's judge allocation.
+     */
+    skipProject: async (userId: string, projectId: string) => {
+        await prisma.judgeAssignment.update({
+            where: { userId_projectId: { userId, projectId } },
+            data: { status: 'skipped' }
+        });
+    },
+
+    /**
      * Submit a comment and complete the assignment.
      */
     submitComment: async (userId: string, projectId: string, comment: string) => {
@@ -494,6 +504,15 @@ export const Judging = {
                 where: {
                     userId,
                     status: 'assigned'
+                }
+            });
+
+            // Reset 'skipped' for projects being explicitly re-assigned by admin
+            await tx.judgeAssignment.deleteMany({
+                where: {
+                    userId,
+                    status: 'skipped',
+                    projectId: { in: projects.map(p => p.id) }
                 }
             });
 
