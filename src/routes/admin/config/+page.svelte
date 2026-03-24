@@ -74,6 +74,17 @@
     <!-- Judging Settings -->
     <section>
         <h2 class="text-xl font-bold text-secondary mb-4">Judging Settings</h2>
+
+        {#if data.maxTablesPerJudge !== null && data.maxJudgesPerTeam !== null && data.tableCount > 0 && data.judgeCount > 0}
+            {@const possible = data.judgeCount * data.maxTablesPerJudge}
+            {@const needed = data.tableCount * data.maxJudgesPerTeam}
+            {#if possible < needed}
+                <div class="mb-4 max-w-sm bg-yellow-50 border border-yellow-300 rounded-lg p-3 text-sm text-yellow-800">
+                    <strong>Cap conflict:</strong> {data.judgeCount} judges × {data.maxTablesPerJudge} tables = {possible} total judgements possible, but {data.tableCount} tables × {data.maxJudgesPerTeam} judges = {needed} needed. Some tables won't reach the goal.
+                </div>
+            {/if}
+        {/if}
+
         <div class="bg-white/50 border border-secondary/10 p-4 rounded-lg max-w-sm">
             <form method="POST" action="?/updateJudgingSettings" use:enhance class="space-y-4">
                 <div class="space-y-1">
