@@ -462,7 +462,9 @@ export const Judging = {
                     orderBy: { startedAt: 'desc' }
                 },
                 _count: {
-                    select: { judgeAssignments: true }
+                    select: {
+                        judgeAssignments: { where: { status: 'completed' } }
+                    }
                 }
             },
             orderBy: {
