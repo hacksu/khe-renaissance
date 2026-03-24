@@ -1,8 +1,16 @@
 import { prisma } from '$lib/server/prisma';
 
 export const SETTING_KEYS = {
-    MAX_TABLES_PER_JUDGE: 'maxTablesPerJudge'
+    MAX_TABLES_PER_JUDGE: 'maxTablesPerJudge',
+    MAX_JUDGES_PER_TEAM: 'maxJudgesPerTeam'
 } as const;
+
+const getIntSetting = async (key: string) => {
+    const row = await prisma.setting.findUnique({ where: { key } });
+    if (row === null) return null;
+    const n = parseInt(row.value);
+    return isNaN(n) ? null : n;
+};
 
 export const Settings = {
     get: async (key: string) => {
@@ -18,10 +26,6 @@ export const Settings = {
         });
     },
 
-    getMaxTablesPerJudge: async () => {
-        const val = await Settings.get(SETTING_KEYS.MAX_TABLES_PER_JUDGE);
-        if (val === null) return null;
-        const n = parseInt(val);
-        return isNaN(n) ? null : n;
-    }
+    getMaxTablesPerJudge: () => getIntSetting(SETTING_KEYS.MAX_TABLES_PER_JUDGE),
+    getMaxJudgesPerTeam: () => getIntSetting(SETTING_KEYS.MAX_JUDGES_PER_TEAM)
 };

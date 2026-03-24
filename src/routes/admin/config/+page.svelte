@@ -88,6 +88,18 @@
                         class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
                     />
                 </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-bold text-secondary block">Max Judges Per Team</label>
+                    <p class="text-xs text-secondary/60">Limits how many judges a team can receive via auto-assignment. Leave blank for no limit.</p>
+                    <input
+                        type="number"
+                        name="maxJudgesPerTeam"
+                        min="1"
+                        value={data.maxJudgesPerTeam ?? ''}
+                        placeholder="No limit"
+                        class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
+                    />
+                </div>
                 <Button type="submit">Save</Button>
             </form>
         </div>

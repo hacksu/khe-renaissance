@@ -71,7 +71,11 @@ export const Judging = {
             return null;
         }
 
-        const maxTables = await Settings.getMaxTablesPerJudge();
+        const [maxTables, maxJudgesPerTeam] = await Promise.all([
+            Settings.getMaxTablesPerJudge(),
+            Settings.getMaxJudgesPerTeam()
+        ]);
+
         if (maxTables !== null) {
             const assignedCount = await prisma.judgeAssignment.count({
                 where: { userId, status: { in: ['assigned', 'completed'] } }
@@ -88,8 +92,7 @@ export const Judging = {
         });
         const excludedIds = userHistory.map(h => h.projectId);
 
-        // 2. Find optimal project
-        const candidates = await prisma.project.findMany({
+        const candidates = (await prisma.project.findMany({
             where: { id: { notIn: excludedIds } },
             include: {
                 _count: {
@@ -100,7 +103,7 @@ export const Judging = {
                 }
             },
             take: 50
-        });
+        })).filter(p => maxJudgesPerTeam === null || p._count.judgements < maxJudgesPerTeam);
 
         // Sort: Least judgements -> Least active assignments
         candidates.sort((a, b) => {

@@ -14,9 +14,12 @@ export const load: PageServerLoad = async () => {
         console.error("Failed to load metadata", e);
     }
 
-    const maxTablesPerJudge = await Settings.getMaxTablesPerJudge();
+    const [maxTablesPerJudge, maxJudgesPerTeam] = await Promise.all([
+        Settings.getMaxTablesPerJudge(),
+        Settings.getMaxJudgesPerTeam()
+    ]);
 
-    return { tracks, criteria, maxTablesPerJudge };
+    return { tracks, criteria, maxTablesPerJudge, maxJudgesPerTeam };
 };
 
 export const actions: Actions = {
@@ -114,16 +117,20 @@ export const actions: Actions = {
     },
     updateJudgingSettings: async ({ request }) => {
         const form = await request.formData();
-        const maxTablesRaw = form.get("maxTablesPerJudge") as string;
+
+        const saveIntSetting = async (key: string, raw: string) => {
+            if (raw === '' || raw === null) {
+                await prisma.setting.deleteMany({ where: { key } });
+            } else {
+                const n = parseInt(raw);
+                if (isNaN(n) || n < 1) return fail(400, { error: `Invalid value for ${key}` });
+                await Settings.set(key, String(n));
+            }
+        };
 
         try {
-            if (maxTablesRaw === '' || maxTablesRaw === null) {
-                await prisma.setting.deleteMany({ where: { key: SETTING_KEYS.MAX_TABLES_PER_JUDGE } });
-            } else {
-                const n = parseInt(maxTablesRaw);
-                if (isNaN(n) || n < 1) return fail(400, { error: "Invalid max tables value" });
-                await Settings.set(SETTING_KEYS.MAX_TABLES_PER_JUDGE, String(n));
-            }
+            await saveIntSetting(SETTING_KEYS.MAX_TABLES_PER_JUDGE, form.get("maxTablesPerJudge") as string);
+            await saveIntSetting(SETTING_KEYS.MAX_JUDGES_PER_TEAM, form.get("maxJudgesPerTeam") as string);
         } catch (e) {
             return fail(500, { error: "Failed to save settings" });
         }
