@@ -10,7 +10,10 @@
     const completed = $derived(assignments.filter(a => a.status === 'completed').length);
     const remaining = $derived(assignments.filter(a => a.status === 'assigned').length);
     const skipped = $derived(assignments.filter(a => a.status === 'skipped').length);
-    const atCap = $derived(data.maxTablesPerJudge !== null && completed >= data.maxTablesPerJudge && remaining === 0);
+    const atCap = $derived(
+        data.allTeamsFull ||
+        (data.maxTablesPerJudge !== null && completed >= data.maxTablesPerJudge && remaining === 0)
+    );
 </script>
 
 <div class="max-w-md mx-auto p-4 flex flex-col h-full min-h-screen relative">
@@ -29,7 +32,13 @@
                 </div>
             </div>
             <p class="font-bold text-green-800 text-lg">You're done!</p>
-            <p class="text-green-700 text-sm mt-1">You've completed all {data.maxTablesPerJudge} of your assigned tables. Thank you!</p>
+            <p class="text-green-700 text-sm mt-1">
+                {#if data.allTeamsFull}
+                    All teams have been fully judged. Thank you!
+                {:else}
+                    You've completed all {data.maxTablesPerJudge} of your assigned tables. Thank you!
+                {/if}
+            </p>
         </div>
     {/if}
 

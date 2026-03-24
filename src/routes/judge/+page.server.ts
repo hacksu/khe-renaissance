@@ -2,15 +2,27 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
 import { Settings } from '$lib/server/settings';
+import { prisma } from '$lib/server/prisma';
 
 export const load: PageServerLoad = async ({ parent }) => {
     const { session } = await parent();
     if (!session) throw redirect(301, "/auth/login");
 
-    const assignments = await Judging.getJudgeAssignments(session.user.id);
-    const maxTablesPerJudge = await Settings.getMaxTablesPerJudge();
+    const [assignments, maxTablesPerJudge, maxJudgesPerTeam] = await Promise.all([
+        Judging.getJudgeAssignments(session.user.id),
+        Settings.getMaxTablesPerJudge(),
+        Settings.getMaxJudgesPerTeam()
+    ]);
 
-    return { assignments, maxTablesPerJudge };
+    let allTeamsFull = false;
+    if (maxJudgesPerTeam !== null) {
+        const projects = await prisma.project.findMany({
+            select: { _count: { select: { judgements: true } } }
+        });
+        allTeamsFull = projects.length > 0 && projects.every(p => p._count.judgements >= maxJudgesPerTeam);
+    }
+
+    return { assignments, maxTablesPerJudge, allTeamsFull };
 };
 
 export const actions: Actions = {

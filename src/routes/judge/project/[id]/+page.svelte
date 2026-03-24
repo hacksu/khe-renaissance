@@ -4,7 +4,6 @@
     let { data } = $props();
     const { project, criteria } = data;
 
-    // --- Scores ---
     interface ScoreMap { [key: string]: number; }
 
     let initialScores: ScoreMap = {};
@@ -20,7 +19,6 @@
     let requiredProgress = $derived(requiredCriteria.filter((c: any) => scores[c.id] > 0).length);
     let canSubmit = $derived(requiredProgress >= requiredCriteria.length);
 
-    // --- Timer ---
     let elapsed = $state(0);
     const totalSeconds = (data.timePerTable ?? 0) * 60;
 
