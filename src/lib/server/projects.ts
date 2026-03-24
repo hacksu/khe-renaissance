@@ -141,5 +141,16 @@ export const Projects = {
                 }
             }
         });
+    },
+
+    /**
+     * Get the next available table number (max numeric table number + 1).
+     */
+    getNextTableNumber: async () => {
+        const projects = await prisma.project.findMany({ select: { tableNumber: true } });
+        const nums = projects
+            .map(p => parseInt(p.tableNumber || ''))
+            .filter(n => !isNaN(n));
+        return nums.length > 0 ? Math.max(...nums) + 1 : 1;
     }
 };

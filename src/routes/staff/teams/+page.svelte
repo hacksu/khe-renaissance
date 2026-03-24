@@ -9,9 +9,10 @@
    import Icon from "@iconify/svelte";
    import { Utils } from "$lib/util";
 
-   let { data } = $props();
+   let { data, form } = $props();
    // data.projects, data.unassignedParticipants
 
+   let createTableNumber = $state('');
    let showCreateModal = $state(false);
    let showAddMemberModal = $state(false);
    let showEditModal = $state(false);
@@ -76,7 +77,7 @@
             if (result.type === 'success') {
                 showCreateModal = false;
             }
-            await update();
+            await update({ reset: false });
         };
    };
    
@@ -87,7 +88,7 @@
             if (result.type === 'success') {
                 showEditModal = false;
             }
-            await update();
+            await update({ reset: false });
         };
    };
    
@@ -107,7 +108,7 @@
             <h1 class="text-2xl font-bold font-serif text-secondary">Judging Management</h1>
             <p class="text-secondary/70">Create teams and assign participants.</p>
         </div>
-        <Button onclick={() => showCreateModal = true}>+ Create Team</Button>
+        <Button onclick={() => { createTableNumber = String(data.nextTableNumber); showCreateModal = true; }}>+ Create Team</Button>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -246,7 +247,12 @@
                     {/each}
                 </select>
              </div>
-            <Input name="tableNumber" label="Table #" placeholder="e.g. 12" />
+            <div class="space-y-1">
+                <Input name="tableNumber" label="Table #" bind:value={createTableNumber} />
+                {#if form?.duplicateTableNumber}
+                    <p class="text-xs text-red-500">Table #{form.tableNumber} is already taken.</p>
+                {/if}
+            </div>
         </div>
     </form>
 </Modal>
@@ -319,7 +325,12 @@
                         {/each}
                     </select>
                  </div>
-                <Input name="tableNumber" label="Table #" value={selectedProjectForEdit.tableNumber || ''} />
+                <div class="space-y-1">
+                    <Input name="tableNumber" label="Table #" value={selectedProjectForEdit.tableNumber || ''} />
+                    {#if form?.duplicateTableNumber}
+                        <p class="text-xs text-red-500">Table #{form.tableNumber} is already taken.</p>
+                    {/if}
+                </div>
             </div>
         </form>
     {/if}
