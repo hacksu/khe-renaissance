@@ -10,6 +10,7 @@
     const completed = $derived(assignments.filter(a => a.status === 'completed').length);
     const remaining = $derived(assignments.filter(a => a.status === 'assigned').length);
     const skipped = $derived(assignments.filter(a => a.status === 'skipped').length);
+    const atCap = $derived(data.maxTablesPerJudge !== null && completed >= data.maxTablesPerJudge && remaining === 0);
 </script>
 
 <div class="max-w-md mx-auto p-4 flex flex-col h-full min-h-screen relative">
@@ -20,6 +21,19 @@
         <p class="text-secondary/80">Welcome, {judgeName}</p>
     </div>
 
+    {#if atCap}
+        <div class="mb-6 bg-green-50 border border-green-200 rounded-xl p-5 text-center">
+            <div class="flex justify-center mb-2">
+                <div class="bg-green-100 text-green-700 rounded-full p-2">
+                    <Icon icon="mdi:trophy-outline" width="28" height="28" />
+                </div>
+            </div>
+            <p class="font-bold text-green-800 text-lg">You're done!</p>
+            <p class="text-green-700 text-sm mt-1">You've completed all {data.maxTablesPerJudge} of your assigned tables. Thank you!</p>
+        </div>
+    {/if}
+
+    {#if !atCap}
     <!-- Judge Next Button -->
     <div class="mb-4">
         <form method="POST" action="?/judgeNext" use:enhance>
@@ -50,6 +64,7 @@
             <p class="text-red-600 text-xs mt-2 text-center">{form.manualEntryError}</p>
         {/if}
     </div>
+    {/if}
 
     <!-- Stats -->
     <div class="bg-white/50 backdrop-blur-sm rounded-xl p-4 mb-6 border border-secondary/10 shadow-sm">

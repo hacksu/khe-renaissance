@@ -1,6 +1,7 @@
 import { prisma } from "$lib/server/prisma";
 import type { Actions, PageServerLoad } from "./$types";
 import { fail } from "@sveltejs/kit";
+import { Settings, SETTING_KEYS } from "$lib/server/settings";
 
 export const load: PageServerLoad = async () => {
     let tracks: any[] = [];
@@ -13,7 +14,9 @@ export const load: PageServerLoad = async () => {
         console.error("Failed to load metadata", e);
     }
 
-    return { tracks, criteria };
+    const maxTablesPerJudge = await Settings.getMaxTablesPerJudge();
+
+    return { tracks, criteria, maxTablesPerJudge };
 };
 
 export const actions: Actions = {
@@ -107,6 +110,22 @@ export const actions: Actions = {
             await prisma.judgingCriterion.delete({ where: { id } });
         } catch (e) {
             return fail(500, { error: "Failed to delete criterion" });
+        }
+    },
+    updateJudgingSettings: async ({ request }) => {
+        const form = await request.formData();
+        const maxTablesRaw = form.get("maxTablesPerJudge") as string;
+
+        try {
+            if (maxTablesRaw === '' || maxTablesRaw === null) {
+                await prisma.setting.deleteMany({ where: { key: SETTING_KEYS.MAX_TABLES_PER_JUDGE } });
+            } else {
+                const n = parseInt(maxTablesRaw);
+                if (isNaN(n) || n < 1) return fail(400, { error: "Invalid max tables value" });
+                await Settings.set(SETTING_KEYS.MAX_TABLES_PER_JUDGE, String(n));
+            }
+        } catch (e) {
+            return fail(500, { error: "Failed to save settings" });
         }
     }
 };

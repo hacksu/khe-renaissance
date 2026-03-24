@@ -1,14 +1,16 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
+import { Settings } from '$lib/server/settings';
 
 export const load: PageServerLoad = async ({ parent }) => {
     const { session } = await parent();
     if (!session) throw redirect(301, "/auth/login");
 
     const assignments = await Judging.getJudgeAssignments(session.user.id);
+    const maxTablesPerJudge = await Settings.getMaxTablesPerJudge();
 
-    return { assignments };
+    return { assignments, maxTablesPerJudge };
 };
 
 export const actions: Actions = {
@@ -52,6 +54,7 @@ export const actions: Actions = {
             throw redirect(303, `/judge/project/${assignment.projectId}`);
         } catch (e) {
             if ((e as any)?.status === 303) throw e;
+            if ((e as any)?.message === 'cap') return fail(400, { manualEntryError: "You've reached your judging limit." });
             console.error(e);
             return fail(404, { manualEntryError: "Failed to find or assign project." });
         }

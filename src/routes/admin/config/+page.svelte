@@ -71,6 +71,28 @@
         </div>
     </section>
 
+    <!-- Judging Settings -->
+    <section>
+        <h2 class="text-xl font-bold text-secondary mb-4">Judging Settings</h2>
+        <div class="bg-white/50 border border-secondary/10 p-4 rounded-lg max-w-sm">
+            <form method="POST" action="?/updateJudgingSettings" use:enhance class="space-y-4">
+                <div class="space-y-1">
+                    <label class="text-sm font-bold text-secondary block">Max Tables Per Judge</label>
+                    <p class="text-xs text-secondary/60">Limits how many tables auto-assignment gives a judge. Leave blank for no limit.</p>
+                    <input
+                        type="number"
+                        name="maxTablesPerJudge"
+                        min="1"
+                        value={data.maxTablesPerJudge ?? ''}
+                        placeholder="No limit"
+                        class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
+                    />
+                </div>
+                <Button type="submit">Save</Button>
+            </form>
+        </div>
+    </section>
+
     <!-- Criteria Manager -->
     <section>
         <h2 class="text-xl font-bold text-secondary mb-4">Judging Criteria</h2>

@@ -1,6 +1,7 @@
 import { prisma } from '$lib/server/prisma';
 import { sendJudgeFeedbackEmail } from '$lib/server/email';
 import { syncJudgingSheet } from '$lib/server/sheets';
+import { Settings } from '$lib/server/settings';
 
 export const Judging = {
     /**
@@ -68,6 +69,16 @@ export const Judging = {
         if (manualAssignments > 0) {
             // STRICT MODE: You only get what you are assigned.
             return null;
+        }
+
+        const maxTables = await Settings.getMaxTablesPerJudge();
+        if (maxTables !== null) {
+            const assignedCount = await prisma.judgeAssignment.count({
+                where: { userId, status: { in: ['assigned', 'completed'] } }
+            });
+            if (assignedCount >= maxTables) {
+                return null;
+            }
         }
 
         // 1. Get IDs of projects user has already touched
@@ -549,7 +560,6 @@ export const Judging = {
      * This bypasses the manual check (or rather, creates a manual-like assignment).
      */
     assignJudgeToTable: async (userId: string, tableNumber: string) => {
-        // 1. Find project by table
         const project = await prisma.project.findFirst({
             where: { tableNumber }
         });
@@ -558,7 +568,16 @@ export const Judging = {
             throw new Error(`No project found at table ${tableNumber}`);
         }
 
-        // 2. Check if already completed
+        const maxTables = await Settings.getMaxTablesPerJudge();
+        if (maxTables !== null) {
+            const assignedCount = await prisma.judgeAssignment.count({
+                where: { userId, status: { in: ['assigned', 'completed'] } }
+            });
+            if (assignedCount >= maxTables) {
+                throw new Error('cap');
+            }
+        }
+
         const completed = await prisma.judgeAssignment.findUnique({
             where: {
                 userId_projectId: { userId, projectId: project.id }

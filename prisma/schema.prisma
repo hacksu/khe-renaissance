@@ -208,6 +208,13 @@ model Judgement {
   @@map("judgement")
 }
 
+model Setting {
+  key   String @id
+  value String
+
+  @@map("setting")
+}
+
 model JudgementScore {
   id           String           @id @default(uuid())
   judgementId  String
