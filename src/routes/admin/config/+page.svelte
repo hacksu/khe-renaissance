@@ -100,6 +100,18 @@
                         class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
                     />
                 </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-bold text-secondary block">Time Per Table (minutes)</label>
+                    <p class="text-xs text-secondary/60">Shows a live timer on the judging page. Leave blank to disable.</p>
+                    <input
+                        type="number"
+                        name="timePerTable"
+                        min="1"
+                        value={data.timePerTable ?? ''}
+                        placeholder="Disabled"
+                        class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
+                    />
+                </div>
                 <Button type="submit">Save</Button>
             </form>
         </div>

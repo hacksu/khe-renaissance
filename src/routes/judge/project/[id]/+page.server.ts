@@ -1,18 +1,22 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
+import { Settings } from '$lib/server/settings';
 
 export const load: PageServerLoad = async ({ params, locals, request }) => {
     const { auth } = await import('$lib/server/auth');
     const session = await auth.api.getSession(request);
 
-    const result = await Judging.getProjectForJudging(params.id, session?.user?.id);
+    const [result, timePerTable] = await Promise.all([
+        Judging.getProjectForJudging(params.id, session?.user?.id),
+        Settings.getTimePerTable()
+    ]);
 
     if (!result) {
         throw error(404, "Project not found");
     }
 
-    return result;
+    return { ...result, timePerTable };
 };
 
 export const actions: Actions = {

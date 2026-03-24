@@ -1,37 +1,59 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
-    
+
     let { data } = $props();
     const { project, criteria } = data;
 
-    // --- State ---
-    interface ScoreMap {
-        [key: string]: number;
-    }
-    
-    // Initialize scores map: id -> score
+    // --- Scores ---
+    interface ScoreMap { [key: string]: number; }
+
     let initialScores: ScoreMap = {};
     if (data.judgement?.scores) {
-        data.judgement.scores.forEach((s: any) => {
-            initialScores[s.criterionId] = s.score;
-        });
+        data.judgement.scores.forEach((s: any) => { initialScores[s.criterionId] = s.score; });
     }
-
-    // Default 0 for unassigned
-    criteria.forEach((c: any) => {
-        if (initialScores[c.id] === undefined) initialScores[c.id] = 0;
-    });
+    criteria.forEach((c: any) => { if (initialScores[c.id] === undefined) initialScores[c.id] = 0; });
 
     let scores: ScoreMap = $state(initialScores);
     let comment = $state(data.judgement?.comment || "");
 
     let requiredCriteria = criteria.filter((c: any) => !c.optional);
-    let requiredProgress = $derived(
-        requiredCriteria.filter((c: any) => scores[c.id] > 0).length
-    );
+    let requiredProgress = $derived(requiredCriteria.filter((c: any) => scores[c.id] > 0).length);
     let canSubmit = $derived(requiredProgress >= requiredCriteria.length);
 
+    // --- Timer ---
+    let elapsed = $state(0);
+    const totalSeconds = (data.timePerTable ?? 0) * 60;
+
+    const pct = $derived(totalSeconds > 0 ? elapsed / totalSeconds : 0);
+    const timerOver = $derived(totalSeconds > 0 && elapsed >= totalSeconds);
+    const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
+    $effect(() => {
+        if (!data.timePerTable) return;
+
+        const key = `judge_timer_${project.id}`;
+        let start = parseInt(localStorage.getItem(key) ?? '');
+        if (isNaN(start)) {
+            start = Date.now();
+            localStorage.setItem(key, String(start));
+        }
+
+        elapsed = Math.floor((Date.now() - start) / 1000);
+        const interval = setInterval(() => {
+            elapsed = Math.floor((Date.now() - start) / 1000);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    });
 </script>
+
+<style>
+    @keyframes flash {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+    .timer-flash { animation: flash 1s ease-in-out infinite; }
+</style>
 
 <div class="max-w-md mx-auto flex flex-col h-screen bg-sand overflow-hidden">
     
@@ -39,13 +61,22 @@
     <div class="flex-none p-4 bg-sand border-b border-secondary/10 z-10">
         <div class="flex items-center justify-between mb-2">
             <a href="/judge" class="text-sm font-medium text-secondary/60 hover:text-primary">← Dashboard</a>
-            <span class="text-xs font-bold uppercase text-secondary/40">Judging</span>
+            {#if data.timePerTable}
+                <span class="text-sm font-mono font-bold tabular-nums px-2 py-0.5 rounded-md
+                    {timerOver ? 'bg-red-500 text-white timer-flash' :
+                     pct >= 0.75 ? 'bg-red-100 text-red-600' :
+                     pct >= 0.5  ? 'bg-orange-100 text-orange-600' :
+                     'bg-secondary/10 text-secondary/70'}">
+                    {formatTime(elapsed)} / {formatTime(totalSeconds)}
+                </span>
+            {:else}
+                <span class="text-xs font-bold uppercase text-secondary/40">Judging</span>
+            {/if}
         </div>
         <h1 class="text-xl font-bold text-secondary truncate">
             {project.name}{#if project.tableNumber} <span class="font-normal text-secondary/50">(#{project.tableNumber})</span>{/if}
         </h1>
         <p class="text-xs text-secondary/70 truncate">{project.track}</p>
-
     </div>
 
     <!-- Form Container -->

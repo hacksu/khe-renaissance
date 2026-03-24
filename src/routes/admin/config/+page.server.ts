@@ -14,12 +14,13 @@ export const load: PageServerLoad = async () => {
         console.error("Failed to load metadata", e);
     }
 
-    const [maxTablesPerJudge, maxJudgesPerTeam] = await Promise.all([
+    const [maxTablesPerJudge, maxJudgesPerTeam, timePerTable] = await Promise.all([
         Settings.getMaxTablesPerJudge(),
-        Settings.getMaxJudgesPerTeam()
+        Settings.getMaxJudgesPerTeam(),
+        Settings.getTimePerTable()
     ]);
 
-    return { tracks, criteria, maxTablesPerJudge, maxJudgesPerTeam };
+    return { tracks, criteria, maxTablesPerJudge, maxJudgesPerTeam, timePerTable };
 };
 
 export const actions: Actions = {
@@ -131,6 +132,7 @@ export const actions: Actions = {
         try {
             await saveIntSetting(SETTING_KEYS.MAX_TABLES_PER_JUDGE, form.get("maxTablesPerJudge") as string);
             await saveIntSetting(SETTING_KEYS.MAX_JUDGES_PER_TEAM, form.get("maxJudgesPerTeam") as string);
+            await saveIntSetting(SETTING_KEYS.TIME_PER_TABLE, form.get("timePerTable") as string);
         } catch (e) {
             return fail(500, { error: "Failed to save settings" });
         }
