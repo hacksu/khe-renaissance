@@ -203,7 +203,7 @@ export const Judging = {
     skipProject: async (userId: string, projectId: string) => {
         await prisma.judgeAssignment.update({
             where: { userId_projectId: { userId, projectId } },
-            data: { status: 'skipped' }
+            data: { status: 'skipped', completedAt: new Date() }
         });
     },
 
@@ -221,14 +221,9 @@ export const Judging = {
             }
         });
 
-        // Mark Assignment as Completed
         await prisma.judgeAssignment.update({
-            where: {
-                userId_projectId: { userId, projectId }
-            },
-            data: {
-                status: 'completed'
-            }
+            where: { userId_projectId: { userId, projectId } },
+            data: { status: 'completed', completedAt: new Date() }
         });
 
         syncJudgingSheet().catch(console.error);
@@ -467,6 +462,9 @@ export const Judging = {
                     },
                     where: {
                         status: 'assigned'
+                    },
+                    orderBy: {
+                        startedAt: 'desc'
                     }
                 }
             },

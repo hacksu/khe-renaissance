@@ -30,10 +30,17 @@
         if (!data.timePerTable) return;
 
         const key = `judge_timer_${project.id}`;
-        let start = parseInt(localStorage.getItem(key) ?? '');
-        if (isNaN(start)) {
-            start = Date.now();
+        let start: number;
+
+        if (data.startedAt) {
+            start = new Date(data.startedAt).getTime();
             localStorage.setItem(key, String(start));
+        } else {
+            start = parseInt(localStorage.getItem(key) ?? '');
+            if (isNaN(start)) {
+                start = Date.now();
+                localStorage.setItem(key, String(start));
+            }
         }
 
         elapsed = Math.floor((Date.now() - start) / 1000);

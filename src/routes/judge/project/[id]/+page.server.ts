@@ -2,6 +2,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
 import { Settings } from '$lib/server/settings';
+import { prisma } from '$lib/server/prisma';
 
 export const load: PageServerLoad = async ({ params, locals, request }) => {
     const { auth } = await import('$lib/server/auth');
@@ -16,7 +17,26 @@ export const load: PageServerLoad = async ({ params, locals, request }) => {
         throw error(404, "Project not found");
     }
 
-    return { ...result, timePerTable };
+    let startedAt: Date | null = null;
+    if (session?.user?.id) {
+        const key = { userId: session.user.id, projectId: params.id };
+        const assignment = await prisma.judgeAssignment.findUnique({
+            where: { userId_projectId: key },
+            select: { startedAt: true }
+        });
+        if (assignment) {
+            startedAt = assignment.startedAt;
+            if (!startedAt) {
+                ({ startedAt } = await prisma.judgeAssignment.update({
+                    where: { userId_projectId: key },
+                    data: { startedAt: new Date() },
+                    select: { startedAt: true }
+                }));
+            }
+        }
+    }
+
+    return { ...result, timePerTable, startedAt };
 };
 
 export const actions: Actions = {

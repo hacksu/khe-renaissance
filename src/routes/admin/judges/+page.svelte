@@ -105,6 +105,17 @@
         showRemoveJudgeModal = false;
     }
 
+    // Timer polling
+    let now = $state(Date.now());
+
+    $effect(() => {
+        const tick = setInterval(() => now = Date.now(), 1000);
+        const poll = setInterval(() => invalidateAll(), 10_000);
+        return () => { clearInterval(tick); clearInterval(poll); };
+    });
+
+    const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
     // Curve State
     let showCurveModal = $state(false);
     let curveJudge = $state<any>(null);
@@ -147,6 +158,9 @@
                     <th class="p-4 font-bold">Judge Name</th>
                     <th class="p-4 font-bold">Role</th>
                     <th class="p-4 font-bold">Assigned Tables</th>
+                    {#if data.timePerTable}
+                        <th class="p-4 font-bold">Timer</th>
+                    {/if}
                     <th class="p-4 font-bold text-right">Actions</th>
                 </tr>
             </thead>
@@ -178,6 +192,26 @@
                                 <span class="text-secondary/30 italic">No assignments</span>
                             {/if}
                         </td>
+                        {#if data.timePerTable}
+                            <td class="p-4">
+                                {#if judge.judgeAssignments[0]?.startedAt}
+                                    {@const active = judge.judgeAssignments[0]}
+                                    {@const end = active.completedAt ? new Date(active.completedAt).getTime() : now}
+                                    {@const elapsed = Math.floor((end - new Date(active.startedAt!).getTime()) / 1000)}
+                                    {@const total = data.timePerTable * 60}
+                                    {@const pct = elapsed / total}
+                                    <span class="text-sm font-mono font-bold tabular-nums px-2 py-0.5 rounded-md
+                                        {pct >= 1     ? 'bg-red-500 text-white animate-pulse' :
+                                         pct >= 0.75  ? 'bg-red-100 text-red-600' :
+                                         pct >= 0.5   ? 'bg-orange-100 text-orange-600' :
+                                                        'bg-secondary/10 text-secondary/70'}">
+                                        {formatTime(elapsed)} / {formatTime(total)}
+                                    </span>
+                                {:else}
+                                    <span class="text-secondary/30 text-sm">—</span>
+                                {/if}
+                            </td>
+                        {/if}
                         <td class="p-4 text-right flex gap-1 justify-end">
                              <Button
                                 class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary border-none shadow-none"
@@ -202,7 +236,7 @@
                 {/each}
                 {#if data.judges.length === 0}
                     <tr>
-                        <td colspan="4" class="p-8 text-center text-secondary/40 italic">
+                        <td colspan={data.timePerTable ? 5 : 4} class="p-8 text-center text-secondary/40 italic">
                             No judges found.
                         </td>
                     </tr>

@@ -183,7 +183,9 @@ model JudgeAssignment {
   priority  Int      @default(0)
   isManual  Boolean  @default(false)
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
 
   @@unique([userId, projectId])
   @@map("judge_assignment")
