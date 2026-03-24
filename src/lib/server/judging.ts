@@ -457,15 +457,12 @@ export const Judging = {
             },
             include: {
                 judgeAssignments: {
-                    include: {
-                        project: true
-                    },
-                    where: {
-                        status: 'assigned'
-                    },
-                    orderBy: {
-                        startedAt: 'desc'
-                    }
+                    include: { project: true },
+                    where: { status: 'assigned' },
+                    orderBy: { startedAt: 'desc' }
+                },
+                _count: {
+                    select: { judgeAssignments: true }
                 }
             },
             orderBy: {

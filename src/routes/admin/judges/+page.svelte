@@ -172,6 +172,7 @@
                                 {judge.name}
                                 <p class="text-xs font-normal text-secondary/50">{judge.email}</p>
                             </div>
+                            <p class="text-xs font-normal text-secondary/40 mt-0.5">{judge._count.judgeAssignments} tables</p>
                         </td>
                         <td class="p-4">
                             <span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-xs font-bold uppercase">{judge.role}</span>
