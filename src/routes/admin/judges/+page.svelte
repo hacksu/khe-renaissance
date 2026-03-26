@@ -46,6 +46,12 @@
         }
     }
 
+    let projectByTable = $derived(
+        Object.fromEntries(
+            (data.projects || []).map((p: any) => [parseInt(p.tableNumber || "0"), p])
+        )
+    );
+
     // Derived list of available tables (excluding already selected ones)
     let availableTables = $derived(
         (data.projects || [])
@@ -273,12 +279,13 @@
                 <!-- Selected Pills -->
                 <div class="flex flex-wrap gap-2 min-h-[40px] p-2 bg-white/10 rounded-md border border-white/20">
                     {#each selectedTables as table}
-                        <button 
+                        <button
                             type="button"
-                            class="flex items-center gap-1 bg-white text-secondary px-2 py-1 rounded text-sm font-mono shadow-sm hover:bg-red-50 hover:text-red-500 transition-colors"
+                            class="flex items-center gap-1 bg-white text-secondary px-2 py-1 rounded text-sm shadow-sm hover:bg-red-50 hover:text-red-500 transition-colors"
                             onclick={() => removeTable(table)}
                         >
-                            {table}
+                            <span class="font-bold">{projectByTable[table]?.name ?? `Table ${table}`}</span>
+                            <span class="font-mono text-xs opacity-60">#{table}</span>
                             <Icon icon="mdi:close" width="14" />
                         </button>
                     {/each}
@@ -297,7 +304,7 @@
                     >
                         <option value="" class="text-secondary">Select a table to add...</option>
                         {#each availableTables as table}
-                            <option value={table} class="text-secondary">Table {table}</option>
+                            <option value={table} class="text-secondary">{projectByTable[table]?.name ?? `Table ${table}`} (#{table})</option>
                         {/each}
                     </select>
                 </div>
