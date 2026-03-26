@@ -69,6 +69,78 @@
         }
     }
 
+    // CSV Import State
+    type CsvRow = { email: string; name: string; status: 'pending' | 'sending' | 'done' | 'error' };
+    let showImportModal = $state(false);
+    let csvRows = $state<CsvRow[]>([]);
+    let isImporting = $state(false);
+    let importDone = $state(false);
+
+    function parseCsv(text: string): CsvRow[] {
+        const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+        if (lines.length === 0) return [];
+
+        const firstCells = lines[0].split(',').map(c => c.trim().toLowerCase().replace(/"/g, ''));
+        const hasHeader = firstCells.some(c => c === 'email' || c === 'name');
+        const dataLines = hasHeader ? lines.slice(1) : lines;
+
+        let emailIdx = 0, nameIdx = 1;
+        if (hasHeader) {
+            const ei = firstCells.indexOf('email');
+            const ni = firstCells.indexOf('name');
+            if (ei !== -1) emailIdx = ei;
+            if (ni !== -1) nameIdx = ni;
+        }
+
+        return dataLines.map(line => {
+            const cells = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+            const email = cells[emailIdx]?.toLowerCase() ?? '';
+            const name = cells[nameIdx] ?? email.split('@')[0];
+            return { email, name, status: 'pending' };
+        }).filter(r => r.email.includes('@'));
+    }
+
+    function handleFileChange(e: Event) {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            csvRows = parseCsv(ev.target?.result as string);
+            importDone = false;
+        };
+        reader.readAsText(file);
+    }
+
+    async function importJudges() {
+        if (csvRows.length === 0 || isImporting) return;
+        isImporting = true;
+        for (let i = 0; i < csvRows.length; i++) {
+            const row = csvRows[i];
+            if (row.status === 'done') continue;
+            csvRows[i] = { ...row, status: 'sending' };
+            try {
+                await fetch("/api/invite", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: row.email, role: "judge" })
+                });
+                await authClient.signIn.magicLink({
+                    email: row.email,
+                    callbackURL: "/judge",
+                    name: row.name
+                });
+                csvRows[i] = { ...csvRows[i], status: 'done' };
+            } catch {
+                csvRows[i] = { ...csvRows[i], status: 'error' };
+            }
+        }
+        isImporting = false;
+        importDone = true;
+        await invalidateAll();
+    }
+
+    let pendingImportCount = $derived(csvRows.filter(r => r.status === 'pending').length);
+
     let projectByTable = $derived(
         Object.fromEntries(
             (data.projects || []).map((p: any) => [parseInt(p.tableNumber || "0"), p])
@@ -175,9 +247,14 @@
             <h1 class="text-2xl font-bold font-serif text-secondary">Judge Assignments</h1>
             <p class="text-secondary/70">Assign specific tables to judges.</p>
         </div>
-        <Button onclick={() => showAddJudgeModal = true} class="bg-primary text-white">
-            <Icon icon="mdi:plus" /> Add Judge
-        </Button>
+        <div class="flex gap-2">
+            <Button onclick={() => showAddJudgeModal = true} class="bg-primary text-white whitespace-nowrap">
+                Add Judge
+            </Button>
+            <Button onclick={() => { showImportModal = true; csvRows = []; importDone = false; }} class="bg-secondary/10 text-secondary border-none shadow-none whitespace-nowrap">
+                Import CSV
+            </Button>
+        </div>
     </div>
 
     <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
@@ -243,31 +320,10 @@
                             </td>
                         {/if}
                         <td class="p-4 text-right flex gap-1 justify-end">
-                             <Button
-                                class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary border-none shadow-none"
-                                onclick={() => openEditModal(judge)}
-                            >
-                                Assign
-                            </Button>
-                            <Button
-                                class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary border-none shadow-none"
-                                onclick={() => openCurveModal(judge)}
-                            >
-                                Curve: {judge.curve ?? 0}
-                            </Button>
-                            <Button
-                                class="text-xs py-1 px-3 bg-blue-50 hover:bg-blue-100 text-blue-600 border-none shadow-none disabled:opacity-50"
-                                onclick={() => resendLink(judge)}
-                                disabled={resendingId === judge.id}
-                            >
-                                {resendingId === judge.id ? "Sending..." : "Resend Link"}
-                            </Button>
-                            <Button
-                                class="text-xs py-1 px-3 bg-red-100 hover:bg-red-200 text-red-600 border-none shadow-none"
-                                onclick={() => { judgeToRemove = judge; showRemoveJudgeModal = true; }}
-                            >
-                                Remove
-                            </Button>
+                            <button class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-lg transition-colors" onclick={() => openEditModal(judge)}>Assign</button>
+                            <button class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-lg transition-colors" onclick={() => openCurveModal(judge)}>Curve: {judge.curve ?? 0}</button>
+                            <button class="text-xs py-1 px-3 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-colors disabled:opacity-50" onclick={() => resendLink(judge)} disabled={resendingId === judge.id}>{resendingId === judge.id ? "Sending..." : "Resend Link"}</button>
+                            <button class="text-xs py-1 px-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors" onclick={() => { judgeToRemove = judge; showRemoveJudgeModal = true; }}>Remove</button>
                         </td>
                     </tr>
                 {/each}
@@ -386,6 +442,59 @@
     onConfirm={handleRemoveConfirm}
     onCancel={() => showRemoveJudgeModal = false}
 />
+
+<Modal
+    open={showImportModal}
+    title="Import Judges from CSV"
+    confirmText={importDone ? "Done" : isImporting ? `Sending ${csvRows.filter(r => r.status === 'done' || r.status === 'error').length}/${csvRows.length}...` : `Send ${pendingImportCount} Invitation${pendingImportCount === 1 ? '' : 's'}`}
+    onConfirm={importDone ? () => showImportModal = false : importJudges}
+    onCancel={() => showImportModal = false}
+>
+    <div class="space-y-4">
+        <p class="text-sm text-white/70">
+            Upload a CSV with an <code class="bg-white/10 px-1 rounded">email</code> column and optional <code class="bg-white/10 px-1 rounded">name</code> column. Header row is optional.
+        </p>
+        <input
+            type="file"
+            accept=".csv,text/csv"
+            onchange={handleFileChange}
+            class="text-sm text-white/70 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-white/20 file:text-white hover:file:bg-white/30"
+        />
+        {#if csvRows.length > 0}
+            <div class="max-h-56 overflow-y-auto rounded-md border border-white/20">
+                <table class="w-full text-xs">
+                    <thead class="bg-white/10 sticky top-0">
+                        <tr>
+                            <th class="p-2 text-left text-white/60 font-bold">Email</th>
+                            <th class="p-2 text-left text-white/60 font-bold">Name</th>
+                            <th class="p-2 text-center text-white/60 font-bold w-16">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each csvRows as row}
+                            <tr class="border-t border-white/10">
+                                <td class="p-2 text-white/80 font-mono">{row.email}</td>
+                                <td class="p-2 text-white/70">{row.name}</td>
+                                <td class="p-2 text-center">
+                                    {#if row.status === 'done'}
+                                        <span class="text-green-400">✓</span>
+                                    {:else if row.status === 'error'}
+                                        <span class="text-red-400">✗</span>
+                                    {:else if row.status === 'sending'}
+                                        <span class="text-white/50 animate-pulse">...</span>
+                                    {:else}
+                                        <span class="text-white/30">—</span>
+                                    {/if}
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-xs text-white/40">{csvRows.length} row{csvRows.length === 1 ? '' : 's'} parsed</p>
+        {/if}
+    </div>
+</Modal>
 
 <Modal
     open={showAddJudgeModal}
