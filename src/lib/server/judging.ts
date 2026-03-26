@@ -41,95 +41,83 @@ export const Judging = {
      * Find and assign the next optimal project for a user to judge.
      */
     assignNextProject: async (userId: string) => {
-        // 0. Check for existing 'assigned' projects (Forced assignments)
         const existingAssignment = await prisma.judgeAssignment.findFirst({
-            where: {
-                userId,
-                status: 'assigned'
-            },
-            orderBy: {
-                project: { tableNumber: 'asc' } // Optional: Do them in order
-            }
+            where: { userId, status: 'assigned' },
+            orderBy: { project: { tableNumber: 'asc' } }
         });
+        if (existingAssignment) return existingAssignment;
 
-        if (existingAssignment) {
-            return existingAssignment;
-        }
+        const manualCount = await prisma.judgeAssignment.count({ where: { userId, isManual: true } });
+        if (manualCount > 0) return null;
 
-        // 0.5 Check if user is in "Manual Mode"
-        // If they have ANY assignment (past or present) that is manual, they are a manual judge.
-        // We do NOT want to give them auto-assigned projects.
-        const manualAssignments = await prisma.judgeAssignment.count({
-            where: {
-                userId,
-                isManual: true
-            }
-        });
-
-        if (manualAssignments > 0) {
-            // STRICT MODE: You only get what you are assigned.
-            return null;
-        }
-
-        const [maxTables, maxJudgesPerTeam] = await Promise.all([
+        const [maxTables, goal] = await Promise.all([
             Settings.getMaxTablesPerJudge(),
             Settings.getMaxJudgesPerTeam()
         ]);
 
         if (maxTables !== null) {
-            const assignedCount = await prisma.judgeAssignment.count({
+            const seen = await prisma.judgeAssignment.count({
                 where: { userId, status: { in: ['assigned', 'completed'] } }
             });
-            if (assignedCount >= maxTables) {
-                return null;
-            }
+            if (seen >= maxTables) return null;
         }
 
-        // 1. Get IDs of projects user has already touched
-        const userHistory = await prisma.judgeAssignment.findMany({
-            where: { userId },
-            select: { projectId: true }
-        });
-        const excludedIds = userHistory.map(h => h.projectId);
-
-        const candidates = (await prisma.project.findMany({
-            where: { id: { notIn: excludedIds } },
-            include: {
-                _count: {
-                    select: {
-                        judgements: true,
-                        judgeAssignments: { where: { status: 'assigned' } }
+        const [allProjects, userHistory] = await Promise.all([
+            prisma.project.findMany({
+                select: {
+                    id: true,
+                    tableNumber: true,
+                    _count: {
+                        select: {
+                            judgements: true,
+                            judgeAssignments: { where: { status: 'assigned' } }
+                        }
                     }
                 }
-            },
-            take: 50
-        })).filter(p => maxJudgesPerTeam === null || p._count.judgements < maxJudgesPerTeam);
+            }),
+            prisma.judgeAssignment.findMany({
+                where: { userId },
+                select: { projectId: true, project: { select: { tableNumber: true } } },
+                orderBy: { completedAt: 'desc' }
+            })
+        ]);
 
-        // Sort: Least judgements -> Least active assignments
-        candidates.sort((a, b) => {
-            if (a._count.judgements !== b._count.judgements) {
-                return a._count.judgements - b._count.judgements;
-            }
-            return a._count.judgeAssignments - b._count.judgeAssignments;
-        });
+        const seenIds = new Set(userHistory.map(h => h.projectId));
+        const lastTable = userHistory[0]?.project?.tableNumber ? parseInt(userHistory[0].project.tableNumber) : null;
 
-        const candidate = candidates[0];
+        const unseen = allProjects.filter(p => !seenIds.has(p.id));
+        if (unseen.length === 0) return null;
 
-        if (!candidate) {
-            return null;
+        const eligible = goal === null
+            ? unseen
+            : unseen.filter(p => p._count.judgements + p._count.judgeAssignments < goal);
+        if (eligible.length === 0) return null;
+
+        const minCount = Math.min(...eligible.map(p => p._count.judgements));
+        const tier = eligible.filter(p => p._count.judgements === minCount);
+
+        const unoccupied = tier.filter(p => p._count.judgeAssignments === 0);
+        const pool = unoccupied.length > 0 ? unoccupied
+            : eligible.filter(p => p._count.judgeAssignments === 0).length > 0
+                ? eligible.filter(p => p._count.judgeAssignments === 0)
+                : tier;
+
+        let candidate: typeof pool[0];
+        if (lastTable === null) {
+            candidate = pool[Math.floor(Math.random() * pool.length)];
+        } else {
+            candidate = pool.reduce((best, p) => {
+                if (p._count.judgements !== best._count.judgements)
+                    return p._count.judgements < best._count.judgements ? p : best;
+                const distP = Math.abs(parseInt(p.tableNumber ?? '0') - lastTable);
+                const distB = Math.abs(parseInt(best.tableNumber ?? '0') - lastTable);
+                return distP < distB ? p : best;
+            });
         }
 
-        // 3. Create Assignment
-        const assignment = await prisma.judgeAssignment.create({
-            data: {
-                userId,
-                projectId: candidate.id,
-                status: 'assigned',
-                isManual: false
-            }
+        return prisma.judgeAssignment.create({
+            data: { userId, projectId: candidate.id, status: 'assigned', isManual: false }
         });
-
-        return assignment;
     },
 
     /**
