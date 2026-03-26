@@ -188,10 +188,10 @@ export const Judging = {
     /**
      * Skip a project assignment without counting it toward the project's judge allocation.
      */
-    skipProject: async (userId: string, projectId: string) => {
+    skipProject: async (userId: string, projectId: string, reason: string) => {
         await prisma.judgeAssignment.update({
             where: { userId_projectId: { userId, projectId } },
-            data: { status: 'skipped', completedAt: new Date() }
+            data: { status: 'skipped', completedAt: new Date(), skipReason: reason }
         });
     },
 
@@ -235,6 +235,10 @@ export const Judging = {
                         user: { select: { name: true, curve: true } }
                     }
                 },
+                judgeAssignments: {
+                    where: { status: 'skipped' },
+                    include: { user: { select: { name: true } } }
+                },
                 Track: true
             }
         });
@@ -268,19 +272,30 @@ export const Judging = {
                 }
             }
 
-            const judgeBreakdowns = p.judgements.map(j => {
-                const curve = j.user.curve || 0;
-                return {
-                    judgeName: j.user.name,
-                    comment: j.comment ?? null,
-                    scores: j.scores.map(s => ({
-                        criterionId: s.criterionId,
-                        criterionName: s.criterion.name,
-                        isOptional: s.criterion.optional,
-                        curvedScore: s.score + curve
-                    }))
-                };
-            });
+            const judgeBreakdowns = [
+                ...p.judgements.map(j => {
+                    const curve = j.user.curve || 0;
+                    return {
+                        judgeName: j.user.name,
+                        comment: j.comment ?? null,
+                        skipped: false,
+                        skipReason: null,
+                        scores: j.scores.map(s => ({
+                            criterionId: s.criterionId,
+                            criterionName: s.criterion.name,
+                            isOptional: s.criterion.optional,
+                            curvedScore: s.score + curve
+                        }))
+                    };
+                }),
+                ...p.judgeAssignments.map(a => ({
+                    judgeName: a.user.name,
+                    comment: null,
+                    skipped: true,
+                    skipReason: a.skipReason ?? null,
+                    scores: [] as { criterionId: string; criterionName: string; isOptional: boolean; curvedScore: number }[]
+                }))
+            ];
 
             return {
                 id: p.id,

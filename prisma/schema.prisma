@@ -179,9 +179,10 @@ model JudgeAssignment {
   projectId String
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   
-  status    String   @default("assigned") // 'assigned', 'completed', 'skipped'
-  priority  Int      @default(0)
-  isManual  Boolean  @default(false)
+  status     String   @default("assigned") // 'assigned', 'completed', 'skipped'
+  skipReason String?
+  priority   Int      @default(0)
+  isManual   Boolean  @default(false)
 
   createdAt   DateTime  @default(now())
   startedAt   DateTime?

@@ -296,20 +296,32 @@
                                     <td colspan="99" class="px-8 pb-4 pt-2">
                                         <div class="flex flex-wrap gap-4">
                                             {#each result.judgeBreakdowns as breakdown}
-                                                <div class="bg-white/80 rounded-lg border border-secondary/10 p-3 text-xs min-w-40">
-                                                    <p class="font-bold text-secondary mb-2">{breakdown.judgeName}</p>
-                                                    {#each breakdown.scores as score}
-                                                        <div class="flex justify-between gap-4 text-secondary/70">
-                                                            <span class="{score.isOptional ? 'italic text-accent/60' : ''}">
-                                                                {score.criterionName}{score.isOptional ? ' *' : ''}
-                                                            </span>
-                                                            <span class="font-mono font-bold text-secondary">{score.curvedScore.toFixed(1)}</span>
+                                                {#if breakdown.skipped}
+                                                    <div class="bg-white/40 rounded-lg border border-secondary/10 p-3 text-xs min-w-40 opacity-50">
+                                                        <div class="flex items-center gap-1.5 mb-2">
+                                                            <p class="font-bold text-secondary/60">{breakdown.judgeName}</p>
+                                                            <span class="text-[10px] px-1 py-0.5 bg-secondary/10 text-secondary/50 rounded font-bold uppercase tracking-wide">Skipped</span>
                                                         </div>
-                                                    {/each}
-                                                    {#if breakdown.comment}
-                                                        <p class="mt-2 pt-2 border-t border-secondary/10 text-secondary/60 italic">{breakdown.comment}</p>
-                                                    {/if}
-                                                </div>
+                                                        {#if breakdown.skipReason}
+                                                            <p class="text-secondary/50 italic">{breakdown.skipReason}</p>
+                                                        {/if}
+                                                    </div>
+                                                {:else}
+                                                    <div class="bg-white/80 rounded-lg border border-secondary/10 p-3 text-xs min-w-40">
+                                                        <p class="font-bold text-secondary mb-2">{breakdown.judgeName}</p>
+                                                        {#each breakdown.scores as score}
+                                                            <div class="flex justify-between gap-4 text-secondary/70">
+                                                                <span class="{score.isOptional ? 'italic text-accent/60' : ''}">
+                                                                    {score.criterionName}{score.isOptional ? ' *' : ''}
+                                                                </span>
+                                                                <span class="font-mono font-bold text-secondary">{score.curvedScore.toFixed(1)}</span>
+                                                            </div>
+                                                        {/each}
+                                                        {#if breakdown.comment}
+                                                            <p class="mt-2 pt-2 border-t border-secondary/10 text-secondary/60 italic">{breakdown.comment}</p>
+                                                        {/if}
+                                                    </div>
+                                                {/if}
                                             {/each}
                                         </div>
                                     </td>

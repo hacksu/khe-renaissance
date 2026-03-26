@@ -45,8 +45,15 @@ export const actions: Actions = {
         const session = await auth.api.getSession(request);
         if (!session) return fail(401);
 
+        const form = await request.formData();
+        const reason = (form.get('reason') as string) ?? '';
+
+        if (reason.trim().length < 2) {
+            return fail(400, { message: "A reason is required to skip" });
+        }
+
         try {
-            await Judging.skipProject(session.user.id, params.id);
+            await Judging.skipProject(session.user.id, params.id, reason.trim());
         } catch (e) {
             console.error(e);
             return fail(500, { message: "Failed to skip project" });

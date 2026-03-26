@@ -19,6 +19,10 @@
     let requiredProgress = $derived(requiredCriteria.filter((c: any) => scores[c.id] > 0).length);
     let canSubmit = $derived(requiredProgress >= requiredCriteria.length);
 
+    let showSkipModal = $state(false);
+    let skipReason = $state('');
+    let canSkip = $derived(skipReason.trim().length >= 2);
+
     let elapsed = $state(0);
     const totalSeconds = (data.timePerTable ?? 0) * 60;
 
@@ -150,8 +154,8 @@
                 <span>Submit Score</span>
             </button>
             <button
-                type="submit"
-                formaction="?/skip"
+                type="button"
+                onclick={() => { showSkipModal = true; skipReason = ''; }}
                 class="py-3.5 px-4 bg-secondary/10 text-secondary/70 font-bold rounded-xl transition-all active:scale-[0.98] hover:bg-secondary/20 flex items-center justify-center gap-1"
                 title="Skip this project"
             >
@@ -160,5 +164,40 @@
             </button>
         </div>
     </form>
+
+    <!-- Skip Reason Modal -->
+    {#if showSkipModal}
+        <div class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm px-4 pb-6">
+            <div class="w-full max-w-md bg-sand rounded-2xl shadow-2xl p-6 space-y-4">
+                <div>
+                    <h2 class="text-lg font-bold text-secondary">Skip this project?</h2>
+                    <p class="text-sm text-secondary/60 mt-1">Please explain why you're skipping before continuing.</p>
+                </div>
+                <textarea
+                    class="w-full h-28 p-3 bg-white/60 border border-secondary/15 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-secondary/20 placeholder:text-secondary/30 text-secondary text-sm"
+                    placeholder="Reason for skipping..."
+                    bind:value={skipReason}
+                    autofocus
+                ></textarea>
+                <form method="POST" action="?/skip" class="flex gap-3">
+                    <input type="hidden" name="reason" value={skipReason} />
+                    <button
+                        type="button"
+                        onclick={() => showSkipModal = false}
+                        class="flex-1 py-3 px-4 bg-secondary/10 text-secondary/70 font-bold rounded-xl transition-all hover:bg-secondary/20"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={!canSkip}
+                        class="flex-1 py-3 px-4 bg-secondary text-offwhite font-bold rounded-xl transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                        Skip Project
+                    </button>
+                </form>
+            </div>
+        </div>
+    {/if}
 
 </div>
