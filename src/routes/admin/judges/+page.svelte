@@ -19,6 +19,7 @@
     let showAddJudgeModal = $state(false);
     let newJudgeEmail = $state("");
     let isAddingJudge = $state(false);
+    let resendingId = $state<string | null>(null);
 
     async function addJudge() {
         if (!newJudgeEmail) return;
@@ -43,6 +44,28 @@
             console.error(e);
         } finally {
             isAddingJudge = false;
+        }
+    }
+
+    async function resendLink(judge: any) {
+        resendingId = judge.id;
+        try {
+            await fetch("/api/invite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: judge.email, role: "judge" })
+            });
+            await authClient.signIn.magicLink({
+                email: judge.email,
+                callbackURL: "/judge",
+                name: judge.name
+            });
+            alert(`Magic link sent to ${judge.email}`);
+        } catch (e) {
+            alert("Failed to send link");
+            console.error(e);
+        } finally {
+            resendingId = null;
         }
     }
 
@@ -231,6 +254,13 @@
                                 onclick={() => openCurveModal(judge)}
                             >
                                 Curve: {judge.curve ?? 0}
+                            </Button>
+                            <Button
+                                class="text-xs py-1 px-3 bg-blue-50 hover:bg-blue-100 text-blue-600 border-none shadow-none disabled:opacity-50"
+                                onclick={() => resendLink(judge)}
+                                disabled={resendingId === judge.id}
+                            >
+                                {resendingId === judge.id ? "Sending..." : "Resend Link"}
                             </Button>
                             <Button
                                 class="text-xs py-1 px-3 bg-red-100 hover:bg-red-200 text-red-600 border-none shadow-none"

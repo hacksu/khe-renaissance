@@ -11,6 +11,7 @@
     let showInviteModal = $state(false);
     let newStaffEmail = $state("");
     let isInviting = $state(false);
+    let resendingId = $state<string | null>(null);
 
     async function inviteStaff() {
         if (!newStaffEmail) return;
@@ -35,6 +36,28 @@
             console.error(e);
         } finally {
             isInviting = false;
+        }
+    }
+
+    async function resendLink(member: any) {
+        resendingId = member.id;
+        try {
+            await fetch("/api/invite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: member.email, role: "staff" })
+            });
+            await authClient.signIn.magicLink({
+                email: member.email,
+                callbackURL: "/staff",
+                name: member.name
+            });
+            alert(`Magic link sent to ${member.email}`);
+        } catch (e) {
+            alert("Failed to send link");
+            console.error(e);
+        } finally {
+            resendingId = null;
         }
     }
 
@@ -92,7 +115,14 @@
                     <tr class="hover:bg-white/50 transition-colors">
                         <td class="p-4 font-bold text-secondary">{member.name}</td>
                         <td class="p-4 text-secondary/70">{member.email}</td>
-                        <td class="p-4 text-right">
+                        <td class="p-4 text-right flex gap-1 justify-end">
+                            <Button
+                                class="text-xs py-1 px-3 bg-blue-50 hover:bg-blue-100 text-blue-600 border-none shadow-none disabled:opacity-50"
+                                onclick={() => resendLink(member)}
+                                disabled={resendingId === member.id}
+                            >
+                                {resendingId === member.id ? "Sending..." : "Resend Link"}
+                            </Button>
                             <Button
                                 class="text-xs py-1 px-3 bg-red-100 hover:bg-red-200 text-red-600 border-none shadow-none"
                                 onclick={() => { memberToRemove = member; showRemoveModal = true; }}
