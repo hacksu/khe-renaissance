@@ -320,10 +320,31 @@
                             </td>
                         {/if}
                         <td class="p-4 text-right flex gap-1 justify-end">
-                            <button class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-lg transition-colors" onclick={() => openEditModal(judge)}>Assign</button>
-                            <button class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-lg transition-colors" onclick={() => openCurveModal(judge)}>Curve: {judge.curve ?? 0}</button>
-                            <button class="text-xs py-1 px-3 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-colors disabled:opacity-50" onclick={() => resendLink(judge)} disabled={resendingId === judge.id}>{resendingId === judge.id ? "Sending..." : "Resend Link"}</button>
-                            <button class="text-xs py-1 px-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors" onclick={() => { judgeToRemove = judge; showRemoveJudgeModal = true; }}>Remove</button>
+                             <Button
+                                class="text-xs border-none shadow-none"
+                                onclick={() => openEditModal(judge)}
+                            >
+                                Assign
+                            </Button>
+                            <Button
+                                class="text-xs border-none shadow-none"
+                                onclick={() => openCurveModal(judge)}
+                            >
+                                Curve: {judge.curve ?? 0}
+                            </Button>
+                            <Button
+                                class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 border-none shadow-none disabled:opacity-50"
+                                onclick={() => resendLink(judge)}
+                                disabled={resendingId === judge.id}
+                            >
+                                {resendingId === judge.id ? "Sending..." : "Resend Link"}
+                            </Button>
+                            <Button
+                                class="text-xs bg-red-500 hover:bg-red-600 text-white border-none shadow-none"
+                                onclick={() => { judgeToRemove = judge; showRemoveJudgeModal = true; }}
+                            >
+                                Remove
+                            </Button>
                         </td>
                     </tr>
                 {/each}
