@@ -24,13 +24,13 @@
         { track: "Cybersecurity", item: "IT/Dev Ops Field Kit", detail: "USB Drives (5), Screw Driver Kit, Tech Pouch, Lock Pick Set", delay: 0.5, img: itDevopsKit },
         { track: "Data Science", item: "Aiolo Portable Drive", detail: "1TB External Hard Drive", delay: 0.6, img: aioloDrive },
         { track: "Game Programming", item: "Miyoo Mini Plus", detail: "Retro Handheld Game Console", delay: 0.7, img: miyooMiniPlus },
-        { track: "Embedded Systems", item: "Libre Computer Sweet Potato", detail: "Modern Single Board Computer", delay: 0.8, img: libreComputer }
+        { track: "Embedded Systems", item: "Libre Computer Sweet Potato", detail: "Modern Single Board Computer", delay: 0.8, img: libreComputer },
+        { name: "Physical AI / Robotics", item: "RasTech Raspberry Pi 5 Kit", detail: "Raspberry Pi 5 Development Kit", delay: 0.9, img: raspBerry  },
     ];
 
     const specialPrizes = [
-        { name: "Hackathon Theme", item: "LEGO Creator 3-in-1 Dinosaur Set", detail: "Top 5 teams", delay: 0.9, img: legoDino },
-        { name: "Best Solo Hack", item: "Yxk Portable Monitor", detail: "", delay: 1.0, img: yxkMonitor },
-        { name: "Embedded Systems Duo", item: "RasTech Raspberry Pi 5 Kit", detail: "", delay: 1.1, img: raspBerry  },
+        { name: "Hackathon Theme", item: "LEGO Creator 3-in-1 Dinosaur Set", detail: "Top 5 teams", delay: 1.0, img: legoDino },
+        { name: "Best Solo Hack", item: "Yxk Portable Monitor", detail: "", delay: 1.1, img: yxkMonitor },
         { name: "Best Attempt", item: "Dino Nugget Pillow Plush", detail: "Organizer Selected", delay: 1.2, img: dinoNuggetPlush },
         { name: "Coolest Hack", item: "Solid Copper Dinosaur Skeleton", detail: "Organizer Selected", delay: 1.3, img: copperDino }
     ];
