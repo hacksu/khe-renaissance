@@ -16,6 +16,7 @@
   import PureButtonsLogo from "../assets/sponsors/pure_buttons_logo.png";
   import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png";
   import ProgressiveLogo from "../assets/sponsors/progressive.svg";
+  import ATRLabLogo from "../assets/sponsors/atr.png";
 
   const sponsors: Sponsor[] = [
     {
@@ -32,6 +33,11 @@
       image: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png",
       name: "Amazon Web Services",
       url: "https://aws.amazon.com",
+    },
+    {
+    image: ATRLabLogo,
+    name: "Advanced Telerobotics Lab",
+    url: "https://www.atr.cs.kent.edu/",
     },
     {
       image: ProgressiveLogo,

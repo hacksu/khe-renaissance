@@ -1,37 +1,68 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
-    
+
     let { data } = $props();
     const { project, criteria } = data;
 
-    // --- State ---
-    interface ScoreMap {
-        [key: string]: number;
-    }
-    
-    // Initialize scores map: id -> score
+    interface ScoreMap { [key: string]: number; }
+
     let initialScores: ScoreMap = {};
     if (data.judgement?.scores) {
-        data.judgement.scores.forEach((s: any) => {
-            initialScores[s.criterionId] = s.score;
-        });
+        data.judgement.scores.forEach((s: any) => { initialScores[s.criterionId] = s.score; });
     }
-
-    // Default 0 for unassigned
-    criteria.forEach((c: any) => {
-        if (initialScores[c.id] === undefined) initialScores[c.id] = 0;
-    });
+    criteria.forEach((c: any) => { if (initialScores[c.id] === undefined) initialScores[c.id] = 0; });
 
     let scores: ScoreMap = $state(initialScores);
     let comment = $state(data.judgement?.comment || "");
 
     let requiredCriteria = criteria.filter((c: any) => !c.optional);
-    let requiredProgress = $derived(
-        requiredCriteria.filter((c: any) => scores[c.id] > 0).length
-    );
+    let requiredProgress = $derived(requiredCriteria.filter((c: any) => scores[c.id] > 0).length);
     let canSubmit = $derived(requiredProgress >= requiredCriteria.length);
 
+    let showSkipModal = $state(false);
+    let skipReason = $state('');
+    let canSkip = $derived(skipReason.trim().length >= 2);
+
+    let elapsed = $state(0);
+    const totalSeconds = (data.timePerTable ?? 0) * 60;
+
+    const pct = $derived(totalSeconds > 0 ? elapsed / totalSeconds : 0);
+    const timerOver = $derived(totalSeconds > 0 && elapsed >= totalSeconds);
+    const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
+    $effect(() => {
+        if (!data.timePerTable) return;
+
+        const key = `judge_timer_${project.id}`;
+        let start: number;
+
+        if (data.startedAt) {
+            start = new Date(data.startedAt).getTime();
+            localStorage.setItem(key, String(start));
+        } else {
+            start = parseInt(localStorage.getItem(key) ?? '');
+            if (isNaN(start)) {
+                start = Date.now();
+                localStorage.setItem(key, String(start));
+            }
+        }
+
+        elapsed = Math.floor((Date.now() - start) / 1000);
+        const interval = setInterval(() => {
+            elapsed = Math.floor((Date.now() - start) / 1000);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    });
 </script>
+
+<style>
+    @keyframes flash {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+    .timer-flash { animation: flash 1s ease-in-out infinite; }
+</style>
 
 <div class="max-w-md mx-auto flex flex-col h-screen bg-sand overflow-hidden">
     
@@ -39,11 +70,22 @@
     <div class="flex-none p-4 bg-sand border-b border-secondary/10 z-10">
         <div class="flex items-center justify-between mb-2">
             <a href="/judge" class="text-sm font-medium text-secondary/60 hover:text-primary">← Dashboard</a>
-            <span class="text-xs font-bold uppercase text-secondary/40">Judging</span>
+            {#if data.timePerTable}
+                <span class="text-sm font-mono font-bold tabular-nums px-2 py-0.5 rounded-md
+                    {timerOver ? 'bg-red-500 text-white timer-flash' :
+                     pct >= 0.75 ? 'bg-red-100 text-red-600' :
+                     pct >= 0.5  ? 'bg-orange-100 text-orange-600' :
+                     'bg-secondary/10 text-secondary/70'}">
+                    {formatTime(elapsed)} / {formatTime(totalSeconds)}
+                </span>
+            {:else}
+                <span class="text-xs font-bold uppercase text-secondary/40">Judging</span>
+            {/if}
         </div>
-        <h1 class="text-xl font-bold text-secondary truncate">{project.name}</h1>
+        <h1 class="text-xl font-bold text-secondary truncate">
+            {project.name}{#if project.tableNumber} <span class="font-normal text-secondary/50">(#{project.tableNumber})</span>{/if}
+        </h1>
         <p class="text-xs text-secondary/70 truncate">{project.track}</p>
-
     </div>
 
     <!-- Form Container -->
@@ -89,7 +131,7 @@
             <!-- Comment Section -->
             <div class="pt-8 border-t border-secondary/10">
                 <h2 class="text-xl font-bold font-serif text-secondary mb-2">Comments</h2>
-                <p class="text-secondary/60 text-sm mb-4">Optional feedback for <span class="font-bold">{project.name}</span></p>
+                <p class="text-secondary/60 text-sm mb-4">Optional feedback for <span class="font-bold">{project.name}{#if project.tableNumber} (#{project.tableNumber}){/if}</span></p>
                 
                 <textarea
                     name="comment"
@@ -102,16 +144,60 @@
         </div>
 
         <!-- Bottom Action Bar -->
-        <div class="flex-none p-4 bg-white/80 backdrop-blur-md border-t border-secondary/10 absolute bottom-0 w-full max-w-md">
-            <button 
+        <div class="flex-none p-4 bg-white/80 backdrop-blur-md border-t border-secondary/10 absolute bottom-0 w-full max-w-md flex gap-3">
+            <button
                 type="submit"
                 disabled={!canSubmit}
-                class="w-full py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                class="flex-1 py-3.5 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
                 <Icon icon="mdi:check" width="20" height="20" />
                 <span>Submit Score</span>
             </button>
+            <button
+                type="button"
+                onclick={() => { showSkipModal = true; skipReason = ''; }}
+                class="py-3.5 px-4 bg-secondary/10 text-secondary/70 font-bold rounded-xl transition-all active:scale-[0.98] hover:bg-secondary/20 flex items-center justify-center gap-1"
+                title="Skip this project"
+            >
+                <Icon icon="mdi:skip-next" width="20" height="20" />
+                <span>Skip</span>
+            </button>
         </div>
     </form>
+
+    <!-- Skip Reason Modal -->
+    {#if showSkipModal}
+        <div class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm px-4 pb-6">
+            <div class="w-full max-w-md bg-sand rounded-2xl shadow-2xl p-6 space-y-4">
+                <div>
+                    <h2 class="text-lg font-bold text-secondary">Skip this project?</h2>
+                    <p class="text-sm text-secondary/60 mt-1">Please explain why you're skipping before continuing.</p>
+                </div>
+                <textarea
+                    class="w-full h-28 p-3 bg-white/60 border border-secondary/15 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-secondary/20 placeholder:text-secondary/30 text-secondary text-sm"
+                    placeholder="Reason for skipping..."
+                    bind:value={skipReason}
+                    autofocus
+                ></textarea>
+                <form method="POST" action="?/skip" class="flex gap-3">
+                    <input type="hidden" name="reason" value={skipReason} />
+                    <button
+                        type="button"
+                        onclick={() => showSkipModal = false}
+                        class="flex-1 py-3 px-4 bg-secondary/10 text-secondary/70 font-bold rounded-xl transition-all hover:bg-secondary/20"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={!canSkip}
+                        class="flex-1 py-3 px-4 bg-secondary text-offwhite font-bold rounded-xl transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                        Skip Project
+                    </button>
+                </form>
+            </div>
+        </div>
+    {/if}
 
 </div>

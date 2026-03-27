@@ -117,6 +117,19 @@ export const Projects = {
     },
 
     /**
+     * Delete a project and clean up all related data.
+     */
+    deleteProject: async (id: string) => {
+        return await prisma.$transaction([
+            prisma.application.updateMany({ where: { projectId: id }, data: { projectId: null } }),
+            prisma.judgementScore.deleteMany({ where: { judgement: { projectId: id } } }),
+            prisma.judgement.deleteMany({ where: { projectId: id } }),
+            prisma.judgeAssignment.deleteMany({ where: { projectId: id } }),
+            prisma.project.delete({ where: { id } }),
+        ]);
+    },
+
+    /**
      * Find a project by table number.
      */
     getByTableNumber: async (tableNumber: string) => {
@@ -128,5 +141,16 @@ export const Projects = {
                 }
             }
         });
+    },
+
+    /**
+     * Get the next available table number (max numeric table number + 1).
+     */
+    getNextTableNumber: async () => {
+        const projects = await prisma.project.findMany({ select: { tableNumber: true } });
+        const nums = projects
+            .map(p => parseInt(p.tableNumber || ''))
+            .filter(n => !isNaN(n));
+        return nums.length > 0 ? Math.max(...nums) + 1 : 1;
     }
 };

@@ -19,6 +19,7 @@
     let showAddJudgeModal = $state(false);
     let newJudgeEmail = $state("");
     let isAddingJudge = $state(false);
+    let resendingId = $state<string | null>(null);
 
     async function addJudge() {
         if (!newJudgeEmail) return;
@@ -45,6 +46,106 @@
             isAddingJudge = false;
         }
     }
+
+    async function resendLink(judge: any) {
+        resendingId = judge.id;
+        try {
+            await fetch("/api/invite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: judge.email, role: "judge" })
+            });
+            await authClient.signIn.magicLink({
+                email: judge.email,
+                callbackURL: "/judge",
+                name: judge.name
+            });
+            alert(`Magic link sent to ${judge.email}`);
+        } catch (e) {
+            alert("Failed to send link");
+            console.error(e);
+        } finally {
+            resendingId = null;
+        }
+    }
+
+    // CSV Import State
+    type CsvRow = { email: string; name: string; status: 'pending' | 'sending' | 'done' | 'error' };
+    let showImportModal = $state(false);
+    let csvRows = $state<CsvRow[]>([]);
+    let isImporting = $state(false);
+    let importDone = $state(false);
+
+    function parseCsv(text: string): CsvRow[] {
+        const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+        if (lines.length === 0) return [];
+
+        const firstCells = lines[0].split(',').map(c => c.trim().toLowerCase().replace(/"/g, ''));
+        const hasHeader = firstCells.some(c => c === 'email' || c === 'name');
+        const dataLines = hasHeader ? lines.slice(1) : lines;
+
+        let emailIdx = 0, nameIdx = 1;
+        if (hasHeader) {
+            const ei = firstCells.indexOf('email');
+            const ni = firstCells.indexOf('name');
+            if (ei !== -1) emailIdx = ei;
+            if (ni !== -1) nameIdx = ni;
+        }
+
+        return dataLines.map(line => {
+            const cells = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+            const email = cells[emailIdx]?.toLowerCase() ?? '';
+            const name = cells[nameIdx] ?? email.split('@')[0];
+            return { email, name, status: 'pending' };
+        }).filter(r => r.email.includes('@'));
+    }
+
+    function handleFileChange(e: Event) {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            csvRows = parseCsv(ev.target?.result as string);
+            importDone = false;
+        };
+        reader.readAsText(file);
+    }
+
+    async function importJudges() {
+        if (csvRows.length === 0 || isImporting) return;
+        isImporting = true;
+        for (let i = 0; i < csvRows.length; i++) {
+            const row = csvRows[i];
+            if (row.status === 'done') continue;
+            csvRows[i] = { ...row, status: 'sending' };
+            try {
+                await fetch("/api/invite", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: row.email, role: "judge" })
+                });
+                await authClient.signIn.magicLink({
+                    email: row.email,
+                    callbackURL: "/judge",
+                    name: row.name
+                });
+                csvRows[i] = { ...csvRows[i], status: 'done' };
+            } catch {
+                csvRows[i] = { ...csvRows[i], status: 'error' };
+            }
+        }
+        isImporting = false;
+        importDone = true;
+        await invalidateAll();
+    }
+
+    let pendingImportCount = $derived(csvRows.filter(r => r.status === 'pending').length);
+
+    let projectByTable = $derived(
+        Object.fromEntries(
+            (data.projects || []).map((p: any) => [parseInt(p.tableNumber || "0"), p])
+        )
+    );
 
     // Derived list of available tables (excluding already selected ones)
     let availableTables = $derived(
@@ -105,6 +206,17 @@
         showRemoveJudgeModal = false;
     }
 
+    // Timer polling
+    let now = $state(Date.now());
+
+    $effect(() => {
+        const tick = setInterval(() => now = Date.now(), 1000);
+        const poll = setInterval(() => invalidateAll(), 10_000);
+        return () => { clearInterval(tick); clearInterval(poll); };
+    });
+
+    const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
     // Curve State
     let showCurveModal = $state(false);
     let curveJudge = $state<any>(null);
@@ -135,9 +247,14 @@
             <h1 class="text-2xl font-bold font-serif text-secondary">Judge Assignments</h1>
             <p class="text-secondary/70">Assign specific tables to judges.</p>
         </div>
-        <Button onclick={() => showAddJudgeModal = true} class="bg-primary text-white">
-            <Icon icon="mdi:plus" /> Add Judge
-        </Button>
+        <div class="flex gap-2">
+            <Button onclick={() => showAddJudgeModal = true} class="bg-primary text-white whitespace-nowrap">
+                Add Judge
+            </Button>
+            <Button onclick={() => { showImportModal = true; csvRows = []; importDone = false; }} class="bg-secondary/10 text-secondary border-none shadow-none whitespace-nowrap">
+                Import CSV
+            </Button>
+        </div>
     </div>
 
     <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
@@ -147,6 +264,9 @@
                     <th class="p-4 font-bold">Judge Name</th>
                     <th class="p-4 font-bold">Role</th>
                     <th class="p-4 font-bold">Assigned Tables</th>
+                    {#if data.timePerTable}
+                        <th class="p-4 font-bold">Timer</th>
+                    {/if}
                     <th class="p-4 font-bold text-right">Actions</th>
                 </tr>
             </thead>
@@ -158,6 +278,7 @@
                                 {judge.name}
                                 <p class="text-xs font-normal text-secondary/50">{judge.email}</p>
                             </div>
+                            <p class="text-xs font-normal text-secondary/40 mt-0.5">{judge._count.judgeAssignments} judged</p>
                         </td>
                         <td class="p-4">
                             <span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-xs font-bold uppercase">{judge.role}</span>
@@ -166,13 +287,9 @@
                             {#if judge.judgeAssignments.length > 0}
                                 <div class="flex flex-wrap gap-1">
                                     {#each judge.judgeAssignments.slice(0, 10) as assignment}
-                                         {#if assignment.project?.tableNumber}
-                                            <span class="bg-white border border-secondary/10 text-secondary px-1.5 py-0.5 rounded text-xs font-mono">
-                                                {assignment.project.tableNumber}
-                                            </span>
-                                         {:else}
-                                             <span class="bg-white border border-secondary/10 text-secondary px-1.5 py-0.5 rounded text-xs font-mono">?</span>
-                                         {/if}
+                                        <span class="bg-white border border-secondary/10 text-secondary px-1.5 py-0.5 rounded text-xs font-mono">
+                                            {assignment.project?.name ?? '?'}{#if assignment.project?.tableNumber} (#{assignment.project.tableNumber}){/if}
+                                        </span>
                                     {/each}
                                     {#if judge.judgeAssignments.length > 10}
                                         <span class="text-xs text-secondary/50">+{judge.judgeAssignments.length - 10} more</span>
@@ -182,21 +299,48 @@
                                 <span class="text-secondary/30 italic">No assignments</span>
                             {/if}
                         </td>
+                        {#if data.timePerTable}
+                            <td class="p-4">
+                                {#if judge.judgeAssignments[0]?.startedAt}
+                                    {@const active = judge.judgeAssignments[0]}
+                                    {@const end = active.completedAt ? new Date(active.completedAt).getTime() : now}
+                                    {@const elapsed = Math.floor((end - new Date(active.startedAt!).getTime()) / 1000)}
+                                    {@const total = data.timePerTable * 60}
+                                    {@const pct = elapsed / total}
+                                    <span class="text-sm font-mono font-bold tabular-nums px-2 py-0.5 rounded-md
+                                        {pct >= 1     ? 'bg-red-500 text-white animate-pulse' :
+                                         pct >= 0.75  ? 'bg-red-100 text-red-600' :
+                                         pct >= 0.5   ? 'bg-orange-100 text-orange-600' :
+                                                        'bg-secondary/10 text-secondary/70'}">
+                                        {formatTime(elapsed)} / {formatTime(total)}
+                                    </span>
+                                {:else}
+                                    <span class="text-secondary/30 text-sm">—</span>
+                                {/if}
+                            </td>
+                        {/if}
                         <td class="p-4 text-right flex gap-1 justify-end">
                              <Button
-                                class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary border-none shadow-none"
+                                class="text-xs border-none shadow-none"
                                 onclick={() => openEditModal(judge)}
                             >
                                 Assign
                             </Button>
                             <Button
-                                class="text-xs py-1 px-3 bg-secondary/10 hover:bg-secondary/20 text-secondary border-none shadow-none"
+                                class="text-xs border-none shadow-none"
                                 onclick={() => openCurveModal(judge)}
                             >
                                 Curve: {judge.curve ?? 0}
                             </Button>
                             <Button
-                                class="text-xs py-1 px-3 bg-red-100 hover:bg-red-200 text-red-600 border-none shadow-none"
+                                class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 border-none shadow-none disabled:opacity-50"
+                                onclick={() => resendLink(judge)}
+                                disabled={resendingId === judge.id}
+                            >
+                                {resendingId === judge.id ? "Sending..." : "Resend Link"}
+                            </Button>
+                            <Button
+                                class="text-xs bg-red-500 hover:bg-red-600 text-white border-none shadow-none"
                                 onclick={() => { judgeToRemove = judge; showRemoveJudgeModal = true; }}
                             >
                                 Remove
@@ -206,7 +350,7 @@
                 {/each}
                 {#if data.judges.length === 0}
                     <tr>
-                        <td colspan="4" class="p-8 text-center text-secondary/40 italic">
+                        <td colspan={data.timePerTable ? 5 : 4} class="p-8 text-center text-secondary/40 italic">
                             No judges found.
                         </td>
                     </tr>
@@ -242,12 +386,13 @@
                 <!-- Selected Pills -->
                 <div class="flex flex-wrap gap-2 min-h-[40px] p-2 bg-white/10 rounded-md border border-white/20">
                     {#each selectedTables as table}
-                        <button 
+                        <button
                             type="button"
-                            class="flex items-center gap-1 bg-white text-secondary px-2 py-1 rounded text-sm font-mono shadow-sm hover:bg-red-50 hover:text-red-500 transition-colors"
+                            class="flex items-center gap-1 bg-white text-secondary px-2 py-1 rounded text-sm shadow-sm hover:bg-red-50 hover:text-red-500 transition-colors"
                             onclick={() => removeTable(table)}
                         >
-                            {table}
+                            <span class="font-bold">{projectByTable[table]?.name ?? `Table ${table}`}</span>
+                            <span class="font-mono text-xs opacity-60">#{table}</span>
                             <Icon icon="mdi:close" width="14" />
                         </button>
                     {/each}
@@ -266,7 +411,7 @@
                     >
                         <option value="" class="text-secondary">Select a table to add...</option>
                         {#each availableTables as table}
-                            <option value={table} class="text-secondary">Table {table}</option>
+                            <option value={table} class="text-secondary">{projectByTable[table]?.name ?? `Table ${table}`} (#{table})</option>
                         {/each}
                     </select>
                 </div>
@@ -318,6 +463,59 @@
     onConfirm={handleRemoveConfirm}
     onCancel={() => showRemoveJudgeModal = false}
 />
+
+<Modal
+    open={showImportModal}
+    title="Import Judges from CSV"
+    confirmText={importDone ? "Done" : isImporting ? `Sending ${csvRows.filter(r => r.status === 'done' || r.status === 'error').length}/${csvRows.length}...` : `Send ${pendingImportCount} Invitation${pendingImportCount === 1 ? '' : 's'}`}
+    onConfirm={importDone ? () => showImportModal = false : importJudges}
+    onCancel={() => showImportModal = false}
+>
+    <div class="space-y-4">
+        <p class="text-sm text-white/70">
+            Upload a CSV with an <code class="bg-white/10 px-1 rounded">email</code> column and optional <code class="bg-white/10 px-1 rounded">name</code> column. Header row is optional.
+        </p>
+        <input
+            type="file"
+            accept=".csv,text/csv"
+            onchange={handleFileChange}
+            class="text-sm text-white/70 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-white/20 file:text-white hover:file:bg-white/30"
+        />
+        {#if csvRows.length > 0}
+            <div class="max-h-56 overflow-y-auto rounded-md border border-white/20">
+                <table class="w-full text-xs">
+                    <thead class="bg-white/10 sticky top-0">
+                        <tr>
+                            <th class="p-2 text-left text-white/60 font-bold">Email</th>
+                            <th class="p-2 text-left text-white/60 font-bold">Name</th>
+                            <th class="p-2 text-center text-white/60 font-bold w-16">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each csvRows as row}
+                            <tr class="border-t border-white/10">
+                                <td class="p-2 text-white/80 font-mono">{row.email}</td>
+                                <td class="p-2 text-white/70">{row.name}</td>
+                                <td class="p-2 text-center">
+                                    {#if row.status === 'done'}
+                                        <span class="text-green-400">✓</span>
+                                    {:else if row.status === 'error'}
+                                        <span class="text-red-400">✗</span>
+                                    {:else if row.status === 'sending'}
+                                        <span class="text-white/50 animate-pulse">...</span>
+                                    {:else}
+                                        <span class="text-white/30">—</span>
+                                    {/if}
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-xs text-white/40">{csvRows.length} row{csvRows.length === 1 ? '' : 's'} parsed</p>
+        {/if}
+    </div>
+</Modal>
 
 <Modal
     open={showAddJudgeModal}

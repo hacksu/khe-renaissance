@@ -71,6 +71,63 @@
         </div>
     </section>
 
+    <!-- Judging Settings -->
+    <section>
+        <h2 class="text-xl font-bold text-secondary mb-4">Judging Settings</h2>
+
+        {#if data.maxTablesPerJudge !== null && data.maxJudgesPerTeam !== null && data.tableCount > 0 && data.judgeCount > 0}
+            {@const possible = data.judgeCount * data.maxTablesPerJudge}
+            {@const needed = data.tableCount * data.maxJudgesPerTeam}
+            {#if possible < needed}
+                <div class="mb-4 max-w-sm bg-yellow-50 border border-yellow-300 rounded-lg p-3 text-sm text-yellow-800">
+                    <strong>Cap conflict:</strong> {data.judgeCount} judges × {data.maxTablesPerJudge} tables = {possible} total judgements possible, but {data.tableCount} tables × {data.maxJudgesPerTeam} judges = {needed} needed. Some tables won't reach the goal.
+                </div>
+            {/if}
+        {/if}
+
+        <div class="bg-white/50 border border-secondary/10 p-4 rounded-lg max-w-sm">
+            <form method="POST" action="?/updateJudgingSettings" use:enhance class="space-y-4">
+                <div class="space-y-1">
+                    <label class="text-sm font-bold text-secondary block">Max Tables Per Judge</label>
+                    <p class="text-xs text-secondary/60">Limits how many tables auto-assignment gives a judge. Leave blank for no limit.</p>
+                    <input
+                        type="number"
+                        name="maxTablesPerJudge"
+                        min="1"
+                        value={data.maxTablesPerJudge ?? ''}
+                        placeholder="No limit"
+                        class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
+                    />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-bold text-secondary block">Max Judges Per Team</label>
+                    <p class="text-xs text-secondary/60">Limits how many judges a team can receive via auto-assignment. Leave blank for no limit.</p>
+                    <input
+                        type="number"
+                        name="maxJudgesPerTeam"
+                        min="1"
+                        value={data.maxJudgesPerTeam ?? ''}
+                        placeholder="No limit"
+                        class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
+                    />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-bold text-secondary block">Time Per Table (minutes)</label>
+                    <p class="text-xs text-secondary/60">Shows a live timer on the judging page. Leave blank to disable.</p>
+                    <input
+                        type="number"
+                        name="timePerTable"
+                        min="1"
+                        value={data.timePerTable ?? ''}
+                        placeholder="Disabled"
+                        class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
+                    />
+                </div>
+                <Button type="submit">Save</Button>
+            </form>
+        </div>
+    </section>
+
     <!-- Criteria Manager -->
     <section>
         <h2 class="text-xl font-bold text-secondary mb-4">Judging Criteria</h2>

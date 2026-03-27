@@ -39,6 +39,7 @@
 		"luxon": "^3.6.1",
 		"nanostores": "^1.0.1",
 		"qrcode": "^1.5.4",
-		"svelte-adapter-bun": "^0.5.2"
+		"svelte-adapter-bun": "^0.5.2",
+		"tailwind-merge": "^3.5.0"
 	}
 }

@@ -1,5 +1,7 @@
 import { prisma } from '$lib/server/prisma';
 import { sendJudgeFeedbackEmail } from '$lib/server/email';
+import { syncJudgingSheet } from '$lib/server/sheets';
+import { Settings } from '$lib/server/settings';
 
 export const Judging = {
     /**
@@ -39,82 +41,83 @@ export const Judging = {
      * Find and assign the next optimal project for a user to judge.
      */
     assignNextProject: async (userId: string) => {
-        // 0. Check for existing 'assigned' projects (Forced assignments)
         const existingAssignment = await prisma.judgeAssignment.findFirst({
-            where: {
-                userId,
-                status: 'assigned'
-            },
-            orderBy: {
-                project: { tableNumber: 'asc' } // Optional: Do them in order
-            }
+            where: { userId, status: 'assigned' },
+            orderBy: { project: { tableNumber: 'asc' } }
         });
+        if (existingAssignment) return existingAssignment;
 
-        if (existingAssignment) {
-            return existingAssignment;
+        const manualCount = await prisma.judgeAssignment.count({ where: { userId, isManual: true } });
+        if (manualCount > 0) return null;
+
+        const [maxTables, goal] = await Promise.all([
+            Settings.getMaxTablesPerJudge(),
+            Settings.getMaxJudgesPerTeam()
+        ]);
+
+        if (maxTables !== null) {
+            const seen = await prisma.judgeAssignment.count({
+                where: { userId, status: { in: ['assigned', 'completed'] } }
+            });
+            if (seen >= maxTables) return null;
         }
 
-        // 0.5 Check if user is in "Manual Mode"
-        // If they have ANY assignment (past or present) that is manual, they are a manual judge.
-        // We do NOT want to give them auto-assigned projects.
-        const manualAssignments = await prisma.judgeAssignment.count({
-            where: {
-                userId,
-                isManual: true
-            }
-        });
-
-        if (manualAssignments > 0) {
-            // STRICT MODE: You only get what you are assigned.
-            return null;
-        }
-
-        // 1. Get IDs of projects user has already touched
-        const userHistory = await prisma.judgeAssignment.findMany({
-            where: { userId },
-            select: { projectId: true }
-        });
-        const excludedIds = userHistory.map(h => h.projectId);
-
-        // 2. Find optimal project
-        const candidates = await prisma.project.findMany({
-            where: { id: { notIn: excludedIds } },
-            include: {
-                _count: {
-                    select: {
-                        judgements: true,
-                        judgeAssignments: { where: { status: 'assigned' } }
+        const [allProjects, userHistory] = await Promise.all([
+            prisma.project.findMany({
+                select: {
+                    id: true,
+                    tableNumber: true,
+                    _count: {
+                        select: {
+                            judgements: true,
+                            judgeAssignments: { where: { status: 'assigned' } }
+                        }
                     }
                 }
-            },
-            take: 50
-        });
+            }),
+            prisma.judgeAssignment.findMany({
+                where: { userId },
+                select: { projectId: true, project: { select: { tableNumber: true } } },
+                orderBy: { completedAt: 'desc' }
+            })
+        ]);
 
-        // Sort: Least judgements -> Least active assignments
-        candidates.sort((a, b) => {
-            if (a._count.judgements !== b._count.judgements) {
-                return a._count.judgements - b._count.judgements;
-            }
-            return a._count.judgeAssignments - b._count.judgeAssignments;
-        });
+        const seenIds = new Set(userHistory.map(h => h.projectId));
+        const lastTable = userHistory[0]?.project?.tableNumber ? parseInt(userHistory[0].project.tableNumber) : null;
 
-        const candidate = candidates[0];
+        const unseen = allProjects.filter(p => !seenIds.has(p.id));
+        if (unseen.length === 0) return null;
 
-        if (!candidate) {
-            return null;
+        const eligible = goal === null
+            ? unseen
+            : unseen.filter(p => p._count.judgements + p._count.judgeAssignments < goal);
+        if (eligible.length === 0) return null;
+
+        const minCount = Math.min(...eligible.map(p => p._count.judgements));
+        const tier = eligible.filter(p => p._count.judgements === minCount);
+
+        const unoccupied = tier.filter(p => p._count.judgeAssignments === 0);
+        const pool = unoccupied.length > 0 ? unoccupied
+            : eligible.filter(p => p._count.judgeAssignments === 0).length > 0
+                ? eligible.filter(p => p._count.judgeAssignments === 0)
+                : tier;
+
+        let candidate: typeof pool[0];
+        if (lastTable === null) {
+            candidate = pool[Math.floor(Math.random() * pool.length)];
+        } else {
+            candidate = pool.reduce((best, p) => {
+                if (p._count.judgements !== best._count.judgements)
+                    return p._count.judgements < best._count.judgements ? p : best;
+                const distP = Math.abs(parseInt(p.tableNumber ?? '0') - lastTable);
+                const distB = Math.abs(parseInt(best.tableNumber ?? '0') - lastTable);
+                return distP < distB ? p : best;
+            });
         }
 
-        // 3. Create Assignment
-        const assignment = await prisma.judgeAssignment.create({
-            data: {
-                userId,
-                projectId: candidate.id,
-                status: 'assigned',
-                isManual: false
-            }
+        return prisma.judgeAssignment.create({
+            data: { userId, projectId: candidate.id, status: 'assigned', isManual: false }
         });
-
-        return assignment;
     },
 
     /**
@@ -160,7 +163,7 @@ export const Judging = {
      * Submit scores for a project.
      */
     submitScore: async (userId: string, projectId: string, scores: { criterionId: string, score: number }[]) => {
-        return await prisma.judgement.upsert({
+        const judgement = await prisma.judgement.upsert({
             where: {
                 userId_projectId: { userId, projectId }
             },
@@ -178,6 +181,18 @@ export const Judging = {
                 },
             }
         });
+        syncJudgingSheet().catch(console.error);
+        return judgement;
+    },
+
+    /**
+     * Skip a project assignment without counting it toward the project's judge allocation.
+     */
+    skipProject: async (userId: string, projectId: string, reason: string) => {
+        await prisma.judgeAssignment.update({
+            where: { userId_projectId: { userId, projectId } },
+            data: { status: 'skipped', completedAt: new Date(), skipReason: reason }
+        });
     },
 
     /**
@@ -194,15 +209,12 @@ export const Judging = {
             }
         });
 
-        // Mark Assignment as Completed
         await prisma.judgeAssignment.update({
-            where: {
-                userId_projectId: { userId, projectId }
-            },
-            data: {
-                status: 'completed'
-            }
+            where: { userId_projectId: { userId, projectId } },
+            data: { status: 'completed', completedAt: new Date() }
         });
+
+        syncJudgingSheet().catch(console.error);
     },
 
     /**
@@ -222,6 +234,10 @@ export const Judging = {
                         scores: { include: { criterion: true } },
                         user: { select: { name: true, curve: true } }
                     }
+                },
+                judgeAssignments: {
+                    where: { status: 'skipped' },
+                    include: { user: { select: { name: true } } }
                 },
                 Track: true
             }
@@ -256,19 +272,30 @@ export const Judging = {
                 }
             }
 
-            const judgeBreakdowns = p.judgements.map(j => {
-                const curve = j.user.curve || 0;
-                return {
-                    judgeName: j.user.name,
-                    comment: j.comment ?? null,
-                    scores: j.scores.map(s => ({
-                        criterionId: s.criterionId,
-                        criterionName: s.criterion.name,
-                        isOptional: s.criterion.optional,
-                        curvedScore: s.score + curve
-                    }))
-                };
-            });
+            const judgeBreakdowns = [
+                ...p.judgements.map(j => {
+                    const curve = j.user.curve || 0;
+                    return {
+                        judgeName: j.user.name,
+                        comment: j.comment ?? null,
+                        skipped: false,
+                        skipReason: null,
+                        scores: j.scores.map(s => ({
+                            criterionId: s.criterionId,
+                            criterionName: s.criterion.name,
+                            isOptional: s.criterion.optional,
+                            curvedScore: s.score + curve
+                        }))
+                    };
+                }),
+                ...p.judgeAssignments.map(a => ({
+                    judgeName: a.user.name,
+                    comment: null,
+                    skipped: true,
+                    skipReason: a.skipReason ?? null,
+                    scores: [] as { criterionId: string; criterionName: string; isOptional: boolean; curvedScore: number }[]
+                }))
+            ];
 
             return {
                 id: p.id,
@@ -433,11 +460,13 @@ export const Judging = {
             },
             include: {
                 judgeAssignments: {
-                    include: {
-                        project: true
-                    },
-                    where: {
-                        status: 'assigned'
+                    include: { project: true },
+                    where: { status: 'assigned' },
+                    orderBy: { startedAt: 'desc' }
+                },
+                _count: {
+                    select: {
+                        judgeAssignments: { where: { status: 'completed' } }
                     }
                 }
             },
@@ -492,6 +521,15 @@ export const Judging = {
                 }
             });
 
+            // Reset 'skipped' for projects being explicitly re-assigned by admin
+            await tx.judgeAssignment.deleteMany({
+                where: {
+                    userId,
+                    status: 'skipped',
+                    projectId: { in: projects.map(p => p.id) }
+                }
+            });
+
             // Create new assignments
             // Filter out projects they might have already completed?
             const completed = await tx.judgeAssignment.findMany({
@@ -525,7 +563,6 @@ export const Judging = {
      * This bypasses the manual check (or rather, creates a manual-like assignment).
      */
     assignJudgeToTable: async (userId: string, tableNumber: string) => {
-        // 1. Find project by table
         const project = await prisma.project.findFirst({
             where: { tableNumber }
         });
@@ -534,7 +571,16 @@ export const Judging = {
             throw new Error(`No project found at table ${tableNumber}`);
         }
 
-        // 2. Check if already completed
+        const maxTables = await Settings.getMaxTablesPerJudge();
+        if (maxTables !== null) {
+            const assignedCount = await prisma.judgeAssignment.count({
+                where: { userId, status: { in: ['assigned', 'completed'] } }
+            });
+            if (assignedCount >= maxTables) {
+                throw new Error('cap');
+            }
+        }
+
         const completed = await prisma.judgeAssignment.findUnique({
             where: {
                 userId_projectId: { userId, projectId: project.id }

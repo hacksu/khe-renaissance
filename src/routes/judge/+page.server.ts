@@ -1,14 +1,28 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
+import { Settings } from '$lib/server/settings';
+import { prisma } from '$lib/server/prisma';
 
 export const load: PageServerLoad = async ({ parent }) => {
     const { session } = await parent();
     if (!session) throw redirect(301, "/auth/login");
 
-    const assignments = await Judging.getJudgeAssignments(session.user.id);
+    const [assignments, maxTablesPerJudge, maxJudgesPerTeam] = await Promise.all([
+        Judging.getJudgeAssignments(session.user.id),
+        Settings.getMaxTablesPerJudge(),
+        Settings.getMaxJudgesPerTeam()
+    ]);
 
-    return { assignments };
+    let allTeamsFull = false;
+    if (maxJudgesPerTeam !== null) {
+        const projects = await prisma.project.findMany({
+            select: { _count: { select: { judgements: true } } }
+        });
+        allTeamsFull = projects.length > 0 && projects.every(p => p._count.judgements >= maxJudgesPerTeam);
+    }
+
+    return { assignments, maxTablesPerJudge, allTeamsFull };
 };
 
 export const actions: Actions = {
@@ -52,6 +66,7 @@ export const actions: Actions = {
             throw redirect(303, `/judge/project/${assignment.projectId}`);
         } catch (e) {
             if ((e as any)?.status === 303) throw e;
+            if ((e as any)?.message === 'cap') return fail(400, { manualEntryError: "You've reached your judging limit." });
             console.error(e);
             return fail(404, { manualEntryError: "Failed to find or assign project." });
         }

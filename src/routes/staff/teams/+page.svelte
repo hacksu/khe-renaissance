@@ -9,19 +9,23 @@
    import Icon from "@iconify/svelte";
    import { Utils } from "$lib/util";
 
-   let { data } = $props();
+   let { data, form } = $props();
    // data.projects, data.unassignedParticipants
 
+   let createTableNumber = $state('');
    let showCreateModal = $state(false);
    let showAddMemberModal = $state(false);
    let showEditModal = $state(false);
+   let showDeleteModal = $state(false);
    let selectedProjectForAdd = $state<any>(null);
    let selectedProjectForEdit = $state<any>(null);
+   let selectedProjectForDelete = $state<any>(null);
    let isSubmitting = $state(false);
    
    let createForm = $state<HTMLFormElement | undefined>();
    let editForm = $state<HTMLFormElement | undefined>();
    let assignForm = $state<HTMLFormElement | undefined>();
+   let deleteForm = $state<HTMLFormElement | undefined>();
 
    let searchTerm = $state("");
    // Filter unassigned
@@ -42,6 +46,22 @@
          showEditModal = true;
    }
 
+   function openDeleteProject(project: any) {
+       selectedProjectForDelete = project;
+       showDeleteModal = true;
+   }
+
+   const submitDelete = () => {
+       isSubmitting = true;
+       return async ({ result, update }: { result: any, update: any }) => {
+           isSubmitting = false;
+           if (result.type === 'success') {
+               showDeleteModal = false;
+           }
+           await update();
+       };
+   };
+
    function handleCreateSubmit() {
        if (createForm) createForm.requestSubmit();
    }
@@ -57,7 +77,7 @@
             if (result.type === 'success') {
                 showCreateModal = false;
             }
-            await update();
+            await update({ reset: false });
         };
    };
    
@@ -68,7 +88,7 @@
             if (result.type === 'success') {
                 showEditModal = false;
             }
-            await update();
+            await update({ reset: false });
         };
    };
    
@@ -88,7 +108,7 @@
             <h1 class="text-2xl font-bold font-serif text-secondary">Judging Management</h1>
             <p class="text-secondary/70">Create teams and assign participants.</p>
         </div>
-        <Button onclick={() => showCreateModal = true}>+ Create Team</Button>
+        <Button onclick={() => { createTableNumber = String(data.nextTableNumber); showCreateModal = true; }}>+ Create Team</Button>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -113,15 +133,21 @@
                         <div class="p-4 flex flex-col h-full">
                             <div class="flex justify-between items-start mb-3">
                                 <div>
-                                    <h3 class="font-bold text-xl text-secondary leading-tight">{project.name}</h3>
+                                    <h3 class="font-bold text-xl text-secondary leading-tight">
+                                        {project.name}{#if project.tableNumber} <span class="font-normal text-secondary/50">(#{project.tableNumber})</span>{/if}
+                                    </h3>
                                     <div class="flex flex-wrap gap-2 text-xs font-mono text-secondary/60 mt-1">
                                         <span class="bg-secondary/5 px-1.5 py-0.5 rounded">{project.track}</span>
-                                        {#if project.tableNumber}<span class="bg-secondary/5 px-1.5 py-0.5 rounded">Table {project.tableNumber}</span>{/if}
                                     </div>
                                 </div>
-                                <button class="text-secondary/30 hover:text-accent transition-colors p-1" title="Edit Project" onclick={() => openEditProject(project)}>
-                                    <Icon icon="mdi:pencil" width="18" />
-                                </button>
+                                <div class="flex gap-1">
+                                    <button class="text-secondary/30 hover:text-accent transition-colors p-1" title="Edit Project" onclick={() => openEditProject(project)}>
+                                        <Icon icon="mdi:pencil" width="18" />
+                                    </button>
+                                    <button class="text-secondary/30 hover:text-red-500 transition-colors p-1" title="Delete Team" onclick={() => openDeleteProject(project)}>
+                                        <Icon icon="mdi:trash-can-outline" width="18" />
+                                    </button>
+                                </div>
                             </div>
 
                             <Divider class="my-3 opacity-50" />
@@ -221,7 +247,12 @@
                     {/each}
                 </select>
              </div>
-            <Input name="tableNumber" label="Table #" placeholder="e.g. 12" />
+            <div class="space-y-1">
+                <Input name="tableNumber" label="Table #" bind:value={createTableNumber} />
+                {#if form?.duplicateTableNumber}
+                    <p class="text-xs text-red-500">Table #{form.tableNumber} is already taken.</p>
+                {/if}
+            </div>
         </div>
     </form>
 </Modal>
@@ -257,6 +288,19 @@
     </div>
 </Modal>
 
+<!-- Delete Project Modal -->
+<Modal
+    open={showDeleteModal}
+    title="Delete Team"
+    message={selectedProjectForDelete ? `Are you sure you want to delete "${selectedProjectForDelete.name}"? This will remove all members, scores, and assignments. This cannot be undone.` : ''}
+    confirmText={isSubmitting ? "Deleting..." : "Delete"}
+    onConfirm={() => { if (deleteForm) deleteForm.requestSubmit(); }}
+    onCancel={() => showDeleteModal = false}
+/>
+<form method="POST" action="?/deleteProject" bind:this={deleteForm} use:enhance={submitDelete} class="hidden">
+    <input type="hidden" name="id" value={selectedProjectForDelete?.id ?? ''} />
+</form>
+
 <!-- Edit Project Modal -->
 <Modal
     open={showEditModal}
@@ -281,7 +325,12 @@
                         {/each}
                     </select>
                  </div>
-                <Input name="tableNumber" label="Table #" value={selectedProjectForEdit.tableNumber || ''} />
+                <div class="space-y-1">
+                    <Input name="tableNumber" label="Table #" value={selectedProjectForEdit.tableNumber || ''} />
+                    {#if form?.duplicateTableNumber}
+                        <p class="text-xs text-red-500">Table #{form.tableNumber} is already taken.</p>
+                    {/if}
+                </div>
             </div>
         </form>
     {/if}

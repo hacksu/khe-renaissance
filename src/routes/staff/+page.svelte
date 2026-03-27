@@ -86,6 +86,22 @@
         downloadCsv(ideas, `project-ideas-${new Date().toISOString().split('T')[0]}.csv`);
     }
 
+    // export checked-in user's names
+    function exportNames() {
+        const checkedInApplications = data.applications.filter(app => app.checkedIn);
+
+        if (checkedInApplications.length === 0) {
+            alert('No checked-in participants to export');
+            return;
+        }
+
+        const participants = checkedInApplications
+            .map(app => `"${Utils.concatExclude(" ", app.firstName, app.lastName)}"`)
+            .join('\n');
+
+        downloadCsv(participants, `checked-in-participants-${new Date().toISOString().split('T')[0]}.csv`);
+    }
+
     function handleDeleteConfirm() {
         if (deleteForm) deleteForm.requestSubmit();
         showDeleteModal = false;
@@ -134,7 +150,7 @@
         <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-semibold text-gray-800">Application Statistics</h2>
-                <div class="flex gap-2 items-center">
+                <div class="flex gap-2 items-center flex-wrap">
                     <select
                         bind:value={emailExportFilter}
                         class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -155,6 +171,12 @@
                         class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
                     >
                         Export Project Ideas
+                    </button>
+                    <button
+                        onclick={exportNames}
+                        class="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 transition-colors"
+                    >
+                        Export Names
                     </button>
                     <a
                         href="/staff/export"
@@ -291,8 +313,8 @@
                         {/if}
                         <Divider>MLH</Divider>
                         <div class="flex justify-between"><p>MLH Authorization:</p><p class={``}>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
-                        <div class="flex justify-between"><p>MLH Code Of Conduct:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
-                        <div class="flex justify-between"><p>MLH Emails:</p><p>{application.mlhAuthorization ? "Yes" : "No"}</p></div>
+                        <div class="flex justify-between"><p>MLH Code Of Conduct:</p><p>{application.mlhCodeOfConduct ? "Yes" : "No"}</p></div>
+                        <div class="flex justify-between"><p>MLH Emails:</p><p>{application.mlhEmails ? "Yes" : "No"}</p></div>
 
                         <Divider />
                         <div class="flex gap-2 flex-wrap">
@@ -307,7 +329,7 @@
                                         {#if application.approved}
                                             <Button type="submit" formaction="?/approve">Un-approve</Button>
                                             {#if application.checkedIn}
-                                                <Button type="submit" formaction="?/checkIn" disabled class="bg-green-600 hover:bg-green-600 cursor-not-allowed">Checked In</Button>
+                                                <Button type="submit" formaction="?/unCheckIn" class="bg-green-600 hover:bg-red-600">Checked In</Button>
                                             {:else}
                                                 <Button type="submit" formaction="?/checkIn">Check In</Button>
                                             {/if}
