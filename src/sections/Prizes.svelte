@@ -12,6 +12,7 @@
     import yxkMonitor from "../assets/prizes/yxk-monitor.png";
     import dinoNuggetPlush from "../assets/prizes/dino-nugget-plush.png";
     import copperDino from "../assets/prizes/copper-dino.png";
+    import raspBerry from "../assets/prizes/atr.png";
 
     const overallPrizes = [
         { place: "1st Place", item: "HyperX Cloud Alpha Wireless", color: "text-sand", delay: 0.2, detail: "Wireless Gaming Headset", img: hyperxCloudAlpha },
@@ -29,8 +30,9 @@
     const specialPrizes = [
         { name: "Hackathon Theme", item: "LEGO Creator 3-in-1 Dinosaur Set", detail: "Top 5 teams", delay: 0.9, img: legoDino },
         { name: "Best Solo Hack", item: "Yxk Portable Monitor", detail: "", delay: 1.0, img: yxkMonitor },
-        { name: "Best Attempt", item: "Dino Nugget Pillow Plush", detail: "Organizer Selected", delay: 1.1, img: dinoNuggetPlush },
-        { name: "Coolest Hack", item: "Solid Copper Dinosaur Skeleton", detail: "Organizer Selected", delay: 1.2, img: copperDino }
+        { name: "Embedded Systems Duo", item: "RasTech Raspberry Pi 5 Kit", detail: "", delay: 1.1, img: raspBerry  },
+        { name: "Best Attempt", item: "Dino Nugget Pillow Plush", detail: "Organizer Selected", delay: 1.2, img: dinoNuggetPlush },
+        { name: "Coolest Hack", item: "Solid Copper Dinosaur Skeleton", detail: "Organizer Selected", delay: 1.3, img: copperDino }
     ];
 </script>
 
