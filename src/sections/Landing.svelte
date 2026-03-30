@@ -1,8 +1,8 @@
 
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { DateTime } from "luxon";
     import { onMount } from "svelte";
+    import { Utils } from "$lib/util";
     const day = "March 28-29th, 2026"
     import Button from "../components/Button.svelte";
     import dinoSvg from "../assets/dino.svg";
@@ -15,6 +15,7 @@
     let shakeTimeout: ReturnType<typeof setTimeout> | null = null;
     let hash = $state("");
     let qrDataUrl = $state("");
+    const applicationsClosed = Utils.hasApplicationsClosed();
 
     const isQrMode = $derived(hash === "#qr");
 
@@ -77,7 +78,9 @@
 
     <!-- Content overlay (above rock and dino) -->
     <div class="relative z-30 flex flex-col items-center gap-3 text-center" id="qr">
-        <h1 class="text-4xl">Kent Hack Enough returns <span class="font-bold">{day}</span></h1>
+        {#if !applicationsClosed}
+            <h1 class="text-4xl">Kent Hack Enough returns <span class="font-bold">{day}</span></h1>
+        {/if}
         {#if isQrMode}
             <div class="flex flex-col items-center gap-3 mt-1">
                 {#if qrDataUrl}
@@ -88,10 +91,20 @@
                 <p class="text-offwhite/90 text-xl font-semibold tracking-widest drop-shadow">khe.io</p>
             </div>
         {:else}
-            <div class="flex flex-col md:flex-row gap-3 w-96">
-                <Button size="lg" onclick={() => goto("/auth/login")}>Apply now!</Button>
-                <Button size="lg" onclick={() => goto("/schedule")}>View Schedule</Button>
-            </div>
+            {#if applicationsClosed}
+                <h1 class="text-4xl">
+                    Kent Hack Enough <span class="font-bold">2026 has ended.</span>
+                </h1>
+                <p class="text-2xl text-black">Check back later for next year's event!</p>
+                <div class="mt-2">
+                    <Button size="lg" onclick={() => goto("/schedule")}>View Schedule</Button>
+                </div>
+            {:else}
+                <div class="flex flex-col md:flex-row gap-3 w-96">
+                    <Button size="lg" onclick={() => goto("/auth/login")}>Apply now!</Button>
+                    <Button size="lg" onclick={() => goto("/schedule")}>View Schedule</Button>
+                </div>
+            {/if}
         {/if}
     </div>
 </div>

@@ -127,18 +127,36 @@
                 application and need to edit it later, don't worry! You can
                 always go back, edit and re-submit the application later.
             </p>
+            {#if data.applicationsClosed}
+                <p class="mt-5 font-semibold text-red-400">
+                    KHE 2026 has ended. Applications are now closed.
+                </p>
+                <p class="text-white/80">
+                    Check back later for next year's event!
+                </p>
+            {/if}
             <p class="mt-5">
-                Your current application status is:
-                {#if application.approved}
-                    <span class="font-bold text-green-400">approved</span>
+                {#if application}
+                    Your current application status is:
+                    {#if application.approved}
+                        <span class="font-bold text-green-400">approved</span>
+                    {:else}
+                        <span class="font-bold text-red-400">unapproved</span>
+                    {/if}
                 {:else}
-                    <span class="font-bold text-red-400">unapproved</span>
+                    You have no application on file.
                 {/if}
             </p>
         </div>
     </Card>
-    <Card padded>
-        <form enctype="multipart/form-data" method="POST" use:enhance={({ formData, cancel, submitter }) => {
+    {#if application}
+        <Card padded>
+            <form enctype="multipart/form-data" method="POST" use:enhance={({ formData, cancel, submitter }) => {
+            if (data.applicationsClosed) {
+                cancel();
+                return;
+            }
+
             // Check for changes
             const hasChanges = hasFormChanges(formData);
 
@@ -162,7 +180,7 @@
                 await update({ reset: false });
                 loading = false;
             }
-        }}>
+            }}>
             <div class="w-full flex flex-col gap-4">
                 <div>
                     <h3 class="font-bold">Personal</h3>
@@ -296,11 +314,24 @@
                     {/if}
                 </div>
 
-                <div class="flex justify-end gap-2">
-                    <Button type="submit" formaction="?/save" disabled={loading}>Save</Button>
-                    <Button type="submit" formaction="?/submit" disabled={loading || !canSubmit}>{application.submitted ? "Un-submit" : "Submit"}</Button>
-                </div>
+                {#if !data.applicationsClosed}
+                    <div class="flex justify-end gap-2">
+                        <Button type="submit" formaction="?/save" disabled={loading}>Save</Button>
+                        <Button type="submit" formaction="?/submit" disabled={loading || !canSubmit}>{application.submitted ? "Un-submit" : "Submit"}</Button>
+                    </div>
+                {:else}
+                    <p class="text-sm text-red-400 text-right">
+                        KHE 2026 has ended. New submissions, applications, and revokes are disabled.
+                    </p>
+                {/if}
             </div>
-        </form>
-    </Card>
+            </form>
+        </Card>
+    {:else}
+        <Card padded>
+            <p class="text-white/90">
+                KHE 2026 has ended, so new applications are not being accepted.
+            </p>
+        </Card>
+    {/if}
 </div>
