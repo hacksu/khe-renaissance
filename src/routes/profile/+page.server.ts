@@ -84,6 +84,10 @@ const saveApplication = async (userId: string, form: FormData) => {
 
 export const actions: Actions = {
   save: async ({ request }) => {
+    if (Utils.hasApplicationsClosed()) {
+      throw error(403, "KHE 2026 has ended. Applications are now closed.");
+    }
+
     const session = await auth.api.getSession(request);
     if (!session) {
       throw error(401, "Your session has expired. Please re-login.");
@@ -113,6 +117,10 @@ export const actions: Actions = {
     // All other cases require no further action (fields are already saved by saveApplication)
   },
   submit: async ({ request }) => {
+    if (Utils.hasApplicationsClosed()) {
+      throw error(403, "KHE 2026 has ended. Applications are now closed.");
+    }
+
     const session = await auth.api.getSession(request);
     if (!session) {
       throw error(401, "Your session has expired. Please re-login.");
@@ -160,6 +168,7 @@ export const load: PageServerLoad = async ({ request }) => {
   }
 
   const userId = session.user.id;
+  const applicationsClosed = Utils.hasApplicationsClosed();
 
   let application = await prisma.application
     .findUnique({
@@ -168,13 +177,17 @@ export const load: PageServerLoad = async ({ request }) => {
     })
     .catch((_) => null);
 
-  if (!application) {
+  if (!application && !applicationsClosed) {
     application = await prisma.application.create({ data: { userId } });
   }
 
   let hasResume = false;
   try {
-    await fs.access(`./resumes/${application.id}.pdf`);
+    if (application) {
+      await fs.access(`./resumes/${application.id}.pdf`);
+    } else {
+      throw new Error("No application");
+    }
     hasResume = true;
   } catch {
     hasResume = false;
@@ -182,5 +195,5 @@ export const load: PageServerLoad = async ({ request }) => {
 
   const sortedSchools = [...schools].sort((a, b) => a.localeCompare(b));
 
-  return { schools: sortedSchools, application, countries, hasResume };
+  return { schools: sortedSchools, application, countries, hasResume, applicationsClosed };
 };
