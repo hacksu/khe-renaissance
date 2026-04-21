@@ -218,6 +218,14 @@ model Setting {
   @@map("setting")
 }
 
+model ReminderSignup {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("reminder_signup")
+}
+
 model JudgementScore {
   id           String           @id @default(uuid())
   judgementId  String
