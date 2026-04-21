@@ -286,6 +286,46 @@ const MAGIC_LINK_EMAIL_HTML = (url: string) => `<p>Hi there,</p>
 <p>Thanks,<br>
 <strong>Kent Hack Enough 2026 Team</strong></p>`;
 
+const REMINDER_SIGNUP_TEXT = `Hi there,
+
+You're on the list! We'll send you an email when signups open for Kent Hack Enough 2027 (March 6–7, 2027).
+
+We can't wait to see you there.
+
+Thanks,
+Kent Hack Enough Team`;
+
+const REMINDER_SIGNUP_HTML = `<p>Hi there,</p>
+<p>You're on the list! We'll send you an email when signups open for <strong>Kent Hack Enough 2027</strong> (March 6–7, 2027).</p>
+<p>We can't wait to see you there.</p>
+<p>Thanks,<br>
+<strong>Kent Hack Enough Team</strong></p>`;
+
+export const sendReminderSignupConfirmation = async (to: string) => {
+    const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
+    const subject = "You're on the list for KHE 2027!";
+    const text = REMINDER_SIGNUP_TEXT;
+    const html = REMINDER_SIGNUP_HTML;
+
+    try {
+        const message = createEmailMessage(from, to, subject, text, html);
+        const encodedMessage = Buffer.from(message)
+            .toString("base64")
+            .replace(/\+/g, "-")
+            .replace(/\//g, "_")
+            .replace(/=+$/, "");
+
+        await gmailClient.users.messages.send({
+            userId: "me",
+            requestBody: {
+                raw: encodedMessage,
+            },
+        });
+    } catch (error: any) {
+        console.error("Failed to send reminder signup confirmation:", error);
+    }
+};
+
 export const sendMagicLinkEmail = async (to: string, url: string) => {
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
     const subject = "Login to Kent Hack Enough 2026";
