@@ -3,7 +3,7 @@
     import { goto } from "$app/navigation";
     import Card from "../components/Card.svelte";
     import Button from "../components/Button.svelte";
-    import Meteor from "../assets/meteor.svg";
+    import Meteor from "../assets/castle/gargoyle.svg";
     
     type Props = {
         error?: Error & { status?: number; message?: string };

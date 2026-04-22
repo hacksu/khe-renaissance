@@ -109,7 +109,7 @@
                 <h1 class="title-glow text-5xl md:text-6xl font-black text-castle-gold leading-none tracking-tight">
                     HACK THE KINGDOM
                 </h1>
-                <p class="text-castle-stoneHighlight text-base md:text-lg tracking-[0.3em] font-light">
+                <p class="text-castle-gold text-base md:text-lg tracking-[0.3em] font-light">
                     KENT HACK ENOUGH
                 </p>
                 <div class="w-full max-w-sm bg-castle-mortar/80 backdrop-blur border border-castle-gold/25

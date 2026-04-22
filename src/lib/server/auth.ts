@@ -37,27 +37,22 @@ export const auth = betterAuth({
     },
     hooks: {
         after: createAuthMiddleware(async ctx => {
-            const { path, request, params, context: { newSession } } = ctx;
+            const { path, request, params } = ctx;
 
             if (path === "/magic-link/verify" || path === "/sign-in/magic-link/verify") {
+                const newSession = ctx.context?.newSession;
                 if (request && newSession) {
                     try {
                         const { user } = newSession;
                         const invite = await prisma.invite.findFirst({
-                            where: { email: user.email, used: false },
+                            where: { email: user.email },
                             orderBy: { createdAt: "desc" }
                         });
-                        const role = invite?.role ?? "judge";
+                        const role = invite?.role ?? user.role ?? "judge";
                         await prisma.user.update({
                             data: { role },
                             where: { id: user.id }
                         });
-                        if (invite) {
-                            await prisma.invite.update({
-                                where: { id: invite.id },
-                                data: { used: true }
-                            });
-                        }
                     } catch (e) {
                         console.error(e);
                     }
@@ -69,9 +64,10 @@ export const auth = betterAuth({
                 return;
             }
             const provider = params.id as SocialProvider;
+            const newSession = ctx.context?.newSession;
             if (request && newSession) {
                 const { session, user } = newSession;
-                let role = await getRole(provider, request, session);
+                let role = await getRole(provider, request, session, user.role);
                 await prisma.user.update({
                     data: { role },
                     where: { id: user.id }

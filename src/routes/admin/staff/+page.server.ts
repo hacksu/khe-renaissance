@@ -9,7 +9,7 @@ export const load: PageServerLoad = async () => {
     });
 
     const pendingInvites = await prisma.invite.findMany({
-        where: { role: "staff", used: false },
+        where: { role: "staff" },
         orderBy: { createdAt: "desc" }
     });
 

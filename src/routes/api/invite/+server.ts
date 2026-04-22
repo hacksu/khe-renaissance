@@ -22,7 +22,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
     await prisma.invite.upsert({
         where: { email_role: { email, role } },
-        update: { used: false, createdAt: new Date() },
+        update: { createdAt: new Date() },
         create: { email, role }
     });
 
