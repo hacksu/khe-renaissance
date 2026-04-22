@@ -1,34 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 200" fill="none">
   <title>Gargoyle — Hack the Kingdom (KHE 2027)</title>
 
-  <!-- rotate/spread gargoyle-wings for wing animation -->
+  
 
   <!-- ═══════════════════════════════════════════
        PARAPET BLOCK
        ═══════════════════════════════════════════ -->
   <g id="gargoyle-parapet">
-    <!-- main block face -->
+    
     <rect x="0" y="158" width="180" height="42" fill="#4a4a5c"/>
-    <!-- top cap -->
+    
     <rect x="0" y="155" width="180" height="6" fill="#5c5c70"/>
-    <!-- shadow under cap -->
+    
     <rect x="0" y="161" width="180" height="3" fill="#2e2e3a"/>
-    <!-- mortar horizontal lines -->
+    
     <rect x="0" y="178" width="180" height="2" fill="#242430"/>
-    <!-- mortar vertical lines — left column -->
+    
     <rect x="28"  y="162" width="2" height="16" fill="#242430"/>
     <rect x="60"  y="162" width="2" height="16" fill="#242430"/>
     <rect x="92"  y="162" width="2" height="16" fill="#242430"/>
     <rect x="124" y="162" width="2" height="16" fill="#242430"/>
     <rect x="156" y="162" width="2" height="16" fill="#242430"/>
-    <!-- mortar vertical lines — lower row (offset) -->
+    
     <rect x="14"  y="180" width="2" height="18" fill="#242430"/>
     <rect x="46"  y="180" width="2" height="18" fill="#242430"/>
     <rect x="78"  y="180" width="2" height="18" fill="#242430"/>
     <rect x="110" y="180" width="2" height="18" fill="#242430"/>
     <rect x="142" y="180" width="2" height="18" fill="#242430"/>
     <rect x="174" y="180" width="2" height="18" fill="#242430"/>
-    <!-- subtle highlight on block top faces -->
+    
     <rect x="0"   y="162" width="28" height="4" fill="#565668"/>
     <rect x="30"  y="162" width="30" height="4" fill="#4f4f62"/>
     <rect x="62"  y="162" width="30" height="4" fill="#565668"/>
@@ -41,7 +41,7 @@
        WINGS (behind body)
        ═══════════════════════════════════════════ -->
   <g id="gargoyle-wings">
-    <!-- Left wing — folded, swept back and up -->
+    
     <path d="
       M 72 130
       C 58 118, 30 105, 12 80
@@ -59,7 +59,7 @@
       C 84  90, 78 112, 72 130
       Z
     " fill="#3a3a4e"/>
-    <!-- Wing membrane inner shadow -->
+    
     <path d="
       M 72 128
       C 62 116, 38 104, 22 82
@@ -77,16 +77,16 @@
       C 84  92, 78 112, 72 128
       Z
     " fill="#2e2e3a" opacity="0.45"/>
-    <!-- Wing leading-edge bony spines -->
-    <!-- Spine 1 (outermost top) -->
+    
+    
     <line x1="90" y1="28" x2="72" y2="130" stroke="#2e2e3a" stroke-width="1.5" opacity="0.6"/>
-    <!-- Spine 2 -->
+    
     <line x1="80" y1="42" x2="72" y2="130" stroke="#2e2e3a" stroke-width="1" opacity="0.4"/>
-    <!-- Spine 3 -->
+    
     <line x1="64" y1="50" x2="72" y2="130" stroke="#2e2e3a" stroke-width="1" opacity="0.4"/>
-    <!-- Spine 4 -->
+    
     <line x1="52" y1="68" x2="72" y2="130" stroke="#2e2e3a" stroke-width="1" opacity="0.4"/>
-    <!-- Wing tip claw nubs -->
+    
     <polygon points="90,28 86,22 94,24" fill="#4a4a5c"/>
     <polygon points="80,42 76,36 84,38" fill="#4a4a5c"/>
     <polygon points="64,50 60,44 68,46" fill="#4a4a5c"/>
@@ -99,7 +99,7 @@
        ═══════════════════════════════════════════ -->
   <g id="gargoyle-body">
 
-    <!-- Haunches / lower body -->
+    
     <path d="
       M 58 155
       C 50 148, 44 138, 46 126
@@ -108,7 +108,7 @@
       L 94 155
       Z
     " fill="#4a4a5c"/>
-    <!-- Haunch highlight -->
+    
     <path d="
       M 64 155
       C 56 148, 52 138, 54 126
@@ -116,7 +116,7 @@
       C 68 118, 66 130, 66 145
       Z
     " fill="#6b6b80" opacity="0.5"/>
-    <!-- Haunch shadow -->
+    
     <path d="
       M 88 155
       C 90 142, 92 128, 88 120
@@ -125,7 +125,7 @@
       Z
     " fill="#2e2e3a" opacity="0.5"/>
 
-    <!-- Left leg -->
+    
     <path d="
       M 50 155
       C 44 148, 40 140, 42 132
@@ -134,7 +134,7 @@
       L 50 155
       Z
     " fill="#3e3e50"/>
-    <!-- Right leg -->
+    
     <path d="
       M 90 155
       C 94 148, 98 140, 96 132
@@ -144,18 +144,18 @@
       Z
     " fill="#3e3e50"/>
 
-    <!-- Left foot / claws -->
+    
     <path d="M 42 154 C 36 152, 30 155, 28 160 L 44 158 Z" fill="#4a4a5c"/>
     <path d="M 38 156 L 26 162 L 28 165 L 40 160 Z" fill="#2e2e3a"/>
     <path d="M 34 158 L 20 166 L 22 169 L 36 162 Z" fill="#2e2e3a"/>
     <path d="M 40 155 L 30 168 L 33 170 L 43 157 Z" fill="#2e2e3a"/>
-    <!-- Right foot / claws -->
+    
     <path d="M 98 154 C 104 152, 110 155, 112 160 L 96 158 Z" fill="#4a4a5c"/>
     <path d="M 102 156 L 114 162 L 112 165 L 100 160 Z" fill="#2e2e3a"/>
     <path d="M 106 158 L 120 166 L 118 169 L 104 162 Z" fill="#2e2e3a"/>
     <path d="M 100 155 L 110 168 L 107 170 L 97 157 Z" fill="#2e2e3a"/>
 
-    <!-- Main torso — hunched/crouching mass -->
+    
     <path d="
       M 58 155
       C 54 140, 52 128, 54 116
@@ -164,7 +164,7 @@
       C 104 120, 102 138, 98 155
       Z
     " fill="#4a4a5c"/>
-    <!-- Torso highlight (left shoulder hump) -->
+    
     <path d="
       M 60 152
       C 56 138, 56 124, 60 114
@@ -172,7 +172,7 @@
       C 68 106, 64 118, 64 138
       Z
     " fill="#6b6b80" opacity="0.5"/>
-    <!-- Torso shadow (right flank) -->
+    
     <path d="
       M 96 152
       C 100 136, 102 120, 98 110
@@ -180,12 +180,12 @@
       C 86 102, 92 116, 94 138
       Z
     " fill="#2e2e3a" opacity="0.5"/>
-    <!-- Spine ridge bumps down the back -->
+    
     <ellipse cx="76" cy="100" rx="4" ry="3" fill="#5a5a70" opacity="0.7"/>
     <ellipse cx="78" cy="110" rx="3.5" ry="2.5" fill="#5a5a70" opacity="0.6"/>
     <ellipse cx="80" cy="120" rx="3" ry="2" fill="#5a5a70" opacity="0.5"/>
 
-    <!-- Neck -->
+    
     <path d="
       M 68 98
       C 66 90, 68  84, 74  82
@@ -195,7 +195,7 @@
       Z
     " fill="#4a4a5c"/>
 
-    <!-- Left forearm resting on parapet ledge -->
+    
     <path d="
       M 54 138
       C 46 136, 36 138, 28 142
@@ -204,7 +204,7 @@
       C 56 148, 54 142, 54 138
       Z
     " fill="#4a4a5c"/>
-    <!-- Left forearm highlight -->
+    
     <path d="
       M 54 138
       C 46 136, 40 138, 36 140
@@ -212,7 +212,7 @@
       C 34 148, 42 144, 50 142
       Z
     " fill="#6b6b80" opacity="0.45"/>
-    <!-- Left forearm shadow underside -->
+    
     <path d="
       M 22 156
       C 20 150, 24 146, 30 144
@@ -221,7 +221,7 @@
       Z
     " fill="#2e2e3a" opacity="0.4"/>
 
-    <!-- Right forearm resting on parapet ledge -->
+    
     <path d="
       M 96 138
       C 104 136, 116 138, 128 142
@@ -230,7 +230,7 @@
       C 98 148, 96 142, 96 138
       Z
     " fill="#4a4a5c"/>
-    <!-- Right forearm highlight -->
+    
     <path d="
       M 96 138
       C 104 136, 112 138, 118 140
@@ -238,7 +238,7 @@
       C 122 148, 112 144, 102 142
       Z
     " fill="#6b6b80" opacity="0.45"/>
-    <!-- Right forearm shadow -->
+    
     <path d="
       M 136 156
       C 140 150, 136 146, 130 144
@@ -247,19 +247,19 @@
       Z
     " fill="#2e2e3a" opacity="0.4"/>
 
-    <!-- Left clawed hand gripping parapet -->
+    
     <path d="M 20 155 C 14 152, 10 156, 10 162 L 26 162 Z" fill="#3e3e50"/>
     <path d="M 16 157 L  4 164 L  6 168 L 18 161 Z" fill="#2e2e3a"/>
     <path d="M 12 159 L  2 168 L  4 172 L 14 163 Z" fill="#2e2e3a"/>
     <path d="M 20 156 L  8 166 L 11 169 L 22 159 Z" fill="#2e2e3a"/>
-    <!-- Right clawed hand gripping parapet -->
+    
     <path d="M 140 155 C 146 152, 152 156, 152 162 L 136 162 Z" fill="#3e3e50"/>
     <path d="M 144 157 L 156 164 L 154 168 L 142 161 Z" fill="#2e2e3a"/>
     <path d="M 148 159 L 160 168 L 158 172 L 146 163 Z" fill="#2e2e3a"/>
     <path d="M 140 156 L 154 166 L 151 169 L 138 159 Z" fill="#2e2e3a"/>
 
-    <!-- ═══ HEAD ═══ -->
-    <!-- Head main mass — faces right -->
+    
+    
     <path d="
       M 68 84
       C 64 76, 64  64, 68  56
@@ -270,7 +270,7 @@
       C 76  98,  70  92, 68  84
       Z
     " fill="#4a4a5c"/>
-    <!-- Brow ridge — prominent overhang -->
+    
     <path d="
       M 66 68
       C 64 62, 68  54, 76  50
@@ -279,16 +279,16 @@
       C 70  56, 66  64, 66  68
       Z
     " fill="#2e2e3a"/>
-    <!-- Brow ridge highlight -->
+    
     <path d="
       M 68 66
       C 68 60, 72 54, 80 52
       C 76 56, 72 62, 70 68
       Z
     " fill="#6b6b80" opacity="0.5"/>
-    <!-- Top-of-head highlight -->
+    
     <ellipse cx="82" cy="58" rx="10" ry="7" fill="#6b6b80" opacity="0.3"/>
-    <!-- Side cheek shadow -->
+    
     <path d="
       M 68 84
       C 64 76, 64 66, 68 58
@@ -297,17 +297,17 @@
       Z
     " fill="#2e2e3a" opacity="0.55"/>
 
-    <!-- Horns / ear spikes -->
-    <!-- Left horn (back) -->
+    
+    
     <polygon points="70,52 62,32 76,48" fill="#3e3e50"/>
     <polygon points="70,52 63,33 67,50" fill="#6b6b80" opacity="0.4"/>
-    <!-- Right horn (forward) -->
+    
     <polygon points="94,50 102,30 100,48" fill="#3e3e50"/>
     <polygon points="94,50 103,31 98,48" fill="#6b6b80" opacity="0.4"/>
-    <!-- Small ear spike low-left -->
+    
     <polygon points="66,72 56,66 68,68" fill="#3e3e50"/>
 
-    <!-- Snout / beak jutting right -->
+    
     <path d="
       M 100 68
       C 106 66, 118 68, 124 72
@@ -316,25 +316,25 @@
       C 108 84, 102 80, 100 76
       Z
     " fill="#3e3e50"/>
-    <!-- Snout highlight (top ridge) -->
+    
     <path d="
       M 100 68
       C 106 66, 116 68, 122 72
       C 118 70, 108 70, 102 72
       Z
     " fill="#6b6b80" opacity="0.55"/>
-    <!-- Snout shadow underside -->
+    
     <path d="
       M 102 80
       C 108 82, 118 84, 124 82
       C 120 86, 112 88, 106 86
       Z
     " fill="#2e2e3a" opacity="0.55"/>
-    <!-- Nostril slits -->
+    
     <ellipse cx="118" cy="73" rx="2.5" ry="1.2" fill="#242430" transform="rotate(-8 118 73)"/>
     <ellipse cx="114" cy="72" rx="2" ry="1" fill="#242430" transform="rotate(-8 114 72)"/>
 
-    <!-- Mouth / fangs -->
+    
     <path d="
       M 102 78
       C 108 80, 118 82, 126 80
@@ -342,30 +342,30 @@
       C 118 86, 108 84, 102 82
       Z
     " fill="#242430"/>
-    <!-- Visible fang tips -->
+    
     <polygon points="108,80 110,88 112,80" fill="#6b6b80"/>
     <polygon points="116,81 118,89 120,81" fill="#6b6b80"/>
     <polygon points="112,80 114,87 116,80" fill="#5a5a6e"/>
 
-    <!-- ═══ EYES ═══ -->
+    
     <g id="gargoyle-eyes">
-      <!-- Eye socket recesses -->
+      
       <ellipse cx="80" cy="68" rx="8" ry="6" fill="#242430"/>
       <ellipse cx="97" cy="66" rx="7" ry="5.5" fill="#242430"/>
-      <!-- Iris glow — amber/gold -->
+      
       <ellipse cx="80" cy="68" rx="5" ry="4" fill="#c9a84c"/>
       <ellipse cx="97" cy="66" rx="4.5" ry="3.5" fill="#c9a84c"/>
-      <!-- Pupil slit — vertical -->
+      
       <ellipse cx="80" cy="68" rx="1.8" ry="3.5" fill="#1a1a22"/>
       <ellipse cx="97" cy="66" rx="1.6" ry="3" fill="#1a1a22"/>
-      <!-- Eye highlight spark -->
+      
       <circle cx="82" cy="66" r="1" fill="#e8c97a" opacity="0.85"/>
       <circle cx="99" cy="64" r="0.9" fill="#e8c97a" opacity="0.85"/>
-      <!-- Ambient eye glow halo -->
+      
       <ellipse cx="80" cy="68" rx="7" ry="5.5" fill="#c9a84c" opacity="0.12"/>
       <ellipse cx="97" cy="66" rx="6.5" ry="5" fill="#c9a84c" opacity="0.12"/>
     </g>
 
-  </g><!-- /gargoyle-body -->
+  </g>
 
 </svg>

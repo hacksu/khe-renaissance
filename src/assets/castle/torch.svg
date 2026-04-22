@@ -1,34 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 220" width="100" height="220" role="img" aria-label="Wall-mounted torch">
   <defs>
-    <!-- Gradient for flame outer -->
+    
     <radialGradient id="flameOuterGrad" cx="50%" cy="80%" r="60%" fx="50%" fy="80%">
       <stop offset="0%" stop-color="#ff8c00"/>
       <stop offset="100%" stop-color="#ff4500"/>
     </radialGradient>
-    <!-- Gradient for flame mid -->
+    
     <radialGradient id="flameMidGrad" cx="50%" cy="75%" r="55%" fx="50%" fy="75%">
       <stop offset="0%" stop-color="#ffcc44"/>
       <stop offset="100%" stop-color="#ff9a00"/>
     </radialGradient>
-    <!-- Gradient for flame inner -->
+    
     <radialGradient id="flameInnerGrad" cx="50%" cy="70%" r="50%" fx="50%" fy="70%">
       <stop offset="0%" stop-color="#ffffff"/>
       <stop offset="60%" stop-color="#ffe066"/>
       <stop offset="100%" stop-color="#ffcc44"/>
     </radialGradient>
-    <!-- Wood grain filter -->
+    
     <filter id="woodTexture" x="0%" y="0%" width="100%" height="100%">
       <feTurbulence type="fractalNoise" baseFrequency="0.9 0.15" numOctaves="3" seed="5" result="noise"/>
       <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
       <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blended"/>
       <feComposite in="blended" in2="SourceGraphic" operator="in"/>
     </filter>
-    <!-- Glow for flame -->
+    
     <filter id="flameGlow" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="3" result="blur"/>
       <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
-    <!-- Soft glow around torch head -->
+    
     <radialGradient id="glowAura" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#ff8c00" stop-opacity="0.18"/>
       <stop offset="100%" stop-color="#ff4500" stop-opacity="0"/>
@@ -40,28 +40,28 @@
        Iron bracket mounted to the left wall edge
        ============================================================ -->
   <g id="bracket" aria-label="Wall bracket">
-    <!-- Wall mounting plate -->
+    
     <rect x="0" y="128" width="10" height="38" rx="2" fill="#1e1e28"/>
-    <!-- Bracket arm (L-shape, extending right) -->
-    <!-- Vertical portion of bracket -->
+    
+    
     <rect x="3" y="133" width="6" height="26" rx="1" fill="#2e2e3c"/>
-    <!-- Horizontal arm -->
+    
     <path d="M3 155 Q12 155 26 158 L26 163 Q12 162 3 161 Z" fill="#2e2e3c"/>
-    <!-- Arm underside bevel -->
+    
     <path d="M8 157 Q17 157 26 159.5" stroke="#4a4a5c" stroke-width="0.8" fill="none" opacity="0.7"/>
-    <!-- Decorative rivet on mounting plate -->
+    
     <circle cx="5" cy="135" r="1.5" fill="#4a4a5c"/>
     <circle cx="5" cy="155" r="1.5" fill="#4a4a5c"/>
-    <!-- Ring/cup at end of bracket arm to hold torch -->
-    <!-- Outer ring -->
+    
+    
     <ellipse cx="38" cy="162" rx="9" ry="5" fill="none" stroke="#2e2e3c" stroke-width="3.5"/>
-    <!-- Ring highlight -->
+    
     <ellipse cx="38" cy="161" rx="9" ry="5" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.6"/>
-    <!-- Ring back face (depth) -->
+    
     <ellipse cx="38" cy="163.5" rx="9" ry="4" fill="#1e1e28"/>
-    <!-- Ring front rim -->
+    
     <path d="M29 162 Q38 167 47 162" fill="#2e2e3c" stroke="#2e2e3c" stroke-width="0.5"/>
-    <!-- Bolt connecting arm to ring -->
+    
     <rect x="25" y="159" width="4" height="6" rx="1" fill="#1e1e28"/>
     <rect x="25.5" y="159.5" width="3" height="5" rx="0.5" fill="#2e2e3c"/>
   </g>
@@ -71,7 +71,7 @@
        transform-origin hint: center-x=38, bottom ~210
        ============================================================ -->
   <g id="handle" aria-label="Torch handle">
-    <!-- Main wooden handle body — slightly tapered top to bottom -->
+    
     <path d="
       M32 175
       L34 210
@@ -80,31 +80,31 @@
       Z
     " fill="#4a3520"/>
 
-    <!-- Wood highlight (left face) -->
+    
     <path d="M33 176 L34.5 209 L35.5 209 L34.2 176 Z" fill="#6b4f2f" opacity="0.7"/>
 
-    <!-- Wood shadow (right face) -->
+    
     <path d="M42 176 L41.5 209 L43 209 L43.5 176 Z" fill="#2d1f0f" opacity="0.6"/>
 
-    <!-- Wood grain lines -->
+    
     <line x1="35" y1="178" x2="35.5" y2="208" stroke="#2d1f0f" stroke-width="0.4" opacity="0.5"/>
     <line x1="37" y1="178" x2="37.5" y2="208" stroke="#2d1f0f" stroke-width="0.3" opacity="0.4"/>
     <line x1="39.5" y1="178" x2="40" y2="208" stroke="#2d1f0f" stroke-width="0.4" opacity="0.45"/>
-    <!-- Subtle knot grain curve -->
+    
     <path d="M34.5 193 Q38 190 41.5 193" stroke="#2d1f0f" stroke-width="0.5" fill="none" opacity="0.4"/>
     <path d="M34 197 Q38 194.5 42 197" stroke="#2d1f0f" stroke-width="0.3" fill="none" opacity="0.3"/>
 
-    <!-- Rope/cloth binding near top of handle -->
-    <!-- Binding wraps — series of angled bands -->
+    
+    
     <rect x="31.5" y="175" width="13" height="3" rx="0.5" fill="#5c3a1e" opacity="0.9"/>
     <rect x="31.5" y="178" width="13" height="2.5" rx="0.5" fill="#7a4f2a" opacity="0.85"/>
     <rect x="31.5" y="180.5" width="13" height="2.5" rx="0.5" fill="#5c3a1e" opacity="0.9"/>
     <rect x="31.5" y="183" width="13" height="2" rx="0.5" fill="#7a4f2a" opacity="0.8"/>
-    <!-- Binding highlight -->
+    
     <line x1="32" y1="175.8" x2="44" y2="175.8" stroke="#9c6a3a" stroke-width="0.5" opacity="0.5"/>
     <line x1="32" y1="178.8" x2="44" y2="178.8" stroke="#9c6a3a" stroke-width="0.4" opacity="0.4"/>
 
-    <!-- Handle bottom end cap -->
+    
     <ellipse cx="38" cy="210" rx="4" ry="1.5" fill="#2d1f0f"/>
     <ellipse cx="38" cy="209.5" rx="4" ry="1.2" fill="#4a3520"/>
   </g>
@@ -114,7 +114,7 @@
        Wider than handle, textured wrapping
        ============================================================ -->
   <g id="torch-head" aria-label="Torch head">
-    <!-- Main bundle body — trapezoid shape, wider at top -->
+    
     <path d="
       M28 148
       Q27 150 28 155
@@ -129,25 +129,25 @@
       Z
     " fill="#3a2a18"/>
 
-    <!-- Bundle texture — wrapped cloth bands -->
+    
     <path d="M28.5 151 Q38 149 47.5 151" stroke="#5c4228" stroke-width="1.2" fill="none" opacity="0.7"/>
     <path d="M28 155 Q38 153 48 155" stroke="#5c4228" stroke-width="1.2" fill="none" opacity="0.7"/>
     <path d="M28.5 159 Q38 157.5 47.5 159" stroke="#5c4228" stroke-width="1" fill="none" opacity="0.65"/>
     <path d="M29.5 163 Q38 161.5 46.5 163" stroke="#5c4228" stroke-width="1" fill="none" opacity="0.6"/>
 
-    <!-- Bundle highlight (left) -->
+    
     <path d="M28 149 Q27.5 156 29 165 L30 165 Q28.5 156 29 149 Z" fill="#6b4a2a" opacity="0.4"/>
 
-    <!-- Bundle shadow (right) -->
+    
     <path d="M47 149 Q48.5 156 47 165 L46 165 Q47.5 156 46 149 Z" fill="#1e1008" opacity="0.5"/>
 
-    <!-- Top rim of bundle where flame sits -->
+    
     <ellipse cx="38" cy="148" rx="10" ry="4" fill="#4a3520"/>
     <ellipse cx="38" cy="147.5" rx="10" ry="3.5" fill="#5c3a18"/>
-    <!-- Charred top rim -->
+    
     <ellipse cx="38" cy="147" rx="9" ry="3" fill="#2a1a08"/>
 
-    <!-- Drip/tar texture on sides -->
+    
     <path d="M31 165 Q30 169 31.5 172" stroke="#2a1a08" stroke-width="1" fill="none" opacity="0.5"/>
     <path d="M42 164 Q43.5 168 42 172" stroke="#2a1a08" stroke-width="1" fill="none" opacity="0.4"/>
   </g>
@@ -162,9 +162,9 @@
        transform-origin hint: 38 145  (base of flame)
        Animate: scaleX flicker + slight rotation sway
        ============================================================ -->
-  <!-- transform-origin: 38 145 -->
+  
   <g id="flame-outer" aria-label="Outer flame">
-    <!-- Main outer flame body -->
+    
     <path d="
       M38 145
       C35 140 26 128 28 112
@@ -176,7 +176,7 @@
       Z
     " fill="#ff6b1a" opacity="0.95"/>
 
-    <!-- Left lick -->
+    
     <path d="
       M38 145
       C34 138 24 125 27 108
@@ -187,7 +187,7 @@
       Z
     " fill="#ff5500" opacity="0.7"/>
 
-    <!-- Right lick -->
+    
     <path d="
       M38 145
       C42 138 52 125 49 108
@@ -198,7 +198,7 @@
       Z
     " fill="#ff5500" opacity="0.65"/>
 
-    <!-- Outer tip tendril -->
+    
     <path d="
       M38 70
       C37 63 35 56 36 50
@@ -214,9 +214,9 @@
        transform-origin hint: 38 145
        Animate: scaleX flicker (faster), slight offset
        ============================================================ -->
-  <!-- transform-origin: 38 145 -->
+  
   <g id="flame-mid" aria-label="Mid flame">
-    <!-- Main mid flame -->
+    
     <path d="
       M38 145
       C36 139 29 127 31 113
@@ -228,7 +228,7 @@
       Z
     " fill="#ffb347" opacity="0.92"/>
 
-    <!-- Mid left tendril -->
+    
     <path d="
       M38 145
       C35 137 28 123 31 109
@@ -239,7 +239,7 @@
       Z
     " fill="#ffa020" opacity="0.6"/>
 
-    <!-- Mid tip -->
+    
     <path d="
       M38 73
       C37.2 67 36 60 36.5 55
@@ -255,9 +255,9 @@
        transform-origin hint: 38 145
        Animate: slow breathe scale + opacity pulse
        ============================================================ -->
-  <!-- transform-origin: 38 145 -->
+  
   <g id="flame-inner" aria-label="Inner flame core">
-    <!-- Core body -->
+    
     <path d="
       M38 145
       C37 138 32 128 33 116
@@ -269,7 +269,7 @@
       Z
     " fill="#ffe066" opacity="0.9"/>
 
-    <!-- White-hot core center -->
+    
     <path d="
       M38 144
       C37.5 137 34 128 35 118
@@ -279,7 +279,7 @@
       Z
     " fill="#fff5c0" opacity="0.85"/>
 
-    <!-- Pure white tip core -->
+    
     <path d="
       M38 100
       C37.5 94 37 89 37.5 85
@@ -295,9 +295,9 @@
        transform-origin hint: wisp centers above flame tip
        Animate: translateY upward, opacity fade, slight x sway
        ============================================================ -->
-  <!-- transform-origin for each wisp: its base x, ~38 y -->
+  
   <g id="smoke" aria-label="Smoke wisps" opacity="0.55">
-    <!-- Wisp 1: central, rises straight then curls right -->
+    
     <path d="
       M38 36
       C38 30 40 24 39 18
@@ -305,7 +305,7 @@
     " stroke="#4a4a5c" stroke-width="1.8" fill="none"
        stroke-linecap="round" opacity="0.5"/>
 
-    <!-- Wisp 2: left offset, curls left -->
+    
     <path d="
       M34 40
       C33 33 31 27 32 21
@@ -313,7 +313,7 @@
     " stroke="#4a4a5c" stroke-width="1.2" fill="none"
        stroke-linecap="round" opacity="0.35"/>
 
-    <!-- Wisp 3: right offset, curls right then back -->
+    
     <path d="
       M42 38
       C43 31 45 25 44 19

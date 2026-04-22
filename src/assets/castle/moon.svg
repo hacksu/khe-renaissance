@@ -9,7 +9,7 @@
       #clouds      — drift clouds group X for moving cloud animation
   -->
 
-  <!-- ═══════════════════════════════ MOON ═══════════════════════════════ -->
+  
   <g id="moon">
     <!--
       True crescent path constructed from two circular arcs.
@@ -18,11 +18,11 @@
       The result is an organic, tapered crescent pointing upper-left.
     -->
 
-    <!-- Soft outer glow halo (very low opacity) -->
+    
     <ellipse cx="168" cy="148" rx="96" ry="94" fill="#e8d5a3" opacity="0.07"/>
     <ellipse cx="168" cy="148" rx="84" ry="82" fill="#e8d5a3" opacity="0.07"/>
 
-    <!-- Main crescent body -->
+    
     <path
       d="
         M 168,62
@@ -33,7 +33,7 @@
       fill="#e8d5a3"
     />
 
-    <!-- Bright leading edge highlight along the outer convex curve -->
+    
     <path
       d="
         M 168,62
@@ -47,7 +47,7 @@
       opacity="0.55"
     />
 
-    <!-- Warm golden inner concave rim — the shadowed inner edge -->
+    
     <path
       d="
         M 168,62
@@ -61,11 +61,11 @@
     />
   </g>
 
-  <!-- ══════════════════════════ LARGE STARS ══════════════════════════════ -->
+  
   <g id="stars-large" fill="#f5e8c0">
 
-    <!-- 6-pointed star — upper left, large -->
-    <!-- Points computed for a 6-pointed star, radius-outer=13, radius-inner=5.5, center (52, 72) -->
+    
+    
     <polygon
       points="
         52,59
@@ -82,15 +82,15 @@
       fill="#f5e8c0"
     />
 
-    <!-- 4-pointed star / diamond cross — lower left, large -->
-    <!-- Thin elongated 4-point star, center (38, 195) -->
+    
+    
     <path
       d="M38,180 L40.5,192.5 L53,195 L40.5,197.5 L38,210 L35.5,197.5 L23,195 L35.5,192.5 Z"
       fill="#f5e8c0"
     />
 
-    <!-- 6-pointed star — upper right area, large -->
-    <!-- center (255, 88), outer=11, inner=4.5 -->
+    
+    
     <polygon
       points="
         255,77
@@ -107,8 +107,8 @@
       fill="#f5e8c0"
     />
 
-    <!-- 4-pointed sparkle star — bottom right, medium-large -->
-    <!-- center (240, 230) -->
+    
+    
     <path
       d="M240,218 L242,227.5 L251.5,230 L242,232.5 L240,242 L238,232.5 L228.5,230 L238,227.5 Z"
       fill="#f5e8c0"
@@ -116,26 +116,26 @@
 
   </g>
 
-  <!-- ══════════════════════════ MEDIUM SPARKLE STARS ═════════════════════ -->
+  
   <g id="stars-medium" fill="#f5e8c0">
 
-    <!-- Cross/sparkle — top center, medium -->
-    <!-- Thin 4-point cross star, center (140, 48) -->
+    
+    
     <path
       d="M140,40 L141.4,46.6 L148,48 L141.4,49.4 L140,56 L138.6,49.4 L132,48 L138.6,46.6 Z"
       fill="#f5e8c0"
     />
 
-    <!-- Cross/sparkle — left mid, medium -->
-    <!-- center (28, 130) -->
+    
+    
     <path
       d="M28,123 L29.2,128.8 L35,130 L29.2,131.2 L28,137 L26.8,131.2 L21,130 L26.8,128.8 Z"
       fill="#f5e8c0"
       opacity="0.85"
     />
 
-    <!-- Cross/sparkle — lower center-left, medium -->
-    <!-- center (88, 255) -->
+    
+    
     <path
       d="M88,248 L89.3,254.7 L96,256 L89.3,257.3 L88,264 L86.7,257.3 L80,256 L86.7,254.7 Z"
       fill="#f5e8c0"
@@ -144,10 +144,10 @@
 
   </g>
 
-  <!-- ══════════════════════════ SMALL DOT STARS ══════════════════════════ -->
+  
   <g id="stars-small">
 
-    <!-- Bright small dots -->
+    
     <circle cx="82"  cy="44"  r="1.8" fill="#f5e8c0"/>
     <circle cx="112" cy="30"  r="1.4" fill="#f5e8c0"/>
     <circle cx="200" cy="42"  r="2.0" fill="#f5e8c0"/>
@@ -156,7 +156,7 @@
     <circle cx="185" cy="268" r="1.7" fill="#f5e8c0"/>
     <circle cx="130" cy="282" r="1.2" fill="#f5e8c0"/>
 
-    <!-- Dimmer small dots -->
+    
     <circle cx="22"  cy="68"  r="1.6" fill="#8e8ea8"/>
     <circle cx="65"  cy="158" r="1.3" fill="#8e8ea8"/>
     <circle cx="18"  cy="248" r="1.5" fill="#8e8ea8"/>
@@ -167,8 +167,8 @@
 
   </g>
 
-  <!-- ══════════════════════════ CLOUD WISPS ══════════════════════════════ -->
-  <!-- drift clouds group X for moving cloud animation -->
+  
+  
   <g id="clouds" fill="#1a2e4a" opacity="0.60">
 
     <!--
