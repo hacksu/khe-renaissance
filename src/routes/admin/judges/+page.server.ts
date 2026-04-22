@@ -16,6 +16,9 @@ export const actions: Actions = {
 
         if (!userId) return fail(400, { missing: true });
 
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user || user.role !== 'judge') return fail(400, { error: 'User not found or is not a judge' });
+
         try {
             await prisma.user.update({
                 where: { id: userId },
@@ -32,6 +35,9 @@ export const actions: Actions = {
         const userId = form.get("userId") as string;
 
         if (!userId) return fail(400, { missing: true });
+
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user || user.role !== 'judge') return fail(400, { error: 'User not found or is not a judge' });
 
         try {
             await prisma.user.update({

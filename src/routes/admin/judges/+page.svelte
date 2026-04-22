@@ -5,8 +5,11 @@
     import Icon from "@iconify/svelte";
     import { authClient } from "$lib/client";
     import { invalidateAll } from "$app/navigation";
+    import type { PageData } from './$types';
 
-    let { data } = $props();
+    let { data }: { data: PageData } = $props();
+
+    type Judge = PageData['judges'][number];
 
     // Add Judge State
     let showAddJudgeModal = $state(false);
@@ -16,14 +19,14 @@
 
     // Remove Judge State
     let showRemoveJudgeModal = $state(false);
-    let judgeToRemove = $state<any>(null);
+    let judgeToRemove = $state<Judge | null>(null);
     let removeJudgeForm = $state<HTMLFormElement | undefined>();
 
     // Inline track editing
     let editingTrackId = $state<string | null>(null);
     let editingTrackValue = $state<string>("");
 
-    function startEditTrack(judge: any) {
+    function startEditTrack(judge: Judge) {
         editingTrackId = judge.id;
         editingTrackValue = judge.judgeTrack ?? "";
     }
@@ -59,7 +62,7 @@
         }
     }
 
-    async function resendLink(judge: any) {
+    async function resendLink(judge: Judge) {
         resendingId = judge.id;
         try {
             await fetch("/api/invite", {
