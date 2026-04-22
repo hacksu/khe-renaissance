@@ -28,19 +28,14 @@
         return `${m}:${String(s).padStart(2, '0')}`;
     }
 
-    const timerColor = $derived(() => {
-        if (timePerTable === null) return 'text-white';
-        const totalSeconds = timePerTable * 60;
-        const pct = elapsed / totalSeconds;
-        if (pct < 0.5) return 'text-green-400';
-        if (pct < 1.0) return 'text-yellow-400';
-        return 'text-red-400';
-    });
+    const timerColor = $derived(
+        timePerTable === null ? 'text-white'
+        : elapsed / (timePerTable * 60) < 0.5 ? 'text-green-400'
+        : elapsed / (timePerTable * 60) < 1.0 ? 'text-yellow-400'
+        : 'text-red-400'
+    );
 
-    const timerPulse = $derived(() => {
-        if (timePerTable === null) return false;
-        return elapsed >= timePerTable * 60;
-    });
+    const timerPulse = $derived(timePerTable !== null && elapsed >= timePerTable * 60);
 </script>
 
 <div class="max-w-md mx-auto p-4 flex flex-col min-h-screen">
@@ -56,7 +51,7 @@
     <!-- Timer -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/10 shadow-sm mb-6 text-center">
         <p class="text-xs font-bold uppercase tracking-widest text-white/50 mb-2">Time at Table</p>
-        <p class="text-6xl font-mono font-bold {timerColor()} {timerPulse() ? 'animate-pulse' : ''}">
+        <p class="text-6xl font-mono font-bold {timerColor} {timerPulse ? 'animate-pulse' : ''}">
             {formatTime(elapsed)}
         </p>
         {#if timePerTable !== null}

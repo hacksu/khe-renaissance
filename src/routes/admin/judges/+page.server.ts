@@ -14,6 +14,10 @@ export const load: PageServerLoad = async () => {
 
 export const actions: Actions = {
     updateTrack: async ({ request }) => {
+        const { auth } = await import('$lib/server/auth');
+        const session = await auth.api.getSession(request);
+        if (!session || session.user.role !== 'staff') return fail(401, { error: 'Unauthorized' });
+
         const form = await request.formData();
         const userId = form.get("userId") as string;
         const judgeTrack = form.get("judgeTrack") as string;
@@ -35,6 +39,10 @@ export const actions: Actions = {
         }
     },
     removeJudge: async ({ request }) => {
+        const { auth } = await import('$lib/server/auth');
+        const session = await auth.api.getSession(request);
+        if (!session || session.user.role !== 'staff') return fail(401, { error: 'Unauthorized' });
+
         const form = await request.formData();
         const userId = form.get("userId") as string;
 

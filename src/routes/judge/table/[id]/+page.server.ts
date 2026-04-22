@@ -1,4 +1,4 @@
-import { redirect, fail } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
 import { Settings } from '$lib/server/settings';
@@ -24,12 +24,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 };
 
 export const actions: Actions = {
-    end: async ({ params, request }) => {
-        const { auth } = await import('$lib/server/auth');
-        const session = await auth.api.getSession(request);
-        if (!session) return fail(401);
-
-        // Just navigate to the feedback page — completion happens on feedback submit
+    end: async ({ params }) => {
         throw redirect(303, `/judge/table/${params.id}/feedback`);
     }
 };
