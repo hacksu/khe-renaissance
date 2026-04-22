@@ -60,14 +60,25 @@ export const Judging = {
 		if (!candidateA || !candidateB) return null;
 
 		// 5. Create and return the PairAssignment
-		return await prisma.pairAssignment.create({
-			data: {
-				judgeId,
-				projectAId: candidateA.id,
-				projectBId: candidateB.id,
-				status: 'assigned'
+		// Wrap in try/catch to handle concurrent inserts hitting the unique constraint
+		try {
+			return await prisma.pairAssignment.create({
+				data: {
+					judgeId,
+					projectAId: candidateA.id,
+					projectBId: candidateB.id,
+					status: 'assigned'
+				}
+			});
+		} catch (e: any) {
+			if (e?.code === 'P2002') {
+				// A concurrent request already created an assignment for this judge
+				return await prisma.pairAssignment.findFirst({
+					where: { judgeId, status: 'assigned' }
+				});
 			}
-		});
+			throw e;
+		}
 	},
 
 	/**
@@ -147,8 +158,8 @@ export const Judging = {
 				const winnerId = result.winner === 'A' ? projectAId : projectBId;
 				const loserId = result.winner === 'A' ? projectBId : projectAId;
 
-				// Upsert CrowdBTState for winner and loser
-				const [winnerState, loserState] = await Promise.all([
+				// Upsert CrowdBTState for winner and loser (ensure rows exist)
+				await Promise.all([
 					tx.crowdBTState.upsert({
 						where: { projectId_criterionId: { projectId: winnerId, criterionId: result.criterionId } },
 						update: {},
@@ -158,6 +169,16 @@ export const Judging = {
 						where: { projectId_criterionId: { projectId: loserId, criterionId: result.criterionId } },
 						update: {},
 						create: { projectId: loserId, criterionId: result.criterionId, alpha: 1, beta: 1, comparisonCount: 0 }
+					})
+				]);
+
+				// Re-read fresh values inside the transaction to avoid using stale upsert results
+				const [winnerState, loserState] = await Promise.all([
+					tx.crowdBTState.findUniqueOrThrow({
+						where: { projectId_criterionId: { projectId: winnerId, criterionId: result.criterionId } }
+					}),
+					tx.crowdBTState.findUniqueOrThrow({
+						where: { projectId_criterionId: { projectId: loserId, criterionId: result.criterionId } }
 					})
 				]);
 
@@ -202,7 +223,7 @@ export const Judging = {
 	 */
 	skipPair: async (judgeId: string, pairAssignmentId: string, reason: string) => {
 		return await prisma.pairAssignment.update({
-			where: { id: pairAssignmentId },
+			where: { id: pairAssignmentId, judgeId },
 			data: { status: 'skipped', skipReason: reason, completedAt: new Date() }
 		});
 	},
