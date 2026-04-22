@@ -15,19 +15,19 @@
     const errorMessages: Record<number, { title: string; message: string }> = {
         404: {
             title: "Page Not Found",
-            message: "Oops! Looks like this page wandered off into the prehistoric wilderness. The page you're looking for doesn't exist, but don't worry - there's plenty of other awesome stuff to explore!"
+            message: "The drawbridge is up and the gate is sealed. This page doesn't exist in the kingdom. Check your scroll, brave adventurer, and try a different path!"
         },
         500: {
             title: "Something Went Wrong",
-            message: "Yikes! Something broke on our end. Our team of futuristic cavemen is working hard to fix it. Try refreshing the page or come back in a bit!"
+            message: "The castle walls have crumbled! Something broke on our end. Our knights are working hard to restore order. Try refreshing the page or return shortly!"
         },
         401: {
             title: "Unauthorized",
-            message: "You need to be logged in to access this page. Head on over to the login page to get started!"
+            message: "Only sworn members of the kingdom may enter here. Present your credentials at the login gate to proceed!"
         },
         403: {
             title: "Access Denied",
-            message: "Sorry, but you don't have permission to access this page. If you think this is a mistake, reach out to us!"
+            message: "The portcullis is down. You don't have permission to enter this part of the castle. If you think this is a mistake, summon a HacKSU organizer!"
         }
     };
     
@@ -52,17 +52,17 @@
                     </h1>
                 </div>
                 
-                <!-- Meteor Illustration -->
+                <!-- Shield Illustration -->
                 <div class="my-4">
-                    <img 
-                        src={Meteor} 
-                        alt="Meteor" 
-                        class="w-32 md:w-48 h-auto -scale-x-100 transition-transform hover:rotate-[20deg]"
+                    <img
+                        src={Meteor}
+                        alt="Broken shield"
+                        class="w-32 md:w-48 h-auto -scale-x-100 transition-transform hover:rotate-[20deg] opacity-60"
                     />
                 </div>
                 
                 <!-- Error Message -->
-                <p class="text-lg text-offwhite leading-relaxed max-w-lg">
+                <p class="text-lg text-castle-stoneHighlight leading-relaxed max-w-lg">
                     {errorInfo.message}
                 </p>
                 
@@ -84,9 +84,9 @@
                 
                 <!-- Additional Help -->
                 <div class="mt-8 pt-6 border-t border-white/20 w-full">
-                    <p class="text-sm text-offwhite opacity-80">
-                        Need help? Check out our <a href="/#faq" class="text-accent hover:text-primary underline underline-offset-2">FAQ</a> or 
-                        <a href="https://hacksu.com" target="_blank" class="text-accent hover:text-primary underline underline-offset-2">contact HacKSU</a>.
+                    <p class="text-sm text-castle-stoneHighlight opacity-80">
+                        Need help? Check out our <a href="/#faq" class="text-castle-torchAmber hover:text-castle-torchYellow underline underline-offset-2">FAQ</a> or 
+                        <a href="https://hacksu.com" target="_blank" class="text-castle-torchAmber hover:text-castle-torchYellow underline underline-offset-2">contact HacKSU</a>.
                     </p>
                 </div>
             </div>

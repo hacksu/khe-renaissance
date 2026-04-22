@@ -1,0 +1,357 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" fill="none">
+  <!--
+    KHE 2027 — Hack the Kingdom
+    village.svg — distant medieval hamlet silhouette (mid-ground)
+    pulse village-lights opacity for flickering candle effect
+  -->
+
+  <defs>
+    <!-- Window glow gradients -->
+    <radialGradient id="glow-amber" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ffb347" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-orange" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff8c42" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#ff8c42" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-amber2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#ffb347" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Smoke gradient — rises and fades -->
+    <linearGradient id="smoke-fade-1" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#4a4a5c" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#4a4a5c" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="smoke-fade-2" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#4a4a5c" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#4a4a5c" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="smoke-fade-3" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#4a4a5c" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#4a4a5c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+
+  <!-- ═══════════════════════════════════════════
+       GROUND — slightly uneven terrain
+  ═══════════════════════════════════════════ -->
+  <path d="
+    M30 268
+    C 60 265, 100 270, 140 267
+    C 170 264, 200 269, 240 266
+    C 270 263, 310 270, 355 265
+    C 390 261, 430 268, 470 264
+    C 500 261, 540 267, 570 265
+    L 570 300 L 30 300 Z"
+    fill="#1e1e28"/>
+
+
+  <!-- ═══════════════════════════════════════════
+       BUILDINGS
+  ═══════════════════════════════════════════ -->
+  <g id="village-buildings">
+
+    <!-- ── Building 1: Small cottage, leftmost ── -->
+    <!-- body -->
+    <rect x="42" y="228" width="46" height="38" fill="#3a3a4a"/>
+    <!-- pitched roof -->
+    <polygon points="38,228 65,206 92,228" fill="#242430"/>
+    <!-- chimney -->
+    <rect x="72" y="210" width="7" height="16" fill="#2e2e3a"/>
+    <!-- chimney cap -->
+    <rect x="70" y="208" width="11" height="3" fill="#242430"/>
+
+
+    <!-- ── Building 2: Wider farmhouse, slightly back ── -->
+    <!-- body -->
+    <rect x="88" y="222" width="60" height="44" fill="#2e2e3a"/>
+    <!-- thatched roof — slightly wavy bottom edge, curved ridge -->
+    <path d="M84,222 Q118,198 152,222 Q148,225 140,224 Q118,200 96,224 Q90,225 84,222 Z" fill="#242430"/>
+    <!-- thatching texture lines -->
+    <path d="M96,224 Q118,202 140,224" stroke="#1a1a24" stroke-width="1" fill="none" opacity="0.6"/>
+    <path d="M98,220 Q118,204 138,220" stroke="#1a1a24" stroke-width="0.8" fill="none" opacity="0.4"/>
+    <!-- chimney -->
+    <rect x="128" y="206" width="8" height="17" fill="#2e2e3a"/>
+    <rect x="126" y="204" width="12" height="3" fill="#242430"/>
+
+
+    <!-- ── Building 3: Narrow tall house ── -->
+    <!-- body -->
+    <rect x="148" y="215" width="38" height="51" fill="#3a3a4a"/>
+    <!-- pitched roof, steeper -->
+    <polygon points="144,215 167,190 190,215" fill="#242430"/>
+
+
+    <!-- ── Building 4: Inn / Guild Hall — tallest non-church building ── -->
+    <!-- body -->
+    <rect x="186" y="200" width="72" height="66" fill="#2e2e3a"/>
+    <!-- second story detail: timber framing lines -->
+    <line x1="186" y1="232" x2="258" y2="232" stroke="#242430" stroke-width="2"/>
+    <line x1="210" y1="200" x2="210" y2="266" stroke="#242430" stroke-width="1.5"/>
+    <line x1="234" y1="200" x2="234" y2="266" stroke="#242430" stroke-width="1.5"/>
+    <!-- pitched roof -->
+    <polygon points="182,200 222,172 262,200" fill="#242430"/>
+    <!-- chimney on inn -->
+    <rect x="214" y="177" width="9" height="22" fill="#2e2e3a"/>
+    <rect x="212" y="175" width="13" height="3" fill="#242430"/>
+    <!-- hanging sign bracket -->
+    <line x1="258" y1="218" x2="274" y2="218" stroke="#3a3a4a" stroke-width="2"/>
+    <line x1="274" y1="214" x2="274" y2="230" stroke="#3a3a4a" stroke-width="2"/>
+    <!-- sign board -->
+    <rect x="265" y="220" width="20" height="13" rx="2" fill="#2e2e3a" stroke="#3a3a4a" stroke-width="1"/>
+    <!-- decorative door (arched) -->
+    <path d="M213,266 L213,248 Q222,240 231,248 L231,266 Z" fill="#1e1e28"/>
+    <path d="M213,248 Q222,238 231,248" fill="#1a1a24"/>
+
+
+    <!-- ── Building 5: Medium cottage with thatched roof ── -->
+    <!-- body -->
+    <rect x="258" y="230" width="50" height="36" fill="#3a3a4a"/>
+    <!-- thatched roof — wavy lower edge -->
+    <path d="
+      M254,230
+      Q283,207 312,230
+      Q308,233 302,231
+      Q283,210 264,231
+      Q258,233 254,230 Z"
+      fill="#242430"/>
+    <!-- thatching detail -->
+    <path d="M264,231 Q283,211 302,231" stroke="#1a1a24" stroke-width="0.9" fill="none" opacity="0.5"/>
+
+
+    <!-- ── Building 6: Small lean-to / storage shed ── -->
+    <!-- body -->
+    <rect x="308" y="242" width="34" height="24" fill="#2e2e3a"/>
+    <!-- sloped shed roof (asymmetric) -->
+    <polygon points="305,242 308,233 342,238 342,242" fill="#242430"/>
+
+
+    <!-- ── Building 7: Church / Chapel ── -->
+    <!-- nave body -->
+    <rect x="340" y="210" width="54" height="56" fill="#2e2e3a"/>
+    <!-- nave roof -->
+    <polygon points="336,210 367,188 398,210" fill="#242430"/>
+    <!-- steeple tower body -->
+    <rect x="357" y="165" width="20" height="46" fill="#2e2e3a"/>
+    <!-- steeple pointed top -->
+    <polygon points="353,165 367,140 381,165" fill="#242430"/>
+    <!-- cross on steeple -->
+    <line x1="367" y1="130" x2="367" y2="145" stroke="#3a3a4a" stroke-width="2.5"/>
+    <line x1="361" y1="135" x2="373" y2="135" stroke="#3a3a4a" stroke-width="2.5"/>
+    <!-- arched window on nave -->
+    <path d="M356,240 L356,226 Q367,218 378,226 L378,240 Z" fill="#1e1e28"/>
+    <!-- small circular rose window in gable -->
+    <circle cx="367" cy="198" r="6" fill="#1e1e28"/>
+    <circle cx="367" cy="198" r="4" fill="none" stroke="#242430" stroke-width="1.5"/>
+
+
+    <!-- ── Building 8: Two-story house, rightward ── -->
+    <!-- body -->
+    <rect x="392" y="218" width="52" height="48" fill="#3a3a4a"/>
+    <!-- floor divider -->
+    <line x1="392" y1="242" x2="444" y2="242" stroke="#2e2e3a" stroke-width="2"/>
+    <!-- roof -->
+    <polygon points="388,218 418,196 448,218" fill="#242430"/>
+    <!-- chimney -->
+    <rect x="400" y="201" width="7" height="17" fill="#2e2e3a"/>
+    <rect x="398" y="199" width="11" height="3" fill="#242430"/>
+
+
+    <!-- ── Building 9: Rightmost small house ── -->
+    <!-- body -->
+    <rect x="444" y="232" width="42" height="34" fill="#2e2e3a"/>
+    <!-- thatched roof -->
+    <path d="
+      M440,232
+      Q465,212 490,232
+      Q486,235 480,233
+      Q465,215 450,233
+      Q444,235 440,232 Z"
+      fill="#242430"/>
+    <!-- thatching lines -->
+    <path d="M450,233 Q465,215 480,233" stroke="#1a1a24" stroke-width="0.9" fill="none" opacity="0.5"/>
+
+  </g>
+
+
+  <!-- ═══════════════════════════════════════════
+       LIGHTS & WINDOWS
+       pulse village-lights opacity for flickering candle effect
+  ═══════════════════════════════════════════ -->
+  <g id="village-lights">
+
+    <!-- Building 1 cottage window glow + rect -->
+    <rect x="52" y="242" width="10" height="9" rx="1" fill="url(#glow-amber)" transform="scale(2.5) translate(-31,-94)"/>
+    <rect x="53" y="243" width="8" height="7" rx="1" fill="#ffb347" opacity="0.85"/>
+
+    <!-- Building 2 farmhouse windows -->
+    <ellipse cx="101" cy="242" rx="8" ry="7" fill="url(#glow-orange)" opacity="0.9"/>
+    <rect x="97" y="239" width="8" height="6" rx="1" fill="#ff8c42" opacity="0.9"/>
+    <ellipse cx="127" cy="242" rx="8" ry="7" fill="url(#glow-amber)" opacity="0.85"/>
+    <rect x="123" y="239" width="8" height="6" rx="1" fill="#ffb347" opacity="0.85"/>
+
+    <!-- Building 3 tall house window -->
+    <ellipse cx="162" cy="232" rx="7" ry="6" fill="url(#glow-amber)" opacity="0.9"/>
+    <rect x="158" y="229" width="7" height="6" rx="1" fill="#ffb347" opacity="0.9"/>
+    <ellipse cx="162" cy="249" rx="7" ry="6" fill="url(#glow-orange)" opacity="0.8"/>
+    <rect x="158" y="246" width="7" height="6" rx="1" fill="#ff8c42" opacity="0.8"/>
+
+    <!-- Building 4 Inn windows — upper floor -->
+    <ellipse cx="199" cy="215" rx="9" ry="8" fill="url(#glow-amber2)" opacity="0.9"/>
+    <rect x="194" y="211" width="9" height="8" rx="1" fill="#ffb347" opacity="0.9"/>
+    <ellipse cx="221" cy="215" rx="9" ry="8" fill="url(#glow-orange)" opacity="0.85"/>
+    <rect x="216" y="211" width="9" height="8" rx="1" fill="#ff8c42" opacity="0.85"/>
+    <ellipse cx="245" cy="215" rx="9" ry="8" fill="url(#glow-amber)" opacity="0.8"/>
+    <rect x="240" y="211" width="9" height="8" rx="1" fill="#ffb347" opacity="0.8"/>
+    <!-- Inn lower floor windows -->
+    <ellipse cx="199" cy="246" rx="9" ry="8" fill="url(#glow-amber2)" opacity="0.7"/>
+    <rect x="194" y="242" width="9" height="8" rx="1" fill="#ffb347" opacity="0.75"/>
+    <ellipse cx="245" cy="246" rx="9" ry="8" fill="url(#glow-orange)" opacity="0.7"/>
+    <rect x="240" y="242" width="9" height="8" rx="1" fill="#ff8c42" opacity="0.75"/>
+
+    <!-- Building 5 cottage windows -->
+    <ellipse cx="272" cy="244" rx="7" ry="6" fill="url(#glow-amber)" opacity="0.85"/>
+    <rect x="268" y="241" width="7" height="6" rx="1" fill="#ffb347" opacity="0.85"/>
+    <ellipse cx="292" cy="244" rx="7" ry="6" fill="url(#glow-orange)" opacity="0.8"/>
+    <rect x="288" y="241" width="7" height="6" rx="1" fill="#ff8c42" opacity="0.8"/>
+
+    <!-- Building 7 Church steeple window (small lancet glow) -->
+    <ellipse cx="367" cy="178" rx="5" ry="8" fill="url(#glow-amber)" opacity="0.7"/>
+    <rect x="364" y="172" width="6" height="10" rx="2" fill="#ffb347" opacity="0.5"/>
+    <!-- Church rose window glow -->
+    <circle cx="367" cy="198" r="5" fill="#ffb347" opacity="0.25"/>
+
+    <!-- Building 8 two-story windows -->
+    <ellipse cx="406" cy="229" rx="8" ry="7" fill="url(#glow-amber2)" opacity="0.9"/>
+    <rect x="401" y="226" width="8" height="7" rx="1" fill="#ffb347" opacity="0.9"/>
+    <ellipse cx="430" cy="229" rx="8" ry="7" fill="url(#glow-orange)" opacity="0.85"/>
+    <rect x="425" y="226" width="8" height="7" rx="1" fill="#ff8c42" opacity="0.85"/>
+    <ellipse cx="406" cy="250" rx="8" ry="7" fill="url(#glow-amber)" opacity="0.8"/>
+    <rect x="401" y="247" width="8" height="7" rx="1" fill="#ffb347" opacity="0.8"/>
+
+    <!-- Building 9 rightmost windows -->
+    <ellipse cx="456" cy="244" rx="7" ry="6" fill="url(#glow-amber2)" opacity="0.85"/>
+    <rect x="452" y="241" width="7" height="6" rx="1" fill="#ffb347" opacity="0.85"/>
+    <ellipse cx="474" cy="244" rx="7" ry="6" fill="url(#glow-orange)" opacity="0.8"/>
+    <rect x="470" y="241" width="7" height="6" rx="1" fill="#ff8c42" opacity="0.8"/>
+
+  </g>
+
+
+  <!-- ═══════════════════════════════════════════
+       SMOKE WISPS
+  ═══════════════════════════════════════════ -->
+  <g id="village-smoke">
+
+    <!-- Wisp 1 — cottage chimney (building 1) -->
+    <g class="smoke-wisp">
+      <path d="
+        M76,208
+        C 74,198 79,190 76,181
+        C 73,172 78,164 75,155"
+        stroke="url(#smoke-fade-1)"
+        stroke-width="4"
+        stroke-linecap="round"
+        fill="none"
+        opacity="0.85"/>
+      <path d="
+        M76,208
+        C 78,196 73,186 77,176
+        C 81,167 76,158 79,150"
+        stroke="url(#smoke-fade-1)"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        fill="none"
+        opacity="0.5"/>
+    </g>
+
+    <!-- Wisp 2 — farmhouse chimney (building 2) -->
+    <g class="smoke-wisp">
+      <path d="
+        M132,204
+        C 130,193 135,184 132,174
+        C 129,164 133,155 130,146"
+        stroke="url(#smoke-fade-2)"
+        stroke-width="4"
+        stroke-linecap="round"
+        fill="none"
+        opacity="0.8"/>
+      <path d="
+        M132,204
+        C 135,193 130,182 134,173
+        C 138,164 133,155 136,146"
+        stroke="url(#smoke-fade-2)"
+        stroke-width="2"
+        stroke-linecap="round"
+        fill="none"
+        opacity="0.45"/>
+    </g>
+
+    <!-- Wisp 3 — inn chimney (building 4) -->
+    <g class="smoke-wisp">
+      <path d="
+        M219,175
+        C 217,163 222,153 219,143
+        C 216,133 221,123 218,114"
+        stroke="url(#smoke-fade-3)"
+        stroke-width="4.5"
+        stroke-linecap="round"
+        fill="none"
+        opacity="0.75"/>
+      <path d="
+        M219,175
+        C 222,162 217,151 221,141
+        C 225,131 220,121 223,112"
+        stroke="url(#smoke-fade-3)"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        fill="none"
+        opacity="0.4"/>
+    </g>
+
+  </g>
+
+
+  <!-- ═══════════════════════════════════════════
+       FOREGROUND DETAIL — stone well
+  ═══════════════════════════════════════════ -->
+  <g id="village-detail">
+
+    <!-- Stone well -->
+    <!-- well base ring -->
+    <ellipse cx="168" cy="268" rx="12" ry="5" fill="#2e2e3a"/>
+    <!-- well shaft -->
+    <rect x="156" y="256" width="24" height="12" rx="2" fill="#3a3a4a"/>
+    <!-- well top ring -->
+    <ellipse cx="168" cy="256" rx="12" ry="5" fill="#2e2e3a"/>
+    <!-- well roof / frame -->
+    <line x1="158" y1="254" x2="158" y2="246" stroke="#2e2e3a" stroke-width="2.5"/>
+    <line x1="178" y1="254" x2="178" y2="246" stroke="#2e2e3a" stroke-width="2.5"/>
+    <path d="M154,246 Q168,240 182,246" stroke="#242430" stroke-width="2" fill="none"/>
+    <!-- bucket hanging -->
+    <line x1="168" y1="243" x2="168" y2="252" stroke="#3a3a4a" stroke-width="1.5"/>
+    <rect x="164" y="252" width="8" height="5" rx="1" fill="#2e2e3a"/>
+
+    <!-- Simple cart silhouette -->
+    <!-- cart body -->
+    <path d="M480,264 L480,252 L510,252 L510,264 Z" fill="#2e2e3a"/>
+    <!-- cart wheel left -->
+    <circle cx="485" cy="266" r="6" fill="none" stroke="#3a3a4a" stroke-width="2.5"/>
+    <line x1="485" y1="260" x2="485" y2="272" stroke="#3a3a4a" stroke-width="1.5"/>
+    <line x1="479" y1="266" x2="491" y2="266" stroke="#3a3a4a" stroke-width="1.5"/>
+    <!-- cart wheel right -->
+    <circle cx="505" cy="266" r="6" fill="none" stroke="#3a3a4a" stroke-width="2.5"/>
+    <line x1="505" y1="260" x2="505" y2="272" stroke="#3a3a4a" stroke-width="1.5"/>
+    <line x1="499" y1="266" x2="511" y2="266" stroke="#3a3a4a" stroke-width="1.5"/>
+    <!-- cart shaft -->
+    <line x1="480" y1="258" x2="470" y2="262" stroke="#3a3a4a" stroke-width="2"/>
+    <!-- cart load (hay bales suggestion) -->
+    <rect x="482" y="248" width="26" height="5" rx="2" fill="#3a3a4a"/>
+
+  </g>
+
+</svg>

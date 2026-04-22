@@ -1,0 +1,309 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700">
+  <defs>
+    <!-- Soft blur for aurora bands -->
+    <filter id="aurora-blur-soft" x="-40%" y="-10%" width="180%" height="120%">
+      <feGaussianBlur stdDeviation="18 8" result="blur"/>
+    </filter>
+    <filter id="aurora-blur-wide" x="-60%" y="-10%" width="220%" height="120%">
+      <feGaussianBlur stdDeviation="30 12" result="blur"/>
+    </filter>
+    <filter id="aurora-blur-narrow" x="-30%" y="-5%" width="160%" height="110%">
+      <feGaussianBlur stdDeviation="12 5" result="blur"/>
+    </filter>
+    <!-- Horizon glow filter — heavy blur -->
+    <filter id="horizon-blur" x="-50%" y="-100%" width="200%" height="300%">
+      <feGaussianBlur stdDeviation="60 40" result="blur"/>
+    </filter>
+    <!-- Star glow -->
+    <filter id="star-glow" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Radial gradient for horizon glow spread -->
+    <radialGradient id="horizonGradient" cx="50%" cy="100%" r="55%" fx="50%" fy="100%">
+      <stop offset="0%"   stop-color="#ff6b1a" stop-opacity="0.18"/>
+      <stop offset="40%"  stop-color="#ff6b1a" stop-opacity="0.10"/>
+      <stop offset="75%"  stop-color="#ff3300" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#ff6b1a" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Aurora band gradients — vertical, fade in/out top and bottom -->
+    <linearGradient id="auroraGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#00ff88" stop-opacity="0"/>
+      <stop offset="12%"  stop-color="#00ff88" stop-opacity="0.55"/>
+      <stop offset="45%"  stop-color="#00ccaa" stop-opacity="0.70"/>
+      <stop offset="72%"  stop-color="#00ccaa" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="auroraGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#4466ff" stop-opacity="0"/>
+      <stop offset="10%"  stop-color="#4466ff" stop-opacity="0.45"/>
+      <stop offset="50%"  stop-color="#2244ff" stop-opacity="0.55"/>
+      <stop offset="75%"  stop-color="#4466ff" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#4466ff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="auroraGrad3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#8844cc" stop-opacity="0"/>
+      <stop offset="15%"  stop-color="#8844cc" stop-opacity="0.40"/>
+      <stop offset="55%"  stop-color="#6633bb" stop-opacity="0.50"/>
+      <stop offset="80%"  stop-color="#8844cc" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#8844cc" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="auroraGrad4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#00ff88" stop-opacity="0"/>
+      <stop offset="8%"   stop-color="#00ff88" stop-opacity="0.50"/>
+      <stop offset="42%"  stop-color="#00ffaa" stop-opacity="0.65"/>
+      <stop offset="68%"  stop-color="#00ccaa" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="auroraGrad5" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#4466ff" stop-opacity="0"/>
+      <stop offset="18%"  stop-color="#8844cc" stop-opacity="0.35"/>
+      <stop offset="48%"  stop-color="#4466ff" stop-opacity="0.45"/>
+      <stop offset="72%"  stop-color="#2244ff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#4466ff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="auroraGrad6" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#00ccaa" stop-opacity="0"/>
+      <stop offset="14%"  stop-color="#00ff88" stop-opacity="0.42"/>
+      <stop offset="52%"  stop-color="#00ccaa" stop-opacity="0.52"/>
+      <stop offset="78%"  stop-color="#00ff88" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#00ccaa" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ═══════════════════════════════════════
+       LAYER 1: Night sky base
+  ═══════════════════════════════════════ -->
+  <rect width="1200" height="700" fill="#0a1628"/>
+
+  <!-- Subtle deep blue vignette at top center -->
+  <radialGradient id="skyVignette" cx="50%" cy="0%" r="80%">
+    <stop offset="0%"   stop-color="#0d2040" stop-opacity="0.6"/>
+    <stop offset="100%" stop-color="#0a1628" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="1200" height="700" fill="url(#skyVignette)"/>
+
+  <!-- ═══════════════════════════════════════
+       LAYER 2: Aurora bands (behind stars)
+       animate aurora-band opacity and slight skewX for shimmering aurora
+  ═══════════════════════════════════════ -->
+
+  <!-- Band 1 — broad green curtain, left-center, slight lean right -->
+  <g class="aurora-band" id="aurora-1">
+    <path
+      d="M 185 -20
+         C 195 30,  228 100, 210 200
+           192 310, 230 400, 215 520
+           205 580, 190 640, 185 700
+         L 265 700
+         C 268 640, 278 580, 270 520
+           255 400, 290 310, 275 200
+           258 100, 290  30, 305 -20
+         Z"
+      fill="url(#auroraGrad1)"
+      filter="url(#aurora-blur-soft)"
+    />
+  </g>
+
+  <!-- Band 2 — tall blue band, right side, leans slightly left -->
+  <g class="aurora-band" id="aurora-2">
+    <path
+      d="M 720 -20
+         C 735  25, 768  95, 750 195
+           730 305, 762 398, 745 515
+           735 578, 720 640, 715 700
+         L 800 700
+         C 798 640, 808 578, 805 515
+           790 398, 818 305, 802 195
+           785  95, 818  25, 835 -20
+         Z"
+      fill="url(#auroraGrad2)"
+      filter="url(#aurora-blur-soft)"
+    />
+  </g>
+
+  <!-- Band 3 — narrow violet accent, far left -->
+  <g class="aurora-band" id="aurora-3">
+    <path
+      d="M  55 -20
+         C  62  40,  80 115,  70 220
+            58 330,  88 415,  75 530
+            65 590,  52 650,  48 700
+         L 110 700
+         C 108 650, 118 590, 112 530
+            98 415, 125 330, 115 220
+           102 115, 122  40, 132 -20
+         Z"
+      fill="url(#auroraGrad3)"
+      filter="url(#aurora-blur-narrow)"
+    />
+  </g>
+
+  <!-- Band 4 — wide green/teal, center-left, dominant curtain -->
+  <g class="aurora-band" id="aurora-4">
+    <path
+      d="M 430 -20
+         C 445  20, 488  90, 465 188
+           442 295, 480 388, 460 505
+           448 572, 432 638, 425 700
+         L 550 700
+         C 546 638, 558 572, 552 505
+           532 388, 568 295, 548 188
+           528  90, 570  20, 588 -20
+         Z"
+      fill="url(#auroraGrad4)"
+      filter="url(#aurora-blur-wide)"
+    />
+  </g>
+
+  <!-- Band 5 — blue/violet blend, far right -->
+  <g class="aurora-band" id="aurora-5">
+    <path
+      d="M 980 -20
+         C 992  28, 1018  98, 1002 195
+           985 302, 1012 395, 998 510
+           988 574, 975 638, 970 700
+         L 1048 700
+         C 1046 638, 1055 574, 1058 510
+           1044 395, 1068 302, 1055 195
+           1040  98, 1068  28, 1082 -20
+         Z"
+      fill="url(#auroraGrad5)"
+      filter="url(#aurora-blur-narrow)"
+    />
+  </g>
+
+  <!-- Band 6 — teal secondary overlay on center, broader feather -->
+  <g class="aurora-band" id="aurora-6">
+    <path
+      d="M 590 -20
+         C 610  22, 648  88, 625 185
+           602 292, 638 385, 618 502
+           606 568, 590 635, 582 700
+         L 670 700
+         C 665 635, 678 568, 672 502
+           652 385, 688 292, 668 185
+           648  88, 688  22, 705 -20
+         Z"
+      fill="url(#auroraGrad6)"
+      filter="url(#aurora-blur-soft)"
+    />
+  </g>
+
+  <!-- ═══════════════════════════════════════
+       LAYER 3: Stars
+  ═══════════════════════════════════════ -->
+  <g id="stars">
+
+    <!-- ── Small dots (r 0.5–1.5) ── -->
+    <circle cx="42"   cy="28"  r="0.8"  fill="#f5e8c0" opacity="0.85"/>
+    <circle cx="118"  cy="52"  r="1.2"  fill="#f5e8c0" opacity="0.70"/>
+    <circle cx="195"  cy="18"  r="0.6"  fill="#8e8ea8" opacity="0.55"/>
+    <circle cx="258"  cy="74"  r="1.0"  fill="#f5e8c0" opacity="0.90"/>
+    <circle cx="315"  cy="35"  r="0.7"  fill="#8e8ea8" opacity="0.50"/>
+    <circle cx="378"  cy="88"  r="1.1"  fill="#f5e8c0" opacity="0.75"/>
+    <circle cx="422"  cy="22"  r="0.9"  fill="#8e8ea8" opacity="0.60"/>
+    <circle cx="488"  cy="61"  r="0.6"  fill="#f5e8c0" opacity="0.80"/>
+    <circle cx="542"  cy="40"  r="1.3"  fill="#f5e8c0" opacity="0.88"/>
+    <circle cx="598"  cy="15"  r="0.7"  fill="#8e8ea8" opacity="0.45"/>
+    <circle cx="648"  cy="78"  r="1.0"  fill="#f5e8c0" opacity="0.72"/>
+    <circle cx="702"  cy="32"  r="0.8"  fill="#8e8ea8" opacity="0.58"/>
+    <circle cx="762"  cy="55"  r="1.2"  fill="#f5e8c0" opacity="0.83"/>
+    <circle cx="818"  cy="24"  r="0.6"  fill="#8e8ea8" opacity="0.48"/>
+    <circle cx="872"  cy="82"  r="1.0"  fill="#f5e8c0" opacity="0.78"/>
+    <circle cx="928"  cy="44"  r="0.9"  fill="#f5e8c0" opacity="0.65"/>
+    <circle cx="985"  cy="18"  r="0.7"  fill="#8e8ea8" opacity="0.52"/>
+    <circle cx="1042" cy="70"  r="1.1"  fill="#f5e8c0" opacity="0.80"/>
+    <circle cx="1098" cy="38"  r="0.8"  fill="#8e8ea8" opacity="0.55"/>
+    <circle cx="1158" cy="58"  r="1.2"  fill="#f5e8c0" opacity="0.88"/>
+    <!-- mid-sky dots -->
+    <circle cx="68"   cy="135" r="0.9"  fill="#f5e8c0" opacity="0.72"/>
+    <circle cx="152"  cy="112" r="0.7"  fill="#8e8ea8" opacity="0.48"/>
+    <circle cx="228"  cy="148" r="1.0"  fill="#f5e8c0" opacity="0.65"/>
+    <circle cx="302"  cy="120" r="0.6"  fill="#8e8ea8" opacity="0.42"/>
+    <circle cx="365"  cy="165" r="1.3"  fill="#f5e8c0" opacity="0.82"/>
+    <circle cx="445"  cy="138" r="0.8"  fill="#8e8ea8" opacity="0.55"/>
+    <circle cx="510"  cy="172" r="0.6"  fill="#f5e8c0" opacity="0.68"/>
+    <circle cx="572"  cy="118" r="1.1"  fill="#f5e8c0" opacity="0.78"/>
+    <circle cx="635"  cy="158" r="0.7"  fill="#8e8ea8" opacity="0.50"/>
+    <circle cx="688"  cy="132" r="1.0"  fill="#f5e8c0" opacity="0.84"/>
+    <circle cx="745"  cy="175" r="0.8"  fill="#8e8ea8" opacity="0.45"/>
+    <circle cx="808"  cy="115" r="1.2"  fill="#f5e8c0" opacity="0.90"/>
+    <circle cx="862"  cy="162" r="0.6"  fill="#8e8ea8" opacity="0.52"/>
+    <circle cx="922"  cy="140" r="1.0"  fill="#f5e8c0" opacity="0.75"/>
+    <circle cx="978"  cy="180" r="0.9"  fill="#f5e8c0" opacity="0.68"/>
+    <circle cx="1035" cy="125" r="0.7"  fill="#8e8ea8" opacity="0.48"/>
+    <circle cx="1092" cy="155" r="1.1"  fill="#f5e8c0" opacity="0.80"/>
+    <circle cx="1145" cy="108" r="0.8"  fill="#8e8ea8" opacity="0.55"/>
+    <!-- upper-third layer -->
+    <circle cx="88"   cy="228" r="1.0"  fill="#f5e8c0" opacity="0.60"/>
+    <circle cx="175"  cy="245" r="0.7"  fill="#8e8ea8" opacity="0.44"/>
+    <circle cx="268"  cy="210" r="1.2"  fill="#f5e8c0" opacity="0.70"/>
+    <circle cx="352"  cy="268" r="0.6"  fill="#8e8ea8" opacity="0.40"/>
+    <circle cx="420"  cy="232" r="0.9"  fill="#f5e8c0" opacity="0.65"/>
+    <circle cx="495"  cy="275" r="0.8"  fill="#8e8ea8" opacity="0.50"/>
+    <circle cx="558"  cy="240" r="1.1"  fill="#f5e8c0" opacity="0.72"/>
+    <circle cx="622"  cy="285" r="0.7"  fill="#8e8ea8" opacity="0.45"/>
+    <circle cx="685"  cy="222" r="1.0"  fill="#f5e8c0" opacity="0.78"/>
+    <circle cx="748"  cy="265" r="0.6"  fill="#8e8ea8" opacity="0.42"/>
+    <circle cx="812"  cy="248" r="1.3"  fill="#f5e8c0" opacity="0.85"/>
+    <circle cx="878"  cy="215" r="0.8"  fill="#f5e8c0" opacity="0.62"/>
+    <circle cx="938"  cy="278" r="0.9"  fill="#8e8ea8" opacity="0.48"/>
+    <circle cx="1005" cy="235" r="1.0"  fill="#f5e8c0" opacity="0.75"/>
+    <circle cx="1065" cy="260" r="0.7"  fill="#8e8ea8" opacity="0.44"/>
+    <circle cx="1128" cy="228" r="1.1"  fill="#f5e8c0" opacity="0.80"/>
+    <circle cx="1175" cy="285" r="0.6"  fill="#8e8ea8" opacity="0.40"/>
+
+    <!-- ── 4-pointed sparkle stars ── -->
+    <!-- Sparkle helper: cross shape = two thin diamond paths -->
+    <!-- Sparkle 1 — bright, upper left area -->
+    <g filter="url(#star-glow)" opacity="0.95">
+      <path d="M 338 46 L 340 38 L 342 46 L 350 48 L 342 50 L 340 58 L 338 50 L 330 48 Z" fill="#f5e8c0"/>
+    </g>
+    <!-- Sparkle 2 — center top -->
+    <g filter="url(#star-glow)" opacity="0.88">
+      <path d="M 598 96 L 601 86 L 604 96 L 614 99 L 604 102 L 601 112 L 598 102 L 588 99 Z" fill="#f5e8c0"/>
+    </g>
+    <!-- Sparkle 3 — right side, small -->
+    <g filter="url(#star-glow)" opacity="0.78">
+      <path d="M 1020 52 L 1022 45 L 1024 52 L 1031 54 L 1024 56 L 1022 63 L 1020 56 L 1013 54 Z" fill="#f5e8c0"/>
+    </g>
+    <!-- Sparkle 4 — mid-left, teal tint (aurora shimmer star) -->
+    <g filter="url(#star-glow)" opacity="0.70">
+      <path d="M 148 190 L 151 181 L 154 190 L 163 193 L 154 196 L 151 205 L 148 196 L 139 193 Z" fill="#d0fff5"/>
+    </g>
+    <!-- Sparkle 5 — far right upper -->
+    <g filter="url(#star-glow)" opacity="0.82">
+      <path d="M 1108 82 L 1110 74 L 1112 82 L 1120 84 L 1112 86 L 1110 94 L 1108 86 L 1100 84 Z" fill="#f5e8c0"/>
+    </g>
+    <!-- Sparkle 6 — lower center -->
+    <g filter="url(#star-glow)" opacity="0.65">
+      <path d="M 520 318 L 522 310 L 524 318 L 532 320 L 524 322 L 522 330 L 520 322 L 512 320 Z" fill="#f5e8c0"/>
+    </g>
+
+  </g>
+
+  <!-- ═══════════════════════════════════════
+       LAYER 4: Horizon glow — fire/torchlight
+  ═══════════════════════════════════════ -->
+  <g id="horizon-glow">
+    <rect
+      x="-100" y="560"
+      width="1400" height="200"
+      fill="url(#horizonGradient)"
+      filter="url(#horizon-blur)"
+    />
+    <!-- Secondary tighter warm accent along the very horizon line -->
+    <ellipse
+      cx="600" cy="640"
+      rx="520" ry="95"
+      fill="#ff6b1a"
+      opacity="0.09"
+      filter="url(#horizon-blur)"
+    />
+  </g>
+
+</svg>

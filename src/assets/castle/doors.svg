@@ -1,0 +1,582 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <defs>
+    <!-- Stone texture gradient -->
+    <linearGradient id="stoneGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6b6b80;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2e2e3a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="stoneGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#6b6b80;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a4a5c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="keystoneGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8e8ea8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a4a5c;stop-opacity:1" />
+    </linearGradient>
+    <!-- Wood grain gradients -->
+    <linearGradient id="woodLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a0f08;stop-opacity:1" />
+      <stop offset="15%" style="stop-color:#4a3520;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#6b4f2f;stop-opacity:1" />
+      <stop offset="65%" style="stop-color:#4a3520;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d1f0f;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="woodRight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2d1f0f;stop-opacity:1" />
+      <stop offset="35%" style="stop-color:#4a3520;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#6b4f2f;stop-opacity:1" />
+      <stop offset="85%" style="stop-color:#4a3520;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a0f08;stop-opacity:1" />
+    </linearGradient>
+    <!-- Iron gradient -->
+    <linearGradient id="ironGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2e2e3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e1e28;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ironHoriz" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1e1e28;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#3a3a4c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e1e28;stop-opacity:1" />
+    </linearGradient>
+    <!-- Ring gradient -->
+    <radialGradient id="ringGrad" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" style="stop-color:#5a5a70;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e1e28;stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="bossGrad" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" style="stop-color:#c9a84c;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#9a7a2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5a4010;stop-opacity:1" />
+    </radialGradient>
+    <!-- Ambient glow -->
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#c9a84c;stop-opacity:0.25" />
+      <stop offset="100%" style="stop-color:#c9a84c;stop-opacity:0" />
+    </radialGradient>
+    <radialGradient id="crackGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#e8c060;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#c9a84c;stop-opacity:0" />
+    </radialGradient>
+    <!-- Threshold gradient -->
+    <linearGradient id="thresholdGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6b6b80;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2e2e3a;stop-opacity:1" />
+    </linearGradient>
+    <!-- Clip path for arch opening -->
+    <clipPath id="archClip">
+      <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560 Z" />
+    </clipPath>
+    <!-- Shadow filter -->
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+    <filter id="innerShadow">
+      <feFlood flood-color="#000000" flood-opacity="0.4" result="flood"/>
+      <feComposite in="flood" in2="SourceGraphic" operator="in" result="mask"/>
+      <feGaussianBlur in="mask" stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- ===== BACKGROUND ===== -->
+  <rect width="400" height="600" fill="#1a1a24" />
+
+  <!-- ===== AMBIENT LIGHT GROUP ===== -->
+  <g id="ambient-light">
+    <!-- Warm glow emanating from the crack between doors -->
+    <ellipse cx="200" cy="350" rx="90" ry="200" fill="url(#glowGrad)" opacity="0.7" />
+    <ellipse cx="200" cy="500" rx="60" ry="80" fill="url(#glowGrad)" opacity="0.4" />
+    <!-- Subtle top glow from beyond the arch -->
+    <ellipse cx="200" cy="140" rx="70" ry="50" fill="url(#glowGrad)" opacity="0.3" />
+  </g>
+
+  <!-- ===== ARCH GROUP ===== -->
+  <g id="arch">
+
+    <!-- === ARCH BACKGROUND / OPENING SHADOW === -->
+    <!-- Deep darkness inside the arch before doors -->
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560 Z" fill="#0a0a10" />
+
+    <!-- === LEFT PILLAR STONES === -->
+    <!-- Left pillar - column of stone blocks -->
+    <!-- Block row 1 (bottom) -->
+    <rect x="10" y="500" width="70" height="38" rx="2" fill="#4a4a5c" stroke="#242430" stroke-width="2"/>
+    <rect x="10" y="500" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <line x1="10" y1="510" x2="80" y2="510" stroke="#242430" stroke-width="1" opacity="0.4"/>
+    <!-- Block row 2 -->
+    <rect x="10" y="460" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <line x1="10" y1="478" x2="80" y2="478" stroke="#242430" stroke-width="1" opacity="0.4"/>
+    <!-- Block row 3 -->
+    <rect x="10" y="420" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <!-- Block row 4 -->
+    <rect x="10" y="380" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <!-- Block row 5 -->
+    <rect x="10" y="340" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <!-- Block row 6 -->
+    <rect x="10" y="300" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <!-- Block row 7 -->
+    <rect x="10" y="260" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <!-- Block row 8 - offset for variety -->
+    <rect x="10" y="220" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <!-- Staggered inner blocks left -->
+    <rect x="15" y="480" width="60" height="18" rx="1" fill="none" stroke="#242430" stroke-width="1" opacity="0.3"/>
+    <rect x="15" y="440" width="60" height="18" rx="1" fill="none" stroke="#242430" stroke-width="1" opacity="0.3"/>
+    <rect x="15" y="360" width="60" height="18" rx="1" fill="none" stroke="#242430" stroke-width="1" opacity="0.3"/>
+    <!-- Highlight edge on left pillar -->
+    <rect x="10" y="220" width="6" height="318" fill="#6b6b80" opacity="0.3" rx="1"/>
+
+    <!-- === RIGHT PILLAR STONES === -->
+    <rect x="320" y="500" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <rect x="320" y="460" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <rect x="320" y="420" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <rect x="320" y="380" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <rect x="320" y="340" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <rect x="320" y="300" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <rect x="320" y="260" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <rect x="320" y="220" width="70" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"/>
+    <!-- Highlight edge on right pillar -->
+    <rect x="384" y="220" width="6" height="318" fill="#8e8ea8" opacity="0.2" rx="1"/>
+
+    <!-- === ARCH STONES (voussoirs) === -->
+    <!-- These are the wedge-shaped stones forming the curved arch -->
+    <!-- We'll approximate with rotated/skewed rects along the arch curve -->
+
+    <!-- Left arch stones - bottom to keystone -->
+    <!-- Stone 1: near bottom-left of arch (mostly vertical) -->
+    <rect x="58" y="185" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-60, 77, 207)"/>
+    <!-- Stone 2 -->
+    <rect x="55" y="140" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-42, 74, 162)"/>
+    <!-- Stone 3 -->
+    <rect x="70" y="98" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-26, 89, 120)"/>
+    <!-- Stone 4: upper-left approaching keystone -->
+    <rect x="102" y="65" width="45" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-12, 124, 84)"/>
+    <!-- Stone 5: left of keystone -->
+    <rect x="147" y="52" width="45" height="35" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-3, 169, 69)"/>
+
+    <!-- Right arch stones -->
+    <!-- Stone 1: near bottom-right -->
+    <rect x="304" y="185" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(60, 323, 207)"/>
+    <!-- Stone 2 -->
+    <rect x="307" y="140" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(42, 326, 162)"/>
+    <!-- Stone 3 -->
+    <rect x="292" y="98" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(26, 311, 120)"/>
+    <!-- Stone 4 -->
+    <rect x="253" y="65" width="45" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(12, 275, 84)"/>
+    <!-- Stone 5: right of keystone -->
+    <rect x="208" y="52" width="45" height="35" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(3, 230, 69)"/>
+
+    <!-- === KEYSTONE === -->
+    <!-- The central top stone of the arch - trapezoid shape -->
+    <polygon points="175,42 225,42 232,78 168,78"
+             fill="url(#keystoneGrad)" stroke="#242430" stroke-width="2.5"/>
+    <!-- Keystone detail lines -->
+    <line x1="190" y1="46" x2="188" y2="74" stroke="#242430" stroke-width="1" opacity="0.5"/>
+    <line x1="210" y1="46" x2="212" y2="74" stroke="#242430" stroke-width="1" opacity="0.5"/>
+    <!-- Keystone highlight -->
+    <polygon points="177,44 223,44 228,56 172,56" fill="#8e8ea8" opacity="0.2"/>
+
+    <!-- === ARCH OUTER FRAME (border masking) === -->
+    <!-- These solid stone blocks form the outer border of the arch structure -->
+    <!-- Top-left corner fill -->
+    <rect x="0" y="0" width="100" height="100" fill="#2e2e3a"/>
+    <rect x="0" y="0" width="100" height="100" fill="url(#stoneGrad1)" opacity="0.8"/>
+    <rect x="100" y="0" width="100" height="60" fill="#2e2e3a"/>
+    <rect x="100" y="0" width="100" height="60" fill="url(#stoneGrad1)" opacity="0.8"/>
+    <!-- Top-right corner fill -->
+    <rect x="300" y="0" width="100" height="100" fill="#2e2e3a"/>
+    <rect x="300" y="0" width="100" height="100" fill="url(#stoneGrad1)" opacity="0.8"/>
+    <rect x="200" y="0" width="100" height="60" fill="#2e2e3a"/>
+    <rect x="200" y="0" width="100" height="60" fill="url(#stoneGrad1)" opacity="0.8"/>
+    <!-- Arch surround using stroke path to create thick border -->
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+          fill="none" stroke="#2e2e3a" stroke-width="80" stroke-linejoin="round"/>
+    <!-- Stone block lines on arch surround -->
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+          fill="none" stroke="#4a4a5c" stroke-width="76" stroke-linejoin="round"/>
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+          fill="none" stroke="#242430" stroke-width="2" stroke-linejoin="round"/>
+    <!-- Inner arch edge highlight -->
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+          fill="none" stroke="#6b6b80" stroke-width="1.5" stroke-linejoin="round" opacity="0.4"/>
+
+    <!-- === ARCH MORTAR / BLOCK DETAIL LINES === -->
+    <!-- These lines create the look of individual stone blocks on the arch surround -->
+    <!-- Outer ring stone courses -->
+    <!-- Horizontal mortar lines on left pillar surround -->
+    <line x1="0" y1="538" x2="80" y2="538" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="498" x2="80" y2="498" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="458" x2="80" y2="458" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="418" x2="80" y2="418" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="378" x2="80" y2="378" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="338" x2="80" y2="338" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="298" x2="80" y2="298" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="258" x2="80" y2="258" stroke="#242430" stroke-width="2"/>
+    <!-- Horizontal mortar lines on right pillar surround -->
+    <line x1="320" y1="538" x2="400" y2="538" stroke="#242430" stroke-width="2"/>
+    <line x1="320" y1="498" x2="400" y2="498" stroke="#242430" stroke-width="2"/>
+    <line x1="320" y1="458" x2="400" y2="458" stroke="#242430" stroke-width="2"/>
+    <line x1="320" y1="418" x2="400" y2="418" stroke="#242430" stroke-width="2"/>
+    <line x1="320" y1="378" x2="400" y2="378" stroke="#242430" stroke-width="2"/>
+    <line x1="320" y1="338" x2="400" y2="338" stroke="#242430" stroke-width="2"/>
+    <line x1="320" y1="298" x2="400" y2="298" stroke="#242430" stroke-width="2"/>
+    <line x1="320" y1="258" x2="400" y2="258" stroke="#242430" stroke-width="2"/>
+    <!-- Top course lines -->
+    <line x1="0" y1="118" x2="135" y2="118" stroke="#242430" stroke-width="2"/>
+    <line x1="265" y1="118" x2="400" y2="118" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="78" x2="158" y2="78" stroke="#242430" stroke-width="2"/>
+    <line x1="242" y1="78" x2="400" y2="78" stroke="#242430" stroke-width="2"/>
+    <line x1="0" y1="40" x2="400" y2="40" stroke="#242430" stroke-width="2"/>
+    <!-- Vertical mortar lines on left surround -->
+    <line x1="40" y1="220" x2="40" y2="560" stroke="#242430" stroke-width="1.5"/>
+    <!-- Vertical mortar lines on right surround -->
+    <line x1="360" y1="220" x2="360" y2="560" stroke="#242430" stroke-width="1.5"/>
+    <!-- Staggered vertical lines -->
+    <line x1="20" y1="418" x2="20" y2="538" stroke="#242430" stroke-width="1.5"/>
+    <line x1="60" y1="498" x2="60" y2="560" stroke="#242430" stroke-width="1.5"/>
+    <line x1="380" y1="418" x2="380" y2="538" stroke="#242430" stroke-width="1.5"/>
+    <line x1="340" y1="498" x2="340" y2="560" stroke="#242430" stroke-width="1.5"/>
+    <!-- Top area vertical dividers -->
+    <line x1="20" y1="40" x2="20" y2="118" stroke="#242430" stroke-width="1.5"/>
+    <line x1="60" y1="78" x2="60" y2="118" stroke="#242430" stroke-width="1.5"/>
+    <line x1="380" y1="40" x2="380" y2="118" stroke="#242430" stroke-width="1.5"/>
+    <line x1="340" y1="78" x2="340" y2="118" stroke="#242430" stroke-width="1.5"/>
+
+  </g>
+  <!-- End arch group -->
+
+  <!-- ===== LEFT DOOR PANEL ===== -->
+  <g id="door-left">
+    <!-- Main door body - left panel -->
+    <rect x="82" y="182" width="116" height="376" fill="url(#woodLeft)" />
+
+    <!-- === WOOD PLANKS - vertical separation lines === -->
+    <line x1="104" y1="182" x2="104" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="126" y1="182" x2="126" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="148" y1="182" x2="148" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="170" y1="182" x2="170" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+
+    <!-- Subtle plank highlight (light catch on edge of each plank) -->
+    <line x1="106" y1="182" x2="106" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="128" y1="182" x2="128" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="150" y1="182" x2="150" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="172" y1="182" x2="172" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+
+    <!-- === IRON BANDING - horizontal bands === -->
+    <!-- Band 1: near top -->
+    <rect x="82" y="200" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="82" y="200" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="82" y="215" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <!-- Band 1 rivets -->
+    <circle cx="95" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="95" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="115" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="115" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="140" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="140" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="165" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="165" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="186" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="186" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <!-- Band 2: upper-mid -->
+    <rect x="82" y="318" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="82" y="318" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="82" y="333" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <!-- Band 2 rivets -->
+    <circle cx="95" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="95" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="115" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="115" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="140" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="140" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="165" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="165" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="186" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="186" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <!-- Band 3: lower-mid -->
+    <rect x="82" y="436" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="82" y="436" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="82" y="451" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <!-- Band 3 rivets -->
+    <circle cx="95" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="95" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="115" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="115" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="140" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="140" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="165" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="165" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="186" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="186" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <!-- Band 4: near bottom -->
+    <rect x="82" y="530" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="82" y="530" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="82" y="545" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <!-- Band 4 rivets -->
+    <circle cx="95" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="95" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="115" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="115" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="140" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="140" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="165" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="165" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="186" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="186" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <!-- === IRON HINGES - LEFT DOOR === -->
+    <!-- Hinge 1: Top - mounted on left edge -->
+    <!-- Hinge plate on door -->
+    <rect x="82" y="220" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <!-- Decorative pointed end -->
+    <polygon points="137,220 152,227 137,234" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <!-- Hinge rivets -->
+    <circle cx="92" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="92" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="108" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="108" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="124" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="124" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <!-- Knuckle -->
+    <ellipse cx="83" cy="227" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="83" cy="227" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <!-- Hinge 2: Middle -->
+    <rect x="82" y="368" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="137,368 152,375 137,382" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="92" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="92" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="108" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="108" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="124" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="124" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="83" cy="375" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="83" cy="375" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <!-- Hinge 3: Lower -->
+    <rect x="82" y="490" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="137,490 152,497 137,504" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="92" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="92" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="108" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="108" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="124" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="124" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="83" cy="497" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="83" cy="497" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <!-- === DOOR RING HANDLE - LEFT === -->
+    <!-- Boss/mount plate -->
+    <circle cx="177" cy="390" r="14" fill="url(#bossGrad)" stroke="#5a4010" stroke-width="2"/>
+    <circle cx="177" cy="390" r="10" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+    <circle cx="177" cy="390" r="4" fill="#c9a84c" opacity="0.8"/>
+    <!-- Decorative ring on boss -->
+    <!-- Ring handle (D-ring shape, hanging down from boss) -->
+    <path d="M 165 390 A 22 22 0 1 0 189 390" fill="none" stroke="url(#ringGrad)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 165 390 A 22 22 0 1 0 189 390" fill="none" stroke="#4a4a5c" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+    <!-- Ring highlight -->
+    <path d="M 168 385 A 16 16 0 0 1 177 368" fill="none" stroke="#6b6b80" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- Door outline -->
+    <rect x="82" y="182" width="116" height="376" fill="none" stroke="#1a0f08" stroke-width="2.5"/>
+  </g>
+  <!-- End door-left -->
+
+  <!-- ===== RIGHT DOOR PANEL ===== -->
+  <g id="door-right">
+    <!-- Main door body - right panel -->
+    <rect x="202" y="182" width="116" height="376" fill="url(#woodRight)" />
+
+    <!-- === WOOD PLANKS - vertical separation lines === -->
+    <line x1="224" y1="182" x2="224" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="246" y1="182" x2="246" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="268" y1="182" x2="268" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="290" y1="182" x2="290" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+
+    <!-- Plank highlights -->
+    <line x1="226" y1="182" x2="226" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="248" y1="182" x2="248" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="270" y1="182" x2="270" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="292" y1="182" x2="292" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+
+    <!-- === IRON BANDING - RIGHT DOOR === -->
+    <!-- Band 1 -->
+    <rect x="202" y="200" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="202" y="200" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="202" y="215" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="214" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="214" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="234" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="234" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="259" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="259" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="284" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="284" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="305" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="305" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <!-- Band 2 -->
+    <rect x="202" y="318" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="202" y="318" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="202" y="333" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="214" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="214" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="234" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="234" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="259" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="259" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="284" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="284" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="305" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="305" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <!-- Band 3 -->
+    <rect x="202" y="436" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="202" y="436" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="202" y="451" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="214" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="214" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="234" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="234" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="259" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="259" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="284" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="284" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="305" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="305" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <!-- Band 4 -->
+    <rect x="202" y="530" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="202" y="530" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="202" y="545" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="214" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="214" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="234" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="234" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="259" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="259" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="284" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="284" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="305" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="305" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <!-- === IRON HINGES - RIGHT DOOR === -->
+    <!-- Hinge 1: Top -->
+    <rect x="263" y="220" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="263,220 248,227 263,234" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="308" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="308" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="292" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="292" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="276" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="276" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="317" cy="227" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="317" cy="227" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <!-- Hinge 2: Middle -->
+    <rect x="263" y="368" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="263,368 248,375 263,382" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="308" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="308" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="292" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="292" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="276" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="276" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="317" cy="375" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="317" cy="375" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <!-- Hinge 3: Lower -->
+    <rect x="263" y="490" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="263,490 248,497 263,504" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="308" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="308" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="292" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="292" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="276" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="276" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="317" cy="497" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="317" cy="497" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <!-- === DOOR RING HANDLE - RIGHT === -->
+    <!-- Boss/mount -->
+    <circle cx="223" cy="390" r="14" fill="url(#bossGrad)" stroke="#5a4010" stroke-width="2"/>
+    <circle cx="223" cy="390" r="10" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+    <circle cx="223" cy="390" r="4" fill="#c9a84c" opacity="0.8"/>
+    <!-- Ring handle -->
+    <path d="M 211 390 A 22 22 0 1 0 235 390" fill="none" stroke="url(#ringGrad)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 211 390 A 22 22 0 1 0 235 390" fill="none" stroke="#4a4a5c" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+    <!-- Ring highlight -->
+    <path d="M 214 385 A 16 16 0 0 1 223 368" fill="none" stroke="#6b6b80" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- Door outline -->
+    <rect x="202" y="182" width="116" height="376" fill="none" stroke="#1a0f08" stroke-width="2.5"/>
+  </g>
+  <!-- End door-right -->
+
+  <!-- ===== CENTER CRACK / GAP ===== -->
+  <!-- The gap between the two doors where they meet -->
+  <rect x="198" y="182" width="4" height="376" fill="#050508"/>
+  <!-- Light leaking through the crack -->
+  <rect x="199" y="182" width="2" height="376" fill="#c9a84c" opacity="0.15"/>
+  <!-- Crack glow -->
+  <rect x="197" y="182" width="6" height="376" fill="url(#crackGlow)" opacity="0.3"/>
+  <!-- Bright spots in the crack (uneven light leaking through) -->
+  <rect x="199" y="280" width="2" height="30" fill="#e8c060" opacity="0.4"/>
+  <rect x="199" y="360" width="2" height="50" fill="#e8c060" opacity="0.5"/>
+  <rect x="199" y="450" width="2" height="25" fill="#e8c060" opacity="0.3"/>
+
+  <!-- ===== THRESHOLD / STEP ===== -->
+  <g id="threshold">
+    <!-- Step 1: main threshold stone -->
+    <rect x="60" y="558" width="280" height="22" rx="2" fill="url(#thresholdGrad)" stroke="#242430" stroke-width="2"/>
+    <!-- Highlight on top edge -->
+    <rect x="60" y="558" width="280" height="4" fill="#8e8ea8" opacity="0.3" rx="2"/>
+    <!-- Stone block divisions -->
+    <line x1="130" y1="560" x2="130" y2="580" stroke="#242430" stroke-width="2"/>
+    <line x1="200" y1="560" x2="200" y2="580" stroke="#242430" stroke-width="2"/>
+    <line x1="270" y1="560" x2="270" y2="580" stroke="#242430" stroke-width="2"/>
+    <!-- Step 2: lower step -->
+    <rect x="40" y="580" width="320" height="16" rx="2" fill="#3a3a4a" stroke="#242430" stroke-width="2"/>
+    <!-- Highlight on step 2 top -->
+    <rect x="40" y="580" width="320" height="3" fill="#6b6b80" opacity="0.3" rx="2"/>
+    <!-- Step 2 stone divisions -->
+    <line x1="120" y1="582" x2="120" y2="596" stroke="#242430" stroke-width="1.5"/>
+    <line x1="200" y1="582" x2="200" y2="596" stroke="#242430" stroke-width="1.5"/>
+    <line x1="280" y1="582" x2="280" y2="596" stroke="#242430" stroke-width="1.5"/>
+    <!-- Ground/base -->
+    <rect x="0" y="596" width="400" height="4" fill="#2e2e3a"/>
+    <!-- Shadow under door onto threshold -->
+    <rect x="80" y="558" width="240" height="6" fill="#000000" opacity="0.3" rx="1"/>
+  </g>
+
+  <!-- ===== FINAL OVERLAY DETAILS ===== -->
+  <!-- Arch inner shadow (depth at the arch opening edge) -->
+  <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+        fill="none" stroke="#000000" stroke-width="12" stroke-linejoin="round" opacity="0.4"/>
+  <!-- Subtle top shadow over doors from arch -->
+  <ellipse cx="200" cy="190" rx="100" ry="20" fill="#000000" opacity="0.3"/>
+
+  <!-- Door surface worn/aging texture - subtle overlaid lines -->
+  <line x1="90" y1="240" x2="90" y2="270" stroke="#2d1f0f" stroke-width="1" opacity="0.4"/>
+  <line x1="155" y1="260" x2="155" y2="310" stroke="#2d1f0f" stroke-width="1" opacity="0.3"/>
+  <line x1="245" y1="250" x2="245" y2="290" stroke="#2d1f0f" stroke-width="1" opacity="0.4"/>
+  <line x1="310" y1="230" x2="310" y2="280" stroke="#2d1f0f" stroke-width="1" opacity="0.3"/>
+
+</svg>

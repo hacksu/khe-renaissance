@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
+  <defs>
+    <!-- Atmospheric blur filter for back layer — suggests haze and distance -->
+    <filter id="atmospheric-haze" x="-2%" y="-2%" width="104%" height="104%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.4" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="1 0 0.08 0 0
+                0 1 0.08 0 0
+                0 0 1    0 0
+                0 0 0    1 0" result="tinted"/>
+    </filter>
+
+    <!-- Subtle vignette for front hills to ground them -->
+    <filter id="ground-shadow" x="0%" y="0%" width="100%" height="100%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- parallax scroll: move layers at different rates -->
+
+  <!-- ============================================================
+       BACK LAYER — farthest, tallest, lightest, atmospheric haze
+       5-7 large peaks with slightly worn/rounded tips
+       Color: #1a2535
+       ============================================================ -->
+  <g id="mountains-back" filter="url(#atmospheric-haze)">
+    <!--
+      Path traces the full jagged skyline from left edge to right edge,
+      then sweeps down and back along the bottom of the viewBox.
+      Peaks are intentionally asymmetric — old, eroded mountain range.
+    -->
+    <path
+      d="
+        M -10,400
+        L -10,310
+        C 20,295  40,285  60,260
+        L 105,175
+        C 110,168 114,165 118,168
+        L 145,215
+        C 150,222 155,225 162,220
+        L 200,155
+        C 205,147 210,143 215,146
+        L 255,210
+        C 260,217 266,220 274,216
+        L 320,118
+        C 326,108 332,104 338,108
+        L 370,160
+        C 375,167 381,170 390,166
+        L 435,88
+        C 441,78  448,74  455,78
+        L 490,135
+        C 496,143 503,147 512,143
+        L 560,52
+        C 566,41  573,37  580,41
+        L 618,110
+        C 624,119 631,123 640,119
+        L 680,72
+        C 686,62  693,58  700,62
+        L 742,130
+        C 748,139 755,143 763,139
+        L 810,95
+        C 816,85  823,81  830,85
+        L 875,165
+        C 881,174 888,178 897,174
+        L 940,115
+        C 946,105 953,101 960,105
+        L 1005,185
+        C 1011,194 1018,198 1027,194
+        L 1075,135
+        C 1081,125 1088,121 1095,125
+        L 1140,200
+        C 1146,209 1152,212 1160,210
+        L 1210,280
+        L 1210,400
+        Z
+      "
+      fill="#1a2535"
+    />
+  </g>
+
+  <!-- ============================================================
+       MID LAYER — medium peaks, more jagged and defined
+       Snow caps on 3 peaks (handled separately in #snow-caps group)
+       Color: #2e2e3a
+       ============================================================ -->
+  <g id="mountains-mid">
+    <!--
+      4–6 peaks, more angular than the back range.
+      Positioned slightly lower so they read as closer.
+      Snow cap notches are built into the path geometry so the
+      #snow-caps group triangles align precisely.
+    -->
+    <path
+      d="
+        M -10,400
+        L -10,340
+        L 30,320
+        L 80,295
+        L 130,310
+        L 175,250
+        L 195,265
+        L 240,220
+        C 244,213 248,208 253,210
+        L 290,255
+        L 335,185
+        C 340,177 345,172 351,175
+        L 395,240
+        L 450,155
+        C 456,146 462,141 469,145
+        L 510,200
+        L 558,128
+        C 564,118 570,113 577,117
+        L 615,175
+        L 660,95
+        C 666,84  673,79  680,83
+        L 720,155
+        L 770,118
+        C 776,108 783,104 790,108
+        L 840,175
+        L 890,130
+        C 896,120 903,116 910,120
+        L 955,185
+        L 1010,145
+        C 1016,135 1023,131 1030,135
+        L 1080,205
+        L 1130,165
+        C 1136,155 1143,151 1150,155
+        L 1210,230
+        L 1210,400
+        Z
+      "
+      fill="#2e2e3a"
+    />
+  </g>
+
+  <!-- ============================================================
+       SNOW CAPS — lighter triangles at 3 mid-layer peak tips
+       Color: #8e8ea8
+       Coordinates matched to peak vertices in #mountains-mid path
+       ============================================================ -->
+  <g id="snow-caps">
+    <!-- Snow cap: peak at approx x=660, y=95 -->
+    <polygon
+      points="660,95  645,128  675,128"
+      fill="#8e8ea8"
+      opacity="0.85"
+    />
+    <!-- Snow cap: peak at approx x=558, y=128 -->
+    <polygon
+      points="558,128  543,158  573,158"
+      fill="#8e8ea8"
+      opacity="0.80"
+    />
+    <!-- Snow cap: peak at approx x=450, y=155 -->
+    <polygon
+      points="450,155  436,183  464,183"
+      fill="#8e8ea8"
+      opacity="0.75"
+    />
+    <!-- Tiny secondary snow accent on x=335,y=185 peak -->
+    <polygon
+      points="335,185  324,208  346,208"
+      fill="#8e8ea8"
+      opacity="0.60"
+    />
+  </g>
+
+  <!-- ============================================================
+       FRONT LAYER — closest rolling hills, darkest
+       2–3 broad peaks, overlap the mid layer base
+       Color: #242430
+       ============================================================ -->
+  <g id="mountains-front">
+    <!--
+      Lower, rounder silhouette — these are closer foothills.
+      Wide sweeping curves give them mass and weight.
+      They bleed off both horizontal edges so there's no gap.
+    -->
+    <path
+      d="
+        M -10,400
+        L -10,370
+        C 30,358  70,348  110,340
+        C 150,332 185,328 215,322
+        C 255,314 290,302 330,285
+        C 360,272 390,265 420,262
+        C 455,258 488,255 520,252
+        C 560,248 595,245 620,248
+        C 648,251 672,258 700,265
+        C 730,273 760,278 795,278
+        C 830,278 862,272 895,262
+        C 928,252 960,242 995,238
+        C 1025,234 1058,235 1090,242
+        C 1122,249 1150,260 1175,272
+        C 1192,281 1205,288 1210,292
+        L 1210,400
+        Z
+      "
+      fill="#242430"
+    />
+  </g>
+
+</svg>
