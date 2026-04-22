@@ -124,7 +124,7 @@ export const Projects = {
             prisma.application.updateMany({ where: { projectId: id }, data: { projectId: null } }),
             prisma.pairCriterionResult.deleteMany({ where: { pairComparison: { OR: [{ projectAId: id }, { projectBId: id }] } } }),
             prisma.pairComparison.deleteMany({ where: { OR: [{ projectAId: id }, { projectBId: id }] } }),
-            prisma.pairAssignment.deleteMany({ where: { OR: [{ projectAId: id }, { projectBId: id }] } }),
+            prisma.tableVisit.deleteMany({ where: { projectId: id } }),
             prisma.crowdBTState.deleteMany({ where: { projectId: id } }),
             prisma.project.delete({ where: { id } }),
         ]);
