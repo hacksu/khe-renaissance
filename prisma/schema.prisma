@@ -210,6 +210,9 @@ model PairAssignment {
   completedAt DateTime?
 
   @@unique([judgeId, projectAId, projectBId])
+  @@index([judgeId])
+  @@index([projectAId])
+  @@index([projectBId])
   @@map("pair_assignment")
 }
 
@@ -228,6 +231,9 @@ model PairComparison {
 
   createdAt DateTime @default(now())
 
+  @@index([judgeId])
+  @@index([projectAId])
+  @@index([projectBId])
   @@map("pair_comparison")
 }
 
@@ -241,6 +247,8 @@ model PairCriterionResult {
   winner String // 'A' | 'B' | 'OPT_OUT_A' | 'OPT_OUT_B'
 
   @@unique([pairComparisonId, criterionId])
+  @@index([pairComparisonId])
+  @@index([criterionId])
   @@map("pair_criterion_result")
 }
 
@@ -256,5 +264,7 @@ model CrowdBTState {
   comparisonCount Int   @default(0)
 
   @@unique([projectId, criterionId])
+  @@index([projectId])
+  @@index([criterionId])
   @@map("crowd_bt_state")
 }
