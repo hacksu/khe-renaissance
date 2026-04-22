@@ -94,6 +94,7 @@ export const actions: Actions = {
         const maxScore = Number(form.get("maxScore"));
         const order = Number(form.get("order"));
         const optional = form.get("optional") === "on";
+        const allowOptOut = form.get("allowOptOut") === "on";
 
         if (!id || !name) return fail(400, { missing: true });
 
@@ -102,7 +103,7 @@ export const actions: Actions = {
         try {
             await prisma.judgingCriterion.update({
                 where: { id },
-                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional }
+                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional, allowOptOut }
             });
         } catch (e) {
             return fail(500, { error: "Failed to update criterion" });

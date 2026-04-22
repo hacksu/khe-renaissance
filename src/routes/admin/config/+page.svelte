@@ -153,6 +153,10 @@
                                 <input type="checkbox" name="optional" checked={editingCriterion.optional} class="rounded border-secondary/30 text-accent focus:ring-accent" />
                                 <span>Optional</span>
                             </label>
+                            <label class="flex items-center gap-2 text-sm text-secondary cursor-pointer">
+                                <input type="checkbox" name="allowOptOut" checked={editingCriterion.allowOptOut} class="rounded border-secondary/30 text-accent focus:ring-accent" />
+                                <span>Allow opt-out (judges can skip this criterion)</span>
+                            </label>
                             <div class="flex gap-2 justify-end">
                                 <button type="button" onclick={() => editingCriterion = null} class="text-xs text-secondary/60 hover:underline">Cancel</button>
                                 <button type="submit" class="text-xs text-accent font-bold hover:underline">Save</button>
@@ -166,6 +170,9 @@
                                     <span class="text-xs bg-secondary/10 px-1 rounded font-mono">Max: {criterion.maxScore}</span>
                                     {#if criterion.optional}
                                         <span class="text-xs bg-secondary/20 text-secondary/80 px-1 rounded font-bold">Optional</span>
+                                    {/if}
+                                    {#if criterion.allowOptOut}
+                                        <span class="text-xs bg-accent/10 text-accent px-1 rounded font-bold">Allow Opt-Out</span>
                                     {/if}
                                 </div>
                                 <p class="text-xs text-secondary/60">Slug: {criterion.slug}</p>
