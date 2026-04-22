@@ -7,6 +7,7 @@
     import Input from "$components/form/Input.svelte";
     import Modal from "$components/Modal.svelte";
     import { Utils } from "$lib/util";
+    import { toCsv } from "$lib/exportUtils";
     import { dropbox } from "better-auth/social-providers";
 
     const { data } = $props();
@@ -36,8 +37,8 @@
             })
     )
 
-    function downloadCsv(content: string, filename: string) {
-        const blob = new Blob([content], { type: 'text/csv' });
+    function downloadFile(content: string, filename: string, type: string) {
+        const blob = new Blob([content], { type });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -46,10 +47,14 @@
         URL.revokeObjectURL(url);
     }
 
+    function downloadExport(records: Record<string, unknown>[], baseName: string) {
+        downloadFile(toCsv(records), `${baseName}.csv`, 'text/csv');
+        downloadFile(JSON.stringify(records, null, 2), `${baseName}.json`, 'application/json');
+    }
+
     function exportEmails() {
         let emailsToExport = data.applications;
 
-        // Filter based on selected export filter
         if (emailExportFilter === 'approved') {
             emailsToExport = emailsToExport.filter(app => app.approved);
         } else if (emailExportFilter === 'submitted') {
@@ -58,48 +63,56 @@
             emailsToExport = emailsToExport.filter(app => !app.submitted);
         }
 
-        const emails = emailsToExport
-            .map(app => (app.email || "").trim() || (app.user.email || "").trim())
-            .filter(Boolean)
-            .join('\n');
+        const records = emailsToExport
+            .map(app => ({
+                email: (app.email || '').trim() || (app.user.email || '').trim(),
+                firstName: app.firstName,
+                lastName: app.lastName,
+            }))
+            .filter(r => r.email);
 
-        if (!emails) {
+        if (records.length === 0) {
             alert(`No emails found for ${emailExportFilter} applications`);
             return;
         }
 
-        downloadCsv(emails, `${emailExportFilter}-emails-${new Date().toISOString().split('T')[0]}.csv`);
+        const date = new Date().toISOString().split('T')[0];
+        downloadExport(records, `${emailExportFilter}-emails-${date}`);
     }
 
     function exportIdeas() {
-        const applicationsWithIdeas = data.applications.filter(app => app.projectIdea);
+        const records = data.applications
+            .filter(app => app.projectIdea)
+            .map(app => ({
+                firstName: app.firstName,
+                lastName: app.lastName,
+                projectIdea: app.projectIdea,
+            }));
 
-        if (applicationsWithIdeas.length === 0) {
+        if (records.length === 0) {
             alert('No project ideas to export');
             return;
         }
 
-        const ideas = applicationsWithIdeas
-            .map(app => `"${app.projectIdea.replace(/"/g, '""')}"`)
-            .join('\n');
-
-        downloadCsv(ideas, `project-ideas-${new Date().toISOString().split('T')[0]}.csv`);
+        const date = new Date().toISOString().split('T')[0];
+        downloadExport(records, `project-ideas-${date}`);
     }
 
-    // export checked-in user's names
     function exportNames() {
-        const checkedInApplications = data.applications.filter(app => app.checkedIn);
+        const records = data.applications
+            .filter(app => app.checkedIn)
+            .map(app => ({
+                firstName: app.firstName,
+                lastName: app.lastName,
+            }));
 
-        if (checkedInApplications.length === 0) {
+        if (records.length === 0) {
             alert('No checked-in participants to export');
             return;
         }
 
-        const participants = checkedInApplications
-            .map(app => `"${Utils.concatExclude(" ", app.firstName, app.lastName)}"`)
-            .join('\n');
-
-        downloadCsv(participants, `checked-in-participants-${new Date().toISOString().split('T')[0]}.csv`);
+        const date = new Date().toISOString().split('T')[0];
+        downloadExport(records, `checked-in-participants-${date}`);
     }
 
     function handleDeleteConfirm() {
