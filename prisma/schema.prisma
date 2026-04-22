@@ -25,11 +25,12 @@ model User {
   accounts      Account[]
   Application   Application[]
 
-  judgeAssignments JudgeAssignment[]
-  judgements       Judgement[]
+  pairAssignments  PairAssignment[]
+  pairComparisons  PairComparison[]
 
-  role String?
-  curve Float   @default(0.0)
+  role       String?
+  curve      Float   @default(0.0)
+  judgeTrack String? // null = general judge, set = track-specific judge (track name)
 
   @@unique([email])
   @@map("user")
@@ -129,86 +130,53 @@ model Application {
 }
 
 model Project {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   description String?
   tableNumber String?
-  
+
   // Legacy track string (deprecated, use trackId relation)
-  track       String   @default("General")
-  
-  trackId     String?
-  Track       Track?   @relation(fields: [trackId], references: [id])
-  
-  members          Application[]
-  judgements       Judgement[]
-  judgeAssignments JudgeAssignment[]
-  
+  track   String @default("General")
+
+  trackId String?
+  Track   Track?  @relation(fields: [trackId], references: [id])
+
+  members Application[]
+
+  pairAssignmentsA PairAssignment[] @relation("PairAssignmentA")
+  pairAssignmentsB PairAssignment[] @relation("PairAssignmentB")
+  pairComparisonsA PairComparison[] @relation("PairComparisonA")
+  pairComparisonsB PairComparison[] @relation("PairComparisonB")
+  crowdBTStates    CrowdBTState[]
+
   @@map("project")
 }
 
 model Track {
-  id          String   @id @default(uuid())
-  name        String   @unique
+  id          String  @id @default(uuid())
+  name        String  @unique
   description String?
-  
-  projects    Project[]
-  
+
+  projects Project[]
+
   @@map("track")
 }
 
 model JudgingCriterion {
-  id          String   @id @default(uuid())
-  slug        String   @unique
+  id          String  @id @default(uuid())
+  slug        String  @unique
   name        String
   description String?
-  maxScore    Int      @default(5)
-  weight      Float    @default(1.0)
-  order       Int      @default(0)
-  optional    Boolean  @default(false)
+  maxScore    Int     @default(5)
+  weight      Float   @default(1.0)
+  order       Int     @default(0)
+  optional    Boolean @default(false)
+  allowOptOut Boolean @default(false)
 
-  scores      JudgementScore[]
+  pairResults   PairCriterionResult[]
+  crowdBTStates CrowdBTState[]
 
   @@map("judging_criterion")
-}
-
-model JudgeAssignment {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
-  status     String   @default("assigned") // 'assigned', 'completed', 'skipped'
-  skipReason String?
-  priority   Int      @default(0)
-  isManual   Boolean  @default(false)
-
-  createdAt   DateTime  @default(now())
-  startedAt   DateTime?
-  completedAt DateTime?
-
-  @@unique([userId, projectId])
-  @@map("judge_assignment")
-}
-
-model Judgement {
-  id           String   @id @default(uuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  projectId    String
-  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
-  // Dynamic Scores
-  scores       JudgementScore[]
-  
-  comment      String? // @db.Text is not needed for raw postgres usually unless specific, String is fine
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@unique([userId, projectId])
-  @@map("judgement")
 }
 
 model Setting {
@@ -226,14 +194,67 @@ model ReminderSignup {
   @@map("reminder_signup")
 }
 
-model JudgementScore {
-  id           String           @id @default(uuid())
-  judgementId  String
-  judgement    Judgement        @relation(fields: [judgementId], references: [id], onDelete: Cascade)
-  criterionId  String
-  criterion    JudgingCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
-  score        Int
+model PairAssignment {
+  id         String  @id @default(uuid())
+  judgeId    String
+  judge      User    @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  projectAId String
+  projectA   Project @relation("PairAssignmentA", fields: [projectAId], references: [id], onDelete: Cascade)
+  projectBId String
+  projectB   Project @relation("PairAssignmentB", fields: [projectBId], references: [id], onDelete: Cascade)
 
-  @@unique([judgementId, criterionId])
-  @@map("judgement_score")
+  status     String  @default("assigned") // 'assigned', 'completed', 'skipped'
+  skipReason String?
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@unique([judgeId, projectAId, projectBId])
+  @@map("pair_assignment")
+}
+
+model PairComparison {
+  id         String  @id @default(uuid())
+  judgeId    String
+  judge      User    @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  projectAId String
+  projectA   Project @relation("PairComparisonA", fields: [projectAId], references: [id], onDelete: Cascade)
+  projectBId String
+  projectB   Project @relation("PairComparisonB", fields: [projectBId], references: [id], onDelete: Cascade)
+
+  comment String
+
+  results PairCriterionResult[]
+
+  createdAt DateTime @default(now())
+
+  @@map("pair_comparison")
+}
+
+model PairCriterionResult {
+  id               String           @id @default(uuid())
+  pairComparisonId String
+  pairComparison   PairComparison   @relation(fields: [pairComparisonId], references: [id], onDelete: Cascade)
+  criterionId      String
+  criterion        JudgingCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
+
+  winner String // 'A' | 'B' | 'OPT_OUT_A' | 'OPT_OUT_B'
+
+  @@unique([pairComparisonId, criterionId])
+  @@map("pair_criterion_result")
+}
+
+model CrowdBTState {
+  id          String           @id @default(uuid())
+  projectId   String
+  project     Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  criterionId String
+  criterion   JudgingCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
+
+  alpha           Float @default(1.0)
+  beta            Float @default(1.0)
+  comparisonCount Int   @default(0)
+
+  @@unique([projectId, criterionId])
+  @@map("crowd_bt_state")
 }
