@@ -74,6 +74,12 @@
             {/each}
         </div>
     </div>
+
+    <!-- Sponsorship CTA -->
+    <p class="text-center text-castle-stoneHighlight text-sm">
+        Interested in sponsoring?
+        <a href="mailto:staff@khe.io" class="sponsor-cta">Contact us!</a>
+    </p>
 </div>
 
 <style>
@@ -108,4 +114,12 @@
 
     .sponsor-tile.royal { width: 220px; height: 120px; }
     .sponsor-tile.ally  { width: 160px; height: 90px;  }
+
+    .sponsor-cta {
+        color: #c9a84c;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        transition: color 0.2s;
+    }
+    .sponsor-cta:hover { color: #ffb347; }
 </style>
