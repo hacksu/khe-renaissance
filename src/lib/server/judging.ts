@@ -1,116 +1,235 @@
 import { prisma } from '$lib/server/prisma';
 import { crowdBTUpdate, crowdBTScore } from '$lib/server/crowdbt';
+import type { TableVisit, PairComparison } from '@prisma/client';
+
+export type { TableVisit, PairComparison };
+
+export type JudgeWithVisit = {
+	id: string;
+	name: string;
+	email: string;
+	role: string | null;
+	judgeTrack: string | null;
+	curve: number;
+	_count: { tableVisits: number };
+	tableVisits: (TableVisit & {
+		project: {
+			name: string;
+			tableNumber: string | null;
+		};
+	})[];
+};
 
 export const Judging = {
 	/**
-	 * Upsert a CrowdBTState row with defaults alpha=1, beta=1 if it doesn't exist.
+	 * Assign the next table for a judge to visit.
+	 * Returns an existing assigned/active visit if one exists, otherwise picks
+	 * the least-judged unvisited project and creates a new TableVisit.
 	 */
-	getOrCreateCrowdBTState: async (projectId: string, criterionId: string) => {
-		return await prisma.crowdBTState.upsert({
-			where: { projectId_criterionId: { projectId, criterionId } },
-			update: {},
-			create: { projectId, criterionId, alpha: 1, beta: 1, comparisonCount: 0 }
-		});
-	},
-
-	/**
-	 * Sequential pair assignment for a judge.
-	 */
-	assignNextPair: async (judgeId: string) => {
-		// 1. Check if judge already has an assigned pair
-		const existing = await prisma.pairAssignment.findFirst({
-			where: { judgeId, status: 'assigned' }
+	assignNextTable: async (judgeId: string): Promise<TableVisit | null> => {
+		// 1. Check for an existing assigned or active visit
+		const existing = await prisma.tableVisit.findFirst({
+			where: { judgeId, status: { in: ['assigned', 'active'] } },
+			orderBy: { sequence: 'asc' }
 		});
 		if (existing) return existing;
 
-		// 2. Find all eligible projects (with a tableNumber)
-		const projects = await prisma.project.findMany({
+		// 2. Find all projects with a tableNumber
+		const allProjects = await prisma.project.findMany({
 			where: { tableNumber: { not: null } },
 			select: { id: true, tableNumber: true },
 			orderBy: { tableNumber: 'asc' }
 		});
 
-		// 3. Find all pairs this judge has already been assigned
-		const alreadyAssigned = await prisma.pairAssignment.findMany({
+		// 3. Find all projects already visited by this judge
+		const alreadyVisited = await prisma.tableVisit.findMany({
 			where: { judgeId },
-			select: { projectAId: true, projectBId: true }
+			select: { projectId: true, sequence: true, status: true },
+			orderBy: { sequence: 'desc' }
 		});
 
-		const assignedSet = new Set(
-			alreadyAssigned.map((a) => `${a.projectAId}:${a.projectBId}`)
-		);
+		const visitedProjectIds = new Set(alreadyVisited.map((v) => v.projectId));
 
-		// 4. Find first available pair (projectAId < projectBId) not yet assigned to this judge
-		let candidateA: (typeof projects)[0] | null = null;
-		let candidateB: (typeof projects)[0] | null = null;
+		// Unvisited projects
+		const unvisited = allProjects.filter((p) => !visitedProjectIds.has(p.id));
+		if (unvisited.length === 0) return null;
 
-		outer: for (let i = 0; i < projects.length; i++) {
-			for (let j = i + 1; j < projects.length; j++) {
-				const a = projects[i];
-				const b = projects[j];
-				const key = `${a.id}:${b.id}`;
-				if (!assignedSet.has(key)) {
-					candidateA = a;
-					candidateB = b;
-					break outer;
+		// 4. Count total TableVisits per project across all judges
+		const visitCounts = await prisma.tableVisit.groupBy({
+			by: ['projectId'],
+			_count: { id: true }
+		});
+
+		const countMap = new Map(visitCounts.map((v) => [v.projectId, v._count.id]));
+
+		// 5. Get the most recent completed visit for proximity tiebreaker
+		const lastCompleted = alreadyVisited.find((v) => v.status === 'completed') ?? alreadyVisited[0];
+		const lastTableNumber = lastCompleted
+			? (allProjects.find((p) => p.id === lastCompleted.projectId)?.tableNumber ?? null)
+			: null;
+
+		// Sort by fewest visits, then proximity to last table
+		const sorted = [...unvisited].sort((a, b) => {
+			const aCount = countMap.get(a.id) ?? 0;
+			const bCount = countMap.get(b.id) ?? 0;
+			if (aCount !== bCount) return aCount - bCount;
+
+			// Tiebreaker: proximity to last table (by tableNumber string comparison / numeric)
+			if (lastTableNumber !== null) {
+				const lastNum = parseInt(lastTableNumber, 10);
+				const aNum = parseInt(a.tableNumber!, 10);
+				const bNum = parseInt(b.tableNumber!, 10);
+				if (!isNaN(lastNum) && !isNaN(aNum) && !isNaN(bNum)) {
+					return Math.abs(aNum - lastNum) - Math.abs(bNum - lastNum);
 				}
+				// Fallback: lexicographic proximity
+				const aDist = Math.abs(a.tableNumber!.localeCompare(lastTableNumber));
+				const bDist = Math.abs(b.tableNumber!.localeCompare(lastTableNumber));
+				return aDist - bDist;
 			}
-		}
 
-		if (!candidateA || !candidateB) return null;
+			return 0;
+		});
 
-		// 5. Create and return the PairAssignment
-		// Wrap in try/catch to handle concurrent inserts hitting the unique constraint
-		try {
-			return await prisma.pairAssignment.create({
-				data: {
-					judgeId,
-					projectAId: candidateA.id,
-					projectBId: candidateB.id,
-					status: 'assigned'
-				}
-			});
-		} catch (e: any) {
-			if (e?.code === 'P2002') {
-				// A concurrent request already created an assignment for this judge
-				return await prisma.pairAssignment.findFirst({
-					where: { judgeId, status: 'assigned' }
-				});
+		const candidate = sorted[0];
+		if (!candidate) return null;
+
+		// 6. Get the judge's current max sequence number
+		const maxSeqRecord = await prisma.tableVisit.aggregate({
+			where: { judgeId },
+			_max: { sequence: true }
+		});
+		const maxSeq = maxSeqRecord._max.sequence ?? 0;
+
+		// 7. Create and return a new TableVisit
+		return await prisma.tableVisit.create({
+			data: {
+				judgeId,
+				projectId: candidate.id,
+				sequence: maxSeq + 1,
+				status: 'assigned'
 			}
-			throw e;
-		}
+		});
 	},
 
 	/**
-	 * Get a pair assignment with full details for the judging UI.
+	 * Mark a TableVisit as active (judge has arrived at the table).
 	 */
-	getPairForJudging: async (pairAssignmentId: string, judgeId: string) => {
-		const pairAssignment = await prisma.pairAssignment.findUnique({
-			where: { id: pairAssignmentId },
+	startJudging: async (judgeId: string, visitId: string): Promise<TableVisit> => {
+		const visit = await prisma.tableVisit.findUnique({ where: { id: visitId } });
+		if (!visit || visit.judgeId !== judgeId) {
+			throw new Error('TableVisit not found or does not belong to this judge');
+		}
+		return await prisma.tableVisit.update({
+			where: { id: visitId },
+			data: { status: 'active', startedAt: new Date() }
+		});
+	},
+
+	/**
+	 * Get the active visit with full project/track details and judging criteria.
+	 */
+	getActiveVisit: async (judgeId: string, visitId: string) => {
+		const visit = await prisma.tableVisit.findUnique({
+			where: { id: visitId },
+			include: {
+				project: { include: { Track: true } }
+			}
+		});
+		if (!visit || visit.judgeId !== judgeId) {
+			throw new Error('TableVisit not found or does not belong to this judge');
+		}
+		const criteria = await prisma.judgingCriterion.findMany({
+			orderBy: { order: 'asc' }
+		});
+		return { visit, criteria };
+	},
+
+	/**
+	 * Submit feedback for a completed table visit and automatically create
+	 * a pairwise comparison with the previous table.
+	 */
+	submitFeedback: async (
+		judgeId: string,
+		visitId: string,
+		feedback: string
+	): Promise<{ nextVisit: TableVisit | null; comparison: PairComparison | null }> => {
+		let nextVisit: TableVisit | null = null;
+		let comparison: PairComparison | null = null;
+
+		await prisma.$transaction(async (tx) => {
+			// 1. Get the current visit and verify ownership
+			const current = await tx.tableVisit.findUnique({ where: { id: visitId } });
+			if (!current || current.judgeId !== judgeId) {
+				throw new Error('TableVisit not found or does not belong to this judge');
+			}
+
+			// Mark as completed
+			await tx.tableVisit.update({
+				where: { id: visitId },
+				data: { status: 'completed', completedAt: new Date(), feedback }
+			});
+
+			// 2. Get the previous completed visit (sequence = current.sequence - 1)
+			if (current.sequence > 1) {
+				const prev = await tx.tableVisit.findFirst({
+					where: { judgeId, sequence: current.sequence - 1 }
+				});
+
+				if (prev) {
+					// a. Create a PairComparison
+					comparison = await tx.pairComparison.create({
+						data: {
+							judgeId,
+							projectAId: prev.projectId,
+							projectBId: current.projectId,
+							comment: ''
+						}
+					});
+
+					// b. Upsert CrowdBTState rows for both projects × all criteria
+					const criteria = await tx.judgingCriterion.findMany({ select: { id: true } });
+					const projectIds = [prev.projectId, current.projectId];
+
+					for (const projectId of projectIds) {
+						for (const criterion of criteria) {
+							await tx.crowdBTState.upsert({
+								where: {
+									projectId_criterionId: { projectId, criterionId: criterion.id }
+								},
+								update: {},
+								create: { projectId, criterionId: criterion.id, alpha: 1, beta: 1, comparisonCount: 0 }
+							});
+						}
+					}
+				}
+			}
+		});
+
+		// 3. Assign next table (outside transaction to avoid nesting issues)
+		nextVisit = await Judging.assignNextTable(judgeId);
+
+		return { nextVisit, comparison };
+	},
+
+	/**
+	 * Get a PairComparison with full project/track details and judging criteria.
+	 */
+	getComparison: async (judgeId: string, comparisonId: string) => {
+		const comparison = await prisma.pairComparison.findUnique({
+			where: { id: comparisonId },
 			include: {
 				projectA: { include: { Track: true } },
 				projectB: { include: { Track: true } }
 			}
 		});
-
-		if (!pairAssignment || pairAssignment.judgeId !== judgeId) return null;
-
+		if (!comparison || comparison.judgeId !== judgeId) {
+			throw new Error('PairComparison not found or does not belong to this judge');
+		}
 		const criteria = await prisma.judgingCriterion.findMany({
 			orderBy: { order: 'asc' }
 		});
-
-		// Get the judge's most recent completed PairComparison's comment
-		const lastComparison = await prisma.pairComparison.findFirst({
-			where: { judgeId },
-			orderBy: { createdAt: 'desc' },
-			select: { comment: true }
-		});
-
-		return {
-			pairAssignment,
-			criteria,
-			previousComment: lastComparison?.comment ?? null
-		};
+		return { comparison, criteria };
 	},
 
 	/**
@@ -118,37 +237,28 @@ export const Judging = {
 	 */
 	submitComparison: async (
 		judgeId: string,
-		pairAssignmentId: string,
+		comparisonId: string,
 		results: { criterionId: string; winner: 'A' | 'B' | 'OPT_OUT_A' | 'OPT_OUT_B' }[],
 		comment: string
 	) => {
 		return await prisma.$transaction(async (tx) => {
-			// 1. Get the PairAssignment and verify ownership
-			const pairAssignment = await tx.pairAssignment.findUnique({
-				where: { id: pairAssignmentId }
+			// 1. Get the PairComparison and verify ownership
+			const comparison = await tx.pairComparison.findUnique({
+				where: { id: comparisonId }
 			});
-
-			if (!pairAssignment || pairAssignment.judgeId !== judgeId) {
-				throw new Error('PairAssignment not found or does not belong to this judge');
+			if (!comparison || comparison.judgeId !== judgeId) {
+				throw new Error('PairComparison not found or does not belong to this judge');
 			}
 
-			const { projectAId, projectBId } = pairAssignment;
+			const { projectAId, projectBId } = comparison;
 
-			// 2. Create a PairComparison with comment and results
-			const comparison = await tx.pairComparison.create({
-				data: {
-					judgeId,
-					projectAId,
-					projectBId,
-					comment,
-					results: {
-						create: results.map((r) => ({
-							criterionId: r.criterionId,
-							winner: r.winner
-						}))
-					}
-				},
-				include: { results: true }
+			// 2. Create PairCriterionResults
+			await tx.pairCriterionResult.createMany({
+				data: results.map((r) => ({
+					pairComparisonId: comparisonId,
+					criterionId: r.criterionId,
+					winner: r.winner
+				}))
 			});
 
 			// 3. Update CrowdBT state for non-opt-out results
@@ -161,24 +271,44 @@ export const Judging = {
 				// Upsert CrowdBTState for winner and loser (ensure rows exist)
 				await Promise.all([
 					tx.crowdBTState.upsert({
-						where: { projectId_criterionId: { projectId: winnerId, criterionId: result.criterionId } },
+						where: {
+							projectId_criterionId: { projectId: winnerId, criterionId: result.criterionId }
+						},
 						update: {},
-						create: { projectId: winnerId, criterionId: result.criterionId, alpha: 1, beta: 1, comparisonCount: 0 }
+						create: {
+							projectId: winnerId,
+							criterionId: result.criterionId,
+							alpha: 1,
+							beta: 1,
+							comparisonCount: 0
+						}
 					}),
 					tx.crowdBTState.upsert({
-						where: { projectId_criterionId: { projectId: loserId, criterionId: result.criterionId } },
+						where: {
+							projectId_criterionId: { projectId: loserId, criterionId: result.criterionId }
+						},
 						update: {},
-						create: { projectId: loserId, criterionId: result.criterionId, alpha: 1, beta: 1, comparisonCount: 0 }
+						create: {
+							projectId: loserId,
+							criterionId: result.criterionId,
+							alpha: 1,
+							beta: 1,
+							comparisonCount: 0
+						}
 					})
 				]);
 
-				// Re-read fresh values inside the transaction to avoid using stale upsert results
+				// Re-read fresh values inside the transaction
 				const [winnerState, loserState] = await Promise.all([
 					tx.crowdBTState.findUniqueOrThrow({
-						where: { projectId_criterionId: { projectId: winnerId, criterionId: result.criterionId } }
+						where: {
+							projectId_criterionId: { projectId: winnerId, criterionId: result.criterionId }
+						}
 					}),
 					tx.crowdBTState.findUniqueOrThrow({
-						where: { projectId_criterionId: { projectId: loserId, criterionId: result.criterionId } }
+						where: {
+							projectId_criterionId: { projectId: loserId, criterionId: result.criterionId }
+						}
 					})
 				]);
 
@@ -190,7 +320,9 @@ export const Judging = {
 				// Update both states and increment comparisonCount
 				await Promise.all([
 					tx.crowdBTState.update({
-						where: { projectId_criterionId: { projectId: winnerId, criterionId: result.criterionId } },
+						where: {
+							projectId_criterionId: { projectId: winnerId, criterionId: result.criterionId }
+						},
 						data: {
 							alpha: updated.winner.alpha,
 							beta: updated.winner.beta,
@@ -198,7 +330,9 @@ export const Judging = {
 						}
 					}),
 					tx.crowdBTState.update({
-						where: { projectId_criterionId: { projectId: loserId, criterionId: result.criterionId } },
+						where: {
+							projectId_criterionId: { projectId: loserId, criterionId: result.criterionId }
+						},
 						data: {
 							alpha: updated.loser.alpha,
 							beta: updated.loser.beta,
@@ -208,23 +342,12 @@ export const Judging = {
 				]);
 			}
 
-			// 4. Mark the PairAssignment as completed
-			await tx.pairAssignment.update({
-				where: { id: pairAssignmentId },
-				data: { status: 'completed', completedAt: new Date() }
+			// 4. Save comment on the PairComparison
+			return await tx.pairComparison.update({
+				where: { id: comparisonId },
+				data: { comment },
+				include: { results: true }
 			});
-
-			return comparison;
-		});
-	},
-
-	/**
-	 * Skip a pair assignment.
-	 */
-	skipPair: async (judgeId: string, pairAssignmentId: string, reason: string) => {
-		return await prisma.pairAssignment.update({
-			where: { id: pairAssignmentId, judgeId },
-			data: { status: 'skipped', skipReason: reason, completedAt: new Date() }
 		});
 	},
 
@@ -252,7 +375,11 @@ export const Judging = {
 			where: {
 				criterionId: { in: optOutCriteria.map((c) => c.id) }
 			},
-			select: { criterionId: true, winner: true, pairComparison: { select: { projectAId: true, projectBId: true } } }
+			select: {
+				criterionId: true,
+				winner: true,
+				pairComparison: { select: { projectAId: true, projectBId: true } }
+			}
 		});
 
 		// For each opt-out criterion, build a set of project IDs that have at least one non-opt-out result
@@ -310,7 +437,10 @@ export const Judging = {
 			const nonOptOutProjects = hasNonOptOut.get(criterion.id);
 			const eligible = calculated
 				.filter((p) => nonOptOutProjects?.has(p.id))
-				.sort((a, b) => (b.criterionScores[criterion.id] ?? 0) - (a.criterionScores[criterion.id] ?? 0));
+				.sort(
+					(a, b) =>
+						(b.criterionScores[criterion.id] ?? 0) - (a.criterionScores[criterion.id] ?? 0)
+				);
 			optOutRankings[criterion.id] = eligible;
 		}
 
@@ -322,39 +452,48 @@ export const Judging = {
 	},
 
 	/**
-	 * Get all users with role 'judge', with assignment counts and current pair.
+	 * Get all users with role 'judge', with visit counts and current active visit.
 	 */
-	getAllJudges: async () => {
-		return await prisma.user.findMany({
+	getAllJudges: async (): Promise<JudgeWithVisit[]> => {
+		return (await prisma.user.findMany({
 			where: { role: 'judge' },
 			include: {
-				pairAssignments: {
-					where: { status: 'assigned' },
+				tableVisits: {
+					where: { status: 'active' },
 					include: {
-						projectA: true,
-						projectB: true
+						project: { select: { name: true, tableNumber: true } }
 					},
-					take: 1,
-					orderBy: { createdAt: 'desc' }
+					take: 1
 				},
 				_count: {
 					select: {
-						pairAssignments: { where: { status: 'completed' } }
+						tableVisits: { where: { status: 'completed' } }
 					}
 				}
 			},
 			orderBy: { name: 'asc' }
-		});
+		})) as JudgeWithVisit[];
 	},
 
 	/**
-	 * Clear all PairComparisons, PairAssignments, and CrowdBTStates.
+	 * Clear all judging data: PairCriterionResults, PairComparisons, CrowdBTStates, TableVisits.
 	 */
 	clearAllScores: async () => {
 		return await prisma.$transaction([
+			prisma.pairCriterionResult.deleteMany({}),
 			prisma.pairComparison.deleteMany({}),
-			prisma.pairAssignment.deleteMany({}),
-			prisma.crowdBTState.deleteMany({})
+			prisma.crowdBTState.deleteMany({}),
+			prisma.tableVisit.deleteMany({})
 		]);
+	},
+
+	/**
+	 * Update the curve value for a judge.
+	 */
+	updateJudgeCurve: async (userId: string, curve: number) => {
+		return await prisma.user.update({
+			where: { id: userId },
+			data: { curve }
+		});
 	}
 };
