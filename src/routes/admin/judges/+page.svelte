@@ -89,10 +89,14 @@
         showRemoveJudgeModal = false;
     }
 
+    // Timer polling
+    let now = $state(Date.now());
     $effect(() => {
+        const tick = setInterval(() => now = Date.now(), 1000);
         const poll = setInterval(() => invalidateAll(), 10_000);
-        return () => clearInterval(poll);
+        return () => { clearInterval(tick); clearInterval(poll); };
     });
+    const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 </script>
 
 <div class="p-6 pt-24 min-h-screen">
@@ -116,12 +120,15 @@
                     <th class="p-4 font-bold">Track</th>
                     <th class="p-4 font-bold text-center w-36">Completed</th>
                     <th class="p-4 font-bold">Current Assignment</th>
+                    {#if data.timePerTable}
+                        <th class="p-4 font-bold">Timer</th>
+                    {/if}
                     <th class="p-4 font-bold text-right">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-secondary/5">
                 {#each data.judges as judge}
-                    {@const currentPair = judge.pairAssignments[0] ?? null}
+                    {@const activeVisit = judge.tableVisits?.[0] ?? null}
                     <tr class="hover:bg-white/50 transition-colors">
                         <td class="p-4">
                             <div class="font-bold text-secondary">{judge.name}</div>
@@ -162,21 +169,39 @@
                         </td>
                         <td class="p-4 text-center">
                             <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-accent/10 text-accent text-sm font-bold">
-                                {judge._count.pairAssignments}
+                                {judge._count.tableVisits}
                             </span>
                         </td>
                         <td class="p-4">
-                            {#if currentPair}
+                            {#if activeVisit}
                                 <div class="flex items-center gap-2">
                                     <span class="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
                                     <span class="text-secondary/70 text-xs">
-                                        {currentPair.projectA.name} vs {currentPair.projectB.name}
+                                        {activeVisit.project?.name ?? `Table ${activeVisit.project?.tableNumber ?? '?'}`}
                                     </span>
                                 </div>
                             {:else}
                                 <span class="text-secondary/30 italic text-xs">No active assignment</span>
                             {/if}
                         </td>
+                        {#if data.timePerTable}
+                            <td class="p-4">
+                                {#if activeVisit?.startedAt}
+                                    {@const startedAt = new Date(activeVisit.startedAt).getTime()}
+                                    {@const elapsed = Math.floor((now - startedAt) / 1000)}
+                                    {@const total = data.timePerTable * 60}
+                                    {@const pct = elapsed / total}
+                                    <span class="text-sm font-mono font-bold tabular-nums px-2 py-0.5 rounded-md
+                                        {pct >= 1    ? 'bg-red-500 text-white animate-pulse' :
+                                         pct >= 0.5  ? 'bg-orange-100 text-orange-600' :
+                                                       'bg-secondary/10 text-secondary/70'}">
+                                        {formatTime(elapsed)} / {formatTime(total)}
+                                    </span>
+                                {:else}
+                                    <span class="text-secondary/30 text-sm">—</span>
+                                {/if}
+                            </td>
+                        {/if}
                         <td class="p-4 text-right flex gap-1 justify-end">
                             <Button
                                 class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 border-none shadow-none disabled:opacity-50"
@@ -196,7 +221,7 @@
                 {/each}
                 {#if data.judges.length === 0}
                     <tr>
-                        <td colspan="5" class="p-8 text-center text-secondary/40 italic">No judges found.</td>
+                        <td colspan={data.timePerTable ? 6 : 5} class="p-8 text-center text-secondary/40 italic">No judges found.</td>
                     </tr>
                 {/if}
             </tbody>

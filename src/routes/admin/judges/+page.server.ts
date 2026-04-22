@@ -2,10 +2,14 @@ import type { Actions, PageServerLoad } from "./$types";
 import { fail } from "@sveltejs/kit";
 import { Judging } from "$lib/server/judging";
 import { prisma } from "$lib/server/prisma";
+import { Settings } from "$lib/server/settings";
 
 export const load: PageServerLoad = async () => {
-    const judges = await Judging.getAllJudges();
-    return { judges };
+    const [judges, timePerTable] = await Promise.all([
+        Judging.getAllJudges(),
+        Settings.getTimePerTable()
+    ]);
+    return { judges, timePerTable };
 };
 
 export const actions: Actions = {
