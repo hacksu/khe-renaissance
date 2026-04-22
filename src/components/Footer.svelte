@@ -21,6 +21,6 @@
   </div>
   <div class="flex gap-2">
     <Link href="https://mlh.io/code-of-conduct">MLH Code of Conduct</Link>
-    <Link href="https://hacksu.com">HacKSU Bylaws</Link>
+    <Link href="https://hacksu.com">HacKSU</Link>
   </div>
 </div>
