@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
+import { prisma } from '$lib/server/prisma';
 
 export const load: PageServerLoad = async ({ params, parent }) => {
     const { session } = await parent();
@@ -20,7 +21,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 };
 
 export const actions: Actions = {
-    submit: async ({ request, params, parent }) => {
+    submit: async ({ request, params }) => {
         const { auth } = await import('$lib/server/auth');
         const session = await auth.api.getSession(request);
         if (!session) return fail(401);
@@ -42,6 +43,11 @@ export const actions: Actions = {
                     results.push({ criterionId, winner });
                 }
             }
+        }
+
+        const criteriaCount = await prisma.judgingCriterion.count();
+        if (results.length !== criteriaCount) {
+            return fail(400, { message: 'All criteria must be evaluated.' });
         }
 
         try {

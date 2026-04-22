@@ -1,11 +1,13 @@
 <script lang="ts">
-    let { data, form } = $props();
+    import type { PageData } from './$types';
+
+    let { data, form }: { data: PageData; form: { message?: string } | null } = $props();
 
     const { assignment, criteria, previousComment } = data;
 
     // projectA and projectB come from the pairAssignment include
-    const projectA = (assignment as any).projectA;
-    const projectB = (assignment as any).projectB;
+    const projectA = assignment.projectA;
+    const projectB = assignment.projectB;
 
     // Track selections per criterion
     let selections: Record<string, string> = $state({});
@@ -15,7 +17,7 @@
 
     // Client-side validation
     let allSelected = $derived(
-        criteria.every((c: any) => !!selections[c.id])
+        criteria.every((c) => !!selections[c.id])
     );
     let canSubmit = $derived(allSelected && comment.trim().length > 0);
     let canSkip = $derived(skipReason.trim().length >= 2);
@@ -64,13 +66,6 @@
 
         <!-- Main Submit Form -->
         <form method="POST" action="?/submit" id="submit-form" class="space-y-6">
-            <!-- Hidden fields for selections -->
-            {#each criteria as criterion (criterion.id)}
-                {#if selections[criterion.id]}
-                    <input type="hidden" name="result_{criterion.id}" value={selections[criterion.id]} />
-                {/if}
-            {/each}
-
             <!-- Criteria -->
             {#each criteria as criterion (criterion.id)}
                 <div class="space-y-3">
@@ -82,7 +77,7 @@
                             {selections[criterion.id] === 'A' ? 'bg-white/20 border border-white/30' : 'bg-white/5 border border-white/10 hover:bg-white/10'}">
                             <input
                                 type="radio"
-                                name="ui_result_{criterion.id}"
+                                name="result_{criterion.id}"
                                 value="A"
                                 class="sr-only"
                                 onchange={() => selections[criterion.id] = 'A'}
@@ -99,7 +94,7 @@
                             {selections[criterion.id] === 'B' ? 'bg-white/20 border border-white/30' : 'bg-white/5 border border-white/10 hover:bg-white/10'}">
                             <input
                                 type="radio"
-                                name="ui_result_{criterion.id}"
+                                name="result_{criterion.id}"
                                 value="B"
                                 class="sr-only"
                                 onchange={() => selections[criterion.id] = 'B'}
@@ -117,7 +112,7 @@
                                 {selections[criterion.id] === 'OPT_OUT_A' ? 'bg-white/20 border border-white/30' : 'bg-white/5 border border-white/10 hover:bg-white/10'}">
                                 <input
                                     type="radio"
-                                    name="ui_result_{criterion.id}"
+                                    name="result_{criterion.id}"
                                     value="OPT_OUT_A"
                                     class="sr-only"
                                     onchange={() => selections[criterion.id] = 'OPT_OUT_A'}
@@ -134,7 +129,7 @@
                                 {selections[criterion.id] === 'OPT_OUT_B' ? 'bg-white/20 border border-white/30' : 'bg-white/5 border border-white/10 hover:bg-white/10'}">
                                 <input
                                     type="radio"
-                                    name="ui_result_{criterion.id}"
+                                    name="result_{criterion.id}"
                                     value="OPT_OUT_B"
                                     class="sr-only"
                                     onchange={() => selections[criterion.id] = 'OPT_OUT_B'}
