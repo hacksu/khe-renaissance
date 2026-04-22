@@ -25,8 +25,8 @@ model User {
   accounts      Account[]
   Application   Application[]
 
-  pairAssignments  PairAssignment[]
-  pairComparisons  PairComparison[]
+  tableVisits     TableVisit[]
+  pairComparisons PairComparison[]
 
   role       String?
   curve      Float   @default(0.0)
@@ -143,8 +143,7 @@ model Project {
 
   members Application[]
 
-  pairAssignmentsA PairAssignment[] @relation("PairAssignmentA")
-  pairAssignmentsB PairAssignment[] @relation("PairAssignmentB")
+  tableVisits      TableVisit[]
   pairComparisonsA PairComparison[] @relation("PairComparisonA")
   pairComparisonsB PairComparison[] @relation("PairComparisonB")
   crowdBTStates    CrowdBTState[]
@@ -194,26 +193,24 @@ model ReminderSignup {
   @@map("reminder_signup")
 }
 
-model PairAssignment {
-  id         String  @id @default(uuid())
-  judgeId    String
-  judge      User    @relation(fields: [judgeId], references: [id], onDelete: Cascade)
-  projectAId String
-  projectA   Project @relation("PairAssignmentA", fields: [projectAId], references: [id], onDelete: Cascade)
-  projectBId String
-  projectB   Project @relation("PairAssignmentB", fields: [projectBId], references: [id], onDelete: Cascade)
+model TableVisit {
+  id        String   @id @default(uuid())
+  judgeId   String
+  judge     User     @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  status     String  @default("assigned") // 'assigned', 'completed', 'skipped'
-  skipReason String?
+  sequence    Int       // 1-based order in this judge's visit sequence
+  feedback    String?   // per-table written feedback
+  status      String    @default("assigned") // 'assigned' | 'active' | 'completed'
 
-  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
   completedAt DateTime?
 
-  @@unique([judgeId, projectAId, projectBId])
+  @@unique([judgeId, projectId])
   @@index([judgeId])
-  @@index([projectAId])
-  @@index([projectBId])
-  @@map("pair_assignment")
+  @@index([projectId])
+  @@map("table_visit")
 }
 
 model PairComparison {
