@@ -14,15 +14,12 @@ export const load: PageServerLoad = async () => {
         console.error("Failed to load metadata", e);
     }
 
-    const [maxTablesPerJudge, maxJudgesPerTeam, timePerTable, judgeCount, tableCount] = await Promise.all([
-        Settings.getMaxTablesPerJudge(),
+    const [maxJudgesPerTeam, timePerTable] = await Promise.all([
         Settings.getMaxJudgesPerTeam(),
-        Settings.getTimePerTable(),
-        prisma.user.count({ where: { role: 'judge' } }),
-        prisma.project.count()
+        Settings.getTimePerTable()
     ]);
 
-    return { tracks, criteria, maxTablesPerJudge, maxJudgesPerTeam, timePerTable, judgeCount, tableCount };
+    return { tracks, criteria, maxJudgesPerTeam, timePerTable };
 };
 
 export const actions: Actions = {
@@ -133,7 +130,6 @@ export const actions: Actions = {
         };
 
         try {
-            await saveIntSetting(SETTING_KEYS.MAX_TABLES_PER_JUDGE, form.get("maxTablesPerJudge") as string);
             await saveIntSetting(SETTING_KEYS.MAX_JUDGES_PER_TEAM, form.get("maxJudgesPerTeam") as string);
             await saveIntSetting(SETTING_KEYS.TIME_PER_TABLE, form.get("timePerTable") as string);
         } catch (e) {

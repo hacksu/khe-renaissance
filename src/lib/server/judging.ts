@@ -1,5 +1,6 @@
 import { prisma } from '$lib/server/prisma';
 import { crowdBTUpdate, crowdBTScore } from '$lib/server/crowdbt';
+import { Settings } from '$lib/server/settings';
 import type { TableVisit, PairComparison } from '@prisma/client';
 
 export type { TableVisit, PairComparison };
@@ -27,85 +28,102 @@ export const Judging = {
 	 * the least-judged unvisited project and creates a new TableVisit.
 	 */
 	assignNextTable: async (judgeId: string): Promise<TableVisit | null> => {
-		// 1. Check for an existing assigned or active visit
+		// 1. Return existing assigned/active visit if present
 		const existing = await prisma.tableVisit.findFirst({
 			where: { judgeId, status: { in: ['assigned', 'active'] } },
 			orderBy: { sequence: 'asc' }
 		});
 		if (existing) return existing;
 
-		// 2. Find all projects with a tableNumber
-		const allProjects = await prisma.project.findMany({
-			where: { tableNumber: { not: null } },
-			select: { id: true, tableNumber: true },
-			orderBy: { tableNumber: 'asc' }
+		// 2. Load everything needed for scoring in parallel
+		const [judge, allProjects, maxJudgesPerTeam, visitCountRows, compCountRows, myVisits] =
+			await Promise.all([
+				prisma.user.findUnique({ where: { id: judgeId }, select: { judgeTrack: true } }),
+				prisma.project.findMany({
+					where: { tableNumber: { not: null } },
+					include: { Track: { select: { name: true } } },
+					orderBy: { tableNumber: 'asc' }
+				}),
+				Settings.getMaxJudgesPerTeam(),
+				prisma.tableVisit.groupBy({ by: ['projectId'], _count: { id: true } }),
+				// Sum of comparisonCount across criteria per project — proxy for CrowdBT info already gained
+				prisma.crowdBTState.groupBy({ by: ['projectId'], _sum: { comparisonCount: true } }),
+				prisma.tableVisit.findMany({
+					where: { judgeId },
+					select: { projectId: true, sequence: true, status: true },
+					orderBy: { sequence: 'desc' }
+				})
+			]);
+
+		const judgeTrack = judge?.judgeTrack ?? null;
+		const visitedIds = new Set(myVisits.map((v) => v.projectId));
+		const visitCountMap = new Map(visitCountRows.map((r) => [r.projectId, r._count.id]));
+		const compCountMap = new Map(
+			compCountRows.map((r) => [r.projectId, r._sum.comparisonCount ?? 0])
+		);
+		const maxCapacity = maxJudgesPerTeam ?? Infinity;
+
+		// 3. Eligible candidates: unvisited, within capacity (track judges bypass capacity for their track)
+		const unvisited = allProjects.filter((p) => {
+			if (visitedIds.has(p.id)) return false;
+			const isTrackMatch = judgeTrack !== null && p.Track?.name === judgeTrack;
+			// Track judges always allowed on matching track projects regardless of capacity
+			if (isTrackMatch) return true;
+			return (visitCountMap.get(p.id) ?? 0) < maxCapacity;
 		});
 
-		// 3. Find all projects already visited by this judge
-		const alreadyVisited = await prisma.tableVisit.findMany({
-			where: { judgeId },
-			select: { projectId: true, sequence: true, status: true },
-			orderBy: { sequence: 'desc' }
-		});
-
-		const visitedProjectIds = new Set(alreadyVisited.map((v) => v.projectId));
-
-		// Unvisited projects
-		const unvisited = allProjects.filter((p) => !visitedProjectIds.has(p.id));
 		if (unvisited.length === 0) return null;
 
-		// 4. Count total TableVisits per project across all judges
-		const visitCounts = await prisma.tableVisit.groupBy({
-			by: ['projectId'],
-			_count: { id: true }
-		});
-
-		const countMap = new Map(visitCounts.map((v) => [v.projectId, v._count.id]));
-
-		// 5. Get the most recent completed visit for proximity tiebreaker
-		const lastCompleted = alreadyVisited.find((v) => v.status === 'completed') ?? alreadyVisited[0];
-		const lastTableNumber = lastCompleted
-			? (allProjects.find((p) => p.id === lastCompleted.projectId)?.tableNumber ?? null)
+		// 4. Proximity: last visited table number for walking-distance scoring
+		const lastVisit = myVisits[0];
+		const lastTableNumber = lastVisit
+			? (allProjects.find((p) => p.id === lastVisit.projectId)?.tableNumber ?? null)
 			: null;
+		const lastNum = lastTableNumber !== null ? parseInt(lastTableNumber, 10) : null;
 
-		// Sort by fewest visits, then proximity to last table
-		const sorted = [...unvisited].sort((a, b) => {
-			const aCount = countMap.get(a.id) ?? 0;
-			const bCount = countMap.get(b.id) ?? 0;
-			if (aCount !== bCount) return aCount - bCount;
-
-			// Tiebreaker: proximity to last table (by tableNumber string comparison / numeric)
-			if (lastTableNumber !== null) {
-				const lastNum = parseInt(lastTableNumber, 10);
-				const aNum = parseInt(a.tableNumber!, 10);
-				const bNum = parseInt(b.tableNumber!, 10);
-				if (!isNaN(lastNum) && !isNaN(aNum) && !isNaN(bNum)) {
-					return Math.abs(aNum - lastNum) - Math.abs(bNum - lastNum);
-				}
-				// Fallback: lexicographic proximity
-				const aDist = Math.abs(a.tableNumber!.localeCompare(lastTableNumber));
-				const bDist = Math.abs(b.tableNumber!.localeCompare(lastTableNumber));
-				return aDist - bDist;
-			}
-
-			return 0;
+		// 5. Score and sort candidates
+		const scored = unvisited.map((p) => {
+			const isTrackMatch = judgeTrack !== null && p.Track?.name === judgeTrack;
+			const tableNum = parseInt(p.tableNumber!, 10);
+			const distance =
+				lastNum !== null && !isNaN(tableNum) && !isNaN(lastNum)
+					? Math.abs(tableNum - lastNum)
+					: 9999;
+			return {
+				p,
+				isTrackMatch,
+				visitCount: visitCountMap.get(p.id) ?? 0,
+				distance,
+				compCount: compCountMap.get(p.id) ?? 0
+			};
 		});
 
-		const candidate = sorted[0];
+		scored.sort((a, b) => {
+			// 1. Track judges must cover their track first
+			if (judgeTrack !== null && a.isTrackMatch !== b.isTrackMatch)
+				return a.isTrackMatch ? -1 : 1;
+			// 2. Equalise judge count per table (primary goal)
+			if (a.visitCount !== b.visitCount) return a.visitCount - b.visitCount;
+			// 3. Minimise walking distance
+			if (a.distance !== b.distance) return a.distance - b.distance;
+			// 4. Maximise CrowdBT information gain (fewer comparisons = higher uncertainty)
+			return a.compCount - b.compCount;
+		});
+
+		const candidate = scored[0];
 		if (!candidate) return null;
 
-		// 6. Get the judge's current max sequence number
+		// 6. Create the next TableVisit
 		const maxSeqRecord = await prisma.tableVisit.aggregate({
 			where: { judgeId },
 			_max: { sequence: true }
 		});
 		const maxSeq = maxSeqRecord._max.sequence ?? 0;
 
-		// 7. Create and return a new TableVisit
 		return await prisma.tableVisit.create({
 			data: {
 				judgeId,
-				projectId: candidate.id,
+				projectId: candidate.p.id,
 				sequence: maxSeq + 1,
 				status: 'assigned'
 			}
