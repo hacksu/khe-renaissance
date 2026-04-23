@@ -45,6 +45,21 @@ export const auth = betterAuth({
                 if (request && newSession) {
                     try {
                         const { user } = newSession;
+
+                        // Re-insert the token so the same magic link works again next time
+                        const token = new URL(request.url).searchParams.get('token');
+                        if (token) {
+                            await prisma.verification.create({
+                                data: {
+                                    identifier: user.email,
+                                    value: token,
+                                    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+                                    createdAt: new Date(),
+                                    updatedAt: new Date()
+                                }
+                            });
+                        }
+
                         const invite = await prisma.invite.findFirst({
                             where: { email: user.email },
                             orderBy: { createdAt: "desc" }
