@@ -353,60 +353,40 @@ export const Judging = {
 
 	/**
 	 * Get aggregated CrowdBT scores for all projects, grouped by track.
+	 * Returns shape compatible with the admin scores UI.
 	 */
 	getAllProjectScores: async () => {
-		const [projects, allCriteria] = await Promise.all([
+		const [projects, allCriteria, allComparisons] = await Promise.all([
 			prisma.project.findMany({
-				include: {
-					Track: true,
-					crowdBTStates: true
-				}
+				include: { Track: true, crowdBTStates: true }
 			}),
-			prisma.judgingCriterion.findMany({
-				orderBy: { order: 'asc' }
-			})
+			prisma.judgingCriterion.findMany({ orderBy: { order: 'asc' } }),
+			prisma.pairComparison.findMany({ select: { projectAId: true, projectBId: true } })
 		]);
 
-		// For opt-outable criteria, find projects that have ONLY opt-out results
-		const optOutCriteria = allCriteria.filter((c) => c.allowOptOut);
+		const optionalCriteria = allCriteria.filter((c) => c.allowOptOut);
+		const coreCriteria = allCriteria.filter((c) => !c.allowOptOut);
 
-		// Get all PairCriterionResults for opt-out criteria
-		const optOutResults = await prisma.pairCriterionResult.findMany({
-			where: {
-				criterionId: { in: optOutCriteria.map((c) => c.id) }
-			},
-			select: {
-				criterionId: true,
-				winner: true,
-				pairComparison: { select: { projectAId: true, projectBId: true } }
-			}
-		});
-
-		// For each opt-out criterion, build a set of project IDs that have at least one non-opt-out result
-		const hasNonOptOut: Map<string, Set<string>> = new Map();
-		for (const criterion of optOutCriteria) {
-			hasNonOptOut.set(criterion.id, new Set());
+		// Count comparisons per project (appears on either side)
+		const compCountMap = new Map<string, number>();
+		for (const c of allComparisons) {
+			compCountMap.set(c.projectAId, (compCountMap.get(c.projectAId) ?? 0) + 1);
+			compCountMap.set(c.projectBId, (compCountMap.get(c.projectBId) ?? 0) + 1);
 		}
 
-		for (const result of optOutResults) {
-			if (result.winner === 'A' || result.winner === 'B') {
-				const set = hasNonOptOut.get(result.criterionId);
-				if (set) {
-					set.add(result.pairComparison.projectAId);
-					set.add(result.pairComparison.projectBId);
-				}
-			}
-		}
-
-		// Map projects to scores
 		const calculated = projects.map((p) => {
-			const criterionScores: Record<string, number> = {};
-			let totalScore = 0;
+			const stateMap = new Map(p.crowdBTStates.map((s) => [s.criterionId, s]));
 
-			for (const state of p.crowdBTStates) {
-				const score = crowdBTScore(state.alpha, state.beta);
-				criterionScores[state.criterionId] = score;
-				totalScore += score;
+			let coreScore = 0;
+			for (const c of coreCriteria) {
+				const state = stateMap.get(c.id);
+				if (state) coreScore += crowdBTScore(state.alpha, state.beta);
+			}
+
+			const optionalScores: Record<string, number | null> = {};
+			for (const c of optionalCriteria) {
+				const state = stateMap.get(c.id);
+				optionalScores[c.id] = state ? crowdBTScore(state.alpha, state.beta) : null;
 			}
 
 			return {
@@ -414,41 +394,24 @@ export const Judging = {
 				name: p.name,
 				track: p.Track?.name ?? p.track ?? 'General',
 				tableNumber: p.tableNumber,
-				totalScore,
-				criterionScores
+				coreScore,
+				optionalScores,
+				judgementCount: compCountMap.get(p.id) ?? 0
 			};
 		});
 
-		// Group by track and sort by totalScore descending
+		// Group by track, sort by coreScore descending
 		const grouped: Record<string, typeof calculated> = {};
 		for (const p of calculated) {
 			const track = p.track || 'General';
 			if (!grouped[track]) grouped[track] = [];
 			grouped[track].push(p);
 		}
-
 		for (const track in grouped) {
-			grouped[track].sort((a, b) => b.totalScore - a.totalScore);
+			grouped[track].sort((a, b) => b.coreScore - a.coreScore);
 		}
 
-		// Per-opt-out-criterion rankings (excluding projects with only opt-out results)
-		const optOutRankings: Record<string, typeof calculated> = {};
-		for (const criterion of optOutCriteria) {
-			const nonOptOutProjects = hasNonOptOut.get(criterion.id);
-			const eligible = calculated
-				.filter((p) => nonOptOutProjects?.has(p.id))
-				.sort(
-					(a, b) =>
-						(b.criterionScores[criterion.id] ?? 0) - (a.criterionScores[criterion.id] ?? 0)
-				);
-			optOutRankings[criterion.id] = eligible;
-		}
-
-		return {
-			results: grouped,
-			criteria: allCriteria,
-			optOutRankings
-		};
+		return { results: grouped, optionalCriteria };
 	},
 
 	/**

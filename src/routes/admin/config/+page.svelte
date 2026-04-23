@@ -205,6 +205,10 @@
                         <input type="checkbox" name="optional" class="rounded border-white/30 text-accent focus:ring-accent" />
                         <span>Optional (judges can submit without scoring this)</span>
                     </label>
+                    <label class="flex items-center gap-2 text-sm text-white/80 cursor-pointer">
+                        <input type="checkbox" name="allowOptOut" class="rounded border-white/30 text-accent focus:ring-accent" />
+                        <span>Allow opt-out (judges can mark a project as not competing)</span>
+                    </label>
                     <div class="pt-2">
                         <Button class="w-full">Create Criterion</Button>
                     </div>

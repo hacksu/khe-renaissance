@@ -148,13 +148,16 @@
                                     class="flex items-center gap-2"
                                 >
                                     <input type="hidden" name="userId" value={judge.id} />
-                                    <input
-                                        type="text"
+                                    <select
                                         name="judgeTrack"
                                         bind:value={editingTrackValue}
-                                        placeholder="General"
-                                        class="w-32 text-sm rounded border border-secondary/20 px-2 py-1 text-secondary"
-                                    />
+                                        class="text-sm rounded border border-secondary/20 px-2 py-1 text-secondary bg-white"
+                                    >
+                                        <option value="">General (all tracks)</option>
+                                        {#each data.tracks as track}
+                                            <option value={track.name}>{track.name}</option>
+                                        {/each}
+                                    </select>
                                     <button type="submit" class="text-accent text-xs font-bold hover:underline">Save</button>
                                     <button type="button" onclick={cancelEditTrack} class="text-secondary/50 text-xs hover:underline">Cancel</button>
                                 </form>

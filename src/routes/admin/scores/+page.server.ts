@@ -3,8 +3,8 @@ import { fail } from '@sveltejs/kit';
 import { Judging } from '$lib/server/judging';
 
 export const load: PageServerLoad = async () => {
-    const { results, criteria, optOutRankings } = await Judging.getAllProjectScores();
-    return { results, criteria, optOutRankings };
+    const { results, optionalCriteria } = await Judging.getAllProjectScores();
+    return { results, optionalCriteria };
 };
 
 export const actions: Actions = {

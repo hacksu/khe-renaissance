@@ -5,11 +5,12 @@ import { prisma } from "$lib/server/prisma";
 import { Settings } from "$lib/server/settings";
 
 export const load: PageServerLoad = async () => {
-    const [judges, timePerTable] = await Promise.all([
+    const [judges, timePerTable, tracks] = await Promise.all([
         Judging.getAllJudges(),
-        Settings.getTimePerTable()
+        Settings.getTimePerTable(),
+        prisma.track.findMany({ orderBy: { name: 'asc' } })
     ]);
-    return { judges, timePerTable };
+    return { judges, timePerTable, tracks };
 };
 
 export const actions: Actions = {

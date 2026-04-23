@@ -74,14 +74,14 @@ export const actions: Actions = {
         const maxScore = Number(form.get("maxScore"));
         const order = Number(form.get("order"));
         const optional = form.get("optional") === "on";
-        // create a slug from name
+        const allowOptOut = form.get("allowOptOut") === "on";
         const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
 
         if (!name) return fail(400, { missing: true });
 
         try {
             await prisma.judgingCriterion.create({
-                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional }
+                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional, allowOptOut }
             });
         } catch (e) {
             return fail(500, { error: "Failed to create criterion" });
