@@ -20,4 +20,5 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-resumes/*.pdf
+resumes/*.pdfdocker-compose.override.yml
+package-lock.json

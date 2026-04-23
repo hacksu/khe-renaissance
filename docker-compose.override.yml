@@ -1,8 +1,0 @@
-services:
-
-  app:
-    ports:
-      - 3000:3000
-  db:
-    ports:
-      - 5433:5432
