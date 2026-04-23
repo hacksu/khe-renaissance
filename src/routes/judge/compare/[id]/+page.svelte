@@ -43,8 +43,6 @@
         if (!val) return '—';
         if (val === 'A') return projectA.name;
         if (val === 'B') return projectB.name;
-        if (val === 'OPT_OUT_A') return `${projectA.name} didn't compete`;
-        if (val === 'OPT_OUT_B') return `${projectB.name} didn't compete`;
         return val;
     }
 </script>
@@ -111,25 +109,6 @@
                         {/if}
                     </button>
 
-                    <!-- Opt-out options -->
-                    {#if criterion.allowOptOut}
-                        <div class="grid grid-cols-2 gap-2 pt-1">
-                            <button
-                                type="button"
-                                onclick={() => selectOption('OPT_OUT_A')}
-                                class="py-2 px-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] border {selections[criterion.id] === 'OPT_OUT_A' ? 'bg-white/20 text-white border-white/40' : 'bg-white/5 text-white/50 border-white/10 hover:bg-white/10'}"
-                            >
-                                {projectA.name} didn't compete
-                            </button>
-                            <button
-                                type="button"
-                                onclick={() => selectOption('OPT_OUT_B')}
-                                class="py-2 px-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] border {selections[criterion.id] === 'OPT_OUT_B' ? 'bg-white/20 text-white border-white/40' : 'bg-white/5 text-white/50 border-white/10 hover:bg-white/10'}"
-                            >
-                                {projectB.name} didn't compete
-                            </button>
-                        </div>
-                    {/if}
                 </div>
 
                 <!-- Navigation -->

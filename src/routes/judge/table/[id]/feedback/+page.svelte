@@ -1,6 +1,6 @@
 <script lang="ts">
     let { data, form } = $props();
-    const { visit } = data;
+    const { visit, optionalCriteria } = data;
     const project = visit.project;
 
     let feedback = $state('');
@@ -24,6 +24,28 @@
     {/if}
 
     <form method="POST" action="?/submit" class="flex flex-col flex-1 gap-4">
+        <!-- Hidden field listing all optional criterion IDs so the server can diff against checked ones -->
+        <input type="hidden" name="optionalCriterionIds" value={optionalCriteria.map(c => c.id).join(',')} />
+
+        {#if optionalCriteria.length > 0}
+            <div class="space-y-3">
+                <div>
+                    <p class="font-bold text-white">Optional Categories</p>
+                    <p class="text-white/50 text-sm mt-0.5">Check any categories this team attempted</p>
+                </div>
+                {#each optionalCriteria as criterion}
+                    <label class="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition-colors">
+                        <input
+                            type="checkbox"
+                            name="attempted_{criterion.id}"
+                            class="w-5 h-5 rounded accent-white cursor-pointer"
+                        />
+                        <span class="text-white font-medium">{criterion.name}</span>
+                    </label>
+                {/each}
+            </div>
+        {/if}
+
         <div class="space-y-2">
             <label for="feedback" class="block font-bold text-white">
                 Feedback for this team <span class="text-white/50">(required)</span>

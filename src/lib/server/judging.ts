@@ -148,11 +148,13 @@ export const Judging = {
 	/**
 	 * Submit feedback for a completed table visit and automatically create
 	 * a pairwise comparison with the previous table.
+	 * optOutCriterionIds: criteria the judge determined this team did not attempt.
 	 */
 	submitFeedback: async (
 		judgeId: string,
 		visitId: string,
-		feedback: string
+		feedback: string,
+		optOutCriterionIds: string[] = []
 	): Promise<{ nextVisit: TableVisit | null; comparison: PairComparison | null }> => {
 		let nextVisit: TableVisit | null = null;
 		let comparison: PairComparison | null = null;
@@ -169,6 +171,14 @@ export const Judging = {
 				where: { id: visitId },
 				data: { status: 'completed', completedAt: new Date(), feedback }
 			});
+
+			// Save opt-out records for optional criteria this team did not attempt
+			if (optOutCriterionIds.length > 0) {
+				await tx.visitOptOut.createMany({
+					data: optOutCriterionIds.map((criterionId) => ({ visitId, criterionId })),
+					skipDuplicates: true
+				});
+			}
 
 			// 2. Get the previous completed visit (sequence = current.sequence - 1)
 			if (current.sequence > 1) {
@@ -214,6 +224,7 @@ export const Judging = {
 
 	/**
 	 * Get a PairComparison with full project/track details and judging criteria.
+	 * Criteria where either project opted out are excluded from the list.
 	 */
 	getComparison: async (judgeId: string, comparisonId: string) => {
 		const comparison = await prisma.pairComparison.findUnique({
@@ -226,9 +237,27 @@ export const Judging = {
 		if (!comparison || comparison.judgeId !== judgeId) {
 			throw new Error('PairComparison not found or does not belong to this judge');
 		}
-		const criteria = await prisma.judgingCriterion.findMany({
-			orderBy: { order: 'asc' }
-		});
+
+		// Load opt-outs from both visits (same judge, respective projects)
+		const [visitA, visitB] = await Promise.all([
+			prisma.tableVisit.findUnique({
+				where: { judgeId_projectId: { judgeId, projectId: comparison.projectAId } },
+				include: { optOuts: true }
+			}),
+			prisma.tableVisit.findUnique({
+				where: { judgeId_projectId: { judgeId, projectId: comparison.projectBId } },
+				include: { optOuts: true }
+			})
+		]);
+
+		const optOutIds = new Set([
+			...(visitA?.optOuts.map((o) => o.criterionId) ?? []),
+			...(visitB?.optOuts.map((o) => o.criterionId) ?? [])
+		]);
+
+		const allCriteria = await prisma.judgingCriterion.findMany({ orderBy: { order: 'asc' } });
+		const criteria = allCriteria.filter((c) => !optOutIds.has(c.id));
+
 		return { comparison, criteria };
 	},
 
@@ -446,6 +475,7 @@ export const Judging = {
 			prisma.pairCriterionResult.deleteMany({}),
 			prisma.pairComparison.deleteMany({}),
 			prisma.crowdBTState.deleteMany({}),
+			prisma.visitOptOut.deleteMany({}),
 			prisma.tableVisit.deleteMany({})
 		]);
 	},
