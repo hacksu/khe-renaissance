@@ -11,8 +11,6 @@
         <img src={Banner} aria-hidden="true" alt=""
              class="hidden lg:block absolute right-0 top-0 h-72 w-auto opacity-60 translate-x-2 pointer-events-none" />
 
-        <p class="eyebrow">The Kingdom Calls</p>
-
         <h2 class="text-5xl md:text-6xl font-black text-white leading-tight">
             KENT HACK ENOUGH
         </h2>
@@ -24,8 +22,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 items-center w-full mt-16">
-
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 items-center w-full mt-16 gap-5">
         <div class="flex flex-col gap-6">
             <div class="parchment-block">
                 <p class="text-lg md:text-xl leading-relaxed text-castle-stoneHighlight">
@@ -33,7 +30,7 @@
                     <span class="font-bold text-castle-torchYellow" style="text-shadow: 0 0 12px rgba(255,224,102,0.5);">
                         Hack the Kingdom.
                     </span>
-                    Sharpen your swords, marshal your code, and storm the digital fortress.
+                    Sharpen your swords, marshal your code, and rule the kingdom!
                 </p>
             </div>
 
@@ -48,7 +45,7 @@
 
         </div>
 
-        <div class="flex justify-center lg:justify-end">
+        <div class="flex justify-center lg:justify-end py-4">
             <div class="shield-glow">
                 <img src={Shield} alt="Kingdom Shield"
                      class="w-36 md:w-48 h-auto transition-transform duration-500 hover:scale-105 hover:rotate-3" />
@@ -58,13 +55,6 @@
 </div>
 
 <style>
-    .eyebrow {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5em;
-        font-weight: 600;
-        color: #ffb347;
-    }
 
     .parchment-block {
         border-left: 3px solid rgba(201,168,76,0.4);
