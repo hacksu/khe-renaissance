@@ -34,13 +34,13 @@ export const actions: Actions = {
         const visitId = form.get('visitId') as string;
         if (!visitId) return fail(400, { message: 'Missing visitId' });
 
+        let visit;
         try {
-            const visit = await Judging.startJudging(session.user.id, visitId);
-            throw redirect(303, `/judge/table/${visit.id}`);
+            visit = await Judging.startJudging(session.user.id, visitId);
         } catch (e) {
-            if (e instanceof Response) throw e;
             console.error(e);
             return fail(500, { message: 'Failed to start judging.' });
         }
+        throw redirect(303, `/judge/table/${visit.id}`);
     }
 };
