@@ -536,6 +536,7 @@
                         type="file"
                         accept=".pdf"
                     />
+                    <span>If you do not have a resume, you can create one <Link href="https://rg.barknote.top/">here</Link>.</span>
                 </div>
 
                 <div class="{step !== 5 ? 'h-0 overflow-hidden' : 'flex flex-col gap-4'}">
