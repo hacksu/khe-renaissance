@@ -137,14 +137,6 @@ export const load: PageServerLoad = async () => {
     orderBy: [{ approved: "desc" }, { updatedAt: "desc" }],
   });
 
-  const totalApplications = applications.length;
-  const approvedApplications = applications.filter(
-    (app) => app.approved,
-  ).length;
-  const checkedInApplications = applications.filter(
-    (app) => app.checkedIn,
-  ).length;
-
   const applicationsWithResume = await Promise.all(
     applications.map(async (app) => {
       try {
@@ -158,10 +150,5 @@ export const load: PageServerLoad = async () => {
 
   return {
     applications: applicationsWithResume,
-    stats: {
-      total: totalApplications,
-      approved: approvedApplications,
-      checkedIn: checkedInApplications,
-    },
   };
 };

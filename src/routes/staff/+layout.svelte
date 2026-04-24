@@ -4,6 +4,7 @@
 
     let links = [
         { href: "/staff", label: "Dashboard", icon: "mdi:view-dashboard" },
+        { href: "/staff/metrics", label: "Metrics", icon: "mdi:chart-bar" },
         { href: "/staff/teams", label: "Team Management", icon: "mdi:gavel" },
     ];
 </script>

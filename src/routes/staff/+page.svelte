@@ -162,7 +162,7 @@
     <div class="p-2 mt-24 w-full h-full">
         <div class="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-800">Application Statistics</h2>
+                <h2 class="text-lg font-semibold text-gray-800">Applications</h2>
                 <div class="flex gap-2 items-center flex-wrap">
                     <select
                         bind:value={emailExportFilter}
@@ -205,25 +205,6 @@
                     </button>
                 </div>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="text-center p-4 bg-gray-50 rounded-lg">
-                    <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Total</p>
-                    <p class="text-3xl font-bold text-gray-900">{data.stats.total}</p>
-                </div>
-                <div class="text-center p-4 bg-green-50 rounded-lg">
-                    <p class="text-xs uppercase tracking-wide text-green-600 mb-1">Approved</p>
-                    <p class="text-3xl font-bold text-green-700">{data.stats.approved}</p>
-                </div>
-                <div class="text-center p-4 bg-blue-50 rounded-lg">
-                    <p class="text-xs uppercase tracking-wide text-blue-600 mb-1">Checked In</p>
-                    <p class="text-3xl font-bold text-blue-700">{data.stats.checkedIn}</p>
-                </div>
-                <div class="text-center p-4 bg-purple-50 rounded-lg">
-                    <p class="text-xs uppercase tracking-wide text-purple-600 mb-1">Check In Rate</p>
-                    <p class="text-3xl font-bold text-purple-700">{data.stats.approved > 0 ? Math.round((data.stats.checkedIn / data.stats.approved) * 100) : 0}%</p>
-                </div>
-            </div>
-            <br />
             <div class="mb-4 flex gap-2 flex-wrap justify-center">
                 <h2 class="text-lg font-semibold text-gray-800 mr-4 justify-left">Filter by Status:</h2>
                 <button
