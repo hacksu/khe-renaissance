@@ -63,7 +63,7 @@
     }
 
     function barPct(n: number, entries: [string, number][]) {
-        const max = entries[0]?.[1] ?? 1;
+        const max = Math.max(...entries.map(e => e[1]), 1);
         return pct(n, max);
     }
 
@@ -230,7 +230,7 @@
                         <div class="flex-1 bg-gray-100 rounded-full h-5 overflow-hidden">
                             <div
                                 class="h-full bg-red-400 rounded-full transition-all"
-                                style="width: {barPct(count, submittedCount)}%"
+                                style="width: {pct(count, submittedCount)}%"
                             ></div>
                         </div>
                         <span class="text-xs font-semibold text-gray-700 w-6 shrink-0 text-right">{count}</span>
