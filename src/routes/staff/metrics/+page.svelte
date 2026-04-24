@@ -10,8 +10,7 @@
 
     function barPct(n: number, entries: [string, number][]) {
         const max = entries[0]?.[1] ?? 1;
-        if (!max) return 0;
-        return Math.round((n / max) * 100);
+        return pct(n, max);
     }
 
     const colorMap: Record<string, string> = {
@@ -127,8 +126,8 @@
                         <span class="text-xs text-gray-600 w-12 shrink-0 text-right">{bucket}</span>
                         <div class="flex-1 bg-gray-100 rounded-full h-5 overflow-hidden">
                             <div
-                                class="h-full bg-indigo-400 rounded-full transition-all"
-                                style="width: {barPct(count, demographics.ageBuckets)}%"
+                                class="h-full bg-red-400 rounded-full transition-all"
+                                style="width: {barPct(count, submittedCount)}%"
                             ></div>
                         </div>
                         <span class="text-xs font-semibold text-gray-700 w-6 shrink-0 text-right">{count}</span>
