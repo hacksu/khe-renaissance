@@ -183,7 +183,6 @@
 </div>
 
 <style>
-
     .title-glow {
         text-shadow:
             0 0 20px  rgba(201, 168, 76, 0.7),

@@ -1,16 +1,17 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { slide } from 'svelte/transition';
+    import Icon from '@iconify/svelte';
 
     type Props = { name: Snippet; content: Snippet };
-    const { name, content }: Props = $props();
+    const { name, content, }: Props = $props();
 
-    let open = $state(false);
+    let open = $state(true);
 </script>
 
 <div class="accordion-item">
     <button class="accordion-trigger {open ? 'open' : ''}" onclick={() => open = !open}>
-        <span class="trigger-icon">{open ? '−' : '+'}</span>
+        <Icon class="trigger-icon" icon={open ? 'mingcute:down-fill' : 'mingcute:right-fill'} />
         <span class="flex-1 text-left">
             {@render name()}
         </span>
@@ -53,15 +54,6 @@
         background: rgba(255, 107, 26, 0.06);
     }
 
-    .trigger-icon {
-        font-size: 1.1rem;
-        font-weight: 300;
-        color: rgba(201, 168, 76, 0.6);
-        flex-shrink: 0;
-        width: 1rem;
-        text-align: center;
-    }
-
     .torch-dot {
         width: 6px;
         height: 6px;
@@ -76,7 +68,7 @@
     }
 
     .accordion-body {
-        padding: 0 1.25rem 1.25rem 3.125rem;
+        padding: 0.5rem 1.25rem 1.25rem 3.125rem;
         color: #8e8ea8;
         font-size: 0.9rem;
         line-height: 1.7;

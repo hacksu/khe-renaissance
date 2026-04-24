@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax meet">
   <defs>
 
-    <!-- Blur filters for fog softness -->
+    
     <filter id="blur-heavy" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="14" result="blur"/>
     </filter>
@@ -15,27 +15,27 @@
       <feGaussianBlur stdDeviation="8" result="blur"/>
     </filter>
 
-    <!-- Vertical fade gradient — transparent top, opaque bottom -->
+    
     <linearGradient id="fade-up" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#1a2e4a" stop-opacity="0"/>
       <stop offset="55%" stop-color="#1a2e4a" stop-opacity="0.6"/>
       <stop offset="100%" stop-color="#1a2e4a" stop-opacity="0.9"/>
     </linearGradient>
 
-    <!-- Warm torch-glow gradient — radiates from center-lower area -->
+    
     <radialGradient id="torch-glow-center" cx="50%" cy="90%" r="45%">
       <stop offset="0%" stop-color="#7a5a30" stop-opacity="0.22"/>
       <stop offset="60%" stop-color="#4a3520" stop-opacity="0.12"/>
       <stop offset="100%" stop-color="#4a3520" stop-opacity="0"/>
     </radialGradient>
 
-    <!-- Warm glow left — torchlight from left tower -->
+    
     <radialGradient id="torch-glow-left" cx="25%" cy="85%" r="30%">
       <stop offset="0%" stop-color="#6b4a28" stop-opacity="0.2"/>
       <stop offset="100%" stop-color="#4a3520" stop-opacity="0"/>
     </radialGradient>
 
-    <!-- Wisp fade gradient — solid at base, gone at tip -->
+    
     <linearGradient id="wisp-fade-1" x1="0" y1="1" x2="0" y2="0">
       <stop offset="0%" stop-color="#1a2e4a" stop-opacity="0.35"/>
       <stop offset="100%" stop-color="#1a2e4a" stop-opacity="0"/>
@@ -59,10 +59,10 @@
        fog-wisps:  subtle sway    (~0.45× speed, slight rotate)
        ============================================================ -->
 
-  <!-- ── BACKGROUND FOG LAYER ── distant, light, heavily blurred -->
+  
   <g id="fog-back" filter="url(#blur-heavy)">
 
-    <!-- Large back blob 1 — left sweep -->
+    
     <path
       d="M -80 300
          C  20 260,  90 240, 180 252
@@ -74,7 +74,7 @@
          L 1280 300 Z"
       fill="#1a2e4a" opacity="0.42"/>
 
-    <!-- Large back blob 2 — right sweep, slightly higher -->
+    
     <path
       d="M -80 300
          C  30 270, 110 258, 220 268
@@ -86,7 +86,7 @@
          L 1280 300 Z"
       fill="#2d4a6e" opacity="0.3"/>
 
-    <!-- Back blob 3 — wide shallow fill -->
+    
     <path
       d="M -80 300
          C  50 285, 140 275, 260 280
@@ -99,10 +99,10 @@
 
   </g>
 
-  <!-- ── MID FOG LAYER ── medium depth, moderate blur -->
+  
   <g id="fog-mid" filter="url(#blur-mid)">
 
-    <!-- Mid blob 1 — undulating center mass -->
+    
     <path
       d="M -80 300
          C   0 272,  60 248,  140 255
@@ -115,7 +115,7 @@
          L 1280 300 Z"
       fill="#1a2e4a" opacity="0.6"/>
 
-    <!-- Mid blob 2 — bulging left side, lower -->
+    
     <path
       d="M -80 300
          C  10 278,  80 258, 170 268
@@ -128,7 +128,7 @@
          L 1280 300 Z"
       fill="#2d4a6e" opacity="0.35"/>
 
-    <!-- Mid blob 3 — right-heavy bump for asymmetry -->
+    
     <path
       d="M 480 300
          C 550 268, 610 248, 680 254
@@ -138,7 +138,7 @@
          L 1280 300 Z"
       fill="#1a2e4a" opacity="0.5"/>
 
-    <!-- Mid blob 4 — left-heavy bump -->
+    
     <path
       d="M -80 300
          C  10 270,  80 250, 160 256
@@ -147,16 +147,16 @@
          L 560 300 Z"
       fill="#1a2e4a" opacity="0.48"/>
 
-    <!-- Warm torch glow baked into mid layer -->
+    
     <rect x="0" y="0" width="1200" height="300" fill="url(#torch-glow-center)" opacity="1"/>
     <rect x="0" y="0" width="1200" height="300" fill="url(#torch-glow-left)" opacity="1"/>
 
   </g>
 
-  <!-- ── FRONT FOG LAYER ── densest, sharpest, closest to viewer -->
+  
   <g id="fog-front" filter="url(#blur-light)">
 
-    <!-- Front blob 1 — main rolling mass -->
+    
     <path
       d="M -80 300
          C  20 280,  70 258, 150 264
@@ -169,7 +169,7 @@
          L 1280 300 Z"
       fill="#1a2e4a" opacity="0.78"/>
 
-    <!-- Front blob 2 — denser lower fill -->
+    
     <path
       d="M -80 300
          C  30 288,  90 276, 180 282
@@ -181,7 +181,7 @@
          L 1280 300 Z"
       fill="#1a2e4a" opacity="0.85"/>
 
-    <!-- Front blob 3 — highlight lighter patch left -->
+    
     <path
       d="M -80 300
          C  10 286,  80 272, 160 278
@@ -190,7 +190,7 @@
          L 510 300 Z"
       fill="#2d4a6e" opacity="0.45"/>
 
-    <!-- Front blob 4 — highlight lighter patch right -->
+    
     <path
       d="M 750 300
          C 820 278, 880 262, 960 268
@@ -199,15 +199,15 @@
          L 1280 300 Z"
       fill="#2d4a6e" opacity="0.4"/>
 
-    <!-- Full-width gradient overlay to unify the layer -->
+    
     <rect x="-80" y="0" width="1360" height="300" fill="url(#fade-up)" opacity="0.55"/>
 
   </g>
 
-  <!-- ── WISPY TENDRILS ── thin upward curling mist fingers -->
+  
   <g id="fog-wisps" filter="url(#blur-wisp)">
 
-    <!-- Wisp 1 — far left, tall -->
+    
     <path
       d="M 55 300
          C  48 265,  38 240,  42 200
@@ -220,7 +220,7 @@
          C  71 230,  78 258,  72 300 Z"
       fill="url(#wisp-fade-1)" opacity="0.75"/>
 
-    <!-- Wisp 2 — slightly right of center-left, shorter -->
+    
     <path
       d="M 180 300
          C 172 270, 164 248, 168 218
@@ -232,7 +232,7 @@
          C 193 264, 194 282, 192 300 Z"
       fill="url(#wisp-fade-2)" opacity="0.65"/>
 
-    <!-- Wisp 3 — center left, wide base curling right -->
+    
     <path
       d="M 310 300
          C 302 272, 295 250, 300 222
@@ -244,7 +244,7 @@
          C 339 252, 340 276, 336 300 Z"
       fill="url(#wisp-fade-1)" opacity="0.55"/>
 
-    <!-- Wisp 4 — just left of center, very tall thin curl -->
+    
     <path
       d="M 490 300
          C 484 268, 476 242, 480 210
@@ -256,7 +256,7 @@
          C 512 224, 506 252, 504 300 Z"
       fill="url(#wisp-fade-3)" opacity="0.7"/>
 
-    <!-- Wisp 5 — center, gentle broad swell -->
+    
     <path
       d="M 620 300
          C 608 274, 598 252, 602 224
@@ -268,7 +268,7 @@
          C 646 254, 642 278, 638 300 Z"
       fill="url(#wisp-fade-2)" opacity="0.5"/>
 
-    <!-- Wisp 6 — right of center -->
+    
     <path
       d="M 790 300
          C 782 272, 774 250, 778 220
@@ -280,7 +280,7 @@
          C 824 248, 818 274, 814 300 Z"
       fill="url(#wisp-fade-1)" opacity="0.6"/>
 
-    <!-- Wisp 7 — far right, leans left slightly -->
+    
     <path
       d="M 980 300
          C 974 268, 966 244, 970 214
@@ -292,7 +292,7 @@
          C 996 234, 990 262, 986 300 Z"
       fill="url(#wisp-fade-3)" opacity="0.55"/>
 
-    <!-- Wisp 8 — extreme right edge, short and faint -->
+    
     <path
       d="M 1120 300
          C 1114 278, 1108 260, 1112 236

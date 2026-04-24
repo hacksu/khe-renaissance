@@ -124,7 +124,7 @@ export const actions: Actions = {
     if (previousApproved && hasChanges) {
       await prisma.application.update({
         where: { id: application.id },
-        data: { approved: false },
+        data: { approved: false, submitted: false },
       });
       await sendApprovalRevokedEmail(application.email);
     }

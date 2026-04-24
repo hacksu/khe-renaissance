@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 280" width="120" height="280" role="img" aria-label="KHE 2027 Hack the Kingdom decorative castle banner">
   <defs>
-    <!-- Fabric base gradient for depth -->
     <linearGradient id="fabric-grad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%"   stop-color="#14233a"/>
       <stop offset="18%"  stop-color="#1a2e4a"/>
@@ -9,35 +8,29 @@
       <stop offset="75%"  stop-color="#2d4a6e"/>
       <stop offset="100%" stop-color="#14233a"/>
     </linearGradient>
-    <!-- Rod gradient (wood) -->
     <linearGradient id="rod-grad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%"   stop-color="#6b4b28"/>
       <stop offset="40%"  stop-color="#4a3520"/>
       <stop offset="100%" stop-color="#2c1f0e"/>
     </linearGradient>
-    <!-- Gold gradient for emblem -->
     <linearGradient id="gold-grad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%"   stop-color="#e2b95a"/>
       <stop offset="50%"  stop-color="#c9a84c"/>
       <stop offset="100%" stop-color="#a07a28"/>
     </linearGradient>
-    <!-- Gold gradient horizontal for border trim -->
     <linearGradient id="gold-h-grad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%"   stop-color="#a07a28"/>
       <stop offset="30%"  stop-color="#e2b95a"/>
       <stop offset="70%"  stop-color="#c9a84c"/>
       <stop offset="100%" stop-color="#a07a28"/>
     </linearGradient>
-    <!-- Tassel thread gradient -->
     <linearGradient id="tassel-grad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%"   stop-color="#c9a84c"/>
       <stop offset="100%" stop-color="#7a5e20"/>
     </linearGradient>
-    <!-- Drop shadow filter for the banner -->
     <filter id="banner-shadow" x="-10%" y="-5%" width="130%" height="120%">
       <feDropShadow dx="3" dy="4" stdDeviation="3" flood-color="#00000066"/>
     </filter>
-    <!-- Subtle inner glow on emblem -->
     <filter id="emblem-glow" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur"/>
       <feOffset dx="0" dy="1" result="offsetBlur"/>
@@ -45,23 +38,15 @@
     </filter>
   </defs>
 
-  <!-- ═══════════════════════════════════════════
-       ROD — horizontal iron/wood bar at top
-       ═══════════════════════════════════════════ -->
   <g id="hanging-rod">
-    <!-- Rod body -->
     <rect x="4" y="12" width="112" height="8" rx="4" ry="4" fill="url(#rod-grad)" stroke="#1a0e04" stroke-width="1"/>
-    <!-- Rod highlight (top edge sheen) -->
     <rect x="6" y="13" width="108" height="2" rx="1" fill="#8a6535" opacity="0.6"/>
-    <!-- Left finial cap -->
     <circle cx="6" cy="16" r="6" fill="url(#rod-grad)" stroke="#1a0e04" stroke-width="1"/>
     <circle cx="6" cy="16" r="3" fill="#8a6535" opacity="0.5"/>
     <circle cx="5" cy="15" r="1.2" fill="#c4943a" opacity="0.7"/>
-    <!-- Right finial cap -->
     <circle cx="114" cy="16" r="6" fill="url(#rod-grad)" stroke="#1a0e04" stroke-width="1"/>
     <circle cx="114" cy="16" r="3" fill="#8a6535" opacity="0.5"/>
     <circle cx="113" cy="15" r="1.2" fill="#c4943a" opacity="0.7"/>
-    <!-- Wood grain lines on rod -->
     <line x1="20" y1="13" x2="22" y2="19" stroke="#2c1f0e" stroke-width="0.5" opacity="0.4"/>
     <line x1="40" y1="13" x2="42" y2="19" stroke="#2c1f0e" stroke-width="0.5" opacity="0.4"/>
     <line x1="60" y1="13" x2="62" y2="19" stroke="#2c1f0e" stroke-width="0.5" opacity="0.4"/>
@@ -69,52 +54,31 @@
     <line x1="100" y1="13" x2="102" y2="19" stroke="#2c1f0e" stroke-width="0.5" opacity="0.4"/>
   </g>
 
-  <!-- ═══════════════════════════════════════════
-       ROPE / CORD — loop at top center
-       ═══════════════════════════════════════════ -->
   <g id="rope-loop">
-    <!-- Rope cord loop from rod -->
     <path d="M 52 16 Q 48 6 60 4 Q 72 6 68 16" fill="none" stroke="#6b4f2f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Rope highlight -->
     <path d="M 52 16 Q 49 7 60 5 Q 71 7 68 16" fill="none" stroke="#8a6535" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-    <!-- Rope knot at top -->
     <ellipse cx="60" cy="4" rx="4" ry="3" fill="#6b4f2f" stroke="#3d2a10" stroke-width="0.8"/>
     <ellipse cx="60" cy="4" rx="2" ry="1.5" fill="#8a6535" opacity="0.5"/>
-    <!-- Rope wraps on rod -->
     <ellipse cx="55" cy="16" rx="3" ry="4" fill="none" stroke="#6b4f2f" stroke-width="2" opacity="0.8"/>
     <ellipse cx="65" cy="16" rx="3" ry="4" fill="none" stroke="#6b4f2f" stroke-width="2" opacity="0.8"/>
   </g>
 
-  <!-- ═══════════════════════════════════════════
-       BANNER FABRIC
-       skew/rotate banner-fabric group for wave animation
-       ═══════════════════════════════════════════ -->
-  <!-- skew/rotate banner-fabric group for wave animation -->
   <g id="banner-fabric" filter="url(#banner-shadow)">
 
-    <!-- Main fabric body (pennant: rectangular with pointed bottom) -->
-    <!-- Pointed bottom: polygon from top-left to top-right to bottom-center -->
     <polygon
       points="14,24 106,24 106,238 60,258 14,238"
       fill="url(#fabric-grad)"
       stroke="none"
     />
 
-    <!-- ─── Fabric fold/crease lines (subtle vertical stripes for cloth depth) ─── -->
     <g id="fabric-folds" opacity="0.18">
-      <!-- Left fold -->
       <line x1="30" y1="26" x2="27" y2="240" stroke="#2d4a6e" stroke-width="2.5"/>
-      <!-- Left-center fold -->
       <line x1="46" y1="25" x2="44" y2="248" stroke="#2d4a6e" stroke-width="1.5"/>
-      <!-- Center fold (slight highlight) -->
       <line x1="60" y1="24" x2="60" y2="255" stroke="#3a5e8a" stroke-width="2"/>
-      <!-- Right-center fold -->
       <line x1="74" y1="25" x2="76" y2="248" stroke="#2d4a6e" stroke-width="1.5"/>
-      <!-- Right fold -->
       <line x1="90" y1="26" x2="93" y2="240" stroke="#2d4a6e" stroke-width="2.5"/>
     </g>
 
-    <!-- ─── Gold decorative border/trim around banner edge ─── -->
     <polygon
       points="14,24 106,24 106,238 60,258 14,238"
       fill="none"
@@ -122,7 +86,6 @@
       stroke-width="2.8"
       stroke-linejoin="round"
     />
-    <!-- Inner thin border line for double-rule effect -->
     <polygon
       points="18,28 102,28 102,235 60,253 18,235"
       fill="none"
@@ -132,12 +95,8 @@
       opacity="0.55"
     />
 
-    <!-- ═══════════════════════════════════════════
-         CENTER EMBLEM — castle tower silhouette
-         ═══════════════════════════════════════════ -->
     <g id="emblem" filter="url(#emblem-glow)">
 
-      <!-- Heraldic shield backing (slightly larger, dark) for depth -->
       <path
         d="M 60 78 L 84 88 L 84 118 Q 84 138 60 150 Q 36 138 36 118 L 36 88 Z"
         fill="#0d1d30"
@@ -145,7 +104,6 @@
         transform="translate(1,2)"
       />
 
-      <!-- Heraldic shield -->
       <path
         id="shield"
         d="M 60 78 L 84 88 L 84 118 Q 84 138 60 150 Q 36 138 36 118 L 36 88 Z"
@@ -154,43 +112,32 @@
         stroke-width="1.5"
         stroke-linejoin="round"
       />
-      <!-- Shield inner field (dark blue for contrast) -->
       <path
         d="M 60 83 L 80 92 L 80 117 Q 80 134 60 145 Q 40 134 40 117 L 40 92 Z"
         fill="#1a2e4a"
         stroke="none"
       />
 
-      <!-- Castle tower on shield (gold silhouette) -->
       <g id="castle-tower" fill="#c9a84c">
-        <!-- Main tower body -->
         <rect x="52" y="103" width="16" height="26" rx="1"/>
-        <!-- Tower battlements (merlons) -->
         <rect x="51" y="97"  width="4" height="8" rx="0.5"/>
         <rect x="57" y="97"  width="4" height="8" rx="0.5"/>
         <rect x="63" y="97"  width="4" height="8" rx="0.5"/>
-        <!-- Tower gate arch -->
         <path d="M 56 129 L 56 120 Q 60 115 64 120 L 64 129 Z" fill="#1a2e4a"/>
-        <!-- Tower window -->
         <path d="M 58 108 L 58 104 Q 60 102 62 104 L 62 108 Z" fill="#1a2e4a"/>
-        <!-- Left small turret -->
         <rect x="44" y="112" width="9"  height="17" rx="1"/>
         <rect x="43" y="107" width="3"  height="6"  rx="0.5"/>
         <rect x="47" y="107" width="3"  height="6"  rx="0.5"/>
         <path d="M 46 129 L 46 124 Q 48.5 121 51 124 L 51 129 Z" fill="#1a2e4a"/>
-        <!-- Right small turret -->
         <rect x="67" y="112" width="9"  height="17" rx="1"/>
         <rect x="67" y="107" width="3"  height="6"  rx="0.5"/>
         <rect x="71" y="107" width="3"  height="6"  rx="0.5"/>
         <path d="M 69 129 L 69 124 Q 71.5 121 74 124 L 74 129 Z" fill="#1a2e4a"/>
-        <!-- Ground base line -->
         <rect x="42" y="129" width="36" height="3" rx="1"/>
       </g>
 
-      <!-- Shield top dividing band (horizontal bar in gold over dark) -->
       <rect x="36" y="107" width="48" height="3" fill="#c9a84c" opacity="0.18" rx="0.5"/>
 
-      <!-- Shield highlight sheen -->
       <path
         d="M 62 79 L 81 88 L 81 108 Q 70 100 62 79 Z"
         fill="white"
@@ -198,23 +145,15 @@
       />
     </g>
 
-    <!-- ─── Small decorative star/fleur corner details on banner ─── -->
     <g fill="#c9a84c" opacity="0.7" id="corner-ornaments">
-      <!-- Top-left corner diamond -->
       <polygon points="24,34  27,38  24,42  21,38" />
-      <!-- Top-right corner diamond -->
       <polygon points="96,34  99,38  96,42  93,38" />
-      <!-- Mid-left diamond -->
       <polygon points="20,140 23,144 20,148 17,144" />
-      <!-- Mid-right diamond -->
       <polygon points="100,140 103,144 100,148 97,144" />
     </g>
 
-    <!-- ─── Banner title text area (decorative scroll line below emblem) ─── -->
     <g id="banner-text-region" opacity="0.9">
-      <!-- Scroll rule top -->
       <line x1="24" y1="162" x2="96" y2="162" stroke="#c9a84c" stroke-width="1" opacity="0.6"/>
-      <!-- Text: KHE 2027 -->
       <text
         x="60"
         y="175"
@@ -225,15 +164,12 @@
         text-anchor="middle"
         letter-spacing="2"
       >KHE 2027</text>
-      <!-- Scroll rule bottom -->
       <line x1="24" y1="180" x2="96" y2="180" stroke="#c9a84c" stroke-width="1" opacity="0.6"/>
-      <!-- Rule end dots -->
       <circle cx="24" cy="162" r="1.5" fill="#c9a84c" opacity="0.6"/>
       <circle cx="96" cy="162" r="1.5" fill="#c9a84c" opacity="0.6"/>
       <circle cx="24" cy="180" r="1.5" fill="#c9a84c" opacity="0.6"/>
       <circle cx="96" cy="180" r="1.5" fill="#c9a84c" opacity="0.6"/>
 
-      <!-- Tagline -->
       <text
         x="60"
         y="195"
@@ -247,15 +183,10 @@
       >Hack the Kingdom</text>
     </g>
 
-  </g><!-- end banner-fabric -->
+  </g>
 
-  <!-- ═══════════════════════════════════════════
-       FRINGE TASSELS — bottom edge
-       Each tassel in its own group for independent animation
-       ═══════════════════════════════════════════ -->
   <g id="fringe">
 
-    <!-- Tassel 1 -->
     <g class="tassel" transform="translate(20, 238)">
       <rect x="-3" y="0" width="6" height="3" rx="1" fill="#c9a84c"/>
       <line x1="-2" y1="3" x2="-2.5" y2="20" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
@@ -263,7 +194,6 @@
       <line x1="2"  y1="3" x2="2.5"  y2="20" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
     </g>
 
-    <!-- Tassel 2 -->
     <g class="tassel" transform="translate(30, 239)">
       <rect x="-3" y="0" width="6" height="3" rx="1" fill="#c9a84c"/>
       <line x1="-2" y1="3" x2="-2.5" y2="19" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
@@ -271,7 +201,6 @@
       <line x1="2"  y1="3" x2="2.5"  y2="19" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
     </g>
 
-    <!-- Tassel 3 -->
     <g class="tassel" transform="translate(40, 241)">
       <rect x="-3" y="0" width="6" height="3" rx="1" fill="#c9a84c"/>
       <line x1="-2" y1="3" x2="-2.5" y2="20" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
@@ -279,7 +208,6 @@
       <line x1="2"  y1="3" x2="2.5"  y2="20" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
     </g>
 
-    <!-- Tassel 4 -->
     <g class="tassel" transform="translate(50, 244)">
       <rect x="-3" y="0" width="6" height="3" rx="1" fill="#c9a84c"/>
       <line x1="-2" y1="3" x2="-2.5" y2="19" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
@@ -287,7 +215,6 @@
       <line x1="2"  y1="3" x2="2.5"  y2="19" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
     </g>
 
-    <!-- Tassel 5 (center — longest, at the point) -->
     <g class="tassel" transform="translate(60, 250)">
       <rect x="-3.5" y="0" width="7" height="3.5" rx="1" fill="#c9a84c"/>
       <line x1="-2.5" y1="3.5" x2="-3"  y2="22" stroke="url(#tassel-grad)" stroke-width="1.4" stroke-linecap="round"/>
@@ -295,7 +222,6 @@
       <line x1="2.5"  y1="3.5" x2="3"   y2="22" stroke="url(#tassel-grad)" stroke-width="1.4" stroke-linecap="round"/>
     </g>
 
-    <!-- Tassel 6 -->
     <g class="tassel" transform="translate(70, 244)">
       <rect x="-3" y="0" width="6" height="3" rx="1" fill="#c9a84c"/>
       <line x1="-2" y1="3" x2="-2.5" y2="19" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
@@ -303,7 +229,6 @@
       <line x1="2"  y1="3" x2="2.5"  y2="19" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
     </g>
 
-    <!-- Tassel 7 -->
     <g class="tassel" transform="translate(80, 241)">
       <rect x="-3" y="0" width="6" height="3" rx="1" fill="#c9a84c"/>
       <line x1="-2" y1="3" x2="-2.5" y2="20" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
@@ -311,7 +236,6 @@
       <line x1="2"  y1="3" x2="2.5"  y2="20" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
     </g>
 
-    <!-- Tassel 8 -->
     <g class="tassel" transform="translate(90, 239)">
       <rect x="-3" y="0" width="6" height="3" rx="1" fill="#c9a84c"/>
       <line x1="-2" y1="3" x2="-2.5" y2="19" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
@@ -319,7 +243,6 @@
       <line x1="2"  y1="3" x2="2.5"  y2="19" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
     </g>
 
-    <!-- Tassel 9 -->
     <g class="tassel" transform="translate(100, 238)">
       <rect x="-3" y="0" width="6" height="3" rx="1" fill="#c9a84c"/>
       <line x1="-2" y1="3" x2="-2.5" y2="20" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
@@ -327,7 +250,6 @@
       <line x1="2"  y1="3" x2="2.5"  y2="20" stroke="url(#tassel-grad)" stroke-width="1.2" stroke-linecap="round"/>
     </g>
 
-    <!-- Fringe connecting bar (the header strip all tassels hang from) -->
     <path
       d="M 14 238 Q 37 242 60 256 Q 83 242 106 238"
       fill="none"
@@ -335,7 +257,6 @@
       stroke-width="2.5"
       stroke-linecap="round"
     />
-    <!-- Fringe bar highlight -->
     <path
       d="M 14 238 Q 37 242 60 256 Q 83 242 106 238"
       fill="none"
@@ -345,6 +266,6 @@
       opacity="0.5"
     />
 
-  </g><!-- end fringe -->
+  </g>
 
 </svg>

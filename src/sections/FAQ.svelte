@@ -5,7 +5,6 @@
 
 <div id="faq" class="flex flex-col gap-8">
 
-    <!-- Heading -->
     <div class="flex flex-col items-center gap-3 text-center">
         <p class="eyebrow">Knowledge Vault</p>
         <h2 class="text-5xl font-black text-castle-gold" style="text-shadow: 0 0 30px rgba(201,168,76,0.4);">
@@ -13,7 +12,6 @@
         </h2>
     </div>
 
-    <!-- Stone-tablet FAQ panel -->
     <div class="faq-panel">
         <Accordion>
             {#snippet name()}What is a hackathon?{/snippet}
@@ -27,40 +25,47 @@
                 <p><i>KHE is a Major League Hacking event. All attendees are subject to the <Link href="https://mlh.io/code-of-conduct" target="_blank">MLH Code of Conduct</Link>.</i></p>
             {/snippet}
         </Accordion>
-
+        <Accordion>
+            {#snippet name()}What can I make?{/snippet}
+            {#snippet content()}
+                <p><span class="text-xs">(almost)</span> <strong class="text-white">ANYTHING!</strong> as long as it is generally tech adjacent. To see past projects for examples on what you could make, check out the <Link href="/guide" target="_self">guide></Link>.</p>
+            {/snippet}
+        </Accordion>
         <Accordion>
             {#snippet name()}Can I participate?{/snippet}
             {#snippet content()}
-                <p>If you're a college student, working professional, or anyone over 18, yes! KHE welcomes all skill levels and backgrounds. You'll fit right in.</p>
+                <p><strong class="text-lg text-castle-torchOrange">YES!</strong> KHE welcomes all skill levels and backgrounds. You'll fit right in.</p>
             {/snippet}
         </Accordion>
-
         <Accordion>
             {#snippet name()}How much does it cost?{/snippet}
             {#snippet content()}
                 <p><strong class="text-castle-torchYellow">$0.00.</strong></p>
-                <p>Thanks to our generous sponsors, the event is completely free. Meals included. Make sure to thank them!</p>
+                <p>Thanks to our generous sponsors, the event is completely free! Meals included. Make sure to thank them!</p>
             {/snippet}
         </Accordion>
-
         <Accordion>
             {#snippet name()}What should I bring?{/snippet}
             {#snippet content()}
-                <p>Laptop, a change of clothes, deodorant, a blanket or pillow, toiletries, and anything you'd need for your project.</p>
+                <p><strong class="text-white">Laptop</strong>, <strong class="text-white">charger</strong>, <strong class="text-white">water bottle</strong>, a change of clothes, <strong>deodorant</strong>, a blanket or pillow, toiletries, and anything you'd need for your project.</p>
             {/snippet}
         </Accordion>
-
         <Accordion>
             {#snippet name()}Do I need to come with a team?{/snippet}
             {#snippet content()}
                 <p>Nope! We run team-building activities at the start of the event. Solo adventurers are very welcome.</p>
             {/snippet}
         </Accordion>
-
         <Accordion>
             {#snippet name()}How many people per team?{/snippet}
             {#snippet content()}
-                <p>Hard limit of <strong class="text-white">4 participants</strong> per team.</p>
+                <p>Hard limit of <strong class="text-white">4 participants</strong> per team, but you could compete with 1, 2, or 3 members as well!</p>
+            {/snippet}
+        </Accordion>
+        <Accordion>
+            {#snippet name()}What is judging based on?{/snippet}
+            {#snippet content()}
+                <p>Excellent question!! We do category based judging. To see the most updated version of the information that we give to our judges, check out this <Link href="https://github.com/hacksu/Hackathon-Judging-Guide" target="_self">judging guide</Link>.</p>
             {/snippet}
         </Accordion>
     </div>

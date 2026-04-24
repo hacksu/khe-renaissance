@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700">
   <defs>
-    <!-- Soft blur for aurora bands -->
     <filter id="aurora-blur-soft" x="-40%" y="-10%" width="180%" height="120%">
       <feGaussianBlur stdDeviation="18 8" result="blur"/>
     </filter>
@@ -10,11 +9,9 @@
     <filter id="aurora-blur-narrow" x="-30%" y="-5%" width="160%" height="110%">
       <feGaussianBlur stdDeviation="12 5" result="blur"/>
     </filter>
-    <!-- Horizon glow filter — heavy blur -->
     <filter id="horizon-blur" x="-50%" y="-100%" width="200%" height="300%">
       <feGaussianBlur stdDeviation="60 40" result="blur"/>
     </filter>
-    <!-- Star glow -->
     <filter id="star-glow" x="-200%" y="-200%" width="500%" height="500%">
       <feGaussianBlur stdDeviation="1.2" result="blur"/>
       <feMerge>
@@ -22,14 +19,12 @@
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-    <!-- Radial gradient for horizon glow spread -->
     <radialGradient id="horizonGradient" cx="50%" cy="100%" r="55%" fx="50%" fy="100%">
       <stop offset="0%"   stop-color="#ff6b1a" stop-opacity="0.18"/>
       <stop offset="40%"  stop-color="#ff6b1a" stop-opacity="0.10"/>
       <stop offset="75%"  stop-color="#ff3300" stop-opacity="0.04"/>
       <stop offset="100%" stop-color="#ff6b1a" stop-opacity="0"/>
     </radialGradient>
-    <!-- Aurora band gradients — vertical, fade in/out top and bottom -->
     <linearGradient id="auroraGrad1" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%"   stop-color="#00ff88" stop-opacity="0"/>
       <stop offset="12%"  stop-color="#00ff88" stop-opacity="0.55"/>
@@ -74,24 +69,15 @@
     </linearGradient>
   </defs>
 
-  <!-- ═══════════════════════════════════════
-       LAYER 1: Night sky base
-  ═══════════════════════════════════════ -->
   <rect width="1200" height="700" fill="#0a1628"/>
 
-  <!-- Subtle deep blue vignette at top center -->
   <radialGradient id="skyVignette" cx="50%" cy="0%" r="80%">
     <stop offset="0%"   stop-color="#0d2040" stop-opacity="0.6"/>
     <stop offset="100%" stop-color="#0a1628" stop-opacity="0"/>
   </radialGradient>
   <rect width="1200" height="700" fill="url(#skyVignette)"/>
 
-  <!-- ═══════════════════════════════════════
-       LAYER 2: Aurora bands (behind stars)
-       animate aurora-band opacity and slight skewX for shimmering aurora
-  ═══════════════════════════════════════ -->
 
-  <!-- Band 1 — broad green curtain, left-center, slight lean right -->
   <g class="aurora-band" id="aurora-1">
     <path
       d="M 185 -20
@@ -108,7 +94,6 @@
     />
   </g>
 
-  <!-- Band 2 — tall blue band, right side, leans slightly left -->
   <g class="aurora-band" id="aurora-2">
     <path
       d="M 720 -20
@@ -125,7 +110,6 @@
     />
   </g>
 
-  <!-- Band 3 — narrow violet accent, far left -->
   <g class="aurora-band" id="aurora-3">
     <path
       d="M  55 -20
@@ -142,7 +126,6 @@
     />
   </g>
 
-  <!-- Band 4 — wide green/teal, center-left, dominant curtain -->
   <g class="aurora-band" id="aurora-4">
     <path
       d="M 430 -20
@@ -159,7 +142,6 @@
     />
   </g>
 
-  <!-- Band 5 — blue/violet blend, far right -->
   <g class="aurora-band" id="aurora-5">
     <path
       d="M 980 -20
@@ -176,7 +158,6 @@
     />
   </g>
 
-  <!-- Band 6 — teal secondary overlay on center, broader feather -->
   <g class="aurora-band" id="aurora-6">
     <path
       d="M 590 -20
@@ -193,12 +174,8 @@
     />
   </g>
 
-  <!-- ═══════════════════════════════════════
-       LAYER 3: Stars
-  ═══════════════════════════════════════ -->
   <g id="stars">
 
-    <!-- ── Small dots (r 0.5–1.5) ── -->
     <circle cx="42"   cy="28"  r="0.8"  fill="#f5e8c0" opacity="0.85"/>
     <circle cx="118"  cy="52"  r="1.2"  fill="#f5e8c0" opacity="0.70"/>
     <circle cx="195"  cy="18"  r="0.6"  fill="#8e8ea8" opacity="0.55"/>
@@ -219,7 +196,6 @@
     <circle cx="1042" cy="70"  r="1.1"  fill="#f5e8c0" opacity="0.80"/>
     <circle cx="1098" cy="38"  r="0.8"  fill="#8e8ea8" opacity="0.55"/>
     <circle cx="1158" cy="58"  r="1.2"  fill="#f5e8c0" opacity="0.88"/>
-    <!-- mid-sky dots -->
     <circle cx="68"   cy="135" r="0.9"  fill="#f5e8c0" opacity="0.72"/>
     <circle cx="152"  cy="112" r="0.7"  fill="#8e8ea8" opacity="0.48"/>
     <circle cx="228"  cy="148" r="1.0"  fill="#f5e8c0" opacity="0.65"/>
@@ -238,7 +214,6 @@
     <circle cx="1035" cy="125" r="0.7"  fill="#8e8ea8" opacity="0.48"/>
     <circle cx="1092" cy="155" r="1.1"  fill="#f5e8c0" opacity="0.80"/>
     <circle cx="1145" cy="108" r="0.8"  fill="#8e8ea8" opacity="0.55"/>
-    <!-- upper-third layer -->
     <circle cx="88"   cy="228" r="1.0"  fill="#f5e8c0" opacity="0.60"/>
     <circle cx="175"  cy="245" r="0.7"  fill="#8e8ea8" opacity="0.44"/>
     <circle cx="268"  cy="210" r="1.2"  fill="#f5e8c0" opacity="0.70"/>
@@ -257,38 +232,27 @@
     <circle cx="1128" cy="228" r="1.1"  fill="#f5e8c0" opacity="0.80"/>
     <circle cx="1175" cy="285" r="0.6"  fill="#8e8ea8" opacity="0.40"/>
 
-    <!-- ── 4-pointed sparkle stars ── -->
-    <!-- Sparkle helper: cross shape = two thin diamond paths -->
-    <!-- Sparkle 1 — bright, upper left area -->
     <g filter="url(#star-glow)" opacity="0.95">
       <path d="M 338 46 L 340 38 L 342 46 L 350 48 L 342 50 L 340 58 L 338 50 L 330 48 Z" fill="#f5e8c0"/>
     </g>
-    <!-- Sparkle 2 — center top -->
     <g filter="url(#star-glow)" opacity="0.88">
       <path d="M 598 96 L 601 86 L 604 96 L 614 99 L 604 102 L 601 112 L 598 102 L 588 99 Z" fill="#f5e8c0"/>
     </g>
-    <!-- Sparkle 3 — right side, small -->
     <g filter="url(#star-glow)" opacity="0.78">
       <path d="M 1020 52 L 1022 45 L 1024 52 L 1031 54 L 1024 56 L 1022 63 L 1020 56 L 1013 54 Z" fill="#f5e8c0"/>
     </g>
-    <!-- Sparkle 4 — mid-left, teal tint (aurora shimmer star) -->
     <g filter="url(#star-glow)" opacity="0.70">
       <path d="M 148 190 L 151 181 L 154 190 L 163 193 L 154 196 L 151 205 L 148 196 L 139 193 Z" fill="#d0fff5"/>
     </g>
-    <!-- Sparkle 5 — far right upper -->
     <g filter="url(#star-glow)" opacity="0.82">
       <path d="M 1108 82 L 1110 74 L 1112 82 L 1120 84 L 1112 86 L 1110 94 L 1108 86 L 1100 84 Z" fill="#f5e8c0"/>
     </g>
-    <!-- Sparkle 6 — lower center -->
     <g filter="url(#star-glow)" opacity="0.65">
       <path d="M 520 318 L 522 310 L 524 318 L 532 320 L 524 322 L 522 330 L 520 322 L 512 320 Z" fill="#f5e8c0"/>
     </g>
 
   </g>
 
-  <!-- ═══════════════════════════════════════
-       LAYER 4: Horizon glow — fire/torchlight
-  ═══════════════════════════════════════ -->
   <g id="horizon-glow">
     <rect
       x="-100" y="560"
@@ -296,7 +260,6 @@
       fill="url(#horizonGradient)"
       filter="url(#horizon-blur)"
     />
-    <!-- Secondary tighter warm accent along the very horizon line -->
     <ellipse
       cx="600" cy="640"
       rx="520" ry="95"

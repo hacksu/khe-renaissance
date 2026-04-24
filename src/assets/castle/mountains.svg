@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
   <defs>
-    <!-- Atmospheric blur filter for back layer — suggests haze and distance -->
+    
     <filter id="atmospheric-haze" x="-2%" y="-2%" width="104%" height="104%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="1.4" result="blur"/>
       <feColorMatrix in="blur" type="matrix"
@@ -10,13 +10,13 @@
                 0 0 0    1 0" result="tinted"/>
     </filter>
 
-    <!-- Subtle vignette for front hills to ground them -->
+    
     <filter id="ground-shadow" x="0%" y="0%" width="100%" height="100%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="0.6"/>
     </filter>
   </defs>
 
-  <!-- parallax scroll: move layers at different rates -->
+  
 
   <!-- ============================================================
        BACK LAYER — farthest, tallest, lightest, atmospheric haze
@@ -139,25 +139,25 @@
        Coordinates matched to peak vertices in #mountains-mid path
        ============================================================ -->
   <g id="snow-caps">
-    <!-- Snow cap: peak at approx x=660, y=95 -->
+    
     <polygon
       points="660,95  645,128  675,128"
       fill="#8e8ea8"
       opacity="0.85"
     />
-    <!-- Snow cap: peak at approx x=558, y=128 -->
+    
     <polygon
       points="558,128  543,158  573,158"
       fill="#8e8ea8"
       opacity="0.80"
     />
-    <!-- Snow cap: peak at approx x=450, y=155 -->
+    
     <polygon
       points="450,155  436,183  464,183"
       fill="#8e8ea8"
       opacity="0.75"
     />
-    <!-- Tiny secondary snow accent on x=335,y=185 peak -->
+    
     <polygon
       points="335,185  324,208  346,208"
       fill="#8e8ea8"

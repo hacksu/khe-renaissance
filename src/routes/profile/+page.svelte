@@ -330,15 +330,72 @@
                         <Select label="Level of Study <span class='text-red-500'>*</span>" name="level-of-study" value={application.levelOfStudy} onchange={(e) => levelOfStudy = e.currentTarget.value}>
                             <option value="" disabled>Select...</option>
                             <option>Less than Secondary / High School</option>
-                            <option>Secondary / High School</option>
-                            <option>Undergraduate University (2 year - community college or similar)</option>
-                            <option>Undergraduate University (3+ year)</option>
-                            <option>Graduate University (Masters, Professional, Doctoral, etc)</option>
-                            <option>Code School / Bootcamp</option>
-                            <option>Other Vocational / Trade Program or Apprenticeship</option>
-                            <option>Post Doctorate</option>
-                            <option>Other</option>
-                            <option>I'm not currently a student</option>
+
+                            <optgroup label="Secondary / High School">
+                                <option value="hs_freshman">High School Freshman (Grade 9)</option>
+                                <option value="hs_sophomore">High School Sophomore (Grade 10)</option>
+                                <option value="hs_junior">High School Junior (Grade 11)</option>
+                                <option value="hs_senior">High School Senior (Grade 12)</option>
+                                <option value="hs_ged">GED / High School Equivalency Program</option>
+                            </optgroup>
+
+                            <optgroup label="Undergraduate – 2-Year (Community College or Similar)">
+                                <option value="cc_freshman">Community College 1st Year / Freshman</option>
+                                <option value="cc_sophomore">Community College 2nd Year / Sophomore</option>
+                                <option value="cc_certificate">Certificate Program (Short-term, &lt; 1 year)</option>
+                            </optgroup>
+
+                            <optgroup label="Undergraduate – 3+ Year University">
+                                <option value="uni_freshman">University 1st Year / Freshman</option>
+                                <option value="uni_sophomore">University 2nd Year / Sophomore</option>
+                                <option value="uni_junior">University 3rd Year / Junior</option>
+                                <option value="uni_senior">University 4th Year / Senior</option>
+                                <option value="uni_super_senior">University 5th Year / Super Senior</option>
+                            </optgroup>
+
+                            <optgroup label="Graduate University">
+                                <option value="grad_masters_1">Master's Year 1</option>
+                                <option value="grad_masters_2">Master's Year 2+</option>
+                                <option value="grad_professional_1">Professional Degree (JD, MD, MBA, etc.) Year 1</option>
+                                <option value="grad_professional_2">Professional Degree Year 2</option>
+                                <option value="grad_professional_3">Professional Degree Year 3+</option>
+                                <option value="grad_phd_early">PhD Early Stage (Coursework)</option>
+                                <option value="grad_phd_mid">PhD Mid Stage (Candidacy / Qualifying Exams)</option>
+                                <option value="grad_phd_late">PhD Late Stage (Dissertation)</option>
+                            </optgroup>
+
+                            <optgroup label="Post-Doctorate">
+                                <option value="postdoc">Post-Doctoral Fellow / Researcher</option>
+                            </optgroup>
+
+                            <optgroup label="Code School / Bootcamp">
+                                <option value="bootcamp_enrolled">Code School / Bootcamp Currently Enrolled</option>
+                                <option value="bootcamp_alumni">Code School / Bootcamp Completed / Alumni</option>
+                            </optgroup>
+
+                            <optgroup label="Vocational / Trade / Apprenticeship">
+                                <option value="trade_apprentice_1">Apprenticeship Year 1</option>
+                                <option value="trade_apprentice_2">Apprenticeship Year 2</option>
+                                <option value="trade_apprentice_3">Apprenticeship Year 3+</option>
+                                <option value="trade_enrolled">Vocational / Trade Program Currently Enrolled</option>
+                                <option value="trade_completed">Vocational / Trade Program Completed</option>
+                            </optgroup>
+
+                            <optgroup label="Other">
+                                <option value="other_self_taught">Self-taught / Informal Learning</option>
+                                <option value="other_mooc">Online Courses / MOOCs (Coursera, Udemy, etc.)</option>
+                                <option value="other_military">Military Training Program</option>
+                                <option value="other_corporate">Corporate / Professional Training Program</option>
+                                <option value="other">Other</option>
+                            </optgroup>
+
+                            <optgroup label="Not Currently a Student">
+                                <option value="not_student_employed">Currently Employed (no active enrollment)</option>
+                                <option value="not_student_unemployed">Unemployed / Between Programs</option>
+                                <option value="not_student_retired">Retired from Education</option>
+                            </optgroup>
+
+                            <option value="no_answer">Prefer not to answer</option>
                             <option>Prefer not to answer</option>
                         </Select>
                         <Input label="Major <span class='text-red-500'>*</span>" name="field-of-study" bind:value={fieldOfStudy} />
