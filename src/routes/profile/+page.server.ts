@@ -156,19 +156,19 @@ export const actions: Actions = {
     if (isUnsubmitting) {
       await prisma.application.update({
         where: { id: application.id },
-        data: { submitted: false, approved: false },
+        data: { submitted: false, submittedAt: null, approved: false, approvedAt: null },
       });
     } else {
       if (previousApproved && hasChanges) {
         await prisma.application.update({
           where: { id: application.id },
-          data: { approved: false },
+          data: { approved: false, approvedAt: null },
         });
         await sendApprovalRevokedEmail(application.email);
       }
       await prisma.application.update({
         where: { id: application.id },
-        data: { submitted: true },
+        data: { submitted: true, submittedAt: new Date() },
       });
     }
   },

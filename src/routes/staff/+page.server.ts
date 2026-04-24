@@ -31,6 +31,7 @@ export const actions: Actions = {
       where: { id },
       data: {
         approved: newApprovedStatus,
+        approvedAt: newApprovedStatus ? new Date() : null,
         checkedIn: newApprovedStatus ? application.checkedIn : false,
       },
     });

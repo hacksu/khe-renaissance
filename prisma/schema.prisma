@@ -128,9 +128,11 @@ model Application {
   // Logistics
   tshirtSize         String   @default("")
 
-  submitted Boolean @default(false)
-  approved  Boolean @default(false)
-  checkedIn Boolean @default(false)
+  submitted   Boolean   @default(false)
+  submittedAt DateTime?
+  approved    Boolean   @default(false)
+  approvedAt  DateTime?
+  checkedIn   Boolean   @default(false)
 
   mlhCodeOfConduct Boolean @default(false)
   mlhAuthorization Boolean @default(false)

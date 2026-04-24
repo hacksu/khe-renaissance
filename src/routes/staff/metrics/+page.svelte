@@ -1,7 +1,61 @@
 <script lang="ts">
     const { data } = $props();
 
-    const { stats, demographics, education, experience, logistics, geography, referral, submittedCount } = data;
+    const { stats, timeSeries, demographics, education, experience, logistics, geography, referral, submittedCount } = data;
+
+    const W = 800, H = 220, PL = 48, PR = 16, PT = 16, PB = 36;
+    const chartW = W - PL - PR;
+    const chartH = H - PT - PB;
+
+    type Point = { x: number; y: number; date: string; reg: number; appr: number };
+
+    function buildChart(series: typeof timeSeries) {
+        if (!series.length) return null;
+
+        const maxCount = Math.max(...series.map(d => d.reg), ...series.map(d => d.appr), 1);
+        const n = series.length;
+
+        const xScale = (i: number) => (i / (n - 1 || 1)) * chartW;
+        const yScale = (v: number) => chartH - (v / maxCount) * chartH;
+
+        const pts: Point[] = series.map((d, i) => ({
+            x: xScale(i), y: 0, date: d.date, reg: d.reg, appr: d.appr,
+        }));
+
+        const regLine = pts.map(p => `${p.x},${yScale(p.reg)}`).join(' ');
+        const apprLine = pts.map(p => `${p.x},${yScale(p.appr)}`).join(' ');
+
+        const yTicks = [0, 0.25, 0.5, 0.75, 1].map(f => ({
+            y: yScale(f * maxCount),
+            label: Math.round(f * maxCount),
+        }));
+
+        const step = Math.max(1, Math.floor(n / 6));
+        const xTicks = pts
+            .filter((_, i) => i % step === 0 || i === n - 1)
+            .map(p => ({ x: p.x, label: p.date.slice(5) }));
+
+        return { pts, regLine, apprLine, yTicks, xTicks, yScale };
+    }
+
+    const chart = $derived(buildChart(timeSeries));
+
+    let hovered = $state<Point | null>(null);
+
+    function findNearest(pts: Point[], mouseX: number) {
+        if (!pts.length) return null;
+        return pts.reduce((best, p) => Math.abs(p.x - mouseX) < Math.abs(best.x - mouseX) ? p : best);
+    }
+
+    function onMouseMove(e: MouseEvent) {
+        if (!chart) return;
+        const svg = e.currentTarget as SVGSVGElement;
+        const rect = svg.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (W / rect.width) - PL;
+        hovered = findNearest(chart.pts, mx);
+    }
+
+    function onMouseLeave() { hovered = null; }
 
     function pct(n: number, total: number) {
         if (!total) return 0;
@@ -82,7 +136,6 @@
 <div class="min-h-screen p-4 pt-8 pb-24 max-w-6xl mx-auto">
     <h1 class="text-2xl font-bold text-gray-900 mb-6">Hacker Metrics</h1>
 
-    <!-- Status Overview -->
     <section class="mb-8">
         <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-500 mb-3">Status Overview</h2>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -113,11 +166,61 @@
         </div>
     </section>
 
-    <!-- 2-col grid of smaller charts -->
+
+    <section class="mb-8 bg-white border border-gray-200 rounded-lg shadow-sm p-5">
+        <h2 class="text-sm font-semibold text-gray-700 mb-4">Registrations &amp; Approvals Over Time</h2>
+        {#if chart}
+            <div class="relative">
+                <svg
+                    viewBox="0 0 {W} {H}"
+                    class="w-full"
+                    role="img"
+                    onmousemove={onMouseMove}
+                    onmouseleave={onMouseLeave}
+                >
+                    <g transform="translate({PL},{PT})">
+                        {#each chart.yTicks as tick}
+                            <line x1="0" y1={tick.y} x2={chartW} y2={tick.y} stroke="#e5e7eb" stroke-width="1" />
+                            <text x="-6" y={tick.y + 4} text-anchor="end" font-size="10" fill="#9ca3af">{tick.label}</text>
+                        {/each}
+
+                        <polyline points={chart.regLine} fill="none" stroke="#3b82f6" stroke-width="2" stroke-linejoin="round" />
+                        <polyline points={chart.apprLine} fill="none" stroke="#22c55e" stroke-width="2" stroke-linejoin="round" />
+
+                        {#each chart.xTicks as tick}
+                            <text x={tick.x} y={chartH + 20} text-anchor="middle" font-size="10" fill="#9ca3af">{tick.label}</text>
+                        {/each}
+
+                        {#if hovered}
+                            <line x1={hovered.x} y1="0" x2={hovered.x} y2={chartH} stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 2" />
+                            <circle cx={hovered.x} cy={chart.yScale(hovered.reg)} r="4" fill="#3b82f6" />
+                            <circle cx={hovered.x} cy={chart.yScale(hovered.appr)} r="4" fill="#22c55e" />
+                        {/if}
+                    </g>
+                </svg>
+
+                {#if hovered}
+                    <div class="absolute top-2 right-2 bg-white border border-gray-200 rounded shadow-sm text-xs p-2 space-y-1 pointer-events-none">
+                        <p class="text-gray-500 font-medium">{hovered.date}</p>
+                        <p class="text-blue-600">Registrations: <span class="font-bold">{hovered.reg}</span></p>
+                        <p class="text-green-600">Approvals: <span class="font-bold">{hovered.appr}</span></p>
+                    </div>
+                {/if}
+            </div>
+
+            <div class="flex gap-6 mt-2 text-xs text-gray-500">
+                <span class="flex items-center gap-1.5"><span class="inline-block w-4 h-0.5 bg-blue-500 rounded"></span> Registrations</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block w-4 h-0.5 bg-green-500 rounded"></span> Approvals</span>
+            </div>
+        {:else}
+            <p class="text-sm text-gray-400 italic">No data yet.</p>
+        {/if}
+    </section>
+
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {@render metricCard("Gender", demographics.gender, submittedCount, "pink")}
 
-        <!-- Age Distribution -->
         <section class="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
             <h3 class="text-sm font-semibold text-gray-700 mb-4">Age Distribution</h3>
             <div class="space-y-2">
