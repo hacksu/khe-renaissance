@@ -105,7 +105,6 @@
 
         {:else if applicationsClosed}
             <div class="flex flex-col items-center gap-3 px-6 text-center pointer-events-auto">
-                <p class="eyebrow">A Royal Proclamation</p>
                 <h1 class="title-glow text-5xl md:text-6xl font-black text-castle-gold leading-none tracking-tight">
                     HACK THE KINGDOM
                 </h1>
@@ -157,22 +156,21 @@
 
         {:else}
             <div class="flex flex-col items-center gap-4 px-6 text-center pointer-events-auto">
-                <p class="eyebrow">A Royal Proclamation</p>
                 <h1 class="title-glow text-6xl md:text-8xl lg:text-[10rem] font-black text-castle-gold
                            leading-none tracking-tight">
                     HACK THE<br/>KINGDOM
                 </h1>
-                <p class="text-white/60 text-sm md:text-base tracking-[0.35em] uppercase font-light">
+                <p class="text-white/60 text-xl md:text-base tracking-[0.35em] uppercase font-light">
                     Kent Hack Enough 2027
                 </p>
-                <div class="flex items-center gap-3 text-castle-torchAmber/70 text-sm tracking-widest">
+                <div class="flex items-center gap-3 text-castle-torchAmber/70 text-xl tracking-widest">
                     <span class="h-px w-10 bg-castle-torchAmber/40 block"></span>
-                    March 28-29, 2026
+                    March 6-7, 2027
                     <span class="h-px w-10 bg-castle-torchAmber/40 block"></span>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3 mt-2">
                     <button onclick={() => goto("/auth/login")} class="btn-torch px-8 py-3 text-sm uppercase tracking-widest font-bold">
-                        Storm the Gates
+                        Apply
                     </button>
                     <button onclick={() => goto("/schedule")} class="btn-stone px-8 py-3 text-sm uppercase tracking-widest font-semibold">
                         View Schedule
@@ -185,13 +183,6 @@
 </div>
 
 <style>
-    .eyebrow {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5em;
-        font-weight: 600;
-        color: #ffb347;
-    }
 
     .title-glow {
         text-shadow:

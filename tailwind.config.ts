@@ -23,7 +23,7 @@ export default {
           skyDeep:        "#0a1628",
           skyMid:         "#1a2e4a",
           skyLight:       "#2d4a6e",
-          torchOrange:    "#ff6b1a",
+          torchOrange:    "#ff922f",
           torchAmber:     "#ffb347",
           torchYellow:    "#ffe066",
           woodDark:       "#1a0f08",

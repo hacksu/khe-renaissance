@@ -109,7 +109,24 @@ model Application {
   gender             String   @default("")
   pronouns           String   @default("")
   dietaryRestriction String   @default("")
+  raceEthnicity      String   @default("")
+  sexuality          String   @default("")
+  firstGenStudent    String   @default("")
   updatedAt          DateTime @default(now())
+
+  // Experience & background
+  hackatonsAttended  String   @default("")
+  experienceLevel    String   @default("")
+  areasOfInterest    String   @default("")
+  heardAboutUs       String   @default("")
+
+  // Portfolio & networking
+  linkedinUrl        String   @default("")
+  interestedInSponsors String @default("")
+  teamPreference     String   @default("")
+
+  // Logistics
+  tshirtSize         String   @default("")
 
   submitted Boolean @default(false)
   approved  Boolean @default(false)
