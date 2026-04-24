@@ -1,0 +1,619 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Medieval sign component library — Hack the Kingdom KHE 2027">
+
+  <defs>
+
+    <filter id="wood-grain-h" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05 0.8" numOctaves="3" seed="7" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blended"/>
+      <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+    </filter>
+    <filter id="wood-grain-v" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8 0.05" numOctaves="3" seed="12" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blended"/>
+      <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+    </filter>
+
+    <filter id="sign-shadow" x="-10%" y="-5%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#0a0608" flood-opacity="0.55"/>
+    </filter>
+    <filter id="hardware-shadow" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <linearGradient id="wood-face-h" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#6b4f2f"/>
+      <stop offset="30%"  stop-color="#4a3520"/>
+      <stop offset="70%"  stop-color="#4a3520"/>
+      <stop offset="100%" stop-color="#2d1f0f"/>
+    </linearGradient>
+    <linearGradient id="wood-face-v" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#2d1f0f"/>
+      <stop offset="15%"  stop-color="#6b4f2f"/>
+      <stop offset="50%"  stop-color="#4a3520"/>
+      <stop offset="85%"  stop-color="#6b4f2f"/>
+      <stop offset="100%" stop-color="#2d1f0f"/>
+    </linearGradient>
+    <linearGradient id="iron-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#4a4a5c"/>
+      <stop offset="40%"  stop-color="#2e2e3c"/>
+      <stop offset="100%" stop-color="#1e1e28"/>
+    </linearGradient>
+    <linearGradient id="gold-trim" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#e8c96a"/>
+      <stop offset="50%"  stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#9a7a30"/>
+    </linearGradient>
+    <linearGradient id="post-shade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#1a0f08" stop-opacity="0.7"/>
+      <stop offset="30%"  stop-color="#1a0f08" stop-opacity="0"/>
+      <stop offset="70%"  stop-color="#1a0f08" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1a0f08" stop-opacity="0.5"/>
+    </linearGradient>
+
+    <symbol id="sign-hanging-rect" viewBox="0 0 220 80" width="220" height="80">
+
+      <line x1="20" y1="0" x2="20" y2="8" stroke="#2e2e3c" stroke-width="2" stroke-linecap="round"/>
+      <line x1="200" y1="0" x2="200" y2="8" stroke="#2e2e3c" stroke-width="2" stroke-linecap="round"/>
+
+      <g filter="url(#hardware-shadow)">
+        <rect x="13" y="5" width="14" height="8" rx="2" fill="#1e1e28"/>
+        <path d="M15 5 Q20 0 25 5" fill="none" stroke="#2e2e3c" stroke-width="3" stroke-linecap="round"/>
+        <path d="M15 5 Q20 1.5 25 5" fill="none" stroke="#4a4a5c" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="16" cy="10" r="1.5" fill="#4a4a5c"/>
+        <circle cx="24" cy="10" r="1.5" fill="#4a4a5c"/>
+      </g>
+
+      <g filter="url(#hardware-shadow)">
+        <rect x="193" y="5" width="14" height="8" rx="2" fill="#1e1e28"/>
+        <path d="M195 5 Q200 0 205 5" fill="none" stroke="#2e2e3c" stroke-width="3" stroke-linecap="round"/>
+        <path d="M195 5 Q200 1.5 205 5" fill="none" stroke="#4a4a5c" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="196" cy="10" r="1.5" fill="#4a4a5c"/>
+        <circle cx="204" cy="10" r="1.5" fill="#4a4a5c"/>
+      </g>
+
+      <g class="sign-board" filter="url(#sign-shadow)">
+
+        <path d="M8 12 Q8 11 9 11 L211 11 Q212 11 212 12 L213 76 Q213 77 212 77 L8 77 Q7 77 7 76 Z"
+              fill="url(#wood-face-h)"/>
+
+        <line x1="35" y1="12" x2="35" y2="76" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="36.5" y1="12" x2="36" y2="76" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+        <line x1="63" y1="12" x2="63" y2="76" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="64.5" y1="12" x2="64" y2="76" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+        <line x1="91" y1="12" x2="91" y2="76" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="92.5" y1="12" x2="92" y2="76" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+        <line x1="119" y1="12" x2="119" y2="76" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="120.5" y1="12" x2="120" y2="76" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+        <line x1="147" y1="12" x2="147" y2="76" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="148.5" y1="12" x2="148" y2="76" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+        <line x1="175" y1="12" x2="175" y2="76" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="176.5" y1="12" x2="176" y2="76" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+
+        <line x1="15"  y1="28" x2="32"  y2="30" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+        <line x1="40"  y1="45" x2="60"  y2="43" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="68"  y1="33" x2="88"  y2="35" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+        <line x1="96"  y1="55" x2="116" y2="53" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="124" y1="38" x2="144" y2="40" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+        <line x1="152" y1="60" x2="172" y2="58" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="180" y1="25" x2="210" y2="27" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+
+        <line x1="8" y1="12" x2="212" y2="12" stroke="#8b6f4a" stroke-width="0.8" opacity="0.4"/>
+        <line x1="8" y1="76" x2="213" y2="76" stroke="#1a0f08" stroke-width="1.2" opacity="0.5"/>
+
+        <path d="M8 12 L8 22 M8 12 L18 12" fill="none" stroke="#2e2e3c" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M212 12 L212 22 M212 12 L202 12" fill="none" stroke="#2e2e3c" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M8 76 L8 66 M8 76 L18 76" fill="none" stroke="#2e2e3c" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M212 76 L212 66 M212 76 L202 76" fill="none" stroke="#2e2e3c" stroke-width="2.5" stroke-linecap="round"/>
+
+        <path d="M8 12 L212 12 L213 76 L7 76 Z"
+              fill="none" stroke="#1a0f08" stroke-width="2" stroke-linejoin="round"/>
+
+      </g>
+
+    </symbol>
+
+    <symbol id="sign-hanging-pointed" viewBox="0 0 220 100" width="220" height="100">
+
+      <line x1="20" y1="0" x2="20" y2="8" stroke="#2e2e3c" stroke-width="2" stroke-linecap="round"/>
+      <line x1="200" y1="0" x2="200" y2="8" stroke="#2e2e3c" stroke-width="2" stroke-linecap="round"/>
+
+      <g filter="url(#hardware-shadow)">
+        <rect x="13" y="5" width="14" height="8" rx="2" fill="#1e1e28"/>
+        <path d="M15 5 Q20 0 25 5" fill="none" stroke="#2e2e3c" stroke-width="3" stroke-linecap="round"/>
+        <path d="M15 5 Q20 1.5 25 5" fill="none" stroke="#4a4a5c" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="16" cy="10" r="1.5" fill="#4a4a5c"/>
+        <circle cx="24" cy="10" r="1.5" fill="#4a4a5c"/>
+      </g>
+
+      <g filter="url(#hardware-shadow)">
+        <rect x="193" y="5" width="14" height="8" rx="2" fill="#1e1e28"/>
+        <path d="M195 5 Q200 0 205 5" fill="none" stroke="#2e2e3c" stroke-width="3" stroke-linecap="round"/>
+        <path d="M195 5 Q200 1.5 205 5" fill="none" stroke="#4a4a5c" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="196" cy="10" r="1.5" fill="#4a4a5c"/>
+        <circle cx="204" cy="10" r="1.5" fill="#4a4a5c"/>
+      </g>
+
+      <g class="sign-board" filter="url(#sign-shadow)">
+
+        <path d="M8 12 L212 12 L213 78 L118 98 Q110 100 102 100 Q94 100 86 98 L7 78 Z"
+              fill="url(#wood-face-h)"/>
+
+        <line x1="35"  y1="12" x2="34"  y2="80" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="36.5" y1="12" x2="35.5" y2="80" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+        <line x1="63"  y1="12" x2="62"  y2="80" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="64.5" y1="12" x2="63.5" y2="80" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+        <line x1="91"  y1="12" x2="90"  y2="82" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="92.5" y1="12" x2="91.5" y2="82" stroke="#6b4f2f" stroke-width="0.5" opacity="0.25"/>
+        <line x1="110" y1="12" x2="110" y2="100" stroke="#1a0f08" stroke-width="1" opacity="0.3"/>
+        <line x1="130" y1="12" x2="130" y2="100" stroke="#1a0f08" stroke-width="1" opacity="0.3"/>
+        <line x1="147" y1="12" x2="148" y2="82" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+        <line x1="175" y1="12" x2="176" y2="80" stroke="#1a0f08" stroke-width="1" opacity="0.35"/>
+
+        <line x1="15"  y1="28" x2="32"  y2="30" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+        <line x1="40"  y1="50" x2="60"  y2="48" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="68"  y1="35" x2="88"  y2="37" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+        <line x1="96"  y1="58" x2="108" y2="56" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="132" y1="60" x2="144" y2="62" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+        <line x1="152" y1="42" x2="172" y2="40" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="180" y1="25" x2="210" y2="27" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+
+        <path d="M14 17 L206 17 L207 74 L118 94 Q110 96 102 96 Q94 96 86 94 L13 74 Z"
+              fill="none" stroke="#8b6f4a" stroke-width="0.8" opacity="0.35"/>
+
+        <line x1="8" y1="12" x2="212" y2="12" stroke="#8b6f4a" stroke-width="0.8" opacity="0.4"/>
+
+        <path d="M8 12 L8 24 M8 12 L20 12" fill="none" stroke="#2e2e3c" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M212 12 L212 24 M212 12 L200 12" fill="none" stroke="#2e2e3c" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M8 76 L8 68 M8 76 L18 76" fill="none" stroke="#2e2e3c" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <path d="M212 76 L212 68 M212 76 L202 76" fill="none" stroke="#2e2e3c" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+
+        <path d="M96 96 L104 100 L112 96" fill="none" stroke="#2e2e3c" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="110" cy="99" r="2" fill="#2e2e3c"/>
+
+        <path d="M8 12 L212 12 L213 78 L118 98 Q110 100 102 100 Q94 100 86 98 L7 78 Z"
+              fill="none" stroke="#1a0f08" stroke-width="2" stroke-linejoin="round"/>
+
+      </g>
+
+    </symbol>
+
+    <symbol id="sign-post-stake" viewBox="0 0 80 200" width="80" height="200">
+
+      <ellipse cx="22" cy="192" rx="18" ry="6" fill="#2e2e3a" opacity="0.8"/>
+      <ellipse cx="22" cy="191" rx="14" ry="4" fill="#3a3048" opacity="0.5"/>
+
+      <path d="M14 8 L14 186 L18 197 L22 200 L26 197 L30 186 L30 8 Z"
+            fill="url(#wood-face-v)"/>
+
+      <rect x="14" y="8" width="4" height="178" fill="#1a0f08" opacity="0.45"/>
+      <rect x="26" y="8" width="4" height="178" fill="#1a0f08" opacity="0.3"/>
+      <rect x="19" y="8" width="5" height="178" fill="#8b6f4a" opacity="0.2"/>
+
+      <line x1="16" y1="8" x2="17" y2="186" stroke="#1a0f08" stroke-width="0.5" opacity="0.5"/>
+      <line x1="20" y1="8" x2="20.5" y2="188" stroke="#1a0f08" stroke-width="0.4" opacity="0.4"/>
+      <line x1="24" y1="8" x2="24.5" y2="186" stroke="#1a0f08" stroke-width="0.5" opacity="0.4"/>
+      <line x1="27" y1="8" x2="28" y2="184" stroke="#1a0f08" stroke-width="0.3" opacity="0.35"/>
+      <ellipse cx="22" cy="70" rx="5" ry="3" fill="none" stroke="#1a0f08" stroke-width="0.6" opacity="0.4"/>
+      <ellipse cx="22" cy="130" rx="4" ry="2.5" fill="none" stroke="#1a0f08" stroke-width="0.5" opacity="0.35"/>
+      <line x1="15" y1="50" x2="29" y2="52" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+      <line x1="15" y1="100" x2="29" y2="98" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+      <line x1="15" y1="150" x2="29" y2="152" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+
+      <rect x="13" y="6" width="18" height="5" rx="1" fill="#4a3520"/>
+      <rect x="14" y="7" width="16" height="3" rx="1" fill="#6b4f2f" opacity="0.6"/>
+
+      <path d="M14 8 L14 186 L18 197 L22 200 L26 197 L30 186 L30 8 Z"
+            fill="none" stroke="#1a0f08" stroke-width="1.5" stroke-linejoin="round"/>
+
+      <rect x="28" y="18" width="6" height="12" rx="1" fill="#2d1f0f"/>
+
+      <path d="M30 20 L75 20 L75 29 L30 29 Z" fill="url(#wood-face-h)"/>
+
+      <line x1="30" y1="22" x2="75" y2="22" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+      <line x1="30" y1="25" x2="75" y2="25" stroke="#6b4f2f" stroke-width="0.3" opacity="0.2"/>
+      <line x1="30" y1="27.5" x2="75" y2="27.5" stroke="#1a0f08" stroke-width="0.3" opacity="0.25"/>
+
+      <rect x="30" y="27" width="45" height="2" fill="#1a0f08" opacity="0.4"/>
+      <line x1="30" y1="20.5" x2="75" y2="20.5" stroke="#8b6f4a" stroke-width="0.6" opacity="0.35"/>
+
+      <rect x="73" y="20" width="4" height="9" rx="1" fill="#2d1f0f"/>
+
+      <rect x="27" y="17" width="8" height="16" rx="1" fill="none" stroke="#2e2e3c" stroke-width="2"/>
+      <circle cx="31" cy="20" r="1.3" fill="#4a4a5c"/>
+      <circle cx="31" cy="30" r="1.3" fill="#4a4a5c"/>
+
+      <circle cx="72" cy="20" r="4" fill="none" stroke="#2e2e3c" stroke-width="2.5"/>
+      <circle cx="72" cy="19.5" r="4" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="72" cy="20" r="1.5" fill="#1e1e28"/>
+
+      <path d="M30 20 L75 20 L75 29 L30 29 Z"
+            fill="none" stroke="#1a0f08" stroke-width="1.5" stroke-linejoin="round"/>
+
+    </symbol>
+
+    <symbol id="sign-post-double" viewBox="0 0 100 220" width="100" height="220">
+
+      <path d="M10 10 L10 207 L14 215 L18 218 L22 215 L26 207 L26 10 Z"
+            fill="url(#wood-face-v)"/>
+      <rect x="10" y="10" width="4" height="197" fill="#1a0f08" opacity="0.45"/>
+      <rect x="22" y="10" width="4" height="197" fill="#1a0f08" opacity="0.3"/>
+      <line x1="13" y1="10" x2="13.5" y2="207" stroke="#1a0f08" stroke-width="0.5" opacity="0.5"/>
+      <line x1="18" y1="10" x2="18.5" y2="209" stroke="#1a0f08" stroke-width="0.4" opacity="0.35"/>
+      <line x1="23" y1="10" x2="23.5" y2="207" stroke="#1a0f08" stroke-width="0.4" opacity="0.4"/>
+      <ellipse cx="18" cy="85" rx="5" ry="3" fill="none" stroke="#1a0f08" stroke-width="0.6" opacity="0.4"/>
+      <ellipse cx="18" cy="150" rx="4" ry="2.5" fill="none" stroke="#1a0f08" stroke-width="0.5" opacity="0.35"/>
+      <line x1="11" y1="55" x2="25" y2="57" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+      <line x1="11" y1="120" x2="25" y2="118" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+      <rect x="9" y="8" width="18" height="5" rx="1" fill="#4a3520"/>
+      <rect x="10" y="9" width="16" height="3" rx="1" fill="#6b4f2f" opacity="0.5"/>
+      <path d="M10 10 L10 207 L14 215 L18 218 L22 215 L26 207 L26 10 Z"
+            fill="none" stroke="#1a0f08" stroke-width="1.5" stroke-linejoin="round"/>
+
+      <path d="M74 10 L74 207 L78 215 L82 218 L86 215 L90 207 L90 10 Z"
+            fill="url(#wood-face-v)"/>
+      <rect x="74" y="10" width="4" height="197" fill="#1a0f08" opacity="0.45"/>
+      <rect x="86" y="10" width="4" height="197" fill="#1a0f08" opacity="0.3"/>
+      <line x1="77" y1="10" x2="77.5" y2="207" stroke="#1a0f08" stroke-width="0.5" opacity="0.5"/>
+      <line x1="82" y1="10" x2="82.5" y2="209" stroke="#1a0f08" stroke-width="0.4" opacity="0.35"/>
+      <line x1="87" y1="10" x2="87.5" y2="207" stroke="#1a0f08" stroke-width="0.4" opacity="0.4"/>
+      <ellipse cx="82" cy="90" rx="5" ry="3" fill="none" stroke="#1a0f08" stroke-width="0.6" opacity="0.4"/>
+      <ellipse cx="82" cy="160" rx="4" ry="2.5" fill="none" stroke="#1a0f08" stroke-width="0.5" opacity="0.35"/>
+      <line x1="75" y1="60" x2="89" y2="62" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+      <line x1="75" y1="130" x2="89" y2="128" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+      <rect x="73" y="8" width="18" height="5" rx="1" fill="#4a3520"/>
+      <rect x="74" y="9" width="16" height="3" rx="1" fill="#6b4f2f" opacity="0.5"/>
+      <path d="M74 10 L74 207 L78 215 L82 218 L86 215 L90 207 L90 10 Z"
+            fill="none" stroke="#1a0f08" stroke-width="1.5" stroke-linejoin="round"/>
+
+      <path d="M9 14 L91 14 L91 26 L9 26 Z" fill="url(#wood-face-h)"/>
+      <line x1="9" y1="17" x2="91" y2="17" stroke="#1a0f08" stroke-width="0.5" opacity="0.3"/>
+      <line x1="9" y1="20.5" x2="91" y2="20.5" stroke="#6b4f2f" stroke-width="0.4" opacity="0.2"/>
+      <line x1="9" y1="24" x2="91" y2="24" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+      <line x1="9" y1="14.5" x2="91" y2="14.5" stroke="#8b6f4a" stroke-width="0.7" opacity="0.35"/>
+      <rect x="9" y="23" width="82" height="3" fill="#1a0f08" opacity="0.4"/>
+      <rect x="9" y="14" width="82" height="12" fill="none" stroke="#1a0f08" stroke-width="1.5" stroke-linejoin="round"/>
+
+      <rect x="8" y="12" width="20" height="16" rx="2" fill="none" stroke="#2e2e3c" stroke-width="2.5"/>
+      <circle cx="12" cy="16" r="1.5" fill="#4a4a5c"/>
+      <circle cx="24" cy="16" r="1.5" fill="#4a4a5c"/>
+      <circle cx="12" cy="24" r="1.5" fill="#4a4a5c"/>
+      <circle cx="24" cy="24" r="1.5" fill="#4a4a5c"/>
+      <rect x="72" y="12" width="20" height="16" rx="2" fill="none" stroke="#2e2e3c" stroke-width="2.5"/>
+      <circle cx="76" cy="16" r="1.5" fill="#4a4a5c"/>
+      <circle cx="88" cy="16" r="1.5" fill="#4a4a5c"/>
+      <circle cx="76" cy="24" r="1.5" fill="#4a4a5c"/>
+      <circle cx="88" cy="24" r="1.5" fill="#4a4a5c"/>
+
+      <circle cx="30" cy="14" r="5" fill="none" stroke="#2e2e3c" stroke-width="2.5"/>
+      <circle cx="30" cy="13.5" r="5" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.5"/>
+      <ellipse cx="30" cy="16" rx="5" ry="2.5" fill="#1e1e28"/>
+      <circle cx="50" cy="14" r="5" fill="none" stroke="#2e2e3c" stroke-width="2.5"/>
+      <circle cx="50" cy="13.5" r="5" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.5"/>
+      <ellipse cx="50" cy="16" rx="5" ry="2.5" fill="#1e1e28"/>
+      <circle cx="70" cy="14" r="5" fill="none" stroke="#2e2e3c" stroke-width="2.5"/>
+      <circle cx="70" cy="13.5" r="5" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.5"/>
+      <ellipse cx="70" cy="16" rx="5" ry="2.5" fill="#1e1e28"/>
+
+    </symbol>
+
+    <symbol id="sign-plank" viewBox="0 0 240 70" width="240" height="70">
+
+      <g class="sign-board" filter="url(#sign-shadow)">
+
+        <path d="
+          M4 8
+          Q8 6 16 7
+          Q30 5 50 6
+          Q70 7 90 5
+          Q110 4 130 5
+          Q150 6 170 5
+          Q190 4 210 6
+          Q228 7 236 8
+          Q239 10 238 14
+          Q240 28 239 40
+          Q238 55 239 62
+          Q237 65 232 65
+          Q210 66 190 65
+          Q170 66 150 65
+          Q130 66 110 65
+          Q90 66 70 65
+          Q50 66 30 65
+          Q12 65 6 64
+          Q2 62 2 58
+          Q1 44 2 30
+          Q1 16 4 8
+          Z
+        " fill="url(#wood-face-h)"/>
+
+        <line x1="5"   y1="16" x2="235" y2="15" stroke="#1a0f08" stroke-width="0.5" opacity="0.35"/>
+        <line x1="5"   y1="22" x2="234" y2="21" stroke="#6b4f2f" stroke-width="0.4" opacity="0.2"/>
+        <line x1="4"   y1="30" x2="235" y2="30" stroke="#1a0f08" stroke-width="0.6" opacity="0.3"/>
+        <line x1="5"   y1="37" x2="235" y2="37" stroke="#6b4f2f" stroke-width="0.4" opacity="0.2"/>
+        <line x1="4"   y1="44" x2="234" y2="44" stroke="#1a0f08" stroke-width="0.5" opacity="0.3"/>
+        <line x1="5"   y1="51" x2="235" y2="51" stroke="#6b4f2f" stroke-width="0.3" opacity="0.2"/>
+        <line x1="4"   y1="58" x2="234" y2="58" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+
+        <ellipse cx="42" cy="35" rx="8" ry="6" fill="none" stroke="#1a0f08" stroke-width="1.2" opacity="0.55"/>
+        <ellipse cx="42" cy="35" rx="4" ry="3" fill="none" stroke="#1a0f08" stroke-width="0.8" opacity="0.4"/>
+        <ellipse cx="42" cy="35" rx="1.5" ry="1" fill="#1a0f08" opacity="0.4"/>
+        <path d="M28 34 Q35 28 42 29 Q49 28 56 34" stroke="#1a0f08" stroke-width="0.4" fill="none" opacity="0.3"/>
+        <path d="M28 38 Q35 44 42 43 Q49 44 56 38" stroke="#1a0f08" stroke-width="0.4" fill="none" opacity="0.3"/>
+
+        <ellipse cx="172" cy="32" rx="7" ry="5" fill="none" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+        <ellipse cx="172" cy="32" rx="3.5" ry="2.5" fill="none" stroke="#1a0f08" stroke-width="0.7" opacity="0.35"/>
+        <ellipse cx="172" cy="32" rx="1.2" ry="0.9" fill="#1a0f08" opacity="0.35"/>
+        <path d="M159 31 Q165 26 172 27 Q179 26 185 31" stroke="#1a0f08" stroke-width="0.4" fill="none" opacity="0.25"/>
+        <path d="M159 35 Q165 40 172 39 Q179 40 185 35" stroke="#1a0f08" stroke-width="0.4" fill="none" opacity="0.25"/>
+
+        <path d="M110 7 Q111 20 110 35" stroke="#1a0f08" stroke-width="0.8" fill="none" opacity="0.3" stroke-linecap="round"/>
+
+        <path d="M4 8 Q120 4 236 8" fill="none" stroke="#8b6f4a" stroke-width="0.8" opacity="0.35"/>
+        <path d="M4 63 Q120 67 236 64" fill="none" stroke="#1a0f08" stroke-width="1" opacity="0.45"/>
+
+        <circle cx="16" cy="16" r="4.5" fill="#1e1e28"/>
+        <circle cx="16" cy="16" r="3" fill="#2e2e3c"/>
+        <circle cx="14.5" cy="14.5" r="1.2" fill="#4a4a5c" opacity="0.7"/>
+        <line x1="13" y1="16" x2="19" y2="16" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+        <line x1="16" y1="13" x2="16" y2="19" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+
+        <circle cx="224" cy="16" r="4.5" fill="#1e1e28"/>
+        <circle cx="224" cy="16" r="3" fill="#2e2e3c"/>
+        <circle cx="222.5" cy="14.5" r="1.2" fill="#4a4a5c" opacity="0.7"/>
+        <line x1="221" y1="16" x2="227" y2="16" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+        <line x1="224" y1="13" x2="224" y2="19" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+
+        <circle cx="16" cy="54" r="4.5" fill="#1e1e28"/>
+        <circle cx="16" cy="54" r="3" fill="#2e2e3c"/>
+        <circle cx="14.5" cy="52.5" r="1.2" fill="#4a4a5c" opacity="0.7"/>
+        <line x1="13" y1="54" x2="19" y2="54" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+        <line x1="16" y1="51" x2="16" y2="57" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+
+        <circle cx="224" cy="54" r="4.5" fill="#1e1e28"/>
+        <circle cx="224" cy="54" r="3" fill="#2e2e3c"/>
+        <circle cx="222.5" cy="52.5" r="1.2" fill="#4a4a5c" opacity="0.7"/>
+        <line x1="221" y1="54" x2="227" y2="54" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+        <line x1="224" y1="51" x2="224" y2="57" stroke="#1a0f08" stroke-width="1" opacity="0.5"/>
+
+        <path d="
+          M4 8 Q8 6 16 7 Q30 5 50 6 Q70 7 90 5 Q110 4 130 5 Q150 6 170 5 Q190 4 210 6 Q228 7 236 8
+          Q239 10 238 14 Q240 28 239 40 Q238 55 239 62 Q237 65 232 65
+          Q210 66 190 65 Q170 66 150 65 Q130 66 110 65 Q90 66 70 65 Q50 66 30 65 Q12 65 6 64
+          Q2 62 2 58 Q1 44 2 30 Q1 16 4 8 Z
+        " fill="none" stroke="#1a0f08" stroke-width="2" stroke-linejoin="round"/>
+
+      </g>
+
+    </symbol>
+
+    <symbol id="sign-shield-mount" viewBox="0 0 100 120" width="100" height="120">
+
+      <g filter="url(#hardware-shadow)">
+        <rect x="42" y="2" width="16" height="10" rx="3" fill="#1e1e28"/>
+        <path d="M44 4 Q50 -2 56 4" fill="none" stroke="#2e2e3c" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M44 4 Q50 -1 56 4" fill="none" stroke="#4a4a5c" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="45" cy="9" r="1.5" fill="#4a4a5c"/>
+        <circle cx="55" cy="9" r="1.5" fill="#4a4a5c"/>
+      </g>
+
+      <g class="sign-board" filter="url(#sign-shadow)">
+
+        <path d="M50 118 C50 118 6 90 6 45 C6 24 6 10 50 10 C94 10 94 24 94 45 C94 90 50 118 50 118 Z"
+              fill="url(#wood-face-h)"/>
+
+        <line x1="50" y1="12" x2="50" y2="116" stroke="#1a0f08" stroke-width="0.8" opacity="0.35"/>
+        <line x1="30" y1="12" x2="22" y2="100" stroke="#1a0f08" stroke-width="0.6" opacity="0.3"/>
+        <line x1="20" y1="15" x2="10" y2="75" stroke="#1a0f08" stroke-width="0.6" opacity="0.3"/>
+        <line x1="70" y1="12" x2="78" y2="100" stroke="#1a0f08" stroke-width="0.6" opacity="0.3"/>
+        <line x1="80" y1="15" x2="90" y2="75" stroke="#1a0f08" stroke-width="0.6" opacity="0.3"/>
+
+        <line x1="18" y1="38" x2="40" y2="36" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+        <line x1="60" y1="36" x2="82" y2="38" stroke="#1a0f08" stroke-width="0.4" opacity="0.3"/>
+        <line x1="12" y1="58" x2="40" y2="55" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="60" y1="55" x2="88" y2="58" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="20" y1="76" x2="42" y2="74" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+        <line x1="58" y1="74" x2="80" y2="76" stroke="#1a0f08" stroke-width="0.4" opacity="0.25"/>
+
+        <ellipse cx="35" cy="50" rx="6" ry="4" fill="none" stroke="#1a0f08" stroke-width="0.7" opacity="0.4"/>
+        <ellipse cx="35" cy="50" rx="2.5" ry="2" fill="none" stroke="#1a0f08" stroke-width="0.5" opacity="0.3"/>
+
+        <path d="M50 118 C50 118 6 90 6 45 C6 24 6 10 50 10 L50 118 Z"
+              fill="#1a0f08" opacity="0.15"/>
+
+        <path d="M50 10 C94 10 94 24 94 45 C94 60 80 82 65 96 L50 60 Z"
+              fill="#8b6f4a" opacity="0.1"/>
+
+        <path d="M50 118 C50 118 6 90 6 45 C6 24 6 10 50 10 C94 10 94 24 94 45 C94 90 50 118 50 118 Z"
+              fill="none" stroke="url(#gold-trim)" stroke-width="4" stroke-linejoin="round"/>
+
+        <path d="M50 110 C50 110 13 86 13 45 C13 28 13 17 50 17 C87 17 87 28 87 45 C87 86 50 110 50 110 Z"
+              fill="none" stroke="#c9a84c" stroke-width="1.2" opacity="0.4"/>
+
+        <path d="M50 118 C50 118 6 90 6 45 C6 24 6 10 50 10 C94 10 94 24 94 45 C94 90 50 118 50 118 Z"
+              fill="none" stroke="#1a0f08" stroke-width="2.5" stroke-linejoin="round"/>
+
+      </g>
+
+    </symbol>
+
+    <symbol id="sign-bracket" viewBox="0 0 60 100" width="60" height="100">
+
+      <rect x="2" y="10" width="12" height="52" rx="3" fill="#1e1e28"/>
+      <rect x="3" y="11" width="4" height="50" rx="2" fill="#4a4a5c" opacity="0.3"/>
+      <rect x="2" y="10" width="12" height="52" rx="3" fill="none" stroke="#1a0f08" stroke-width="1.5"/>
+
+      <circle cx="8" cy="22" r="4" fill="#2e2e3c"/>
+      <circle cx="8" cy="22" r="2.5" fill="#1e1e28"/>
+      <circle cx="6.5" cy="20.5" r="1" fill="#4a4a5c" opacity="0.6"/>
+      <line x1="5" y1="22" x2="11" y2="22" stroke="#4a4a5c" stroke-width="0.8" opacity="0.4"/>
+      <line x1="8" y1="19" x2="8" y2="25" stroke="#4a4a5c" stroke-width="0.8" opacity="0.4"/>
+
+      <circle cx="8" cy="50" r="4" fill="#2e2e3c"/>
+      <circle cx="8" cy="50" r="2.5" fill="#1e1e28"/>
+      <circle cx="6.5" cy="48.5" r="1" fill="#4a4a5c" opacity="0.6"/>
+      <line x1="5" y1="50" x2="11" y2="50" stroke="#4a4a5c" stroke-width="0.8" opacity="0.4"/>
+      <line x1="8" y1="47" x2="8" y2="53" stroke="#4a4a5c" stroke-width="0.8" opacity="0.4"/>
+
+
+      <path d="
+        M14 38
+        C18 38 24 40 28 36
+        C34 30 32 18 40 14
+        C46 11 52 14 52 20
+        C52 26 46 28 46 34
+        C46 40 50 44 52 44
+      " fill="none" stroke="#1a0f08" stroke-width="7"
+         stroke-linecap="round" stroke-linejoin="round" opacity="0.5"
+         transform="translate(1,2)"/>
+
+      <path d="
+        M14 38
+        C18 38 24 40 28 36
+        C34 30 32 18 40 14
+        C46 11 52 14 52 20
+        C52 26 46 28 46 34
+        C46 40 50 44 52 44
+      " fill="none" stroke="#2e2e3c" stroke-width="6"
+         stroke-linecap="round" stroke-linejoin="round"/>
+
+      <path d="
+        M14 36
+        C18 36 24 38 28 34
+        C34 28 32 16 40 12
+        C46 9 52 12 52 18
+      " fill="none" stroke="#4a4a5c" stroke-width="1.5"
+         stroke-linecap="round" opacity="0.5"/>
+
+      <circle cx="52" cy="20" r="6" fill="none" stroke="#2e2e3c" stroke-width="3"/>
+      <circle cx="52" cy="20" r="6" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.4"/>
+      <circle cx="52" cy="20" r="2" fill="#1e1e28"/>
+      <path d="M52 20 Q54 17 57 20 Q57 24 52 24" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.35"/>
+
+      <circle cx="52" cy="44" r="5.5" fill="none" stroke="#2e2e3c" stroke-width="3"/>
+      <circle cx="52" cy="44" r="5.5" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.4"/>
+      <circle cx="52" cy="44" r="1.8" fill="#1e1e28"/>
+
+      <circle cx="28" cy="36" r="3" fill="#2e2e3c"/>
+      <circle cx="28" cy="36" r="1.5" fill="#1e1e28"/>
+
+      <line x1="52" y1="49" x2="52" y2="56" stroke="#2e2e3c" stroke-width="2.5"/>
+      <circle cx="52" cy="65" r="8" fill="none" stroke="#2e2e3c" stroke-width="3.5"/>
+      <circle cx="52" cy="64.5" r="8" fill="none" stroke="#4a4a5c" stroke-width="1.2" opacity="0.5"/>
+      <line x1="49" y1="57" x2="55" y2="57" stroke="#2e2e3c" stroke-width="3.5"/>
+      <line x1="49" y1="57" x2="55" y2="57" stroke="#4a4a5c" stroke-width="1.2" opacity="0.4"/>
+      <path d="M44 65 Q52 74 60 65" fill="none" stroke="#1e1e28" stroke-width="2" opacity="0.6"/>
+      <path d="M44 63 Q52 57 60 63" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.3"/>
+
+      <ellipse cx="14" cy="38" rx="5" ry="4" fill="#2e2e3c"/>
+      <ellipse cx="14" cy="38" rx="5" ry="4" fill="none" stroke="#1a0f08" stroke-width="1"/>
+      <ellipse cx="14" cy="38" rx="3" ry="2.5" fill="#1e1e28"/>
+      <ellipse cx="13" cy="37" rx="1.5" ry="1" fill="#4a4a5c" opacity="0.5"/>
+
+    </symbol>
+
+  </defs>
+
+
+  <g transform="translate(60, 55)">
+    <use href="#sign-hanging-rect" x="0" y="0"/>
+    <text x="110" y="53" text-anchor="middle"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="18" font-weight="bold" letter-spacing="3"
+          fill="#e8d5a3">ANDREW</text>
+  </g>
+
+  <g transform="translate(330, 55)">
+    <use href="#sign-hanging-pointed" x="0" y="0"/>
+    <text x="110" y="53" text-anchor="middle"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="18" font-weight="bold" letter-spacing="3"
+          fill="#e8d5a3">Hi</text>
+  </g>
+
+  <g transform="translate(570, 68)">
+    <use href="#sign-plank" x="-10" y="0"/>
+    <text x="110" y="43" text-anchor="middle"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="16" font-weight="bold" letter-spacing="2"
+          fill="#e8d5a3">HACKSU</text>
+  </g>
+
+
+
+  <g transform="translate(55, 200)">
+    <use href="#sign-post-stake" x="0" y="0"/>
+    <line x1="72" y1="20" x2="72" y2="28" stroke="#2e2e3c" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
+    <g transform="translate(42, 28)">
+      <rect x="0" y="0" width="60" height="28" rx="2" fill="#4a3520"/>
+      <line x1="10" y1="0" x2="10" y2="28" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <line x1="20" y1="0" x2="20" y2="28" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <line x1="30" y1="0" x2="30" y2="28" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <line x1="40" y1="0" x2="40" y2="28" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <line x1="50" y1="0" x2="50" y2="28" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <rect x="0" y="0" width="60" height="28" rx="2" fill="none" stroke="#1a0f08" stroke-width="1.5"/>
+      <text x="30" y="19" text-anchor="middle"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="10" font-weight="bold" letter-spacing="1"
+            fill="#e8d5a3">KHE27</text>
+    </g>
+  </g>
+
+  <g transform="translate(185, 195)">
+    <use href="#sign-post-double" x="0" y="0"/>
+    <line x1="50" y1="14" x2="50" y2="26" stroke="#2e2e3c" stroke-width="1.5" stroke-linecap="round"/>
+    <g transform="translate(15, 26)">
+      <rect x="0" y="0" width="70" height="30" rx="2" fill="#4a3520"/>
+      <line x1="14" y1="0" x2="14" y2="30" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <line x1="28" y1="0" x2="28" y2="30" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <line x1="42" y1="0" x2="42" y2="30" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <line x1="56" y1="0" x2="56" y2="30" stroke="#1a0f08" stroke-width="0.7" opacity="0.3"/>
+      <rect x="0" y="0" width="70" height="30" rx="2" fill="none" stroke="#1a0f08" stroke-width="1.5"/>
+      <text x="35" y="20" text-anchor="middle"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="11" font-weight="bold" letter-spacing="1"
+            fill="#e8d5a3">HacKSU</text>
+    </g>
+  </g>
+
+  <g transform="translate(340, 195)">
+    <use href="#sign-shield-mount" x="0" y="0"/>
+    <text x="50" y="55" text-anchor="middle"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="13" font-weight="bold" letter-spacing="2"
+          fill="#e8d5a3">HacKSU</text>
+    <text x="50" y="72" text-anchor="middle"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="10" letter-spacing="1"
+          fill="#c9a84c" opacity="0.8">&#x2736;</text>
+  </g>
+
+  <g transform="translate(490, 200)">
+    <use href="#sign-bracket" x="0" y="0"/>
+    <line x1="52" y1="73" x2="52" y2="82" stroke="#4a3520" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+  </g>
+
+  <g transform="translate(568, 190)">
+    <rect x="-4" y="0" width="18" height="120" rx="2" fill="#2a2035" opacity="0.7"/>
+    <rect x="-4" y="0" width="18" height="120" rx="2" fill="none" stroke="#3a2e50" stroke-width="1"/>
+    <line x1="-4" y1="30" x2="14" y2="30" stroke="#1a1220" stroke-width="1" opacity="0.5"/>
+    <line x1="-4" y1="60" x2="14" y2="60" stroke="#1a1220" stroke-width="1" opacity="0.5"/>
+    <line x1="-4" y1="90" x2="14" y2="90" stroke="#1a1220" stroke-width="1" opacity="0.5"/>
+
+    <use href="#sign-bracket" x="0" y="10"/>
+
+    <line x1="52" y1="83" x2="32" y2="90" stroke="#2e2e3c" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="72" y1="83" x2="92" y2="90" stroke="#2e2e3c" stroke-width="1.5" stroke-linecap="round"/>
+
+    <g transform="translate(-36, 90)">
+      <use href="#sign-hanging-rect" x="0" y="0" width="156" height="57"/>
+      <text x="78" y="44" text-anchor="middle"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="13" font-weight="bold" letter-spacing="2"
+            fill="#e8d5a3">Andrew</text>
+    </g>
+
+  </g>
+
+
+</svg>

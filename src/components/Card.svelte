@@ -6,6 +6,6 @@
 
 </script>
 
-<div class="border-2 border-white rounded-md h-full bg-secondary text-white {padded ? "p-4" : ""}">
+<div class="border-2 border-castle-stoneMid rounded-md h-full bg-castle-stoneDark text-white {padded ? "p-4" : ""}">
     {@render children()}
 </div>

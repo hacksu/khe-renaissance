@@ -1,264 +1,278 @@
-
 <script lang="ts">
     import { enhance } from "$app/forms";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
     import { Utils } from "$lib/util";
-    const day = "March 28-29th, 2026"
-    import Button from "../components/Button.svelte";
-    import dinoSvg from "../assets/dino.svg";
-    import rockImg from "../assets/rock.png";
+
+    import auroraSvg          from "../assets/castle/aurora.svg";
+    import moonSvg            from "../assets/castle/moon.svg";
+    import mountainsSvg       from "../assets/castle/mountains.svg";
+    import enchantedForestSvg from "../assets/castle/enchanted-forest.svg";
+    import wallSvg            from "../assets/castle/wall.svg";
+    import fogSvg             from "../assets/castle/fog.svg";
+    import torchSvg           from "../assets/castle/torch.svg";
+
     import QRCode from "qrcode";
-    // const returnDate = DateTime.fromFormat("03/28/2026", "MM/dd/yyyy").toRelativeCalendar();
 
-    let isShaking = $state(false);
-    let isHovered = $state(false);
-    let shakeTimeout: ReturnType<typeof setTimeout> | null = null;
-    let hash = $state("");
+    let hash      = $state("");
     let qrDataUrl = $state("");
-    let { form } = $props<{ form?: { success?: boolean; alreadySignedUp?: boolean; error?: string } }>();
-    let email = $state("");
-    let loading = $state(false);
-    const applicationsClosed = Utils.hasApplicationsClosed();
+    let { form }  = $props<{ form?: { success?: boolean; alreadySignedUp?: boolean; error?: string } }>();
+    let email     = $state("");
+    let loading   = $state(false);
 
+    let moonWobble = $state(false);
+    let stars: { id: number; angle: number }[] = $state([]);
+    let starId = 0;
+
+    const applicationsClosed = Utils.hasApplicationsClosed();
     const isQrMode = $derived(hash === "#qr");
+
+    function clickMoon() {
+        if (moonWobble) return;
+        moonWobble = true;
+        for (let i = 0; i < 6; i++) {
+            const id = ++starId;
+            stars = [...stars, { id, angle: i * 60 + Math.random() * 20 }];
+            setTimeout(() => { stars = stars.filter(s => s.id !== id); }, 900);
+        }
+        setTimeout(() => { moonWobble = false; }, 700);
+    }
 
     onMount(async () => {
         hash = window.location.hash;
-        const handleHashChange = () => { hash = window.location.hash; };
-        window.addEventListener("hashchange", handleHashChange);
+        const onHash = () => { hash = window.location.hash; };
+        window.addEventListener("hashchange", onHash);
 
         qrDataUrl = await QRCode.toDataURL("https://khe.io", {
-            width: 364,
-            margin: 2,
-            color: {
-                dark: "#504538",
-                light: "#ede4d9",
-            },
+            width: 364, margin: 2,
+            color: { dark: "#2e2e3a", light: "#c9a84c" },
         });
 
-        // Shake the rock occasionally (every 5-8 seconds)
-        const scheduleShake = () => {
-            const delay = 5000 + Math.random() * 3000; // 5-8 seconds
-            shakeTimeout = setTimeout(() => {
-                isShaking = true;
-                setTimeout(() => {
-                    isShaking = false;
-                    scheduleShake(); // Schedule next shake
-                }, 800); // Shake duration
-            }, delay);
-        };
-        scheduleShake();
-
-        return () => {
-            if (shakeTimeout) clearTimeout(shakeTimeout);
-            window.removeEventListener("hashchange", handleHashChange);
-        };
+        return () => window.removeEventListener("hashchange", onHash);
     });
 </script>
 
-<div class="bg-[url(/background.jpg)] bg-cover bg-center h-screen flex flex-col justify-center items-center gap-3 text-center relative overflow-hidden">
-    <img 
-        src={rockImg} 
-        alt="Rock" 
-        class="absolute inset-0 w-full h-full object-cover object-center z-10 transition-transform duration-100 pointer-events-none overflow-hidden"
-        class:animate-shake={isShaking}
-        style="transform-origin: center center;"
-    />
-    
-    <div 
-        class="absolute bottom-[0%] left-[18%] cursor-pointer z-[5] p-8 -m-8"
-        onmouseenter={() => isHovered = true}
-        onmouseleave={() => isHovered = false}
-    >
-        <img 
-            src={dinoSvg} 
-            alt="Dino" 
-            class="w-32 md:w-48 h-auto transition-all duration-500 ease-out pointer-events-none dino-pop"
-            class:dino-popped={isHovered}
-            class:dino-hidden={!isHovered}
-        />
-    </div>
+<div class="h-screen relative overflow-hidden bg-castle-skyDeep" id="qr">
 
-    <!-- Content overlay (above rock and dino) -->
-    <div class="relative z-30 flex flex-col items-center gap-3 text-center" id="qr">
-        {#if !applicationsClosed}
-            <h1 class="text-4xl">Kent Hack Enough returns <span class="font-bold">{day}</span></h1>
-        {/if}
+    <img src={auroraSvg} aria-hidden="true" alt=""
+         class="absolute inset-0 w-full h-full object-cover z-[1] opacity-40 pointer-events-none" />
+
+    <button
+        class="absolute top-6 right-14 md:right-24 w-28 md:w-48 z-[2] moon-btn"
+        class:moon-wobble={moonWobble}
+        onclick={clickMoon}
+        aria-label="Click the moon"
+    >
+        <img src={moonSvg} alt="" class="w-full h-auto moon-glow" />
+        {#each stars as star (star.id)}
+            <span class="shooting-star" style="--angle: {star.angle}deg;"></span>
+        {/each}
+    </button>
+
+    <img src={mountainsSvg} aria-hidden="true" alt=""
+         class="absolute bottom-0 left-0 w-full h-auto z-[3] pointer-events-none" />
+
+    <img src={enchantedForestSvg} aria-hidden="true" alt=""
+         class="absolute bottom-0 left-0 w-full h-auto z-[4] pointer-events-none" />
+
+    <img src={wallSvg} aria-hidden="true" alt=""
+         class="absolute bottom-0 left-0 w-full h-auto z-[5] pointer-events-none" />
+
+    <img src={torchSvg} aria-hidden="true" alt=""
+         class="absolute z-[9] pointer-events-none torch-l"
+         style="width: 3.5vw; min-width: 26px; bottom: calc(37.5vw - 14vw); left: 19%;" />
+
+    <img src={torchSvg} aria-hidden="true" alt=""
+         class="absolute z-[9] pointer-events-none torch-r"
+         style="width: 3.5vw; min-width: 26px; bottom: calc(37.5vw - 14vw); right: 19%; transform: scaleX(-1);" />
+
+    <!-- Fog 
+    <img src={fogSvg} aria-hidden="true" alt=""
+         class="absolute bottom-0 left-0 w-full h-auto z-[7] pointer-events-none opacity-55" />
+-->
+    <div class="absolute inset-0 z-[20] flex flex-col items-center justify-end pointer-events-none"
+         style="padding-bottom: 2rem;">
+
         {#if isQrMode}
-            <div class="flex flex-col items-center gap-3 mt-1">
+            <div class="flex flex-col items-center gap-4 pointer-events-auto">
                 {#if qrDataUrl}
-                    <div class="bg-offwhite p-3 rounded-2xl shadow-2xl border-4 border-sand/60">
-                        <img src={qrDataUrl} alt="QR Code to khe.io" class="w-72 h-72 rounded-lg" />
+                    <div class="bg-castle-stoneDark p-4 rounded-2xl shadow-2xl border-2 border-castle-gold/60">
+                        <img src={qrDataUrl} alt="QR Code - khe.io" class="w-64 h-64 rounded-lg" />
                     </div>
                 {/if}
-                <p class="text-offwhite/90 text-xl font-semibold tracking-widest drop-shadow">khe.io</p>
+                <p class="text-castle-torchYellow text-2xl font-bold tracking-[0.5em] drop-shadow">khe.io</p>
             </div>
-        {:else}
-            {#if applicationsClosed}
-                <div class="bg-secondary/90 backdrop-blur-md border-2 border-sand/50 rounded-3xl shadow-2xl px-10 py-10 flex flex-col items-center gap-4 max-w-2xl">
-                    <p class="text-sand uppercase tracking-[0.3em] text-sm font-semibold">Save the date</p>
 
-                    <h1 class="text-offwhite text-4xl md:text-5xl font-bold leading-tight">
-                        Kent Hack Enough<br />
-                        <span class="text-accent">will return</span>
-                    </h1>
-
-                    <div class="h-px w-3/4 bg-sand/40"></div>
-
-                    <p class="text-sand text-3xl md:text-4xl font-bold tracking-wide">
-                        March 6-7, 2027
-                    </p>
-                </div>
-
-                <div class="bg-offwhite backdrop-blur-sm border border-white/20 rounded-2xl px-8 py-8 w-full max-w-md flex flex-col gap-4 shadow-xl mt-3">
+        {:else if applicationsClosed}
+            <div class="flex flex-col items-center gap-3 px-6 text-center pointer-events-auto">
+                <h1 class="title-glow text-5xl md:text-6xl font-black text-castle-gold leading-none tracking-tight">
+                    HACK THE KINGDOM
+                </h1>
+                <p class="text-castle-gold text-base md:text-lg tracking-[0.3em] font-light">
+                    KENT HACK ENOUGH
+                </p>
+                <div class="w-full max-w-sm bg-castle-mortar/80 backdrop-blur border border-castle-gold/25
+                            rounded-2xl p-5 flex flex-col gap-3 mt-1 text-left">
+                    <div class="text-center">
+                        <p class="text-castle-gold text-xs uppercase tracking-[0.4em] mb-1">Save the Date</p>
+                        <p class="text-white text-2xl font-bold">March 6-7, 2027</p>
+                    </div>
+                    <div class="h-px bg-castle-gold/20"></div>
                     {#if form?.success}
-                        <div class="flex flex-col items-center gap-3 py-2">
-                            <div class="w-12 h-12 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center text-accent text-2xl">✓</div>
-                            <p class="text-secondary font-semibold text-lg">
-                                {form.alreadySignedUp ? "You're already on the list!" : "You're on the list!"}
+                        <div class="flex flex-col items-center gap-2 py-1 text-center">
+                            <span class="text-castle-torchOrange text-3xl select-none">⚔</span>
+                            <p class="text-white font-semibold text-sm">
+                                {form.alreadySignedUp ? "Already on the list!" : "You're on the list!"}
                             </p>
-                            <p class="text-secondary/70 text-sm text-center">
+                            <p class="text-castle-stoneHighlight text-xs">
                                 {form.alreadySignedUp
-                                    ? "We already have your email. We'll reach out when signups open."
-                                    : "We'll email you when signups open for KHE 2027."}
+                                    ? "We'll reach out when signups open."
+                                    : "We'll notify you when registration launches."}
                             </p>
                         </div>
                     {:else}
-                        <p class="text-secondary font-semibold text-lg">Get notified when signups open</p>
-                        <p class="text-secondary/70 text-sm -mt-2">Drop your email and we'll reach out when registration launches.</p>
-
+                        <p class="text-castle-stoneHighlight text-xs -mb-1">Get notified when signups open</p>
                         {#if form?.error}
-                            <p class="text-red-600 text-sm">{form.error}</p>
+                            <p class="text-red-400 text-xs">{form.error}</p>
                         {/if}
-
-                        <form
-                            method="POST"
-                            action="?/subscribe"
-                            use:enhance={() => {
-                                loading = true;
-                                return async ({ update }) => {
-                                    loading = false;
-                                    await update();
-                                };
-                            }}
-                            class="flex flex-col gap-3"
-                        >
-                            <input
-                                type="email"
-                                name="email"
-                                bind:value={email}
-                                placeholder="your@email.com"
-                                required
-                                class="w-full px-4 py-3 rounded-xl bg-white border border-secondary/20 text-secondary placeholder-secondary/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-200 text-sm"
-                            />
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                class="w-full py-3 px-6 bg-accent hover:bg-accent/80 disabled:opacity-50 text-white font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-accent/40 hover:scale-[1.02] text-sm"
-                            >
-                                {loading ? "Signing up..." : "Remind me"}
+                        <form method="POST" action="?/subscribe"
+                              use:enhance={() => {
+                                  loading = true;
+                                  return async ({ update }) => { loading = false; await update(); };
+                              }}
+                              class="flex flex-col gap-2">
+                            <input type="email" name="email" bind:value={email}
+                                   placeholder="your@email.com" required
+                                   class="w-full px-3 py-2 rounded-lg bg-castle-ironDark border border-castle-stoneMid
+                                          text-white placeholder-castle-stoneLight text-sm
+                                          focus:outline-none focus:border-castle-torchOrange transition-colors" />
+                            <button type="submit" disabled={loading} class="btn-torch text-sm py-2">
+                                {loading ? "Signing up..." : "Notify me"}
                             </button>
                         </form>
                     {/if}
                 </div>
-            {:else}
-                <div class="flex flex-col md:flex-row gap-3 w-96">
-                    <Button size="lg" onclick={() => goto("/auth/login")}>Apply now!</Button>
-                    <Button size="lg" onclick={() => goto("/schedule")}>View Schedule</Button>
+            </div>
+
+        {:else}
+            <div class="flex flex-col items-center gap-4 px-6 text-center pointer-events-auto">
+                <h1 class="title-glow text-6xl md:text-8xl lg:text-[10rem] font-black text-castle-gold
+                           leading-none tracking-tight">
+                    HACK THE<br/>KINGDOM
+                </h1>
+                <p class="text-white/60 text-xl md:text-base tracking-[0.35em] uppercase font-light">
+                    Kent Hack Enough 2027
+                </p>
+                <div class="flex items-center gap-3 text-castle-torchAmber/70 text-xl tracking-widest">
+                    <span class="h-px w-10 bg-castle-torchAmber/40 block"></span>
+                    March 6-7, 2027
+                    <span class="h-px w-10 bg-castle-torchAmber/40 block"></span>
                 </div>
-            {/if}
+                <div class="flex flex-col sm:flex-row gap-3 mt-2">
+                    <button onclick={() => goto("/auth/login")} class="btn-torch px-8 py-3 text-sm uppercase tracking-widest font-bold">
+                        Apply
+                    </button>
+                    <button onclick={() => goto("/schedule")} class="btn-stone px-8 py-3 text-sm uppercase tracking-widest font-semibold">
+                        View Schedule
+                    </button>
+                </div>
+            </div>
         {/if}
     </div>
+
 </div>
 
-<!--I hate keyframes -->
 <style>
-    @keyframes shake {
-        0% { 
-            transform: translate(0, 0) rotate(0deg) scale(1);
-        }
-        5% { 
-            transform: translate(-3px, -2px) rotate(-1deg) scale(1.002);
-        }
-        10% { 
-            transform: translate(3px, 2px) rotate(1deg) scale(1.001);
-        }
-        15% { 
-            transform: translate(-2px, 1px) rotate(-0.8deg) scale(1.001);
-        }
-        20% { 
-            transform: translate(2px, -1px) rotate(0.8deg) scale(1);
-        }
-        25% { 
-            transform: translate(-2px, 2px) rotate(-0.6deg) scale(1.001);
-        }
-        30% { 
-            transform: translate(2px, -2px) rotate(0.6deg) scale(1);
-        }
-        35% { 
-            transform: translate(-1px, 1px) rotate(-0.4deg) scale(1);
-        }
-        40% { 
-            transform: translate(1px, -1px) rotate(0.4deg) scale(1);
-        }
-        45% { 
-            transform: translate(-1px, 0px) rotate(-0.3deg) scale(1);
-        }
-        50% { 
-            transform: translate(1px, 1px) rotate(0.3deg) scale(1);
-        }
-        55% { 
-            transform: translate(-0.5px, -0.5px) rotate(-0.2deg) scale(1);
-        }
-        60% { 
-            transform: translate(0.5px, 0.5px) rotate(0.2deg) scale(1);
-        }
-        65% { 
-            transform: translate(-0.5px, 0px) rotate(-0.1deg) scale(1);
-        }
-        70% { 
-            transform: translate(0.5px, 0px) rotate(0.1deg) scale(1);
-        }
-        75% { 
-            transform: translate(-0.3px, 0px) rotate(-0.05deg) scale(1);
-        }
-        80% { 
-            transform: translate(0.3px, 0px) rotate(0.05deg) scale(1);
-        }
-        85% { 
-            transform: translate(-0.2px, 0px) rotate(-0.03deg) scale(1);
-        }
-        90% { 
-            transform: translate(0.2px, 0px) rotate(0.03deg) scale(1);
-        }
-        95% { 
-            transform: translate(-0.1px, 0px) rotate(-0.01deg) scale(1);
-        }
-        100% { 
-            transform: translate(0, 0) rotate(0deg) scale(1);
-        }
+    .title-glow {
+        text-shadow:
+            0 0 20px  rgba(201, 168, 76, 0.7),
+            0 0 60px  rgba(201, 168, 76, 0.4),
+            0 0 120px rgba(201, 168, 76, 0.2);
     }
 
-    .animate-shake {
-        animation: shake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-        transform-origin: center center;
+    .btn-torch {
+        background: linear-gradient(135deg, #ff6b1a 0%, #ffb347 100%);
+        color: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 18px rgba(255, 107, 26, 0.45);
+        transition: box-shadow 0.2s, transform 0.15s;
+        cursor: pointer;
+    }
+    .btn-torch:hover {
+        box-shadow: 0 0 32px rgba(255, 107, 26, 0.75);
+        transform: translateY(-2px);
     }
 
-    .dino-pop {
-        transform: translateY(0) translateX(0) scale(1);
-        opacity: 0;
-        visibility: hidden;
+    .btn-stone {
+        background: linear-gradient(135deg, #4a4a5c 0%, #2e2e3a 100%);
+        color: #c9a84c;
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        border-radius: 0.5rem;
+        transition: border-color 0.2s, background 0.2s, transform 0.15s;
+        cursor: pointer;
+    }
+    .btn-stone:hover {
+        border-color: rgba(201, 168, 76, 0.7);
+        background: linear-gradient(135deg, #6b6b80 0%, #4a4a5c 100%);
+        transform: translateY(-2px);
     }
 
-    .dino-pop.dino-popped {
-        transform: translateY(-60px) translateX(20px) scale(1.15);
-        opacity: 1;
-        visibility: visible;
+    .moon-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        position: absolute;
+        overflow: visible;
     }
 
-    .dino-pop.dino-hidden {
-        opacity: 0;
-        visibility: hidden;
+    @keyframes moon-pulse {
+        0%, 100% { filter: drop-shadow(0 0  8px rgba(201,168,76,0.35)); }
+        50%       { filter: drop-shadow(0 0 24px rgba(201,168,76,0.80)); }
     }
+    .moon-glow { animation: moon-pulse 5s ease-in-out infinite; }
+
+    @keyframes moon-wobble {
+        0%   { transform: scale(1)    rotate(0deg);  }
+        20%  { transform: scale(1.18) rotate(-8deg); }
+        40%  { transform: scale(1.12) rotate(6deg);  }
+        60%  { transform: scale(1.08) rotate(-4deg); }
+        80%  { transform: scale(1.04) rotate(2deg);  }
+        100% { transform: scale(1)    rotate(0deg);  }
+    }
+    .moon-wobble img { animation: moon-wobble 0.7s ease-in-out forwards !important; }
+
+    .shooting-star {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 60px;
+        height: 2px;
+        border-radius: 1px;
+        background: linear-gradient(90deg, #ffe066, transparent);
+        transform-origin: left center;
+        transform: rotate(var(--angle));
+        animation: shoot-out 0.9s ease-out forwards;
+        pointer-events: none;
+    }
+    @keyframes shoot-out {
+        0%   { opacity: 1; width: 0;    }
+        40%  { opacity: 1; width: 70px; }
+        100% { opacity: 0; width: 90px; }
+    }
+
+    @keyframes flicker-a {
+        0%,100% { filter: drop-shadow(0 -6px 10px rgba(255,107,26,0.85)); }
+        25%      { filter: drop-shadow(0 -6px 18px rgba(255,224,102,1.0)); }
+        50%      { filter: drop-shadow(0 -6px  7px rgba(255,107,26,0.60)); }
+        75%      { filter: drop-shadow(0 -6px 14px rgba(255,179,71,0.90)); }
+    }
+    @keyframes flicker-b {
+        0%,100% { filter: drop-shadow(0 -6px 14px rgba(255,179,71,0.90)); }
+        30%      { filter: drop-shadow(0 -6px  7px rgba(255,107,26,0.60)); }
+        60%      { filter: drop-shadow(0 -6px 18px rgba(255,224,102,1.0)); }
+        80%      { filter: drop-shadow(0 -6px 10px rgba(255,107,26,0.85)); }
+    }
+    .torch-l { animation: flicker-a 1.7s ease-in-out infinite; }
+    .torch-r { animation: flicker-b 2.1s ease-in-out infinite; }
 </style>

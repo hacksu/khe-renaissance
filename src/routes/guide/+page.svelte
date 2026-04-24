@@ -79,11 +79,11 @@
 <div class="py-12 px-4 md:px-12 lg:px-24 xl:px-36 flex flex-col gap-12 text-black guide-content text-left">
     <!-- Header Section -->
     <div class="text-center max-w-4xl mx-auto">
-        <h1 class="font-bold text-5xl mb-6 text-secondary">A Quickstart Guide to Hackathons</h1>
-        <p class="text-xl mb-4 leading-relaxed">
+        <h1 class="font-bold text-5xl mb-6 text-primary">A Quickstart Guide to Hackathons</h1>
+        <p class="text-xl mb-4 leading-relaxed text-primary">
             Throwing together a revolutionary new product that <strong>shakes the world to its core</strong> and <strong><em>permanently changes humans' relationship with technology</em></strong> in less than 24 hours might sound hard, <strong>but it's really not.</strong>
         </p>
-        <p class="text-lg">
+        <p class="text-lg text-primary">
             All you need is an idea and the tools to implement it. For example:
         </p>
     </div>
@@ -269,12 +269,12 @@
         </div>
 
         <div class="mt-12 text-center max-w-2xl mx-auto">
-            <h2 class="text-2xl font-bold mb-4 text-secondary">But:</h2>
-            <p class="text-lg mb-4">Don't let this list of technologies hold you back!</p>
-            <p class="mb-4">
+            <h2 class="text-2xl font-bold mb-4 text-primary">But:</h2>
+            <p class="text-lg mb-4 text-primary">Don't let this list of technologies hold you back!</p>
+            <p class="mb-4 text-primary">
                 The above is meant to be a survey of the most common ways to accomplish different tasks, not an exhaustive list of interesting bases for projects. You can ignore all of the above and build a GUI in <Link href="https://ziglang.org/" target="_blank">Zig</Link> or a command line app in Lisp, as long as it does something interesting and you learn something while doing it.
             </p>
-            <p class="text-sm opacity-75">
+            <p class="text-sm opacity-75 text-primary">
                 This content is released under the terms of <Link href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0</Link>.
             </p>
         </div>

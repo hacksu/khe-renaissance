@@ -75,30 +75,8 @@
     <section>
         <h2 class="text-xl font-bold text-secondary mb-4">Judging Settings</h2>
 
-        {#if data.maxTablesPerJudge !== null && data.maxJudgesPerTeam !== null && data.tableCount > 0 && data.judgeCount > 0}
-            {@const possible = data.judgeCount * data.maxTablesPerJudge}
-            {@const needed = data.tableCount * data.maxJudgesPerTeam}
-            {#if possible < needed}
-                <div class="mb-4 max-w-sm bg-yellow-50 border border-yellow-300 rounded-lg p-3 text-sm text-yellow-800">
-                    <strong>Cap conflict:</strong> {data.judgeCount} judges × {data.maxTablesPerJudge} tables = {possible} total judgements possible, but {data.tableCount} tables × {data.maxJudgesPerTeam} judges = {needed} needed. Some tables won't reach the goal.
-                </div>
-            {/if}
-        {/if}
-
         <div class="bg-white/50 border border-secondary/10 p-4 rounded-lg max-w-sm">
             <form method="POST" action="?/updateJudgingSettings" use:enhance class="space-y-4">
-                <div class="space-y-1">
-                    <label class="text-sm font-bold text-secondary block">Max Tables Per Judge</label>
-                    <p class="text-xs text-secondary/60">Limits how many tables auto-assignment gives a judge. Leave blank for no limit.</p>
-                    <input
-                        type="number"
-                        name="maxTablesPerJudge"
-                        min="1"
-                        value={data.maxTablesPerJudge ?? ''}
-                        placeholder="No limit"
-                        class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
-                    />
-                </div>
                 <div class="space-y-1">
                     <label class="text-sm font-bold text-secondary block">Max Judges Per Team</label>
                     <p class="text-xs text-secondary/60">Limits how many judges a team can receive via auto-assignment. Leave blank for no limit.</p>
@@ -153,6 +131,10 @@
                                 <input type="checkbox" name="optional" checked={editingCriterion.optional} class="rounded border-secondary/30 text-accent focus:ring-accent" />
                                 <span>Optional</span>
                             </label>
+                            <label class="flex items-center gap-2 text-sm text-secondary cursor-pointer">
+                                <input type="checkbox" name="allowOptOut" checked={editingCriterion.allowOptOut} class="rounded border-secondary/30 text-accent focus:ring-accent" />
+                                <span>Allow opt-out (judges can skip this criterion)</span>
+                            </label>
                             <div class="flex gap-2 justify-end">
                                 <button type="button" onclick={() => editingCriterion = null} class="text-xs text-secondary/60 hover:underline">Cancel</button>
                                 <button type="submit" class="text-xs text-accent font-bold hover:underline">Save</button>
@@ -166,6 +148,9 @@
                                     <span class="text-xs bg-secondary/10 px-1 rounded font-mono">Max: {criterion.maxScore}</span>
                                     {#if criterion.optional}
                                         <span class="text-xs bg-secondary/20 text-secondary/80 px-1 rounded font-bold">Optional</span>
+                                    {/if}
+                                    {#if criterion.allowOptOut}
+                                        <span class="text-xs bg-accent/10 text-accent px-1 rounded font-bold">Allow Opt-Out</span>
                                     {/if}
                                 </div>
                                 <p class="text-xs text-secondary/60">Slug: {criterion.slug}</p>
@@ -197,6 +182,10 @@
                     <label class="flex items-center gap-2 text-sm text-white/80 cursor-pointer">
                         <input type="checkbox" name="optional" class="rounded border-white/30 text-accent focus:ring-accent" />
                         <span>Optional (judges can submit without scoring this)</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-white/80 cursor-pointer">
+                        <input type="checkbox" name="allowOptOut" class="rounded border-white/30 text-accent focus:ring-accent" />
+                        <span>Allow opt-out (judges can mark a project as not competing)</span>
                     </label>
                     <div class="pt-2">
                         <Button class="w-full">Create Criterion</Button>

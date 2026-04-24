@@ -1,148 +1,57 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { enhance } from "$app/forms";
-    import Icon from "@iconify/svelte";
-    
-    let { data, form } = $props();
-    let assignments = $derived(data.assignments);
-    const judgeName = $page.data.session?.user?.name || "Judge";
 
-    const completed = $derived(assignments.filter(a => a.status === 'completed').length);
-    const remaining = $derived(assignments.filter(a => a.status === 'assigned').length);
-    const skipped = $derived(assignments.filter(a => a.status === 'skipped').length);
-    const atCap = $derived(
-        data.allTeamsFull ||
-        (data.maxTablesPerJudge !== null && completed >= data.maxTablesPerJudge && remaining === 0)
-    );
+    let { data } = $props();
+    const judgeName = $page.data.session?.user?.name || "Judge";
+    const { visit } = data;
 </script>
 
-<div class="max-w-md mx-auto p-4 flex flex-col h-full min-h-screen relative">
+<div class="max-w-md mx-auto p-4 flex flex-col min-h-screen">
     <!-- Header -->
     <div class="mb-6 mt-2">
-        <a href="/" class="text-sm font-medium text-secondary/70 hover:text-primary mb-4 block">← Back to Home</a>
-        <h1 class="text-2xl font-bold text-secondary mb-1">Judging Dashboard</h1>
-        <p class="text-secondary/80">Welcome, {judgeName}</p>
+        <a href="/" class="text-sm font-medium text-white/60 hover:text-white mb-4 block">← Back to Home</a>
+        <h1 class="text-2xl font-bold text-white mb-1">Judging Dashboard</h1>
+        <p class="text-white/80">Welcome, {judgeName}</p>
     </div>
 
-    {#if atCap}
-        <div class="mb-6 bg-green-50 border border-green-200 rounded-xl p-5 text-center">
-            <div class="flex justify-center mb-2">
-                <div class="bg-green-100 text-green-700 rounded-full p-2">
-                    <Icon icon="mdi:trophy-outline" width="28" height="28" />
-                </div>
-            </div>
-            <p class="font-bold text-green-800 text-lg">You're done!</p>
-            <p class="text-green-700 text-sm mt-1">
-                {#if data.allTeamsFull}
-                    All teams have been fully judged. Thank you!
-                {:else}
-                    You've completed all {data.maxTablesPerJudge} of your assigned tables. Thank you!
-                {/if}
-            </p>
-        </div>
-    {/if}
-
-    {#if !atCap}
-    <!-- Judge Next Button -->
-    <div class="mb-4">
-        <form method="POST" action="?/judgeNext" use:enhance>
-            <button class="w-full py-4 px-6 bg-secondary text-offwhite font-bold rounded-xl shadow-lg transition-transform active:scale-[0.98] flex items-center justify-center gap-2 hover:bg-secondary/90">
-                <span>Judge Next Team</span>
-                <Icon icon="mdi:arrow-right" width="20" height="20" />
-            </button>
-        </form>
-        <p class="text-center text-xs text-secondary/50 mt-2">Get assigned a new team automatically.</p>
-    </div>
-
-    <!-- Manual Entry -->
-    <div class="mb-8 border-t border-secondary/10 pt-4">
-        <h3 class="text-xs font-bold uppercase tracking-widest text-secondary/50 mb-3 text-center">Or Enter Manual Team #</h3>
-        <form method="POST" action="?/manualEntry" use:enhance class="flex gap-2">
-            <input 
-                type="text" 
-                name="tableNumber" 
-                placeholder="Table #" 
-                class="flex-1 bg-white rounded-lg px-4 py-2 border border-secondary/20 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent text-secondary placeholder:text-secondary/30"
-                required
-            />
-            <button class="px-4 py-2 bg-secondary/10 text-secondary font-bold rounded-lg hover:bg-secondary/20 transition-colors">
-                Go
-            </button>
-        </form>
-        {#if form?.manualEntryError}
-            <p class="text-red-600 text-xs mt-2 text-center">{form.manualEntryError}</p>
-        {/if}
-    </div>
-    {/if}
-
-    <!-- Stats -->
-    <div class="bg-white/50 backdrop-blur-sm rounded-xl p-4 mb-6 border border-secondary/10 shadow-sm">
-        <div class="grid grid-cols-4 gap-2 text-center divide-x divide-secondary/10">
-            <div>
-                <p class="text-xs uppercase tracking-wider text-secondary/60">Total</p>
-                <p class="text-xl font-bold text-secondary">{assignments.length}</p>
-            </div>
-            <div>
-                <p class="text-xs uppercase tracking-wider text-secondary/60">Done</p>
-                <p class="text-xl font-bold text-green-700">{completed}</p>
-            </div>
-            <div>
-                <p class="text-xs uppercase tracking-wider text-secondary/60">Active</p>
-                <p class="text-xl font-bold text-orange-600">{remaining}</p>
-            </div>
-            <div>
-                <p class="text-xs uppercase tracking-wider text-secondary/60">Skipped</p>
-                <p class="text-xl font-bold text-secondary/40">{skipped}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Assigned Projects List -->
-    <h2 class="text-xs font-bold uppercase tracking-widest text-secondary/50 mb-3">Your History</h2>
-    
-    <div class="space-y-3 pb-20">
-        {#each assignments as assignment}
-            <a href="/judge/project/{assignment.project?.id}" 
-               class="block bg-white rounded-xl p-4 shadow-sm border border-secondary/5 hover:border-accent/30 transition-all active:scale-[0.98] group relative overflow-hidden ring-offset-2 focus:outline-none focus:ring-2 focus:ring-accent">
-                
-                {#if assignment.status === 'completed'}
-                    <div class="absolute top-0 right-0 p-3">
-                         <div class="bg-green-100 text-green-700 rounded-full p-1">
-                            <Icon icon="mdi:check" width="16" height="16" />
-                         </div>
-                    </div>
-                {:else if assignment.status === 'skipped'}
-                    <div class="absolute top-0 right-0 p-3">
-                        <div class="bg-secondary/10 text-secondary/40 rounded-full p-1">
-                            <Icon icon="mdi:skip-next" width="16" height="16" />
-                        </div>
-                    </div>
-                {/if}
-
-                <h3 class="font-bold text-lg {assignment.status === 'skipped' ? 'text-secondary/40' : 'text-secondary group-hover:text-accent'} transition-colors">
-                    {assignment.project?.name}{#if assignment.project?.tableNumber} <span class="font-normal text-secondary/50">(#{assignment.project?.tableNumber})</span>{/if}
-                </h3>
-                <p class="text-sm text-secondary/70 mb-2">{assignment.project?.track}</p>
-
-                {#if assignment.status === 'completed' && assignment.comment}
-                    <p class="text-xs text-secondary/60 italic mb-2 line-clamp-2">"{assignment.comment}"</p>
-                {/if}
-
-                <div class="flex items-center text-xs font-medium {assignment.status === 'completed' ? 'text-green-600' : assignment.status === 'skipped' ? 'text-secondary/40' : 'text-accent'}">
-                    {#if assignment.status === 'completed'}
-                        Review Score
-                    {:else if assignment.status === 'skipped'}
-                        Skipped
-                    {:else}
-                        Continue Judging →
+    {#if visit}
+        <div class="mb-6">
+            <h2 class="text-xs font-bold uppercase tracking-widest text-white/50 mb-3">Your Next Table</h2>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/10 shadow-sm space-y-4">
+                <div>
+                    <p class="text-3xl font-bold text-white">{visit.project.name}</p>
+                    {#if visit.project.tableNumber}
+                        <p class="text-white/60 mt-1 text-lg">Table #{visit.project.tableNumber}</p>
                     {/if}
                 </div>
-            </a>
-        {/each}
-        {#if assignments.length === 0}
-            <div class="text-center py-8 text-secondary/40 italic">
-                No history yet. Start judging!
+
+                {#if visit.status === 'active'}
+                    <a
+                        href="/judge/table/{visit.id}"
+                        class="block w-full py-3.5 px-6 bg-white text-castle-skyDeep font-bold rounded-xl text-center shadow-lg transition-all active:scale-[0.98] hover:bg-white/90"
+                    >
+                        Continue Judging →
+                    </a>
+                {:else}
+                    <form method="POST" action="?/start">
+                        <input type="hidden" name="visitId" value={visit.id} />
+                        <button
+                            type="submit"
+                            class="w-full py-3.5 px-6 bg-white text-castle-skyDeep font-bold rounded-xl text-center shadow-lg transition-all active:scale-[0.98] hover:bg-white/90"
+                        >
+                            Start Judging →
+                        </button>
+                    </form>
+                {/if}
             </div>
-        {/if}
-    </div>
+        </div>
+    {:else}
+        <div class="flex-1 flex items-center justify-center">
+            <div class="text-center bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+                <div class="text-4xl mb-4">✓</div>
+                <p class="font-bold text-white text-lg mb-2">All done — no more tables to judge.</p>
+                <p class="text-white/60 text-sm">Thank you!</p>
+            </div>
+        </div>
+    {/if}
 </div>

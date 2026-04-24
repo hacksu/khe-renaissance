@@ -1,0 +1,379 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <defs>
+    <linearGradient id="stoneGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6b6b80;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2e2e3a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="stoneGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#6b6b80;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a4a5c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="keystoneGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8e8ea8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a4a5c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="woodLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a0f08;stop-opacity:1" />
+      <stop offset="15%" style="stop-color:#4a3520;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#6b4f2f;stop-opacity:1" />
+      <stop offset="65%" style="stop-color:#4a3520;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d1f0f;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="woodRight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2d1f0f;stop-opacity:1" />
+      <stop offset="35%" style="stop-color:#4a3520;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#6b4f2f;stop-opacity:1" />
+      <stop offset="85%" style="stop-color:#4a3520;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a0f08;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ironGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2e2e3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e1e28;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ironHoriz" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1e1e28;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#3a3a4c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e1e28;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="ringGrad" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" style="stop-color:#5a5a70;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e1e28;stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="bossGrad" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" style="stop-color:#c9a84c;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#9a7a2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5a4010;stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#c9a84c;stop-opacity:0.25" />
+      <stop offset="100%" style="stop-color:#c9a84c;stop-opacity:0" />
+    </radialGradient>
+    <radialGradient id="crackGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#e8c060;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#c9a84c;stop-opacity:0" />
+    </radialGradient>
+    <linearGradient id="thresholdGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6b6b80;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#4a4a5c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2e2e3a;stop-opacity:1" />
+    </linearGradient>
+    <clipPath id="archClip">
+      <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560 Z" />
+    </clipPath>
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+    <filter id="innerShadow">
+      <feFlood flood-color="#000000" flood-opacity="0.4" result="flood"/>
+      <feComposite in="flood" in2="SourceGraphic" operator="in" result="mask"/>
+      <feGaussianBlur in="mask" stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="400" height="600" fill="#1a1a24" />
+
+  <g id="ambient-light">
+    <ellipse cx="200" cy="350" rx="90" ry="200" fill="url(#glowGrad)" opacity="0.7" />
+    <ellipse cx="200" cy="500" rx="60" ry="80" fill="url(#glowGrad)" opacity="0.4" />
+    <ellipse cx="200" cy="140" rx="70" ry="50" fill="url(#glowGrad)" opacity="0.3" />
+  </g>
+
+  <g id="arch">
+
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560 Z" fill="#0a0a10" />
+
+    <rect x="58" y="185" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-60, 77, 207)"/>
+    <rect x="55" y="140" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-42, 74, 162)"/>
+    <rect x="70" y="98" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-26, 89, 120)"/>
+    <rect x="102" y="65" width="45" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-12, 124, 84)"/>
+    <rect x="147" y="52" width="45" height="35" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(-3, 169, 69)"/>
+
+    <rect x="304" y="185" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(60, 323, 207)"/>
+    <rect x="307" y="140" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(42, 326, 162)"/>
+    <rect x="292" y="98" width="38" height="45" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(26, 311, 120)"/>
+    <rect x="253" y="65" width="45" height="38" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(12, 275, 84)"/>
+    <rect x="208" y="52" width="45" height="35" rx="2" fill="url(#stoneGrad1)" stroke="#242430" stroke-width="2"
+          transform="rotate(3, 230, 69)"/>
+
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+          fill="none" stroke="#2e2e3a" stroke-width="80" stroke-linejoin="round"/>
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+          fill="none" stroke="#4a4a5c" stroke-width="76" stroke-linejoin="round"/>
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+          fill="none" stroke="#242430" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+          fill="none" stroke="#6b6b80" stroke-width="1.5" stroke-linejoin="round" opacity="0.4"/>
+
+
+  </g>
+
+  <g id="door-left">
+    <rect x="82" y="182" width="116" height="376" fill="url(#woodLeft)" />
+
+    <line x1="104" y1="182" x2="104" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="126" y1="182" x2="126" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="148" y1="182" x2="148" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="170" y1="182" x2="170" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+
+    <line x1="106" y1="182" x2="106" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="128" y1="182" x2="128" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="150" y1="182" x2="150" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="172" y1="182" x2="172" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+
+    <rect x="82" y="200" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="82" y="200" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="82" y="215" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="95" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="95" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="115" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="115" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="140" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="140" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="165" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="165" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="186" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="186" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <rect x="82" y="318" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="82" y="318" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="82" y="333" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="95" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="95" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="115" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="115" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="140" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="140" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="165" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="165" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="186" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="186" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <rect x="82" y="436" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="82" y="436" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="82" y="451" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="95" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="95" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="115" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="115" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="140" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="140" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="165" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="165" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="186" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="186" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <rect x="82" y="530" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="82" y="530" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="82" y="545" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="95" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="95" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="115" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="115" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="140" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="140" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="165" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="165" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="186" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="186" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <rect x="82" y="220" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="137,220 152,227 137,234" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="92" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="92" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="108" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="108" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="124" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="124" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="83" cy="227" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="83" cy="227" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <rect x="82" y="368" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="137,368 152,375 137,382" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="92" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="92" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="108" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="108" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="124" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="124" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="83" cy="375" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="83" cy="375" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <rect x="82" y="490" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="137,490 152,497 137,504" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="92" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="92" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="108" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="108" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="124" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="124" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="83" cy="497" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="83" cy="497" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <circle cx="177" cy="390" r="14" fill="url(#bossGrad)" stroke="#5a4010" stroke-width="2"/>
+    <circle cx="177" cy="390" r="10" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+    <circle cx="177" cy="390" r="4" fill="#c9a84c" opacity="0.8"/>
+    <path d="M 165 390 A 22 22 0 1 0 189 390" fill="none" stroke="url(#ringGrad)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 165 390 A 22 22 0 1 0 189 390" fill="none" stroke="#4a4a5c" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+    <path d="M 168 385 A 16 16 0 0 1 177 368" fill="none" stroke="#6b6b80" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+    <rect x="82" y="182" width="116" height="376" fill="none" stroke="#1a0f08" stroke-width="2.5"/>
+  </g>
+
+  <g id="door-right">
+    <rect x="202" y="182" width="116" height="376" fill="url(#woodRight)" />
+
+    <line x1="224" y1="182" x2="224" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="246" y1="182" x2="246" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="268" y1="182" x2="268" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+    <line x1="290" y1="182" x2="290" y2="558" stroke="#1a0f08" stroke-width="2" opacity="0.7"/>
+
+    <line x1="226" y1="182" x2="226" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="248" y1="182" x2="248" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="270" y1="182" x2="270" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+    <line x1="292" y1="182" x2="292" y2="558" stroke="#6b4f2f" stroke-width="1" opacity="0.3"/>
+
+    <rect x="202" y="200" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="202" y="200" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="202" y="215" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="214" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="214" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="234" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="234" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="259" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="259" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="284" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="284" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="305" cy="209" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="305" cy="209" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <rect x="202" y="318" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="202" y="318" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="202" y="333" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="214" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="214" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="234" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="234" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="259" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="259" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="284" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="284" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="305" cy="327" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="305" cy="327" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <rect x="202" y="436" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="202" y="436" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="202" y="451" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="214" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="214" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="234" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="234" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="259" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="259" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="284" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="284" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="305" cy="445" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="305" cy="445" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <rect x="202" y="530" width="116" height="18" fill="url(#ironHoriz)" rx="1"/>
+    <rect x="202" y="530" width="116" height="3" fill="#4a4a5c" opacity="0.5" rx="1"/>
+    <rect x="202" y="545" width="116" height="3" fill="#1e1e28" opacity="0.5" rx="1"/>
+    <circle cx="214" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="214" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="234" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="234" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="259" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="259" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="284" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="284" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+    <circle cx="305" cy="539" r="4" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="305" cy="539" r="1.5" fill="#5a5a70" opacity="0.6"/>
+
+    <rect x="263" y="220" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="263,220 248,227 263,234" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="308" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="308" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="292" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="292" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="276" cy="227" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="276" cy="227" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="317" cy="227" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="317" cy="227" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <rect x="263" y="368" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="263,368 248,375 263,382" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="308" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="308" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="292" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="292" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="276" cy="375" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="276" cy="375" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="317" cy="375" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="317" cy="375" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <rect x="263" y="490" width="55" height="14" fill="url(#ironHoriz)" rx="2" stroke="#1e1e28" stroke-width="1.5"/>
+    <polygon points="263,490 248,497 263,504" fill="url(#ironHoriz)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="308" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="308" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="292" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="292" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <circle cx="276" cy="497" r="3.5" fill="url(#ironGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="276" cy="497" r="1.2" fill="#5a5a70" opacity="0.7"/>
+    <ellipse cx="317" cy="497" rx="6" ry="8" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <ellipse cx="317" cy="497" rx="3" ry="5" fill="#4a4a5c"/>
+
+    <circle cx="223" cy="390" r="14" fill="url(#bossGrad)" stroke="#5a4010" stroke-width="2"/>
+    <circle cx="223" cy="390" r="10" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+    <circle cx="223" cy="390" r="4" fill="#c9a84c" opacity="0.8"/>
+    <path d="M 211 390 A 22 22 0 1 0 235 390" fill="none" stroke="url(#ringGrad)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 211 390 A 22 22 0 1 0 235 390" fill="none" stroke="#4a4a5c" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+    <path d="M 214 385 A 16 16 0 0 1 223 368" fill="none" stroke="#6b6b80" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+    <rect x="202" y="182" width="116" height="376" fill="none" stroke="#1a0f08" stroke-width="2.5"/>
+  </g>
+
+  <rect x="198" y="182" width="4" height="376" fill="#050508"/>
+  <rect x="199" y="182" width="2" height="376" fill="#c9a84c" opacity="0.15"/>
+  <rect x="197" y="182" width="6" height="376" fill="url(#crackGlow)" opacity="0.3"/>
+  <rect x="199" y="280" width="2" height="30" fill="#e8c060" opacity="0.4"/>
+  <rect x="199" y="360" width="2" height="50" fill="#e8c060" opacity="0.5"/>
+  <rect x="199" y="450" width="2" height="25" fill="#e8c060" opacity="0.3"/>
+
+  <g id="threshold">
+    <rect x="60" y="558" width="280" height="22" rx="2" fill="url(#thresholdGrad)" stroke="#242430" stroke-width="2"/>
+    <rect x="60" y="558" width="280" height="4" fill="#8e8ea8" opacity="0.3" rx="2"/>
+    <line x1="130" y1="560" x2="130" y2="580" stroke="#242430" stroke-width="2"/>
+    <line x1="200" y1="560" x2="200" y2="580" stroke="#242430" stroke-width="2"/>
+    <line x1="270" y1="560" x2="270" y2="580" stroke="#242430" stroke-width="2"/>
+    <rect x="40" y="580" width="320" height="16" rx="2" fill="#3a3a4a" stroke="#242430" stroke-width="2"/>
+    <rect x="40" y="580" width="320" height="3" fill="#6b6b80" opacity="0.3" rx="2"/>
+    <line x1="120" y1="582" x2="120" y2="596" stroke="#242430" stroke-width="1.5"/>
+    <line x1="200" y1="582" x2="200" y2="596" stroke="#242430" stroke-width="1.5"/>
+    <line x1="280" y1="582" x2="280" y2="596" stroke="#242430" stroke-width="1.5"/>
+    <rect x="0" y="596" width="400" height="4" fill="#2e2e3a"/>
+    <rect x="80" y="558" width="240" height="6" fill="#000000" opacity="0.3" rx="1"/>
+  </g>
+
+  <path d="M 80 560 L 80 220 Q 80 60 200 60 Q 320 60 320 220 L 320 560"
+        fill="none" stroke="#000000" stroke-width="12" stroke-linejoin="round" opacity="0.4"/>
+  <ellipse cx="200" cy="190" rx="100" ry="20" fill="#000000" opacity="0.3"/>
+
+  <line x1="90" y1="240" x2="90" y2="270" stroke="#2d1f0f" stroke-width="1" opacity="0.4"/>
+  <line x1="155" y1="260" x2="155" y2="310" stroke="#2d1f0f" stroke-width="1" opacity="0.3"/>
+  <line x1="245" y1="250" x2="245" y2="290" stroke="#2d1f0f" stroke-width="1" opacity="0.4"/>
+  <line x1="310" y1="230" x2="310" y2="280" stroke="#2d1f0f" stroke-width="1" opacity="0.3"/>
+
+</svg>
