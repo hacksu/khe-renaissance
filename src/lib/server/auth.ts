@@ -20,6 +20,7 @@ export const auth = betterAuth({
     }),
     plugins: [
         magicLink({
+            expiresIn: 60 * 60 * 24, // 24 hours
             sendMagicLink: async ({ email, url }) => {
                 await sendMagicLinkEmail(email, url);
             }
@@ -37,27 +38,37 @@ export const auth = betterAuth({
     },
     hooks: {
         after: createAuthMiddleware(async ctx => {
-            const { path, request, params, context: { newSession } } = ctx;
+            const { path, request, params } = ctx;
 
             if (path === "/magic-link/verify" || path === "/sign-in/magic-link/verify") {
+                const newSession = ctx.context?.newSession;
                 if (request && newSession) {
                     try {
                         const { user } = newSession;
+
+                        // Re-insert the token so the same magic link works again next time
+                        const token = new URL(request.url).searchParams.get('token');
+                        if (token) {
+                            await prisma.verification.create({
+                                data: {
+                                    identifier: user.email,
+                                    value: token,
+                                    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+                                    createdAt: new Date(),
+                                    updatedAt: new Date()
+                                }
+                            });
+                        }
+
                         const invite = await prisma.invite.findFirst({
-                            where: { email: user.email, used: false },
+                            where: { email: user.email },
                             orderBy: { createdAt: "desc" }
                         });
-                        const role = invite?.role ?? "judge";
+                        const role = invite?.role ?? user.role ?? "judge";
                         await prisma.user.update({
                             data: { role },
                             where: { id: user.id }
                         });
-                        if (invite) {
-                            await prisma.invite.update({
-                                where: { id: invite.id },
-                                data: { used: true }
-                            });
-                        }
                     } catch (e) {
                         console.error(e);
                     }
@@ -69,9 +80,10 @@ export const auth = betterAuth({
                 return;
             }
             const provider = params.id as SocialProvider;
+            const newSession = ctx.context?.newSession;
             if (request && newSession) {
                 const { session, user } = newSession;
-                let role = await getRole(provider, request, session);
+                let role = await getRole(provider, request, session, user.role);
                 await prisma.user.update({
                     data: { role },
                     where: { id: user.id }

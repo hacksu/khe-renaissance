@@ -1,0 +1,387 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <defs>
+    
+    <linearGradient id="barGradV" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e1e28"/>
+      <stop offset="30%" stop-color="#2e2e3c"/>
+      <stop offset="55%" stop-color="#4a4a5c"/>
+      <stop offset="75%" stop-color="#2e2e3c"/>
+      <stop offset="100%" stop-color="#1e1e28"/>
+    </linearGradient>
+
+    
+    <linearGradient id="barGradH" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e1e28"/>
+      <stop offset="30%" stop-color="#2e2e3c"/>
+      <stop offset="55%" stop-color="#4a4a5c"/>
+      <stop offset="75%" stop-color="#2e2e3c"/>
+      <stop offset="100%" stop-color="#1e1e28"/>
+    </linearGradient>
+
+    
+    <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e1e28"/>
+      <stop offset="20%" stop-color="#2e2e3c"/>
+      <stop offset="50%" stop-color="#3a3a4c"/>
+      <stop offset="80%" stop-color="#2e2e3c"/>
+      <stop offset="100%" stop-color="#1e1e28"/>
+    </linearGradient>
+
+    
+    <radialGradient id="rivetGrad" cx="35%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#6b6b80"/>
+      <stop offset="50%" stop-color="#4a4a5c"/>
+      <stop offset="100%" stop-color="#1e1e28"/>
+    </radialGradient>
+
+    
+    <linearGradient id="chainGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e1e28"/>
+      <stop offset="40%" stop-color="#3a3a4c"/>
+      <stop offset="60%" stop-color="#4a4a5c"/>
+      <stop offset="100%" stop-color="#1e1e28"/>
+    </linearGradient>
+
+    
+    
+    <linearGradient id="tipGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e1e28"/>
+      <stop offset="50%" stop-color="#3a3a4c"/>
+      <stop offset="100%" stop-color="#1e1e28"/>
+    </linearGradient>
+  </defs>
+
+  
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CHAINS — rendered behind portcullis so they appear to
+       emerge from the top of the frame
+       ═══════════════════════════════════════════════════════════ -->
+  <g id="chains">
+
+    
+    <g id="chain-left" transform="translate(100, 0)">
+      
+      
+
+      
+      <ellipse cx="0" cy="72" rx="6" ry="10" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="72" rx="2.5" ry="6" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="0" cy="56" rx="10" ry="6" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="56" rx="6" ry="2.5" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="0" cy="40" rx="6" ry="10" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="40" rx="2.5" ry="6" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="0" cy="24" rx="10" ry="6" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="24" rx="6" ry="2.5" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="0" cy="8" rx="6" ry="10" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="8" rx="2.5" ry="6" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="3" cy="40" rx="2" ry="4" fill="#5a3520" opacity="0.35"/>
+    </g>
+
+    
+    <g id="chain-right" transform="translate(300, 0)">
+      
+      <ellipse cx="0" cy="72" rx="6" ry="10" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="72" rx="2.5" ry="6" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="0" cy="56" rx="10" ry="6" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="56" rx="6" ry="2.5" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="0" cy="40" rx="6" ry="10" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="40" rx="2.5" ry="6" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="0" cy="24" rx="10" ry="6" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="24" rx="6" ry="2.5" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="0" cy="8" rx="6" ry="10" fill="url(#chainGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <ellipse cx="0" cy="8" rx="2.5" ry="6" fill="none" stroke="#4a4a5c" stroke-width="0.8" opacity="0.6"/>
+
+      
+      <ellipse cx="-3" cy="56" rx="2" ry="4" fill="#5a3520" opacity="0.35"/>
+    </g>
+
+  </g>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PORTCULLIS — main gate group
+       translate this group Y to animate raising/lowering
+       ═══════════════════════════════════════════════════════════ -->
+  <g id="portcullis">
+
+    <!-- ─────────────────────────────────────────────────────────
+         OUTER IRON FRAME
+         Occupies x:60–340, y:80–500 (bars extend below to ~540)
+         Frame is rendered as four thick rects; interior is open
+         ───────────────────────────────────────────────────────── -->
+
+    
+    <rect x="60" y="80" width="280" height="24" fill="url(#frameGrad)" stroke="#1e1e28" stroke-width="2"/>
+    
+    <rect x="64" y="83" width="272" height="8" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.5"/>
+    
+    <rect x="80" y="92" width="40" height="3" fill="#5a3520" opacity="0.3" rx="1"/>
+    <rect x="260" y="92" width="40" height="3" fill="#5a3520" opacity="0.3" rx="1"/>
+
+    
+    <rect x="60" y="80" width="24" height="420" fill="url(#frameGrad)" stroke="#1e1e28" stroke-width="2"/>
+    
+    <rect x="63" y="84" width="8" height="412" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.5"/>
+
+    
+    <rect x="316" y="80" width="24" height="420" fill="url(#frameGrad)" stroke="#1e1e28" stroke-width="2"/>
+    
+    <rect x="329" y="84" width="8" height="412" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.5"/>
+
+    
+    <rect x="60" y="488" width="280" height="16" fill="url(#frameGrad)" stroke="#1e1e28" stroke-width="2"/>
+    
+    <rect x="64" y="491" width="272" height="5" fill="none" stroke="#4a4a5c" stroke-width="1" opacity="0.5"/>
+
+    
+    <circle cx="72" cy="92" r="7" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="328" cy="92" r="7" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="72" cy="496" r="7" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="328" cy="496" r="7" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+
+
+    <!-- ─────────────────────────────────────────────────────────
+         VERTICAL BARS  (8 bars, evenly spaced across the opening)
+         Opening interior: x:84–316, so span = 232px
+         8 bars at spacing ~29.7px => positions ~84,114,144,173,203,232,262,292,316 (centres)
+         Bar width: 14px  Bar body: y:104 to y:500  Spear tip below that
+         ───────────────────────────────────────────────────────── -->
+
+    
+
+    
+    <g id="vbar-1">
+      <rect x="93" y="104" width="14" height="396" fill="url(#barGradV)" stroke="#1e1e28" stroke-width="1.5"/>
+      
+      <rect x="98" y="104" width="4" height="396" fill="#4a4a5c" opacity="0.4"/>
+      
+      <polygon points="93,500 107,500 103,540 100,550 97,540" fill="url(#tipGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <line x1="100" y1="502" x2="100" y2="545" stroke="#4a4a5c" stroke-width="1.5" opacity="0.5"/>
+      
+      <line x1="93" y1="510" x2="97" y2="535" stroke="#5a3520" stroke-width="1.5" opacity="0.4"/>
+    </g>
+
+    
+    <g id="vbar-2">
+      <rect x="123" y="104" width="14" height="396" fill="url(#barGradV)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="128" y="104" width="4" height="396" fill="#4a4a5c" opacity="0.4"/>
+      <polygon points="123,500 137,500 133,540 130,550 127,540" fill="url(#tipGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <line x1="130" y1="502" x2="130" y2="545" stroke="#4a4a5c" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    
+    <g id="vbar-3">
+      <rect x="153" y="104" width="14" height="396" fill="url(#barGradV)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="158" y="104" width="4" height="396" fill="#4a4a5c" opacity="0.4"/>
+      <polygon points="153,500 167,500 163,540 160,550 157,540" fill="url(#tipGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <line x1="160" y1="502" x2="160" y2="545" stroke="#4a4a5c" stroke-width="1.5" opacity="0.5"/>
+      
+      <rect x="153" y="200" width="4" height="30" fill="#5a3520" opacity="0.25" rx="1"/>
+    </g>
+
+    
+    <g id="vbar-4">
+      <rect x="183" y="104" width="14" height="396" fill="url(#barGradV)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="188" y="104" width="4" height="396" fill="#4a4a5c" opacity="0.4"/>
+      <polygon points="183,500 197,500 193,540 190,550 187,540" fill="url(#tipGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <line x1="190" y1="502" x2="190" y2="545" stroke="#4a4a5c" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    
+    <g id="vbar-5">
+      <rect x="213" y="104" width="14" height="396" fill="url(#barGradV)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="218" y="104" width="4" height="396" fill="#4a4a5c" opacity="0.4"/>
+      <polygon points="213,500 227,500 223,540 220,550 217,540" fill="url(#tipGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <line x1="220" y1="502" x2="220" y2="545" stroke="#4a4a5c" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    
+    <g id="vbar-6">
+      <rect x="243" y="104" width="14" height="396" fill="url(#barGradV)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="248" y="104" width="4" height="396" fill="#4a4a5c" opacity="0.4"/>
+      <polygon points="243,500 257,500 253,540 250,550 247,540" fill="url(#tipGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <line x1="250" y1="502" x2="250" y2="545" stroke="#4a4a5c" stroke-width="1.5" opacity="0.5"/>
+      
+      <rect x="257" y="350" width="4" height="25" fill="#5a3520" opacity="0.25" rx="1"/>
+    </g>
+
+    
+    <g id="vbar-7">
+      <rect x="273" y="104" width="14" height="396" fill="url(#barGradV)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="278" y="104" width="4" height="396" fill="#4a4a5c" opacity="0.4"/>
+      <polygon points="273,500 287,500 283,540 280,550 277,540" fill="url(#tipGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <line x1="280" y1="502" x2="280" y2="545" stroke="#4a4a5c" stroke-width="1.5" opacity="0.5"/>
+    </g>
+
+    
+    <g id="vbar-8">
+      <rect x="303" y="104" width="14" height="396" fill="url(#barGradV)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="308" y="104" width="4" height="396" fill="#4a4a5c" opacity="0.4"/>
+      <polygon points="303,500 317,500 313,540 310,550 307,540" fill="url(#tipGrad)" stroke="#1e1e28" stroke-width="1.5"/>
+      <line x1="310" y1="502" x2="310" y2="545" stroke="#4a4a5c" stroke-width="1.5" opacity="0.5"/>
+      
+      <line x1="317" y1="510" x2="313" y2="535" stroke="#5a3520" stroke-width="1.5" opacity="0.4"/>
+    </g>
+
+
+    <!-- ─────────────────────────────────────────────────────────
+         HORIZONTAL CROSS BARS  (6 bars)
+         y positions: 150, 210, 270, 330, 390, 450
+         Each bar spans x:84 to x:316 (inside the frame)
+         Bar height: 12px, centred on the y value listed
+         ───────────────────────────────────────────────────────── -->
+
+    
+    <g id="hbar-1">
+      <rect x="84" y="144" width="232" height="12" fill="url(#barGradH)" stroke="#1e1e28" stroke-width="1.5"/>
+      
+      <rect x="84" y="147" width="232" height="3" fill="#4a4a5c" opacity="0.4"/>
+
+      
+      <circle cx="100" cy="150" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="130" cy="150" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="160" cy="150" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="190" cy="150" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="220" cy="150" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="250" cy="150" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="280" cy="150" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="310" cy="150" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+    </g>
+
+    
+    <g id="hbar-2">
+      <rect x="84" y="204" width="232" height="12" fill="url(#barGradH)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="84" y="207" width="232" height="3" fill="#4a4a5c" opacity="0.4"/>
+      
+      <rect x="140" y="204" width="35" height="4" fill="#5a3520" opacity="0.25" rx="1"/>
+
+      <circle cx="100" cy="210" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="130" cy="210" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="160" cy="210" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="190" cy="210" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="220" cy="210" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="250" cy="210" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="280" cy="210" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="310" cy="210" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+    </g>
+
+    
+    <g id="hbar-3">
+      <rect x="84" y="264" width="232" height="12" fill="url(#barGradH)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="84" y="267" width="232" height="3" fill="#4a4a5c" opacity="0.4"/>
+
+      <circle cx="100" cy="270" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="130" cy="270" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="160" cy="270" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="190" cy="270" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="220" cy="270" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="250" cy="270" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="280" cy="270" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="310" cy="270" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+    </g>
+
+    
+    <g id="hbar-4">
+      <rect x="84" y="324" width="232" height="12" fill="url(#barGradH)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="84" y="327" width="232" height="3" fill="#4a4a5c" opacity="0.4"/>
+      
+      <rect x="240" y="324" width="50" height="4" fill="#5a3520" opacity="0.2" rx="1"/>
+
+      <circle cx="100" cy="330" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="130" cy="330" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="160" cy="330" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="190" cy="330" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="220" cy="330" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="250" cy="330" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="280" cy="330" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="310" cy="330" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+    </g>
+
+    
+    <g id="hbar-5">
+      <rect x="84" y="384" width="232" height="12" fill="url(#barGradH)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="84" y="387" width="232" height="3" fill="#4a4a5c" opacity="0.4"/>
+
+      <circle cx="100" cy="390" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="130" cy="390" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="160" cy="390" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="190" cy="390" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="220" cy="390" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="250" cy="390" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="280" cy="390" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="310" cy="390" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+    </g>
+
+    
+    <g id="hbar-6">
+      <rect x="84" y="444" width="232" height="12" fill="url(#barGradH)" stroke="#1e1e28" stroke-width="1.5"/>
+      <rect x="84" y="447" width="232" height="3" fill="#4a4a5c" opacity="0.4"/>
+      
+      <rect x="84" y="444" width="45" height="4" fill="#5a3520" opacity="0.3" rx="1"/>
+
+      <circle cx="100" cy="450" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="130" cy="450" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="160" cy="450" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="190" cy="450" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="220" cy="450" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="250" cy="450" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="280" cy="450" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+      <circle cx="310" cy="450" r="6" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.2"/>
+    </g>
+
+
+    <!-- ─────────────────────────────────────────────────────────
+         CHAIN ANCHOR PLATES on top of frame
+         Where the chains connect into the frame top beam
+         ───────────────────────────────────────────────────────── -->
+
+    
+    <rect x="88" y="78" width="24" height="10" rx="2" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="100" cy="83" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+
+    
+    <rect x="288" y="78" width="24" height="10" rx="2" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>
+    <circle cx="300" cy="83" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+
+    
+    <circle cx="130" cy="92" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="200" cy="92" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="270" cy="92" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+
+    
+    <circle cx="72" cy="200" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="72" cy="330" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="72" cy="450" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+
+    
+    <circle cx="328" cy="200" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="328" cy="330" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+    <circle cx="328" cy="450" r="4" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1"/>
+
+    
+    <rect x="60" y="280" width="10" height="40" fill="#5a3520" opacity="0.25" rx="2"/>
+    
+    <rect x="330" y="380" width="10" height="30" fill="#5a3520" opacity="0.2" rx="2"/>
+
+  </g>
+
+</svg>

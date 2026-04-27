@@ -10,6 +10,8 @@ import type { PageServerLoad } from "./$types";
 
 const saveApplication = async (userId: string, form: FormData) => {
   const formValues = Utils.formToDict(form);
+  // Multi-value field — getAll returns all checked boxes as an array
+  const areasOfInterest = (form.getAll("areas-of-interest") as string[]).join(",");
 
   // Fetch current application to check for changes
   const currentApplication = await prisma.application.findUnique({
@@ -39,6 +41,17 @@ const saveApplication = async (userId: string, form: FormData) => {
     currentApplication.gender !== formValues["gender"] ||
     currentApplication.pronouns !== formValues["pronouns"] ||
     currentApplication.personalUrl !== formValues["personal-url"] ||
+    currentApplication.raceEthnicity !== formValues["race-ethnicity"] ||
+    currentApplication.sexuality !== formValues["sexuality"] ||
+    currentApplication.firstGenStudent !== formValues["first-gen-student"] ||
+    currentApplication.hackatonsAttended !== formValues["hackathons-attended"] ||
+    currentApplication.experienceLevel !== formValues["experience-level"] ||
+    currentApplication.areasOfInterest !== areasOfInterest ||
+    currentApplication.heardAboutUs !== formValues["heard-about-us"] ||
+    currentApplication.linkedinUrl !== formValues["linkedin-url"] ||
+    currentApplication.interestedInSponsors !== formValues["interested-in-sponsors"] ||
+    currentApplication.teamPreference !== formValues["team-preference"] ||
+    currentApplication.tshirtSize !== formValues["tshirt-size"] ||
     currentApplication.mlhCodeOfConduct !== !!formValues["mlh-code"] ||
     currentApplication.mlhAuthorization !== !!formValues["mlh-authorization"] ||
     currentApplication.mlhEmails !== !!formValues["mlh-emails"];
@@ -61,6 +74,17 @@ const saveApplication = async (userId: string, form: FormData) => {
       gender: formValues["gender"],
       pronouns: formValues["pronouns"],
       personalUrl: formValues["personal-url"],
+      raceEthnicity: formValues["race-ethnicity"] ?? "",
+      sexuality: formValues["sexuality"] ?? "",
+      firstGenStudent: formValues["first-gen-student"] ?? "",
+      hackatonsAttended: formValues["hackathons-attended"] ?? "",
+      experienceLevel: formValues["experience-level"] ?? "",
+      areasOfInterest: areasOfInterest,
+      heardAboutUs: formValues["heard-about-us"] ?? "",
+      linkedinUrl: formValues["linkedin-url"] ?? "",
+      interestedInSponsors: formValues["interested-in-sponsors"] ?? "",
+      teamPreference: formValues["team-preference"] ?? "",
+      tshirtSize: formValues["tshirt-size"] ?? "",
       mlhCodeOfConduct: !!formValues["mlh-code"],
       mlhAuthorization: !!formValues["mlh-authorization"],
       mlhEmails: !!formValues["mlh-emails"],
@@ -95,26 +119,15 @@ export const actions: Actions = {
 
     const userId = session.user.id;
     const form = await request.formData();
-    const { application, hasChanges, previousApproved } = await saveApplication(
-      userId,
-      form,
-    );
-
-    // Matrix Logic:
-    // Approved, Save, no changes: Do nothing (already saved fields, keep approved)
-    // Approved, save, changes: Unapprove, send email
-    // unapproved, save, no changes: do nothing (already saved fields)
-    // unapproved, save, changes: save changes (already saved fields)
+    const { application, hasChanges, previousApproved } = await saveApplication(userId, form);
 
     if (previousApproved && hasChanges) {
-      // Approved + Changes -> Unapprove, Send Email
       await prisma.application.update({
         where: { id: application.id },
-        data: { approved: false },
+        data: { approved: false, submitted: false },
       });
       await sendApprovalRevokedEmail(application.email);
     }
-    // All other cases require no further action (fields are already saved by saveApplication)
   },
   submit: async ({ request }) => {
     if (Utils.hasApplicationsClosed()) {
@@ -135,27 +148,27 @@ export const actions: Actions = {
     // If currently NOT submitted -> Submit.
 
     // We call saveApplication first to save any potential edits made before clicking submit/unsubmit.
-    const { application, previousApproved, previousSubmitted } =
+    const { application, hasChanges, previousApproved, previousSubmitted } =
       await saveApplication(userId, form);
 
     const isUnsubmitting = previousSubmitted;
 
     if (isUnsubmitting) {
-      // Approved, unsubmit: unapprove, no email
-      // (Also applies if unapproved and unsubmit, just unsubmit)
       await prisma.application.update({
         where: { id: application.id },
-        data: {
-          submitted: false,
-          approved: false, // Always unapprove on unsubmit
-        },
+        data: { submitted: false, submittedAt: null, approved: false, approvedAt: null },
       });
     } else {
-      // unaproved, submit: submit for approval.
-      // (If approved and submit... shouldn't happen if UI is correct, but if it does, ensure submitted=true)
+      if (previousApproved && hasChanges) {
+        await prisma.application.update({
+          where: { id: application.id },
+          data: { approved: false, approvedAt: null },
+        });
+        await sendApprovalRevokedEmail(application.email);
+      }
       await prisma.application.update({
         where: { id: application.id },
-        data: { submitted: true },
+        data: { submitted: true, submittedAt: new Date() },
       });
     }
   },

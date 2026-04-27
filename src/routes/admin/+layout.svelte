@@ -17,14 +17,14 @@
     </div>
 
     <!-- Fixed Bottom Admin Navigation -->
-    <div class="fixed bottom-0 w-full bg-white/90 backdrop-blur-md border-t border-secondary/10 shadow-lg z-50">
+    <div class="fixed bottom-0 w-full bg-castle-mortar/95 backdrop-blur-md border-t border-castle-stoneMid/30 shadow-lg z-50">
         <div class="max-w-4xl mx-auto flex justify-around p-2">
             {#each links as link}
                 {@const active = $page.url.pathname === link.href || $page.url.pathname.startsWith(link.href)}
                 <a
                     href={link.href}
                     class="flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 group
-                    {active ? 'text-accent bg-accent/5' : 'text-secondary/60 hover:text-secondary hover:bg-secondary/5'}"
+                    {active ? 'text-castle-torchOrange bg-castle-torchOrange/10' : 'text-castle-stoneLight hover:text-castle-torchYellow hover:bg-castle-stoneMid/30'}"
                 >
                     <Icon icon={link.icon} width="24" height="24" class="mb-1 transition-transform group-active:scale-95 {active ? 'scale-110' : ''}" />
                     <span class="text-[10px] font-bold uppercase tracking-wider">{link.label}</span>

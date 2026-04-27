@@ -5,10 +5,12 @@
 </script>
 
 <div class="relative w-full flex flex-row gap-4">
+    <label class="flex flex-row gap-4 items-center cursor-pointer">
     <input
         type="checkbox"
         {...others}
-        class="text-black border mt-4 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        class="text-black border mt-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
     />
     <span>{@render children?.()}</span>
+    </label>
 </div>

@@ -1,0 +1,400 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200" width="1200" height="200" role="img" aria-label="Castle moat — dark water with torch reflections and reeds">
+  
+
+  <defs>
+
+    
+    
+    
+
+    
+    <linearGradient id="water-depth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#112237"/>
+      <stop offset="35%"  stop-color="#0d1f35"/>
+      <stop offset="100%" stop-color="#0a1a2c"/>
+    </linearGradient>
+
+    
+    <linearGradient id="far-bank-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#2e2e3a"/>
+      <stop offset="100%" stop-color="#22222e"/>
+    </linearGradient>
+
+    
+    <linearGradient id="near-bank-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#242430"/>
+      <stop offset="100%" stop-color="#1a1a22"/>
+    </linearGradient>
+
+    
+    <linearGradient id="stone-a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#32323e"/>
+      <stop offset="100%" stop-color="#242430"/>
+    </linearGradient>
+    <linearGradient id="stone-b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#2a2a36"/>
+      <stop offset="100%" stop-color="#1e1e2a"/>
+    </linearGradient>
+    <linearGradient id="stone-c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#38383e"/>
+      <stop offset="100%" stop-color="#282832"/>
+    </linearGradient>
+
+    
+    <linearGradient id="torch-reflect-1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ff8c42" stop-opacity="0"/>
+      <stop offset="18%"  stop-color="#ff8c42" stop-opacity="0.28"/>
+      <stop offset="50%"  stop-color="#ffb347" stop-opacity="0.18"/>
+      <stop offset="80%"  stop-color="#ff8c42" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#ff8c42" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="torch-reflect-2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ff8c42" stop-opacity="0"/>
+      <stop offset="15%"  stop-color="#ffb347" stop-opacity="0.30"/>
+      <stop offset="45%"  stop-color="#ffb347" stop-opacity="0.20"/>
+      <stop offset="75%"  stop-color="#ff8c42" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ff8c42" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="torch-reflect-3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ff8c42" stop-opacity="0"/>
+      <stop offset="20%"  stop-color="#ff8c42" stop-opacity="0.22"/>
+      <stop offset="55%"  stop-color="#ffb347" stop-opacity="0.15"/>
+      <stop offset="85%"  stop-color="#ff8c42" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ff8c42" stop-opacity="0"/>
+    </linearGradient>
+
+    
+    <linearGradient id="reflect-core-1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ffb347" stop-opacity="0"/>
+      <stop offset="22%"  stop-color="#ffd080" stop-opacity="0.14"/>
+      <stop offset="50%"  stop-color="#ffcc66" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ffb347" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="reflect-core-2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ffb347" stop-opacity="0"/>
+      <stop offset="20%"  stop-color="#ffe0a0" stop-opacity="0.16"/>
+      <stop offset="48%"  stop-color="#ffcc66" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ffb347" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="reflect-core-3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ffb347" stop-opacity="0"/>
+      <stop offset="25%"  stop-color="#ffd070" stop-opacity="0.12"/>
+      <stop offset="52%"  stop-color="#ffcc66" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ffb347" stop-opacity="0"/>
+    </linearGradient>
+
+    
+    <linearGradient id="surface-gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#1a2e4a" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#1a2e4a" stop-opacity="0"/>
+    </linearGradient>
+
+    
+    <linearGradient id="bank-shadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+
+  </defs>
+
+
+  
+  
+  
+  <g id="moat-water">
+
+    
+    <rect x="0" y="18" width="1200" height="152" fill="url(#water-depth)"/>
+
+    
+    <rect x="0" y="18" width="1200" height="28" fill="url(#surface-gloss)"/>
+
+    
+    <rect x="0" y="72" width="1200" height="18" fill="#1a2e4a" opacity="0.08"/>
+
+  </g>
+
+
+  
+  
+  
+  
+  <g id="moat-far-bank">
+
+    
+    <rect x="0" y="0" width="1200" height="22" fill="url(#far-bank-grad)"/>
+
+    
+    <rect x="0"    y="0"  width="118" height="10" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="121"  y="0"  width="96"  height="10" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="220"  y="0"  width="110" height="10" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="333"  y="0"  width="88"  height="10" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="424"  y="0"  width="124" height="10" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="551"  y="0"  width="98"  height="10" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="652"  y="0"  width="112" height="10" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="767"  y="0"  width="90"  height="10" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="860"  y="0"  width="104" height="10" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="967"  y="0"  width="116" height="10" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="1086" y="0"  width="114" height="10" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+
+    
+    <rect x="0"    y="11" width="74"  height="11" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="77"   y="11" width="108" height="11" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="188"  y="11" width="90"  height="11" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="281"  y="11" width="118" height="11" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="402"  y="11" width="80"  height="11" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="485"  y="11" width="102" height="11" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="590"  y="11" width="92"  height="11" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="685"  y="11" width="116" height="11" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="804"  y="11" width="86"  height="11" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="893"  y="11" width="110" height="11" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="1006" y="11" width="98"  height="11" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="1107" y="11" width="93"  height="11" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+
+    
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#3e3e50" stroke-width="1.5"/>
+    
+    <line x1="0" y1="22" x2="1200" y2="22" stroke="#080e18" stroke-width="2"/>
+
+  </g>
+
+
+  
+  
+  
+  
+  <g id="moat-ripples">
+
+    
+    
+
+    
+    <path d="M-40 38 Q60 35 160 38 Q260 41 360 38 Q460 35 560 38 Q660 41 760 38 Q860 35 960 38 Q1060 41 1160 38 Q1200 37 1240 38"
+          stroke="#2d4a6e" stroke-width="0.8" fill="none" opacity="0.22"/>
+
+    
+    <path d="M-80 52 Q80 49 230 52 Q380 55 530 52 Q680 49 830 52 Q980 55 1130 52 Q1200 51 1280 52"
+          stroke="#2d4a6e" stroke-width="0.7" fill="none" opacity="0.18"/>
+
+    
+    <path d="M-20 65 Q50 63 120 65 Q190 67 260 65 Q330 63 400 65 Q470 67 540 65 Q610 63 680 65 Q750 67 820 65 Q890 63 960 65 Q1030 67 1100 65 Q1170 63 1240 65"
+          stroke="#2d4a6e" stroke-width="0.6" fill="none" opacity="0.20"/>
+
+    
+    <path d="M-60 80 Q100 77 280 80 Q460 83 640 80 Q820 77 1000 80 Q1100 82 1260 80"
+          stroke="#2d4a6e" stroke-width="0.9" fill="none" opacity="0.25"/>
+
+    
+    <path d="M-30 94 Q90 92 200 94 Q310 96 420 94 Q530 92 640 94 Q750 96 860 94 Q970 92 1080 94 Q1150 95 1230 94"
+          stroke="#2d4a6e" stroke-width="0.6" fill="none" opacity="0.16"/>
+
+    
+    <path d="M-70 110 Q130 107 330 110 Q530 113 730 110 Q930 107 1130 110 Q1200 111 1270 110"
+          stroke="#2d4a6e" stroke-width="0.8" fill="none" opacity="0.22"/>
+
+    
+    <path d="M-10 124 Q70 122 150 124 Q230 126 310 124 Q390 122 470 124 Q550 126 630 124 Q710 122 790 124 Q870 126 950 124 Q1030 122 1110 124 Q1190 126 1210 124"
+          stroke="#2d4a6e" stroke-width="0.7" fill="none" opacity="0.18"/>
+
+    
+    <path d="M-50 138 Q120 136 310 138 Q500 140 690 138 Q880 136 1070 138 Q1150 139 1250 138"
+          stroke="#2d4a6e" stroke-width="0.6" fill="none" opacity="0.14"/>
+
+    
+    <path d="M-20 150 Q80 148 180 150 Q280 152 380 150 Q480 148 580 150 Q680 152 780 150 Q880 148 980 150 Q1080 152 1200 150"
+          stroke="#2d4a6e" stroke-width="0.5" fill="none" opacity="0.12"/>
+
+  </g>
+
+
+  
+  
+  
+  
+  <g id="moat-reflections">
+
+    <g class="torch-reflection">
+      
+      <rect x="196" y="18" width="68" height="152" rx="10" fill="url(#torch-reflect-1)" opacity="0.9"/>
+      
+      <rect x="214" y="18" width="32" height="152" rx="6"  fill="url(#torch-reflect-1)" opacity="0.8"/>
+      
+      <rect x="224" y="18" width="12" height="152" rx="4"  fill="url(#reflect-core-1)" opacity="1.0"/>
+      
+      <ellipse cx="230" cy="52"  rx="6"  ry="3"  fill="#ffb347" opacity="0.10"/>
+      <ellipse cx="227" cy="72"  rx="4"  ry="2"  fill="#ffb347" opacity="0.08"/>
+      <ellipse cx="233" cy="93"  rx="5"  ry="2"  fill="#ff8c42" opacity="0.09"/>
+      <ellipse cx="228" cy="114" rx="4"  ry="2"  fill="#ffb347" opacity="0.07"/>
+      <ellipse cx="232" cy="136" rx="3"  ry="1.5" fill="#ff8c42" opacity="0.06"/>
+    </g>
+
+    <g class="torch-reflection">
+      
+      <rect x="552" y="18" width="76" height="152" rx="10" fill="url(#torch-reflect-2)" opacity="0.95"/>
+      
+      <rect x="570" y="18" width="40" height="152" rx="6"  fill="url(#torch-reflect-2)" opacity="0.85"/>
+      
+      <rect x="581" y="18" width="14" height="152" rx="4"  fill="url(#reflect-core-2)" opacity="1.0"/>
+      
+      <ellipse cx="588" cy="44"  rx="7"  ry="3"   fill="#ffcc66" opacity="0.12"/>
+      <ellipse cx="584" cy="67"  rx="5"  ry="2.5" fill="#ffb347" opacity="0.10"/>
+      <ellipse cx="591" cy="88"  rx="6"  ry="2"   fill="#ff8c42" opacity="0.09"/>
+      <ellipse cx="586" cy="110" rx="4"  ry="2"   fill="#ffb347" opacity="0.08"/>
+      <ellipse cx="590" cy="132" rx="5"  ry="2"   fill="#ff8c42" opacity="0.07"/>
+      <ellipse cx="585" cy="150" rx="3"  ry="1.5" fill="#ffb347" opacity="0.05"/>
+    </g>
+
+    <g class="torch-reflection">
+      
+      <rect x="926" y="18" width="66" height="152" rx="10" fill="url(#torch-reflect-3)" opacity="0.9"/>
+      
+      <rect x="942" y="18" width="34" height="152" rx="6"  fill="url(#torch-reflect-3)" opacity="0.80"/>
+      
+      <rect x="952" y="18" width="10" height="152" rx="4"  fill="url(#reflect-core-3)" opacity="1.0"/>
+      
+      <ellipse cx="957" cy="48"  rx="5"  ry="2.5" fill="#ffb347" opacity="0.10"/>
+      <ellipse cx="954" cy="70"  rx="4"  ry="2"   fill="#ff8c42" opacity="0.08"/>
+      <ellipse cx="960" cy="95"  rx="5"  ry="2"   fill="#ffb347" opacity="0.09"/>
+      <ellipse cx="956" cy="118" rx="3"  ry="1.5" fill="#ff8c42" opacity="0.07"/>
+      <ellipse cx="959" cy="140" rx="4"  ry="1.5" fill="#ffb347" opacity="0.06"/>
+    </g>
+
+  </g>
+
+
+  
+  
+  
+  <g id="moat-shimmer">
+    
+    <circle cx="88"   cy="42"  r="1.0" fill="#f5e8c0" opacity="0.55"/>
+    <circle cx="152"  cy="87"  r="0.8" fill="#f5e8c0" opacity="0.42"/>
+    <circle cx="318"  cy="55"  r="1.1" fill="#f5e8c0" opacity="0.60"/>
+    <circle cx="410"  cy="130" r="0.7" fill="#f5e8c0" opacity="0.40"/>
+    <circle cx="474"  cy="72"  r="0.9" fill="#f5e8c0" opacity="0.50"/>
+    <circle cx="537"  cy="108" r="1.0" fill="#f5e8c0" opacity="0.48"/>
+    <circle cx="665"  cy="44"  r="0.8" fill="#f5e8c0" opacity="0.45"/>
+    <circle cx="720"  cy="95"  r="1.2" fill="#f5e8c0" opacity="0.62"/>
+    <circle cx="795"  cy="62"  r="0.7" fill="#f5e8c0" opacity="0.40"/>
+    <circle cx="848"  cy="118" r="1.0" fill="#f5e8c0" opacity="0.52"/>
+    <circle cx="1015" cy="50"  r="0.9" fill="#f5e8c0" opacity="0.46"/>
+    <circle cx="1088" cy="80"  r="1.1" fill="#f5e8c0" opacity="0.58"/>
+    <circle cx="1142" cy="135" r="0.8" fill="#f5e8c0" opacity="0.43"/>
+    
+    <circle cx="200"  cy="30"  r="0.7" fill="#f5e8c0" opacity="0.45"/>
+    <circle cx="620"  cy="28"  r="0.8" fill="#f5e8c0" opacity="0.50"/>
+    <circle cx="980"  cy="32"  r="0.7" fill="#f5e8c0" opacity="0.42"/>
+  </g>
+
+
+  
+  
+  
+  <g id="moat-near-bank">
+
+    
+    <rect x="0" y="170" width="1200" height="30" fill="url(#near-bank-grad)"/>
+
+    
+    <rect x="0" y="168" width="1200" height="14" fill="url(#bank-shadow)"/>
+
+    
+    
+    <rect x="0"    y="170" width="104" height="12" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="107"  y="170" width="84"  height="12" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="194"  y="170" width="120" height="12" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="317"  y="170" width="92"  height="12" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="412"  y="170" width="108" height="12" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="523"  y="170" width="86"  height="12" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="612"  y="170" width="112" height="12" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="727"  y="170" width="96"  height="12" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="826"  y="170" width="106" height="12" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="935"  y="170" width="88"  height="12" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="1026" y="170" width="116" height="12" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="1145" y="170" width="55"  height="12" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+
+    
+    <rect x="0"    y="184" width="68"  height="16" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="71"   y="184" width="102" height="16" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="176"  y="184" width="90"  height="16" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="269"  y="184" width="116" height="16" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="388"  y="184" width="80"  height="16" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="471"  y="184" width="108" height="16" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="582"  y="184" width="94"  height="16" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="679"  y="184" width="112" height="16" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="794"  y="184" width="84"  height="16" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="881"  y="184" width="110" height="16" fill="url(#stone-a)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="994"  y="184" width="96"  height="16" fill="url(#stone-c)" stroke="#1a1a24" stroke-width="1"/>
+    <rect x="1093" y="184" width="107" height="16" fill="url(#stone-b)" stroke="#1a1a24" stroke-width="1"/>
+
+    
+    <line x1="0" y1="170" x2="1200" y2="170" stroke="#0a1020" stroke-width="1.8"/>
+
+    
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#12121a" stroke-width="2"/>
+
+  </g>
+
+
+  
+  
+  
+  
+  <g id="moat-reeds">
+
+    
+    <g class="reed" id="reed-1">
+      
+      <line x1="62" y1="170" x2="58" y2="22" stroke="#1a1a24" stroke-width="2.2" stroke-linecap="round"/>
+      
+      <ellipse cx="58" cy="28" rx="5" ry="11" fill="#1a1a24"/>
+      
+      <line x1="58" y1="17" x2="57" y2="8" stroke="#1a1a24" stroke-width="1.2" stroke-linecap="round"/>
+      
+      <path d="M62 120 Q48 90 44 60" stroke="#1a1a24" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      
+      <path d="M62 100 Q72 72 70 44" stroke="#1a1a24" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </g>
+
+    
+    <g class="reed" id="reed-2">
+      <line x1="82" y1="170" x2="79" y2="34" stroke="#1a1a24" stroke-width="2.0" stroke-linecap="round"/>
+      <ellipse cx="79" cy="40" rx="4.5" ry="10" fill="#1a1a24"/>
+      <line x1="79" y1="30" x2="78" y2="22" stroke="#1a1a24" stroke-width="1.1" stroke-linecap="round"/>
+      <path d="M82 115 Q68 88 66 58" stroke="#1a1a24" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </g>
+
+    
+    <g class="reed" id="reed-3">
+      <line x1="1118" y1="170" x2="1122" y2="26" stroke="#1a1a24" stroke-width="2.2" stroke-linecap="round"/>
+      <ellipse cx="1122" cy="32" rx="5" ry="11" fill="#1a1a24"/>
+      <line x1="1122" y1="21" x2="1123" y2="12" stroke="#1a1a24" stroke-width="1.2" stroke-linecap="round"/>
+      
+      <path d="M1118 118 Q1132 90 1136 56" stroke="#1a1a24" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M1118 100 Q1108 74 1110 46" stroke="#1a1a24" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </g>
+
+    
+    <g class="reed" id="reed-4">
+      <line x1="1140" y1="170" x2="1137" y2="18" stroke="#1a1a24" stroke-width="2.0" stroke-linecap="round"/>
+      <ellipse cx="1137" cy="24" rx="4" ry="10" fill="#1a1a24"/>
+      <line x1="1137" y1="14" x2="1136" y2="6" stroke="#1a1a24" stroke-width="1.1" stroke-linecap="round"/>
+      <path d="M1140 110 Q1152 84 1150 52" stroke="#1a1a24" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </g>
+
+  </g>
+
+
+  
+  
+  
+  
+  <defs>
+    <radialGradient id="vignette-radial" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.22"/>
+    </radialGradient>
+  </defs>
+  <rect x="0" y="18" width="1200" height="152" fill="url(#vignette-radial)" pointer-events="none"/>
+
+</svg>

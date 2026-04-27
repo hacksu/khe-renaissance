@@ -5,7 +5,7 @@
 </script>
 
 <div
-  class="bg-secondary bg-opacity-100 py-2 px-5 mt-24 flex flex-row items-center justify-between text-white"
+  class="bg-castle-wood py-2 px-5 mt-24 flex flex-row items-center justify-between text-white border-t border-castle-woodHighlight"
 >
   <div class="flex flex-row items-center gap-2">
     <Link href="https://hacksu.com">
@@ -21,6 +21,6 @@
   </div>
   <div class="flex gap-2">
     <Link href="https://mlh.io/code-of-conduct">MLH Code of Conduct</Link>
-    <Link href="https://hacksu.com">HacKSU Bylaws</Link>
+    <Link href="https://hacksu.com">HacKSU</Link>
   </div>
 </div>

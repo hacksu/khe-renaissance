@@ -122,9 +122,10 @@ export const Projects = {
     deleteProject: async (id: string) => {
         return await prisma.$transaction([
             prisma.application.updateMany({ where: { projectId: id }, data: { projectId: null } }),
-            prisma.judgementScore.deleteMany({ where: { judgement: { projectId: id } } }),
-            prisma.judgement.deleteMany({ where: { projectId: id } }),
-            prisma.judgeAssignment.deleteMany({ where: { projectId: id } }),
+            prisma.pairCriterionResult.deleteMany({ where: { pairComparison: { OR: [{ projectAId: id }, { projectBId: id }] } } }),
+            prisma.pairComparison.deleteMany({ where: { OR: [{ projectAId: id }, { projectBId: id }] } }),
+            prisma.tableVisit.deleteMany({ where: { projectId: id } }),
+            prisma.crowdBTState.deleteMany({ where: { projectId: id } }),
             prisma.project.delete({ where: { id } }),
         ]);
     },

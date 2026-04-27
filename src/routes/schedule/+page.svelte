@@ -36,25 +36,25 @@
     function getDotColor(type: string): string {
         switch(type) {
             case "ceremony":
-                return "bg-sand"; // Gold/sand for ceremonies
+                return "bg-castle-gold";
             case "meal":
-                return "bg-orange-500"; // Orange for meals
+                return "bg-castle-torchAmber";
             case "workshop":
-                return "bg-accent"; // Blue for workshops
+                return "bg-castle-torchOrange";
             case "event":
-                return "bg-primary"; // Beige for general events
+                return "bg-castle-stoneLight";
             case "milestone":
-                return "bg-green-500"; // Green for milestones
+                return "bg-green-500";
             default:
                 return "bg-white";
         }
     }
 </script>
 
-<div class="py-12 px-4 md:px-12 lg:px-24 xl:px-36 flex flex-col gap-12 text-black">
+<div class="py-12 px-4 md:px-12 lg:px-24 xl:px-36 flex flex-col gap-12">
     <!-- Header Section -->
     <div class="text-center max-w-4xl mx-auto fade-in">
-        <h1 class="font-bold text-5xl mb-6 text-secondary">Event Schedule</h1>
+        <h1 class="font-bold text-5xl mb-6 text-castle-gold">Event Schedule</h1>
         <p class="text-xl mb-4 leading-relaxed">
             Here's the timeline for the weekend. Join us for 24 hours of hacking, workshops, and fun!
         </p>
@@ -62,7 +62,7 @@
 
     <!-- Saturday Schedule -->
     <div class="fade-in" style="animation-delay: 0.2s;">
-        <h2 class="text-4xl font-bold text-center mb-8 text-secondary">~ Saturday ~</h2>
+        <h2 class="text-4xl font-bold text-center mb-8 text-castle-gold">~ Saturday ~</h2>
         <Card padded>
             <div class="space-y-1">
                 {#each saturday as event, i}
@@ -79,7 +79,7 @@
                         </div>
 
                         <!-- Time -->
-                        <div class="text-accent font-bold font-mono min-w-[90px] pt-0.5 text-sm md:text-base transition-colors duration-300 group-hover:text-sand">
+                        <div class="text-castle-torchOrange font-bold font-mono min-w-[90px] pt-0.5 text-sm md:text-base transition-colors duration-300 group-hover:text-castle-gold">
                             {event.time}
                         </div>
 
@@ -97,7 +97,7 @@
 
     <!-- Sunday Schedule -->
     <div class="fade-in" style="animation-delay: 0.4s;">
-        <h2 class="text-4xl font-bold text-center mb-8 text-secondary">~ Sunday ~</h2>
+        <h2 class="text-4xl font-bold text-center mb-8 text-castle-gold">~ Sunday ~</h2>
         <Card padded>
             <div class="space-y-1">
                 {#each sunday as event, i}
@@ -114,7 +114,7 @@
                         </div>
 
                         <!-- Time -->
-                        <div class="text-accent font-bold font-mono min-w-[90px] pt-0.5 text-sm md:text-base transition-colors duration-300 group-hover:text-sand">
+                        <div class="text-castle-torchOrange font-bold font-mono min-w-[90px] pt-0.5 text-sm md:text-base transition-colors duration-300 group-hover:text-castle-gold">
                             {event.time}
                         </div>
 

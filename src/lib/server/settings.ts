@@ -1,7 +1,6 @@
 import { prisma } from '$lib/server/prisma';
 
 export const SETTING_KEYS = {
-    MAX_TABLES_PER_JUDGE: 'maxTablesPerJudge',
     MAX_JUDGES_PER_TEAM: 'maxJudgesPerTeam',
     TIME_PER_TABLE: 'timePerTable'
 } as const;
@@ -27,7 +26,6 @@ export const Settings = {
         });
     },
 
-    getMaxTablesPerJudge: () => getIntSetting(SETTING_KEYS.MAX_TABLES_PER_JUDGE),
     getMaxJudgesPerTeam: () => getIntSetting(SETTING_KEYS.MAX_JUDGES_PER_TEAM),
     getTimePerTable: () => getIntSetting(SETTING_KEYS.TIME_PER_TABLE)
 };

@@ -8,7 +8,7 @@
     let isJudgeRoute = $derived($page.url.pathname.startsWith('/judge'));
 </script>
 
-<div class="text-black bg-sand min-h-screen flex flex-col">
+<div class="text-white bg-castle-skyDeep min-h-screen flex flex-col">
     {#if !isJudgeRoute}
         <Navbar />
     {/if}

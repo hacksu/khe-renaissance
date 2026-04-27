@@ -4,10 +4,9 @@
 
 :root {
     --font-family: "Inter", sans-serif;
-    background-color: theme('colors.primary');
+    background-color: theme('colors.castle.skyDeep');
 }
 
 a {
-  @apply text-accent hover:text-primary transition-colors;
-  color: #ff4500;
+  @apply text-castle-torchAmber hover:text-castle-torchYellow transition-colors;
 }

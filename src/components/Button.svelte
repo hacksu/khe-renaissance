@@ -10,7 +10,7 @@
 <div class="w-full">
     <button
         {...others}
-        class={twMerge(`flex flex-row justify-center items-center gap-2 bg-accent rounded-lg px-2 py-2 w-full text-black text-${size} transition-opacity duration-300 hover:opacity-75 disabled:opacity-25`, extraClass)}
+        class={twMerge(`flex flex-row justify-center items-center gap-2 bg-castle-torchOrange rounded-lg px-2 py-2 w-full text-white text-${size} transition-opacity duration-300 hover:opacity-75 disabled:opacity-25`, extraClass)}
     >
         {@render children?.()}
     </button>

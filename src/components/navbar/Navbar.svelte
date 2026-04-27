@@ -34,14 +34,14 @@
     }
 </script>
 
-<a href="https://mlh.io/seasons/2026/events" target="_blank" class="fixed top-0 left-0 z-50">
+<!-- <a href="https://mlh.io/seasons/2026/events" target="_blank" class="fixed top-0 left-0 z-50">
     <img 
         decoding="async" 
         src="https://s3.amazonaws.com/logged-assets/trust-badge/2026/mlh-trust-badge-2026-red.svg" 
         alt="Major League Hacking 2026 Hackathon Season" 
         class="w-20"
     >
-</a>
+</a> -->
 
 <nav 
     class="fixed top-0 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ease-out"
@@ -53,11 +53,11 @@
     "
 >
     <div 
-        class="relative backdrop-blur-sm bg-white bg-opacity-30 border border-white border-opacity-20 shadow-lg transition-all duration-500"
+        class="relative backdrop-blur-sm bg-castle-stoneDark/80 border border-castle-stoneMid/40 shadow-lg transition-all duration-500"
         style="border-radius: inherit;"
     >
         <div 
-            class="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 pointer-events-none transition-opacity duration-500"
+            class="absolute inset-0 bg-gradient-to-r from-castle-torchOrange/5 via-transparent to-castle-gold/10 pointer-events-none transition-opacity duration-500"
             style="border-radius: inherit; opacity: {scrolled ? '1' : '0.5'};"
         ></div>
 
@@ -66,15 +66,15 @@
                 {#each navLinks.slice(1) as link}
                     <NavbarItem 
                         href={link.href}
-                        class="relative px-3 py-2 text-gray-900 font-medium transition-all duration-300 hover:text-gray-600 group text-sm"
+                        class="relative px-3 py-2 text-castle-stoneHighlight font-medium transition-all duration-300 hover:text-castle-torchYellow group text-sm"
                     >
                         <span class="relative z-10">{link.label}</span>
                         
                         {#if isActive(link.href)}
-                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-accent rounded-full"></div>
+                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-castle-torchOrange rounded-full"></div>
                         {/if}
                         
-                        <div class="absolute inset-0 bg-white/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+                        <div class="absolute inset-0 bg-castle-stoneMid/30 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></div>
                     </NavbarItem>
                 {/each}
             </div>
@@ -99,16 +99,16 @@
                 </NavbarItem>
                 
                 {#if $session.data}
-                    <NavbarItem 
-                        href="/profile" 
-                        class="px-4 py-2 text-gray-900 font-medium bg-accent/20 hover:bg-accent/30 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/50 text-sm"
+                    <NavbarItem
+                        href="/profile"
+                        class="px-4 py-2 text-castle-torchYellow font-medium bg-castle-torchOrange/20 hover:bg-castle-torchOrange/30 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-castle-torchOrange/50 text-sm"
                     >
                         {$session.data.user.email}
                     </NavbarItem>
                 {:else}
-                    <NavbarItem 
-                        href="/auth/login" 
-                        class="px-5 py-2 text-gray-900 font-semibold bg-accent rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/50 hover:scale-105 hover:bg-accent/80 text-sm"
+                    <NavbarItem
+                        href="/auth/login"
+                        class="px-5 py-2 text-white font-semibold bg-castle-torchOrange rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-castle-torchOrange/50 hover:scale-105 hover:bg-castle-torchAmber text-sm"
                     >
                         Login
                     </NavbarItem>
@@ -121,16 +121,16 @@
                 aria-label="Toggle menu"
             >
                 <span 
-                    class="w-6 h-0.5 bg-offwhite rounded-full transition-all duration-300 group-hover:bg-white"
+                    class="w-6 h-0.5 bg-castle-stoneHighlight rounded-full transition-all duration-300 group-hover:bg-castle-torchYellow"
                     class:rotate-45={mobileMenuOpen}
                     class:translate-y-2={mobileMenuOpen}
                 ></span>
                 <span 
-                    class="w-6 h-0.5 bg-offwhite rounded-full transition-all duration-300 group-hover:bg-white"
+                    class="w-6 h-0.5 bg-castle-stoneHighlight rounded-full transition-all duration-300 group-hover:bg-castle-torchYellow"
                     class:opacity-0={mobileMenuOpen}
                 ></span>
                 <span 
-                    class="w-6 h-0.5 bg-offwhite rounded-full transition-all duration-300 group-hover:bg-white"
+                    class="w-6 h-0.5 bg-castle-stoneHighlight rounded-full transition-all duration-300 group-hover:bg-castle-torchYellow"
                     class:-rotate-45={mobileMenuOpen}
                     class:-translate-y-2={mobileMenuOpen}
                 ></span>
@@ -146,50 +146,50 @@
     >
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"></div>
         
-        <div 
-            class="absolute top-20 right-4 left-4 bg-secondary/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden animate-slide-down"
+        <div
+            class="absolute top-20 right-4 left-4 bg-castle-mortar/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-castle-stoneMid/30 overflow-hidden animate-slide-down"
             onclick={(e) => e.stopPropagation()}
         >
             <div class="p-6 space-y-2">
                 {#each navLinks as link}
                     <NavbarItem 
                         href={link.href}
-                        class="block px-4 py-3 text-white font-medium rounded-lg transition-all duration-300 hover:bg-white/90 hover:translate-x-2"
+                        class="block px-4 py-3 text-castle-stoneHighlight font-medium rounded-lg transition-all duration-300 hover:bg-castle-stoneMid/60 hover:text-castle-torchYellow hover:translate-x-2"
                         onclick={() => mobileMenuOpen = false}
                     >
                         <span class="flex items-center gap-3">
                             {#if isActive(link.href)}
-                                <span class="w-1.5 h-1.5 bg-accent rounded-full"></span>
+                                <span class="w-1.5 h-1.5 bg-castle-torchOrange rounded-full"></span>
                             {/if}
                             {link.label}
                         </span>
                     </NavbarItem>
                 {/each}
 
-                <div class="h-px bg-white/10 my-4"></div>
+                <div class="h-px bg-castle-stoneMid/40 my-4"></div>
 
                 <NavbarItem 
                     href="https://kent-hack-enough-2026.devpost.com/" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    class="flex items-center gap-3 px-4 py-3 text-white font-medium rounded-lg transition-all duration-300 hover:bg-white/90"
+                    class="flex items-center gap-3 px-4 py-3 text-castle-stoneHighlight font-medium rounded-lg transition-all duration-300 hover:bg-castle-stoneMid/60 hover:text-castle-torchYellow"
                 >
                     <img src={devPost} width={24} alt="DevPost" />
                     Submit on DevPost
                 </NavbarItem>
 
                 {#if $session.data}
-                    <NavbarItem 
-                        href="/profile" 
-                        class="block px-4 py-3 text-center text-white font-semibold bg-accent/20 hover:bg-accent/30 rounded-lg transition-all duration-300"
+                    <NavbarItem
+                        href="/profile"
+                        class="block px-4 py-3 text-center text-castle-torchYellow font-semibold bg-castle-torchOrange/20 hover:bg-castle-torchOrange/30 rounded-lg transition-all duration-300"
                         onclick={() => mobileMenuOpen = false}
                     >
                         {$session.data.user.email}
                     </NavbarItem>
                 {:else}
-                    <NavbarItem 
-                        href="/auth/login" 
-                        class="block px-4 py-3 text-center text-white font-bold bg-gradient-to-r from-accent to-primary hover:from-primary hover:to-accent rounded-lg transition-all duration-300 hover:shadow-lg"
+                    <NavbarItem
+                        href="/auth/login"
+                        class="block px-4 py-3 text-center text-white font-bold bg-gradient-to-r from-castle-torchOrange to-castle-gold hover:from-castle-gold hover:to-castle-torchOrange rounded-lg transition-all duration-300 hover:shadow-lg"
                         onclick={() => mobileMenuOpen = false}
                     >
                         Login
