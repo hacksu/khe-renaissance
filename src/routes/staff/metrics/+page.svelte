@@ -241,7 +241,6 @@
         </section>
 
         {@render metricCard("Race / Ethnicity", demographics.raceEthnicity, submittedCount, "orange")}
-        {@render metricCard("Sexuality", demographics.sexuality, submittedCount, "rose")}
         {@render metricCard("First-Generation Student", demographics.firstGen, submittedCount, "teal")}
         {@render metricCard("Level of Study", education.levelOfStudy, submittedCount, "blue")}
         {@render metricCard("Field of Study", education.fieldOfStudy, submittedCount, "violet")}

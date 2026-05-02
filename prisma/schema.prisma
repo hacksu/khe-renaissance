@@ -110,7 +110,6 @@ model Application {
   pronouns           String   @default("")
   dietaryRestriction String   @default("")
   raceEthnicity      String   @default("")
-  sexuality          String   @default("")
   firstGenStudent    String   @default("")
   updatedAt          DateTime @default(now())
 

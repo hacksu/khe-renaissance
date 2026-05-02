@@ -59,7 +59,7 @@
     const STEPS = [
         { label: "Personal",   title: "Who are you?",           subtitle: "Just the basics." },
         { label: "Education",  title: "Where do you study?",    subtitle: "Tell us about your academic background." },
-        { label: "Identity",   title: "About you",              subtitle: "Optional, helps us make KHE more inclusive." },
+        { label: "Background", title: "About you",              subtitle: "Optional demographic details that help us make KHE more inclusive." },
         { label: "Experience", title: "What do you build?",     subtitle: "Tell us about your skills and interests." },
         { label: "Portfolio",  title: "Show your work",         subtitle: "Links, ideas, and your resume." },
         { label: "Logistics",  title: "The details",            subtitle: "A few things to help us plan the event." },
@@ -128,7 +128,6 @@
             pronouns: formData.get("pronouns"),
             personalUrl: formData.get("personal-url"),
             raceEthnicity: formData.get("race-ethnicity"),
-            sexuality: formData.get("sexuality"),
             firstGenStudent: formData.get("first-gen-student"),
             hackatonsAttended: formData.get("hackathons-attended"),
             experienceLevel: formData.get("experience-level"),
@@ -438,15 +437,6 @@
                             <option>Two or more ethnicities</option>
                             <option>Other</option>
                         </Select>
-                        <Select label="Sexuality" name="sexuality" value={application.sexuality}>
-                            <option value="">Prefer not to answer</option>
-                            <option>Straight / Heterosexual</option>
-                            <option>Gay or Lesbian</option>
-                            <option>Bisexual</option>
-                            <option>Prefer to self-describe</option>
-                        </Select>
-                    </div>
-                    <div class="flex gap-2 flex-col sm:flex-row">
                         <Select label="First-generation college student?" name="first-gen-student" value={application.firstGenStudent}>
                             <option value="">Prefer not to answer</option>
                             <option>Yes</option>
@@ -554,6 +544,17 @@
                             <option>XL</option>
                             <option>XXL</option>
                         </Select>
+                        <Select label="Dietary Restriction" name="dietary-restriction" value={application.dietaryRestriction}>
+                            <option value="">None</option>
+                            <option>Vegetarian</option>
+                            <option>Vegan</option>
+                            <option>Celiac Disease</option>
+                            <option>Allergies</option>
+                            <option>Kosher</option>
+                            <option>Halal</option>
+                        </Select>
+                    </div>
+                    <div class="flex gap-2 flex-col sm:flex-row">
                         <Select label="How did you hear about KHE? <span class='text-red-500'>*</span>" name="heard-about-us" value={application.heardAboutUs} onchange={(e) => referral = e.currentTarget.value}>
                             <option value="" disabled>Who told you about us?</option>
                             <option>Instagram</option>
@@ -574,21 +575,19 @@
                             <option>Discord</option>
                             <option>Google search</option>
                         </Select>
-                    </div>
-                    <div class="flex gap-2 flex-col sm:flex-row">
                         <Select label="Interested in talking to sponsors?" name="interested-in-sponsors" value={application.interestedInSponsors}>
                             <option value="">Prefer not to answer</option>
                             <option>Yes! I'd love to meet recruiters!</option>
                             <option>Maybe</option>
                             <option>No thanks</option>
                         </Select>
-                        <Select label="Team preference" name="team-preference" value={application.teamPreference}>
-                            <option value="">Prefer not to answer</option>
-                            <option>Going solo</option>
-                            <option>I already have a full team</option>
-                            <option>Looking for teammates</option>
-                        </Select>
                     </div>
+                    <Select label="Team preference" name="team-preference" value={application.teamPreference}>
+                        <option value="">Prefer not to answer</option>
+                        <option>Going solo</option>
+                        <option>I already have a full team</option>
+                        <option>Looking for teammates</option>
+                    </Select>
                 </div>
 
                 <div class="{step !== 6 ? 'h-0 overflow-hidden' : 'flex flex-col gap-4'}">

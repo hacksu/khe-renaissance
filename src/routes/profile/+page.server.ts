@@ -42,7 +42,6 @@ const saveApplication = async (userId: string, form: FormData) => {
     currentApplication.pronouns !== formValues["pronouns"] ||
     currentApplication.personalUrl !== formValues["personal-url"] ||
     currentApplication.raceEthnicity !== formValues["race-ethnicity"] ||
-    currentApplication.sexuality !== formValues["sexuality"] ||
     currentApplication.firstGenStudent !== formValues["first-gen-student"] ||
     currentApplication.hackatonsAttended !== formValues["hackathons-attended"] ||
     currentApplication.experienceLevel !== formValues["experience-level"] ||
@@ -75,7 +74,6 @@ const saveApplication = async (userId: string, form: FormData) => {
       pronouns: formValues["pronouns"],
       personalUrl: formValues["personal-url"],
       raceEthnicity: formValues["race-ethnicity"] ?? "",
-      sexuality: formValues["sexuality"] ?? "",
       firstGenStudent: formValues["first-gen-student"] ?? "",
       hackatonsAttended: formValues["hackathons-attended"] ?? "",
       experienceLevel: formValues["experience-level"] ?? "",

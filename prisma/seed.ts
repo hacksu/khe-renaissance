@@ -366,7 +366,6 @@ async function main() {
                     pronouns,
                     dietaryRestriction: pick(dietaryRestrictions),
                     raceEthnicity: pick(raceEthnicities),
-                    sexuality: pick(sexualities),
                     firstGenStudent: maybe(0.28) ? 'Yes' : 'No',
                     hackatonsAttended: pick(hackatonsPool),
                     experienceLevel: pick(experienceLevels),

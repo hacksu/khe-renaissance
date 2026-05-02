@@ -55,7 +55,6 @@ export const load: PageServerLoad = async () => {
                 approvedAt: true,
                 gender: true,
                 raceEthnicity: true,
-                sexuality: true,
                 firstGenStudent: true,
                 age: true,
                 levelOfStudy: true,
@@ -113,11 +112,9 @@ export const load: PageServerLoad = async () => {
         demographics: {
             gender: topN(countBy(submittedApps, a => a.gender)),
             raceEthnicity: topN(countBy(submittedApps, a => a.raceEthnicity)),
-            sexuality: topN(countBy(submittedApps, a => a.sexuality)),
             firstGen: topN(countBy(submittedApps, a => a.firstGenStudent)),
             ageBuckets: Object.entries(ageBuckets),
-        },
-        education: {
+        },        education: {
             levelOfStudy: topN(countBy(submittedApps, a => a.levelOfStudy)),
             fieldOfStudy: topN(countBy(submittedApps, a => a.fieldOfStudy)),
             school: topN(countBy(submittedApps, a => a.school), 15),
