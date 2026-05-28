@@ -31,22 +31,30 @@
     let firstName        = $state(application?.firstName ?? "");
     let lastName         = $state(application?.lastName ?? "");
     let phoneNumber      = $state(application?.phoneNumber ?? "");
+    const phoneValid     = $derived(phoneNumber === "" || /^\+?[\d\s\-().]{7,15}$/.test(phoneNumber));
     let email            = $state(application?.email ?? "");
     let countryOfResidence = $state(application?.countryOfResidence ?? "");
+    let age              = $state(application?.age ?? null as number | null);
+    const ageValid       = $derived(age === null || age === 0 || (age >= 13 && age <= 100));
     let levelOfStudy     = $state(application?.levelOfStudy ?? "");
     let fieldOfStudy     = $state(application?.fieldOfStudy ?? "");
     let gender           = $state(application?.gender ?? "");
     let pronouns         = $state(application?.pronouns ?? "");
     let githubUrl        = $state(application?.githubUrl ?? "");
+    const githubValid    = $derived(githubUrl === "" || /^https:\/\/github\.com\/.+/.test(githubUrl));
+    let linkedinUrl      = $state(application?.linkedinUrl ?? "");
+    const linkedinValid  = $derived(linkedinUrl === "" || /^https:\/\/(www\.)?linkedin\.com\/in\/.+/.test(linkedinUrl));
+    let personalUrl      = $state(application?.personalUrl ?? "");
+    const personalValid  = $derived(personalUrl === "" || /^https?:\/\/.+\..+/.test(personalUrl));
     let tshirtSize       = $state(application?.tshirtSize ?? "");
     let referral         = $state(application?.heardAboutUs ?? "");
 
     const stepDone = $derived([
-        !!(firstName && lastName && phoneNumber && email && countryOfResidence),
+        !!(firstName && lastName && phoneNumber && phoneValid && email && countryOfResidence && ageValid),
         !!(schoolValue && levelOfStudy && fieldOfStudy),
         true,
         true,
-        !!(githubUrl),
+        !!(githubUrl && githubValid && linkedinValid && personalValid),
         !!(tshirtSize && referral),
         mlhCodeChecked && mlhAuthChecked,
     ]);
@@ -279,10 +287,20 @@
                     <div class="flex gap-2 flex-col sm:flex-row">
                         <Input label="First Name <span class='text-red-500'>*</span>" name="first-name" bind:value={firstName} />
                         <Input label="Last Name <span class='text-red-500'>*</span>" name="last-name" bind:value={lastName} />
-                        <Input label="Age <span class='text-red-500'>*</span>" name="age" type="number" value={application.age} />
+                        <div class="flex flex-col gap-1 flex-1">
+                            <Input label="Age <span class='text-red-500'>*</span>" name="age" type="number" min="13" max="100" bind:value={age} />
+                            {#if age && !ageValid}
+                                <p class="text-xs text-red-500 ml-1">Age must be between 13 and 100.</p>
+                            {/if}
+                        </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" bind:value={phoneNumber} />
+                        <div class="flex flex-col gap-1 flex-1">
+                            <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" bind:value={phoneNumber} />
+                            {#if phoneNumber && !phoneValid}
+                                <p class="text-xs text-red-500 ml-1">Enter a valid phone number (7–15 digits, spaces, dashes, and parentheses allowed).</p>
+                            {/if}
+                        </div>
                         <Input label="Email <span class='text-red-500'>*</span>" name="email" type="email" bind:value={email} />
                     </div>
                     <Datalist
@@ -514,10 +532,25 @@
                     </div>
                     <Input label="What are you planning to build?" name="project-idea" value={application.projectIdea} placeholder="Describe your idea, or just say you don't know yet!" />
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <Input label="GitHub <span class='text-red-500'>*</span>" name="github-url" bind:value={githubUrl} placeholder="https://github.com/..." />
-                        <Input label="LinkedIn" name="linkedin-url" value={application.linkedinUrl} placeholder="https://linkedin.com/in/..." />
+                        <div class="flex flex-col gap-1 flex-1">
+                            <Input label="GitHub <span class='text-red-500'>*</span>" name="github-url" bind:value={githubUrl} placeholder="https://github.com/..." />
+                            {#if githubUrl && !githubValid}
+                                <p class="text-xs text-red-500 ml-1">Must be a valid GitHub URL (https://github.com/...).</p>
+                            {/if}
+                        </div>
+                        <div class="flex flex-col gap-1 flex-1">
+                            <Input label="LinkedIn" name="linkedin-url" bind:value={linkedinUrl} placeholder="https://linkedin.com/in/..." />
+                            {#if linkedinUrl && !linkedinValid}
+                                <p class="text-xs text-red-500 ml-1">Must be a valid LinkedIn URL (https://linkedin.com/in/...).</p>
+                            {/if}
+                        </div>
                     </div>
-                    <Input label="Personal Website" name="personal-url" value={application.personalUrl} placeholder="https://..." />
+                    <div class="flex flex-col gap-1">
+                        <Input label="Personal Website" name="personal-url" bind:value={personalUrl} placeholder="https://..." />
+                        {#if personalUrl && !personalValid}
+                            <p class="text-xs text-red-500 ml-1">Must be a valid URL starting with https://.</p>
+                        {/if}
+                    </div>
                     <Input
                         label={data.hasResume
                             ? "Resume (already uploaded) — upload a new one to replace"

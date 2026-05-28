@@ -8,10 +8,30 @@ import countries from "../../assets/json/countries.json";
 import schools from "../../assets/json/schools.json";
 import type { PageServerLoad } from "./$types";
 
+const PHONE_RE    = /^\+?[\d\s\-().]{7,15}$/;
+const GITHUB_RE   = /^https:\/\/github\.com\/.+/;
+const LINKEDIN_RE = /^https:\/\/(www\.)?linkedin\.com\/in\/.+/;
+const URL_RE      = /^https?:\/\/.+\..+/;
+
 const saveApplication = async (userId: string, form: FormData) => {
   const formValues = Utils.formToDict(form);
   // Multi-value field — getAll returns all checked boxes as an array
   const areasOfInterest = (form.getAll("areas-of-interest") as string[]).join(",");
+
+  const phone = formValues["phone-number"] ?? "";
+  if (phone && !PHONE_RE.test(phone)) throw new Error("Invalid phone number format.");
+
+  const age = Utils.toNumber(formValues["age"]);
+  if (age && (age < 13 || age > 100)) throw new Error("Age must be between 13 and 100.");
+
+  const github = formValues["github-url"] ?? "";
+  if (github && !GITHUB_RE.test(github)) throw new Error("Invalid GitHub URL.");
+
+  const linkedin = formValues["linkedin-url"] ?? "";
+  if (linkedin && !LINKEDIN_RE.test(linkedin)) throw new Error("Invalid LinkedIn URL.");
+
+  const personal = formValues["personal-url"] ?? "";
+  if (personal && !URL_RE.test(personal)) throw new Error("Invalid personal website URL.");
 
   // Fetch current application to check for changes
   const currentApplication = await prisma.application.findUnique({
