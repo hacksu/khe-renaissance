@@ -212,9 +212,9 @@
                         <p class="text-white/50 text-sm">{STEPS[0].subtitle}</p>
                     </div>
                     <div class="flex gap-2 flex-col sm:flex-row">
-                        <Input label="First Name <span class='text-red-500'>*</span>" name="first-name" bind:value={firstName} />
-                        <Input label="Last Name <span class='text-red-500'>*</span>" name="last-name" bind:value={lastName} />
-                        <div class="flex flex-col gap-1 flex-1">
+                        <div class="flex-1"><Input label="First Name <span class='text-red-500'>*</span>" name="first-name" bind:value={firstName} /></div>
+                        <div class="flex-1"><Input label="Last Name <span class='text-red-500'>*</span>" name="last-name" bind:value={lastName} /></div>
+                        <div class="flex flex-col gap-1 w-24 shrink-0">
                             <Input label="Age <span class='text-red-500'>*</span>" name="age" type="number" min="13" max="100" bind:value={age} />
                             {#if age && !ageValid}
                                 <p class="text-xs text-red-500 ml-1">Age must be between 13 and 100.</p>
@@ -228,7 +228,9 @@
                                 <p class="text-xs text-red-500 ml-1">Enter a valid phone number (7-15 digits, spaces, dashes, and parentheses allowed).</p>
                             {/if}
                         </div>
-                        <Input label="Email <span class='text-red-500'>*</span>" name="email" type="email" bind:value={email} />
+                        <div class="flex-1">
+                            <Input label="Email <span class='text-red-500'>*</span>" name="email" type="email" bind:value={email} />
+                        </div>
                     </div>
                     <Datalist
                         label="Country of Residence <span class='text-red-500'>*</span>"
@@ -382,7 +384,7 @@
                             <option>Two or more ethnicities</option>
                             <option>Other</option>
                         </Select>
-                        <Select label="First-generation college student?" name="first-gen-student" value={application.firstGenStudent}>
+                        <Select label="First-Gen Student?" name="first-gen-student" value={application.firstGenStudent}>
                             <option value="">Prefer not to answer</option>
                             <option>Yes</option>
                             <option>No</option>
@@ -603,7 +605,7 @@
                             {#if data.applicationsClosed}
                                 <p class="text-sm text-red-400">Applications are closed.</p>
                             {:else if application.submitted}
-                                <Button type="button" onclick={() => showUnsubmitModal = true} disabled={loading} class="bg-castle-stoneMid hover:bg-castle-stoneLight">
+                                <Button type="button" onclick={() => showUnsubmitModal = true} disabled={loading} class="bg-castle-stoneMid hover:bg-castle-stoneLight whitespace-nowrap">
                                     Unsubmit and Modify
                                 </Button>
                             {:else}

@@ -9,8 +9,8 @@
     <input
         type="checkbox"
         {...others}
-        class="text-black border mt-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        class="text-black border mt-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-40 disabled:cursor-not-allowed"
     />
-    <span>{@render children?.()}</span>
+    <span class="peer-disabled:opacity-40">{@render children?.()}</span>
     </label>
 </div>

@@ -150,7 +150,7 @@
             type="text"
             autocomplete="off"
             {...others}
-            class="text-black w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="text-black w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-gray-100"
             oninput={handleInput}
             onkeydown={handleKeydown}
             onblur={handleBlur}
