@@ -12,6 +12,7 @@ export type JudgeWithVisit = {
 	role: string | null;
 	judgeTrack: string | null;
 	curve: number;
+	manualMode: boolean;
 	_count: { tableVisits: number };
 	tableVisits: (TableVisit & {
 		project: {
@@ -38,7 +39,7 @@ export const Judging = {
 		// 2. Load everything needed for scoring in parallel
 		const [judge, allProjects, maxJudgesPerTeam, visitCountRows, compCountRows, myVisits] =
 			await Promise.all([
-				prisma.user.findUnique({ where: { id: judgeId }, select: { judgeTrack: true } }),
+				prisma.user.findUnique({ where: { id: judgeId }, select: { judgeTrack: true, manualMode: true } }),
 				prisma.project.findMany({
 					where: { tableNumber: { not: null } },
 					include: { Track: { select: { name: true } } },
@@ -54,6 +55,8 @@ export const Judging = {
 					orderBy: { sequence: 'desc' }
 				})
 			]);
+
+		if (judge?.manualMode) return null;
 
 		const judgeTrack = judge?.judgeTrack ?? null;
 		const visitedIds = new Set(myVisits.map((v) => v.projectId));
@@ -505,6 +508,13 @@ export const Judging = {
 		return await prisma.user.update({
 			where: { id: userId },
 			data: { curve }
+		});
+	},
+
+	setManualMode: async (userId: string, manualMode: boolean) => {
+		return await prisma.user.update({
+			where: { id: userId },
+			data: { manualMode }
 		});
 	}
 };

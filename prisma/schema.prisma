@@ -30,6 +30,7 @@ model User {
 
   role       String?
   curve      Float   @default(0.0)
+  manualMode Boolean @default(false)
   judgeTrack String? // null = general judge, set = track-specific judge (track name)
 
   @@unique([email])

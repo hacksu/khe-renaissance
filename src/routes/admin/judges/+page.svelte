@@ -206,6 +206,16 @@
                             </td>
                         {/if}
                         <td class="p-4 text-right flex gap-1 justify-end">
+                            <form method="POST" action="?/setManualMode" use:enhance>
+                                <input type="hidden" name="userId" value={judge.id} />
+                                <input type="hidden" name="manualMode" value={judge.manualMode ? "false" : "true"} />
+                                <button
+                                    class="text-xs py-1 px-3 rounded font-bold transition-colors {judge.manualMode ? 'bg-amber-100 hover:bg-amber-200 text-amber-700' : 'bg-secondary/10 hover:bg-secondary/20 text-secondary/50'}"
+                                    title={judge.manualMode ? 'Manual mode — click to allow auto-assign' : 'Auto mode — click to restrict to assigned tables only'}
+                                >
+                                    {judge.manualMode ? 'Manual' : 'Auto'}
+                                </button>
+                            </form>
                             <Button
                                 class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 border-none shadow-none disabled:opacity-50"
                                 onclick={() => resendLink(judge)}

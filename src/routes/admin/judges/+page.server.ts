@@ -39,6 +39,21 @@ export const actions: Actions = {
             return fail(500, { error: "Failed to update judge track" });
         }
     },
+    setManualMode: async ({ request }) => {
+        const form = await request.formData();
+        const userId = form.get("userId") as string;
+        const manualMode = form.get("manualMode") === "true";
+
+        if (!userId) return fail(400, { missing: true });
+
+        try {
+            await Judging.setManualMode(userId, manualMode);
+            return { success: true };
+        } catch (e) {
+            console.error(e);
+            return fail(500, { error: "Failed to update manual mode" });
+        }
+    },
     removeJudge: async ({ request }) => {
         const { auth } = await import('$lib/server/auth');
         const session = await auth.api.getSession(request);

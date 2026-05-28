@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN "manualMode" BOOLEAN NOT NULL DEFAULT false;
