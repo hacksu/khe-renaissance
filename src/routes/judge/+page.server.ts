@@ -2,6 +2,7 @@ import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
 import { prisma } from '$lib/server/prisma';
+import { Role } from '$lib/server/external_roles';
 
 export const load: PageServerLoad = async ({ parent }) => {
     const { session } = await parent();
@@ -29,6 +30,7 @@ export const actions: Actions = {
         const { auth } = await import('$lib/server/auth');
         const session = await auth.api.getSession(request);
         if (!session) return fail(401);
+        if (session.user.role !== Role.JUDGE) return fail(403);
 
         const form = await request.formData();
         const visitId = form.get('visitId') as string;

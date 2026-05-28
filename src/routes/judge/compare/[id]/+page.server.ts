@@ -1,6 +1,7 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { Judging } from '$lib/server/judging';
+import { Role } from '$lib/server/external_roles';
 
 export const load: PageServerLoad = async ({ params, parent }) => {
     const { session } = await parent();
@@ -24,6 +25,7 @@ export const actions: Actions = {
         const { auth } = await import('$lib/server/auth');
         const session = await auth.api.getSession(request);
         if (!session) return fail(401);
+        if (session.user.role !== Role.JUDGE) return fail(403);
 
         const form = await request.formData();
         const comment = (form.get('comment') as string) ?? '';
