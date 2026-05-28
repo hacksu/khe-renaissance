@@ -1,4 +1,4 @@
--- DropForeignKey (guarded — tables may not exist on fresh deployments)
+-- DropForeignKey (guarded -- tables may not exist on fresh deployments)
 ALTER TABLE IF EXISTS "judge_assignment" DROP CONSTRAINT IF EXISTS "judge_assignment_projectId_fkey";
 ALTER TABLE IF EXISTS "judge_assignment" DROP CONSTRAINT IF EXISTS "judge_assignment_userId_fkey";
 ALTER TABLE IF EXISTS "judgement" DROP CONSTRAINT IF EXISTS "judgement_projectId_fkey";
@@ -6,12 +6,12 @@ ALTER TABLE IF EXISTS "judgement" DROP CONSTRAINT IF EXISTS "judgement_userId_fk
 ALTER TABLE IF EXISTS "judgement_score" DROP CONSTRAINT IF EXISTS "judgement_score_criterionId_fkey";
 ALTER TABLE IF EXISTS "judgement_score" DROP CONSTRAINT IF EXISTS "judgement_score_judgementId_fkey";
 
--- AlterTable (guarded — columns may already exist)
+-- AlterTable (guarded -- columns may already exist)
 ALTER TABLE "application" ADD COLUMN IF NOT EXISTS "checkedIn" BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE "judging_criterion" ADD COLUMN IF NOT EXISTS "allowOptOut" BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "judgeTrack" TEXT;
 
--- DropTable (guarded — tables may not exist on fresh deployments)
+-- DropTable (guarded -- tables may not exist on fresh deployments)
 DROP TABLE IF EXISTS "judge_assignment";
 DROP TABLE IF EXISTS "judgement";
 DROP TABLE IF EXISTS "judgement_score";

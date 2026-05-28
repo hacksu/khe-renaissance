@@ -53,10 +53,6 @@
 
   
 
-  <!-- ═══════════════════════════════════════════════════════════
-       CHAINS — rendered behind portcullis so they appear to
-       emerge from the top of the frame
-       ═══════════════════════════════════════════════════════════ -->
   <g id="chains">
 
     
@@ -117,17 +113,7 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════════════════════
-       PORTCULLIS — main gate group
-       translate this group Y to animate raising/lowering
-       ═══════════════════════════════════════════════════════════ -->
   <g id="portcullis">
-
-    <!-- ─────────────────────────────────────────────────────────
-         OUTER IRON FRAME
-         Occupies x:60–340, y:80–500 (bars extend below to ~540)
-         Frame is rendered as four thick rects; interior is open
-         ───────────────────────────────────────────────────────── -->
 
     
     <rect x="60" y="80" width="280" height="24" fill="url(#frameGrad)" stroke="#1e1e28" stroke-width="2"/>
@@ -159,14 +145,7 @@
     <circle cx="328" cy="496" r="7" fill="url(#rivetGrad)" stroke="#1e1e28" stroke-width="1.5"/>
 
 
-    <!-- ─────────────────────────────────────────────────────────
-         VERTICAL BARS  (8 bars, evenly spaced across the opening)
-         Opening interior: x:84–316, so span = 232px
-         8 bars at spacing ~29.7px => positions ~84,114,144,173,203,232,262,292,316 (centres)
-         Bar width: 14px  Bar body: y:104 to y:500  Spear tip below that
-         ───────────────────────────────────────────────────────── -->
 
-    
 
     
     <g id="vbar-1">
@@ -243,12 +222,6 @@
     </g>
 
 
-    <!-- ─────────────────────────────────────────────────────────
-         HORIZONTAL CROSS BARS  (6 bars)
-         y positions: 150, 210, 270, 330, 390, 450
-         Each bar spans x:84 to x:316 (inside the frame)
-         Bar height: 12px, centred on the y value listed
-         ───────────────────────────────────────────────────────── -->
 
     
     <g id="hbar-1">
@@ -349,10 +322,6 @@
     </g>
 
 
-    <!-- ─────────────────────────────────────────────────────────
-         CHAIN ANCHOR PLATES on top of frame
-         Where the chains connect into the frame top beam
-         ───────────────────────────────────────────────────────── -->
 
     
     <rect x="88" y="78" width="24" height="10" rx="2" fill="#2e2e3c" stroke="#1e1e28" stroke-width="1.5"/>

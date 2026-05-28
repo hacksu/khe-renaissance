@@ -1,10 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" fill="none">
-  <!--
-    KHE 2027 — Hack the Kingdom
-    village.svg — distant medieval hamlet silhouette (mid-ground)
-    pulse village-lights opacity for flickering candle effect
-  -->
-
   <defs>
     
     <radialGradient id="glow-amber" cx="50%" cy="50%" r="50%">
@@ -36,9 +30,6 @@
   </defs>
 
 
-  <!-- ═══════════════════════════════════════════
-       GROUND — slightly uneven terrain
-  ═══════════════════════════════════════════ -->
   <path d="
     M30 268
     C 60 265, 100 270, 140 267
@@ -50,9 +41,6 @@
     fill="#1e1e28"/>
 
 
-  <!-- ═══════════════════════════════════════════
-       BUILDINGS
-  ═══════════════════════════════════════════ -->
   <g id="village-buildings">
 
     
@@ -178,10 +166,6 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════
-       LIGHTS & WINDOWS
-       pulse village-lights opacity for flickering candle effect
-  ═══════════════════════════════════════════ -->
   <g id="village-lights">
 
     
@@ -242,9 +226,6 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════
-       SMOKE WISPS
-  ═══════════════════════════════════════════ -->
   <g id="village-smoke">
 
     
@@ -316,9 +297,6 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════
-       FOREGROUND DETAIL — stone well
-  ═══════════════════════════════════════════ -->
   <g id="village-detail">
 
     

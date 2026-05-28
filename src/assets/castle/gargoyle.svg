@@ -1,11 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 200" fill="none">
-  <title>Gargoyle — Hack the Kingdom (KHE 2027)</title>
+  <title>Gargoyle - Hack the Kingdom (KHE 2027)</title>
 
   
 
-  <!-- ═══════════════════════════════════════════
-       PARAPET BLOCK
-       ═══════════════════════════════════════════ -->
   <g id="gargoyle-parapet">
     
     <rect x="0" y="158" width="180" height="42" fill="#4a4a5c"/>
@@ -37,9 +34,6 @@
     <rect x="158" y="162" width="22" height="4" fill="#4f4f62"/>
   </g>
 
-  <!-- ═══════════════════════════════════════════
-       WINGS (behind body)
-       ═══════════════════════════════════════════ -->
   <g id="gargoyle-wings">
     
     <path d="
@@ -94,9 +88,6 @@
     <polygon points="26,52 22,46 30,50" fill="#4a4a5c"/>
   </g>
 
-  <!-- ═══════════════════════════════════════════
-       BODY
-       ═══════════════════════════════════════════ -->
   <g id="gargoyle-body">
 
     

@@ -47,7 +47,7 @@ export const Judging = {
 				}),
 				Settings.getMaxJudgesPerTeam(),
 				prisma.tableVisit.groupBy({ by: ['projectId'], _count: { id: true } }),
-				// Sum of comparisonCount across criteria per project — proxy for CrowdBT info already gained
+				// Sum of comparisonCount across criteria per project -- proxy for CrowdBT info already gained
 				prisma.crowdBTState.groupBy({ by: ['projectId'], _sum: { comparisonCount: true } }),
 				prisma.tableVisit.findMany({
 					where: { judgeId },

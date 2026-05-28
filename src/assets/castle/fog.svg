@@ -51,15 +51,6 @@
 
   </defs>
 
-  <!-- ============================================================
-       translateX fog layers at different speeds for drifting fog animation
-       fog-back:   slowest drift  (~0.3× speed)
-       fog-mid:    medium drift   (~0.6× speed)
-       fog-front:  fastest drift  (~1.0× speed)
-       fog-wisps:  subtle sway    (~0.45× speed, slight rotate)
-       ============================================================ -->
-
-  
   <g id="fog-back" filter="url(#blur-heavy)">
 
     

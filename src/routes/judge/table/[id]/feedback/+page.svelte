@@ -12,7 +12,7 @@
     <div class="mb-6 mt-2">
         <a href="/judge/table/{visit.id}" class="text-sm font-medium text-white/60 hover:text-white mb-4 block">← Back to Timer</a>
         <h1 class="text-2xl font-bold text-white mb-1">
-            Table {project.tableNumber ? `#${project.tableNumber}` : ''} — {project.name}
+            Table {project.tableNumber ? `#${project.tableNumber}` : ''} - {project.name}
         </h1>
         <p class="text-white/60">Submit your feedback for this team</p>
     </div>

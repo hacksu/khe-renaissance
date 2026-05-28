@@ -49,7 +49,7 @@
         <div class="flex-1 flex items-center justify-center">
             <div class="text-center bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/10">
                 <div class="text-4xl mb-4">✓</div>
-                <p class="font-bold text-white text-lg mb-2">All done — no more tables to judge.</p>
+                <p class="font-bold text-white text-lg mb-2">All done -- no more tables to judge.</p>
                 <p class="text-white/60 text-sm">Thank you!</p>
             </div>
         </div>

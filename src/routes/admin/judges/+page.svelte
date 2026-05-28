@@ -103,7 +103,7 @@
     <div class="flex justify-between items-center mb-6">
         <div>
             <h1 class="text-2xl font-bold font-serif text-secondary">Judges</h1>
-            <p class="text-secondary/70">Pairwise judging overview — comparisons completed and current assignment status.</p>
+            <p class="text-secondary/70">Pairwise judging overview -- comparisons completed and current assignment status.</p>
         </div>
         <div class="flex gap-2">
             <Button onclick={() => showAddJudgeModal = true} class="bg-primary text-white whitespace-nowrap">
@@ -211,7 +211,7 @@
                                 <input type="hidden" name="manualMode" value={judge.manualMode ? "false" : "true"} />
                                 <button
                                     class="text-xs py-1 px-3 rounded font-bold transition-colors {judge.manualMode ? 'bg-amber-100 hover:bg-amber-200 text-amber-700' : 'bg-secondary/10 hover:bg-secondary/20 text-secondary/50'}"
-                                    title={judge.manualMode ? 'Manual mode — click to allow auto-assign' : 'Auto mode — click to restrict to assigned tables only'}
+                                    title={judge.manualMode ? 'Manual mode -- click to allow auto-assign' : 'Auto mode -- click to restrict to assigned tables only'}
                                 >
                                     {judge.manualMode ? 'Manual' : 'Auto'}
                                 </button>

@@ -35,10 +35,6 @@
     </radialGradient>
   </defs>
 
-  <!-- ============================================================
-       WALL BRACKET / SCONCE
-       Iron bracket mounted to the left wall edge
-       ============================================================ -->
   <g id="bracket" aria-label="Wall bracket">
     
     <rect x="0" y="128" width="10" height="38" rx="2" fill="#1e1e28"/>
@@ -66,10 +62,6 @@
     <rect x="25.5" y="159.5" width="3" height="5" rx="0.5" fill="#2e2e3c"/>
   </g>
 
-  <!-- ============================================================
-       TORCH HANDLE (wooden, tapered)
-       transform-origin hint: center-x=38, bottom ~210
-       ============================================================ -->
   <g id="handle" aria-label="Torch handle">
     
     <path d="
@@ -109,10 +101,6 @@
     <ellipse cx="38" cy="209.5" rx="4" ry="1.2" fill="#4a3520"/>
   </g>
 
-  <!-- ============================================================
-       TORCH HEAD (wrapped fuel bundle)
-       Wider than handle, textured wrapping
-       ============================================================ -->
   <g id="torch-head" aria-label="Torch head">
     
     <path d="
@@ -152,17 +140,8 @@
     <path d="M42 164 Q43.5 168 42 172" stroke="#2a1a08" stroke-width="1" fill="none" opacity="0.4"/>
   </g>
 
-  <!-- ============================================================
-       AMBIENT GLOW (behind flame, soft light spill)
-       ============================================================ -->
   <ellipse cx="38" cy="115" rx="28" ry="35" fill="url(#glowAura)" opacity="0.85"/>
 
-  <!-- ============================================================
-       FLAME — OUTER LAYER
-       transform-origin hint: 38 145  (base of flame)
-       Animate: scaleX flicker + slight rotation sway
-       ============================================================ -->
-  
   <g id="flame-outer" aria-label="Outer flame">
     
     <path d="
@@ -209,12 +188,6 @@
     " fill="#ff6b1a" opacity="0.6"/>
   </g>
 
-  <!-- ============================================================
-       FLAME — MID LAYER
-       transform-origin hint: 38 145
-       Animate: scaleX flicker (faster), slight offset
-       ============================================================ -->
-  
   <g id="flame-mid" aria-label="Mid flame">
     
     <path d="
@@ -250,12 +223,6 @@
     " fill="#ffb347" opacity="0.75"/>
   </g>
 
-  <!-- ============================================================
-       FLAME — INNER / CORE LAYER
-       transform-origin hint: 38 145
-       Animate: slow breathe scale + opacity pulse
-       ============================================================ -->
-  
   <g id="flame-inner" aria-label="Inner flame core">
     
     <path d="
@@ -290,12 +257,6 @@
     " fill="#ffffff" opacity="0.7"/>
   </g>
 
-  <!-- ============================================================
-       SMOKE WISPS
-       transform-origin hint: wisp centers above flame tip
-       Animate: translateY upward, opacity fade, slight x sway
-       ============================================================ -->
-  
   <g id="smoke" aria-label="Smoke wisps" opacity="0.55">
     
     <path d="

@@ -1,15 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" fill="none">
-  <!--
-    KHE 2027 — Hack the Kingdom
-    Enchanted forest background layer: dark silhouetted trees against a nighttime sky.
-    Designed to sit behind the castle on the landing page. Transparent background.
-
-    Animation hooks:
-      .tree / #tree-N   — translate Y slightly for subtle sway, or opacity pulse
-      #wisps / .wisp    — translate/fade wisp groups for floating animation
-      #forest-ground    — static ground; can shift for parallax
-  -->
-
   <defs>
     
     <filter id="wisp-glow" x="-80%" y="-80%" width="260%" height="260%">
@@ -39,10 +28,6 @@
   </defs>
 
 
-  <!-- ═══════════════════════════════════════════════════════════════════
-       GROUND / ROOTS BASE
-       Slightly lumpy ground horizon at y~390-415, filling to bottom.
-       ═══════════════════════════════════════════════════════════════════ -->
   <g id="forest-ground">
     
     <path
@@ -106,10 +91,6 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════════════════════════════
-       UNDERGROWTH — dark shrub silhouettes at ground level
-       Simple rounded shapes between trees
-       ═══════════════════════════════════════════════════════════════════ -->
   <g id="undergrowth" fill="#1e1e2a">
 
     
@@ -159,12 +140,6 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════════════════════════════
-       TREES — FAR LEFT CLUSTER  (trees 1–4)
-       Dense grouping on the far left edge, trees tall and looming
-       ═══════════════════════════════════════════════════════════════════ -->
-
-  
   <g class="tree" id="tree-1" fill="#1a1a24">
     
     <path d="
@@ -328,12 +303,6 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════════════════════════════
-       TREES — LEFT-INNER  (trees 5–6)
-       Thinner, more sparse, reaching inward — fades toward center
-       ═══════════════════════════════════════════════════════════════════ -->
-
-  
   <g class="tree" id="tree-5" fill="#1a1a24">
     
     <path d="
@@ -405,12 +374,6 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════════════════════════════
-       TREES — FAR RIGHT CLUSTER  (trees 7–10)
-       Mirror in spirit but unique shapes — dense on right edge
-       ═══════════════════════════════════════════════════════════════════ -->
-
-  
   <g class="tree" id="tree-7" fill="#2e2e3a">
     
     <path d="
@@ -617,11 +580,6 @@
   </g>
 
 
-  <!-- ═══════════════════════════════════════════════════════════════════
-       WILL-O-WISPS
-       translate/fade wisp groups for floating animation
-       ═══════════════════════════════════════════════════════════════════ -->
-  
   <g id="wisps">
 
     

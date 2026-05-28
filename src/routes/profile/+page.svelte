@@ -9,7 +9,7 @@
     import Input from "../../components/form/Input.svelte";
     import Select from "../../components/form/Select.svelte";
     import Datalist from "../../components/form/Datalist.svelte";
-    import { goto, beforeNavigate } from "$app/navigation";
+    import { goto } from "$app/navigation";
 
     const auth = authClient.useSession();
     const user = $derived($auth.data?.user);
@@ -74,39 +74,30 @@
         { label: "Finish",     title: "Almost there!",          subtitle: "Agree to the MLH policies and submit." },
     ];
 
-    // Unsaved-changes tracking
-    let isDirty = $state(false);
+    // Auto-save state
+    type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+    let saveStatus = $state<SaveStatus>('idle');
+    let saveDebounce: ReturnType<typeof setTimeout> | null = null;
+    let formEl = $state<HTMLFormElement | null>(null);
 
-    beforeNavigate(({ cancel }) => {
-        if (isDirty && !confirm("You have unsaved changes. If you leave now they'll be lost — continue?")) {
-            cancel();
+    function scheduleAutoSave() {
+        if (application?.submitted) return;
+        if (saveDebounce) clearTimeout(saveDebounce);
+        saveDebounce = setTimeout(autoSave, 800);
+    }
+
+    async function autoSave() {
+        if (!formEl || application?.submitted) return;
+        saveStatus = 'saving';
+        try {
+            const formData = new FormData(formEl);
+            const res = await fetch('?/save', { method: 'POST', body: formData });
+            saveStatus = res.ok ? 'saved' : 'error';
+        } catch {
+            saveStatus = 'error';
         }
-    });
-
-    $effect(() => {
-        const handler = (e: BeforeUnloadEvent) => {
-            if (isDirty) {
-                e.preventDefault();
-                e.returnValue = "";
-            }
-        };
-        window.addEventListener("beforeunload", handler);
-        return () => window.removeEventListener("beforeunload", handler);
-    });
-
-    // Change detection (for approved-application warning)
-    let originalApplication = $state<any>(null);
-
-    // Warning modal
-    let showWarningModal = $state(false);
-    let pendingSubmitter = $state<HTMLElement | null>(null);
-    let warningConfirmed = $state(false);
-
-    $effect(() => {
-        if (application && !originalApplication) {
-            originalApplication = { ...application };
-        }
-    });
+        if (saveStatus === 'saved') setTimeout(() => { if (saveStatus === 'saved') saveStatus = 'idle'; }, 2000);
+    }
 
     $effect(() => {
         schoolValue = application?.school ?? "";
@@ -117,63 +108,19 @@
         }
     });
 
-    function hasFormChanges(formData: FormData): boolean {
-        if (!originalApplication) return false;
-        const formValues: Record<string, any> = {
-            firstName: formData.get("first-name"),
-            lastName: formData.get("last-name"),
-            phoneNumber: formData.get("phone-number"),
-            email: formData.get("email"),
-            countryOfResidence: formData.get("country-of-residence"),
-            school: formData.get("school"),
-            levelOfStudy: formData.get("level-of-study"),
-            fieldOfStudy: formData.get("field-of-study"),
-            githubUrl: formData.get("github-url"),
-            projectIdea: formData.get("project-idea"),
-            age: parseInt(formData.get("age") as string) || 18,
-            dietaryRestriction: formData.get("dietary-restriction"),
-            gender: formData.get("gender"),
-            pronouns: formData.get("pronouns"),
-            personalUrl: formData.get("personal-url"),
-            raceEthnicity: formData.get("race-ethnicity"),
-            firstGenStudent: formData.get("first-gen-student"),
-            hackatonsAttended: formData.get("hackathons-attended"),
-            experienceLevel: formData.get("experience-level"),
-            areasOfInterest: (formData.getAll("areas-of-interest") as string[]).join(","),
-            heardAboutUs: formData.get("heard-about-us"),
-            linkedinUrl: formData.get("linkedin-url"),
-            interestedInSponsors: formData.get("interested-in-sponsors"),
-            teamPreference: formData.get("team-preference"),
-            tshirtSize: formData.get("tshirt-size"),
-            mlhCodeOfConduct: !!formData.get("mlh-code"),
-            mlhAuthorization: !!formData.get("mlh-authorization"),
-            mlhEmails: !!formData.get("mlh-emails"),
-        };
-        for (const [key, value] of Object.entries(formValues)) {
-            if (originalApplication[key] !== value) return true;
-        }
-        return false;
-    }
-
-    function handleModalConfirm() {
-        warningConfirmed = true;
-        showWarningModal = false;
-        if (pendingSubmitter) pendingSubmitter.click();
-    }
-
-    function handleModalCancel() {
-        showWarningModal = false;
-        pendingSubmitter = null;
-        warningConfirmed = false;
-    }
+    // Unsubmit modal
+    let showUnsubmitModal = $state(false);
+    let unsubmitFormEl = $state<HTMLFormElement | null>(null);
 </script>
 
 <Modal
-    open={showWarningModal}
-    title="Warning: Approval Will Be Revoked"
-    message="Your application is currently approved. Making changes will revoke your approval and you will need to be re-approved. Do you want to continue?"
-    onConfirm={handleModalConfirm}
-    onCancel={handleModalCancel}
+    open={showUnsubmitModal}
+    title="Unsubmit application?"
+    message={application?.approved
+        ? "Your application is currently approved. Unsubmitting will revoke your approval and you will need to be re-reviewed by staff. Continue?"
+        : "Are you sure you want to unsubmit your application? You can re-submit at any time before the deadline."}
+    onConfirm={() => { showUnsubmitModal = false; unsubmitFormEl?.requestSubmit(); }}
+    onCancel={() => { showUnsubmitModal = false; }}
 />
 
 <div class="py-24 px-4 md:px-24 lg:px-60 xl:px-96 flex flex-col gap-4 justify-center text-black">
@@ -184,10 +131,13 @@
                 <button onclick={logout} class="text-xs text-white/60 hover:text-white transition-colors">Log out</button>
             </div>
             <p class="text-white/70 text-sm mt-1">
-                Welcome to your Kent Hack Enough profile. Fill out your application — you can save at any point and come back later.
+                Welcome to your Kent Hack Enough profile. Fill out your application and come back any time.
             </p>
+            {#if application && !application.submitted}
+                <p class="text-white/40 text-xs mt-1">Changes are saved automatically.</p>
+            {/if}
             {#if data.applicationsClosed}
-                <p class="mt-4 font-semibold text-red-400">KHE 2026 has ended. Applications are now closed.</p>
+                <p class="mt-4 font-semibold text-red-400">KHE 2027 has ended. Applications are now closed.</p>
             {/if}
             {#if application}
                 <p class="mt-3 text-sm">
@@ -219,17 +169,11 @@
                         class="flex flex-col items-center gap-1 cursor-pointer"
                         role="button"
                         onclick={() => {
-                            if (isDirty && i !== step && application.submitted) {
-                                if (!confirm("You have unsaved changes. If you submit later, your approval status will be revoked and you'll need re-review. Continue navigating?")) return;
-                            }
-                            step = i;
+                                step = i;
                         }}
                         onkeydown={(e) => {
                             if (e.key !== 'Enter' && e.key !== ' ') return;
-                            if (isDirty && i !== step && application.submitted) {
-                                if (!confirm("You have unsaved changes. If you submit later, your approval status will be revoked and you'll need re-review. Continue navigating?")) return;
-                            }
-                            step = i;
+                                step = i;
                         }}
                     >
                         <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300
@@ -250,35 +194,18 @@
             </div>
 
             <form enctype="multipart/form-data" method="POST" novalidate
-                oninput={() => isDirty = true}
-                onchange={() => isDirty = true}
-                use:enhance={({ formData, cancel, submitter }) => {
-                    if (data.applicationsClosed) { cancel(); return; }
-
-                    const isSave   = submitter?.getAttribute("formaction") === "?/save";
-                    const isSubmit = submitter?.getAttribute("formaction") === "?/submit";
-
-                    if (application.approved && !warningConfirmed) {
-                        if ((isSave || isSubmit) && hasFormChanges(formData)) {
-                            cancel();
-                            pendingSubmitter = submitter;
-                            showWarningModal = true;
-                            return;
-                        }
-                    }
-                    if (warningConfirmed) {
-                        warningConfirmed = false;
-                        pendingSubmitter = null;
-                    }
-
+                bind:this={formEl}
+                oninput={scheduleAutoSave}
+                onchange={scheduleAutoSave}
+                use:enhance={() => {
                     loading = true;
                     return async ({ update }) => {
                         await update({ reset: false });
                         loading = false;
-                        isDirty = false;
                     };
                 }}
             >
+            <fieldset disabled={application.submitted} class="contents">
                 <div class="{step !== 0 ? 'h-0 overflow-hidden' : 'flex flex-col gap-4'}">
                     <div>
                         <h3 class="font-bold text-lg text-white">{STEPS[0].title}</h3>
@@ -298,7 +225,7 @@
                         <div class="flex flex-col gap-1 flex-1">
                             <Input label="Phone Number <span class='text-red-500'>*</span>" name="phone-number" type="tel" bind:value={phoneNumber} />
                             {#if phoneNumber && !phoneValid}
-                                <p class="text-xs text-red-500 ml-1">Enter a valid phone number (7–15 digits, spaces, dashes, and parentheses allowed).</p>
+                                <p class="text-xs text-red-500 ml-1">Enter a valid phone number (7-15 digits, spaces, dashes, and parentheses allowed).</p>
                             {/if}
                         </div>
                         <Input label="Email <span class='text-red-500'>*</span>" name="email" type="email" bind:value={email} />
@@ -356,13 +283,13 @@
                                 <option value="hs_ged">GED / High School Equivalency Program</option>
                             </optgroup>
 
-                            <optgroup label="Undergraduate – 2-Year (Community College or Similar)">
+                            <optgroup label="Undergraduate - 2-Year (Community College or Similar)">
                                 <option value="cc_freshman">Community College 1st Year / Freshman</option>
                                 <option value="cc_sophomore">Community College 2nd Year / Sophomore</option>
                                 <option value="cc_certificate">Certificate Program (Short-term, &lt; 1 year)</option>
                             </optgroup>
 
-                            <optgroup label="Undergraduate – 3+ Year University">
+                            <optgroup label="Undergraduate - 3+ Year University">
                                 <option value="uni_freshman">University 1st Year / Freshman</option>
                                 <option value="uni_sophomore">University 2nd Year / Sophomore</option>
                                 <option value="uni_junior">University 3rd Year / Junior</option>
@@ -481,9 +408,9 @@
                     <div class="flex gap-2 flex-col sm:flex-row">
                         <Select label="Hackathons attended" name="hackathons-attended" value={application.hackatonsAttended}>
                             <option value="">Prefer not to answer</option>
-                            <option>0 — this is my first!</option>
-                            <option>1–3</option>
-                            <option>4–7</option>
+                            <option>0 -- this is my first!</option>
+                            <option>1-3</option>
+                            <option>4-7</option>
                             <option>8+</option>
                         </Select>
                         <Select label="Experience level" name="experience-level" value={application.experienceLevel}>
@@ -496,7 +423,7 @@
                     <div>
                         <p class="text-sm mb-2">
                             Areas of interest
-                            <span class="text-white/40 font-normal"> — select all that apply</span>
+                            <span class="text-white/40 font-normal"> -- select all that apply</span>
                         </p>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1">
                             {#each [
@@ -553,7 +480,7 @@
                     </div>
                     <Input
                         label={data.hasResume
-                            ? "Resume (already uploaded) — upload a new one to replace"
+                            ? "Resume (already uploaded) -- upload a new one to replace"
                             : "Resume <span class='text-red-500'>*</span>"}
                         name="resume"
                         type="file"
@@ -648,12 +575,9 @@
                     {/if}
                 </div>
 
+                </fieldset>
+
                 <div class="flex flex-col gap-3 mt-8 pt-4 border-t border-castle-stoneMid">
-                    {#if !data.applicationsClosed && application.submitted}
-                        <Button type="submit" formaction="?/submit" disabled={loading} class="w-full">
-                            Un-submit
-                        </Button>
-                    {/if}
                     <div class="flex justify-between items-center">
                         <div>
                             {#if step > 0}
@@ -668,32 +592,47 @@
                         </div>
 
                         <div class="flex gap-2 items-center">
-                            <Button type="submit" formaction="?/save" disabled={loading || data.applicationsClosed} class="bg-castle-stoneMid hover:bg-castle-stoneLight">
-                                Save
-                            </Button>
-                            {#if !data.applicationsClosed}
-                                {#if step < STEPS.length - 1}
-                                    <Button type="button" onclick={() => { step++; window.scrollTo({ top: 0, behavior: 'smooth' }); }} disabled={loading}>
-                                        Next
-                                    </Button>
-                                {/if}
-                                {#if (canSubmitFull || step === STEPS.length - 1) && !application.submitted}
+                            {#if saveStatus === 'saving'}
+                                <span class="text-xs text-white/40">Saving...</span>
+                            {:else if saveStatus === 'saved'}
+                                <span class="text-xs text-castle-torchOrange/70">Saved</span>
+                            {:else if saveStatus === 'error'}
+                                <span class="text-xs text-red-400">Save failed</span>
+                            {/if}
+
+                            {#if data.applicationsClosed}
+                                <p class="text-sm text-red-400">Applications are closed.</p>
+                            {:else if application.submitted}
+                                <Button type="button" onclick={() => showUnsubmitModal = true} disabled={loading} class="bg-castle-stoneMid hover:bg-castle-stoneLight">
+                                    Unsubmit and Modify
+                                </Button>
+                            {:else}
+                                {#if allStepsDone}
                                     <Button type="submit" formaction="?/submit" disabled={loading || !canSubmitFull}>
                                         Submit
                                     </Button>
                                 {/if}
-                            {:else}
-                                <p class="text-sm text-red-400">Applications are closed.</p>
+                            {/if}
+
+                            {#if step < STEPS.length - 1}
+                                <Button type="button" onclick={() => { step++; window.scrollTo({ top: 0, behavior: 'smooth' }); }} disabled={loading}>
+                                    Next
+                                </Button>
                             {/if}
                         </div>
                     </div>
                 </div>
             </form>
+
+            <form method="POST" action="?/unsubmit" bind:this={unsubmitFormEl} use:enhance={() => {
+                loading = true;
+                return async ({ update }) => { await update({ reset: false }); loading = false; };
+            }}></form>
         </Card>
     {:else}
         <Card padded>
             <p class="text-white/90">
-                KHE 2026 has ended, so new applications are not being accepted.
+                KHE 2027 has ended, so new applications are not being accepted.
             </p>
         </Card>
     {/if}

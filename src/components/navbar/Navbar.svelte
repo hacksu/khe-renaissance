@@ -2,7 +2,7 @@
     import { authClient } from "$lib/client";
     import { onMount } from "svelte";
     import { page } from "$app/stores";
-    import Logo from "../../assets/2026logo.png";
+    import Logo from "../../assets/2027logo.png";
     import devPost from "../../assets/devPost.png";
     import NavbarItem from "./NavbarItem.svelte";
 
@@ -34,11 +34,11 @@
     }
 </script>
 
-<!-- <a href="https://mlh.io/seasons/2026/events" target="_blank" class="fixed top-0 left-0 z-50">
-    <img 
-        decoding="async" 
-        src="https://s3.amazonaws.com/logged-assets/trust-badge/2026/mlh-trust-badge-2026-red.svg" 
-        alt="Major League Hacking 2026 Hackathon Season" 
+<!-- <a href="https://mlh.io/seasons/2027/events" target="_blank" class="fixed top-0 left-0 z-50">
+    <img
+        decoding="async"
+        src="https://s3.amazonaws.com/logged-assets/trust-badge/2027/mlh-trust-badge-2027-red.svg"
+        alt="Major League Hacking 2027 Hackathon Season"
         class="w-20"
     >
 </a> -->
@@ -90,7 +90,7 @@
 
             <div class="hidden lg:flex items-center gap-3 flex-1 justify-end">
                 <NavbarItem 
-                    href="https://kent-hack-enough-2026.devpost.com/" 
+                    href="https://kent-hack-enough-2027.devpost.com/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     class="transition-transform duration-300 hover:scale-110 hover:rotate-6"
@@ -169,7 +169,7 @@
                 <div class="h-px bg-castle-stoneMid/40 my-4"></div>
 
                 <NavbarItem 
-                    href="https://kent-hack-enough-2026.devpost.com/" 
+                    href="https://kent-hack-enough-2027.devpost.com/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     class="flex items-center gap-3 px-4 py-3 text-castle-stoneHighlight font-medium rounded-lg transition-all duration-300 hover:bg-castle-stoneMid/60 hover:text-castle-torchYellow"

@@ -15,7 +15,7 @@ const URL_RE      = /^https?:\/\/.+\..+/;
 
 const saveApplication = async (userId: string, form: FormData) => {
   const formValues = Utils.formToDict(form);
-  // Multi-value field — getAll returns all checked boxes as an array
+  // Multi-value field -- getAll returns all checked boxes as an array
   const areasOfInterest = (form.getAll("areas-of-interest") as string[]).join(",");
 
   const phone = formValues["phone-number"] ?? "";
@@ -127,7 +127,7 @@ const saveApplication = async (userId: string, form: FormData) => {
 export const actions: Actions = {
   save: async ({ request }) => {
     if (Utils.hasApplicationsClosed()) {
-      throw error(403, "KHE 2026 has ended. Applications are now closed.");
+      throw error(403, "KHE 2027 has ended. Applications are now closed.");
     }
 
     const session = await auth.api.getSession(request);
@@ -149,7 +149,7 @@ export const actions: Actions = {
   },
   submit: async ({ request }) => {
     if (Utils.hasApplicationsClosed()) {
-      throw error(403, "KHE 2026 has ended. Applications are now closed.");
+      throw error(403, "KHE 2027 has ended. Applications are now closed.");
     }
 
     const session = await auth.api.getSession(request);
@@ -159,35 +159,36 @@ export const actions: Actions = {
 
     const userId = session.user.id;
     const form = await request.formData();
+    const { application } = await saveApplication(userId, form);
 
-    // We need to know if we are "Submitting" or "Un-submitting".
-    // The button text toggles based on current state.
-    // If currently submitted -> Unsubmit.
-    // If currently NOT submitted -> Submit.
+    await prisma.application.update({
+      where: { id: application.id },
+      data: { submitted: true, submittedAt: new Date() },
+    });
+  },
 
-    // We call saveApplication first to save any potential edits made before clicking submit/unsubmit.
-    const { application, hasChanges, previousApproved, previousSubmitted } =
-      await saveApplication(userId, form);
+  unsubmit: async ({ request }) => {
+    if (Utils.hasApplicationsClosed()) {
+      throw error(403, "KHE 2027 has ended. Applications are now closed.");
+    }
 
-    const isUnsubmitting = previousSubmitted;
+    const session = await auth.api.getSession(request);
+    if (!session) {
+      throw error(401, "Your session has expired. Please re-login.");
+    }
 
-    if (isUnsubmitting) {
-      await prisma.application.update({
-        where: { id: application.id },
-        data: { submitted: false, submittedAt: null, approved: false, approvedAt: null },
-      });
-    } else {
-      if (previousApproved && hasChanges) {
-        await prisma.application.update({
-          where: { id: application.id },
-          data: { approved: false, approvedAt: null },
-        });
-        await sendApprovalRevokedEmail(application.email);
-      }
-      await prisma.application.update({
-        where: { id: application.id },
-        data: { submitted: true, submittedAt: new Date() },
-      });
+    const userId = session.user.id;
+    const application = await prisma.application.findUnique({ where: { userId } });
+    if (!application) throw error(404, "Application not found.");
+
+    const wasApproved = application.approved;
+    await prisma.application.update({
+      where: { id: application.id },
+      data: { submitted: false, submittedAt: null, approved: false, approvedAt: null },
+    });
+
+    if (wasApproved) {
+      await sendApprovalRevokedEmail(application.email);
     }
   },
 };

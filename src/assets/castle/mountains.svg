@@ -18,17 +18,7 @@
 
   
 
-  <!-- ============================================================
-       BACK LAYER — farthest, tallest, lightest, atmospheric haze
-       5-7 large peaks with slightly worn/rounded tips
-       Color: #1a2535
-       ============================================================ -->
   <g id="mountains-back" filter="url(#atmospheric-haze)">
-    <!--
-      Path traces the full jagged skyline from left edge to right edge,
-      then sweeps down and back along the bottom of the viewBox.
-      Peaks are intentionally asymmetric — old, eroded mountain range.
-    -->
     <path
       d="
         M -10,400
@@ -78,18 +68,7 @@
     />
   </g>
 
-  <!-- ============================================================
-       MID LAYER — medium peaks, more jagged and defined
-       Snow caps on 3 peaks (handled separately in #snow-caps group)
-       Color: #2e2e3a
-       ============================================================ -->
   <g id="mountains-mid">
-    <!--
-      4–6 peaks, more angular than the back range.
-      Positioned slightly lower so they read as closer.
-      Snow cap notches are built into the path geometry so the
-      #snow-caps group triangles align precisely.
-    -->
     <path
       d="
         M -10,400
@@ -133,11 +112,6 @@
     />
   </g>
 
-  <!-- ============================================================
-       SNOW CAPS — lighter triangles at 3 mid-layer peak tips
-       Color: #8e8ea8
-       Coordinates matched to peak vertices in #mountains-mid path
-       ============================================================ -->
   <g id="snow-caps">
     
     <polygon
@@ -165,17 +139,7 @@
     />
   </g>
 
-  <!-- ============================================================
-       FRONT LAYER — closest rolling hills, darkest
-       2–3 broad peaks, overlap the mid layer base
-       Color: #242430
-       ============================================================ -->
   <g id="mountains-front">
-    <!--
-      Lower, rounder silhouette — these are closer foothills.
-      Wide sweeping curves give them mass and weight.
-      They bleed off both horizontal edges so there's no gap.
-    -->
     <path
       d="
         M -10,400

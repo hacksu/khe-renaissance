@@ -6,7 +6,7 @@ const APPROVAL_EMAIL_TEXT =
 
 Great news! Your application to Kent Hack Enough 2027 has been approved.
 
-The event will take place on March 6–7th. More updates will be shared soon, so stay tuned.
+The event will take place on March 6-7th. More updates will be shared soon, so stay tuned.
 
 In the meantime, be sure to join our community Discord:
 https://discord.gg/FHrw9AHtA8
@@ -22,7 +22,7 @@ Kent Hack Enough 2027 Team`;
 const APPROVAL_EMAIL_HTML =
     `<p>Hi there,</p>
 <p>Great news! Your application to <strong>Kent Hack Enough 2027</strong> has been approved.</p>
-<p>The event will take place on <strong>March 6–7</strong>. More updates will be shared soon, so stay tuned.</p>
+<p>The event will take place on <strong>March 6-7</strong>. More updates will be shared soon, so stay tuned.</p>
 <p>In the meantime, be sure to join our community Discord:<br>
 <a href="https://discord.gg/FHrw9AHtA8">https://discord.gg/FHrw9AHtA8</a></p>
 <p>And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:<br>
@@ -288,7 +288,7 @@ const MAGIC_LINK_EMAIL_HTML = (url: string) => `<p>Hi there,</p>
 
 const REMINDER_SIGNUP_TEXT = `Hi there,
 
-You're on the list! We'll send you an email when signups open for Kent Hack Enough 2027 (March 6–7, 2027).
+You're on the list! We'll send you an email when signups open for Kent Hack Enough 2027 (March 6-7, 2027).
 
 We can't wait to see you there.
 
@@ -296,7 +296,7 @@ Thanks,
 Kent Hack Enough Team`;
 
 const REMINDER_SIGNUP_HTML = `<p>Hi there,</p>
-<p>You're on the list! We'll send you an email when signups open for <strong>Kent Hack Enough 2027</strong> (March 6–7, 2027).</p>
+<p>You're on the list! We'll send you an email when signups open for <strong>Kent Hack Enough 2027</strong> (March 6-7, 2027).</p>
 <p>We can't wait to see you there.</p>
 <p>Thanks,<br>
 <strong>Kent Hack Enough Team</strong></p>`;
