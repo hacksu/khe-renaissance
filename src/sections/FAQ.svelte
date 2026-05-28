@@ -28,7 +28,7 @@
         <Accordion>
             {#snippet name()}What can I make?{/snippet}
             {#snippet content()}
-                <p><span class="text-xs">(almost)</span> <strong class="text-white">ANYTHING!</strong> as long as it is generally tech adjacent. To see past projects for examples on what you could make, check out the <Link href="/guide" target="_self">guide></Link>.</p>
+                <p><span class="text-xs">(almost)</span> <strong class="text-white">ANYTHING!</strong> as long as it is generally tech adjacent. To see past projects for examples on what you could make, check out the <Link href="/guide" target="_self">guide</Link>.</p>
             {/snippet}
         </Accordion>
         <Accordion>
