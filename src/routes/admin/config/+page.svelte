@@ -101,6 +101,17 @@
                         class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
                     />
                 </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-bold text-secondary block">Discord Invite Link</label>
+                    <p class="text-xs text-secondary/60">Included in approval emails. Leave blank to omit from emails.</p>
+                    <input
+                        type="url"
+                        name="discordInvite"
+                        value={data.discordInvite ?? ''}
+                        placeholder="https://discord.gg/..."
+                        class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black"
+                    />
+                </div>
                 <Button type="submit">Save</Button>
             </form>
         </div>

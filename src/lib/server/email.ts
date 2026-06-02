@@ -1,16 +1,18 @@
 import { env } from "$env/dynamic/private";
 import { google } from "googleapis";
+import { Settings } from "$lib/server/settings";
+import { prisma } from "$lib/server/prisma";
 
-const APPROVAL_EMAIL_TEXT =
+const approvalEmailText = (discordInvite: string | null) =>
     `Hi there,
 
 Great news! Your application to Kent Hack Enough 2027 has been approved.
 
 The event will take place on March 6-7th. More updates will be shared soon, so stay tuned.
-
+${discordInvite ? `
 In the meantime, be sure to join our community Discord:
-https://discord.gg/FHrw9AHtA8
-
+${discordInvite}
+` : ''}
 And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:
 https://khe-2027.devpost.com/
 
@@ -19,12 +21,12 @@ If you have any questions at all, feel free to reach out. We are here to help.
 Thanks,
 Kent Hack Enough 2027 Team`;
 
-const APPROVAL_EMAIL_HTML =
+const approvalEmailHtml = (discordInvite: string | null) =>
     `<p>Hi there,</p>
 <p>Great news! Your application to <strong>Kent Hack Enough 2027</strong> has been approved.</p>
 <p>The event will take place on <strong>March 6-7</strong>. More updates will be shared soon, so stay tuned.</p>
-<p>In the meantime, be sure to join our community Discord:<br>
-<a href="https://discord.gg/FHrw9AHtA8">https://discord.gg/FHrw9AHtA8</a></p>
+${discordInvite ? `<p>In the meantime, be sure to join our community Discord:<br>
+<a href="${discordInvite}">${discordInvite}</a></p>` : ''}
 <p>And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:<br>
 <a href="https://khe-2027.devpost.com/">https://khe-2027.devpost.com/</a></p>
 <p>If you have any questions at all, feel free to reach out. We are here to help.</p>
@@ -65,20 +67,22 @@ const MANUALLY_REVOKED_EMAIL_HTML =
 
 const JUDGE_FEEDBACK_EMAIL_SUBJECT = "Your Judge Feedback - Kent Hack Enough 2027";
 
-const createFeedbackEmailText = (projectName: string, feedback: string) => `Hi there,
+const feedbackEmailText = (projectName: string, snippets: string[]) =>
+    `Hi there,
 
-Here is the feedback for your project "${projectName}" at Kent Hack Enough 2027.
+Here is the judge feedback for your project "${projectName}" at Kent Hack Enough 2027.
 
-${feedback}
+${snippets.map((s, i) => `--- Feedback ${i + 1} ---\n${s}`).join('\n\n')}
 
 Thank you for participating!
 
 Best,
 Kent Hack Enough 2027 Team`;
 
-const createFeedbackEmailHtml = (projectName: string, feedbackHtml: string) => `<p>Hi there,</p>
-<p>Here is the feedback for your project "<strong>${projectName}</strong>" at Kent Hack Enough 2027.</p>
-${feedbackHtml}
+const feedbackEmailHtml = (projectName: string, snippets: string[]) =>
+    `<p>Hi there,</p>
+<p>Here is the judge feedback for your project "<strong>${projectName}</strong>" at Kent Hack Enough 2027.</p>
+${snippets.map(s => `<blockquote style="border-left:3px solid #ccc;margin:12px 0;padding:8px 12px;color:#333;">${s.replace(/\n/g, '<br>')}</blockquote>`).join('\n')}
 <p>Thank you for participating!</p>
 <p>Best,<br>
 <strong>Kent Hack Enough 2027 Team</strong></p>`;
@@ -127,8 +131,9 @@ const createEmailMessage = (from: string, to: string, subject: string, text: str
 export const sendApprovalEmail = async (to: string) => {
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
     const subject = "Your application to KHE has been approved!";
-    const text = APPROVAL_EMAIL_TEXT;
-    const html = APPROVAL_EMAIL_HTML;
+    const discordInvite = await Settings.getDiscordInvite();
+    const text = approvalEmailText(discordInvite ?? '');
+    const html = approvalEmailHtml(discordInvite ?? '');
 
     try {
         const message = createEmailMessage(from, to, subject, text, html);
@@ -199,27 +204,56 @@ export const sendManualRevocationEmail = async (to: string) => {
     }
 };
 
-export const sendJudgeFeedbackEmail = async (to: string, projectName: string, feedbackText: string, feedbackHtml: string) => {
+export const sendProjectFeedbackEmails = async (projectId: string) => {
+    const project = await prisma.project.findUnique({
+        where: { id: projectId },
+        include: {
+            tableVisits: {
+                where: { status: 'completed', feedback: { not: null } },
+                select: { feedback: true }
+            },
+            members: {
+                include: { user: { select: { email: true } } }
+            }
+        }
+    });
+
+    if (!project) return;
+
+    const snippets = project.tableVisits
+        .map(v => v.feedback!)
+        .filter(f => f.trim())
+        .sort(() => Math.random() - 0.5);
+
+    if (snippets.length === 0) return;
+
+    const emails = project.members
+        .map(m => m.user.email)
+        .filter(Boolean);
+
+    if (emails.length === 0) return;
+
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
     const subject = JUDGE_FEEDBACK_EMAIL_SUBJECT;
-    const text = createFeedbackEmailText(projectName, feedbackText);
-    const html = createFeedbackEmailHtml(projectName, feedbackHtml);
-    try {
-        const message = createEmailMessage(from, to, subject, text, html);
-        const encodedMessage = Buffer.from(message)
-            .toString("base64")
-            .replace(/\+/g, "-")
-            .replace(/\//g, "_")
-            .replace(/=+$/, "");
+    const text = feedbackEmailText(project.name, snippets);
+    const html = feedbackEmailHtml(project.name, snippets);
 
-        await gmailClient.users.messages.send({
-            userId: "me",
-            requestBody: {
-                raw: encodedMessage,
-            },
-        });
-    } catch (error: any) {
-        console.error("Failed to send feedback email to " + to, error);
+    for (const to of emails) {
+        try {
+            const message = createEmailMessage(from, to, subject, text, html);
+            const encodedMessage = Buffer.from(message)
+                .toString("base64")
+                .replace(/\+/g, "-")
+                .replace(/\//g, "_")
+                .replace(/=+$/, "");
+
+            await gmailClient.users.messages.send({
+                userId: "me",
+                requestBody: { raw: encodedMessage },
+            });
+        } catch (error: any) {
+            console.error(`Failed to send feedback email to ${to}:`, error);
+        }
     }
 };
 

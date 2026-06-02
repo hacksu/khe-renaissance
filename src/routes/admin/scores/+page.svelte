@@ -7,6 +7,7 @@
     let { data } = $props();
 
     let isClearing = $state(false);
+    let isSendingFeedback = $state(false);
     let toggledOptional = $state<string[]>([]);
     let sortBy = $state('display');
     let viewMode = $state<'tracks' | 'overall'>('overall');
@@ -73,6 +74,23 @@
                     Overall
                 </button>
             </div>
+
+            <form method="POST" action="?/sendFeedback" use:enhance={() => {
+                if (!confirm("Send feedback emails to all project teams? This cannot be undone.")) return ({ update }: { update: () => void }) => update();
+                isSendingFeedback = true;
+                return async ({ update }: { update: () => void }) => {
+                    isSendingFeedback = false;
+                    await update();
+                };
+            }}>
+                <button
+                    disabled={isSendingFeedback}
+                    class="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors font-bold text-sm disabled:opacity-50"
+                >
+                    <Icon icon="mdi:email-send-outline" />
+                    {isSendingFeedback ? "Sending..." : "Send Feedback Emails"}
+                </button>
+            </form>
 
             <form method="POST" action="?/clearAll" use:enhance={() => {
                 if (!confirmClear()) return ({ update }: { update: () => void }) => update();

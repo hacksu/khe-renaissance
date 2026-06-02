@@ -14,12 +14,13 @@ export const load: PageServerLoad = async () => {
         console.error("Failed to load metadata", e);
     }
 
-    const [maxJudgesPerTeam, timePerTable] = await Promise.all([
+    const [maxJudgesPerTeam, timePerTable, discordInvite] = await Promise.all([
         Settings.getMaxJudgesPerTeam(),
-        Settings.getTimePerTable()
+        Settings.getTimePerTable(),
+        Settings.getDiscordInvite()
     ]);
 
-    return { tracks, criteria, maxJudgesPerTeam, timePerTable };
+    return { tracks, criteria, maxJudgesPerTeam, timePerTable, discordInvite };
 };
 
 export const actions: Actions = {
@@ -129,9 +130,16 @@ export const actions: Actions = {
             }
         };
 
+        const discordInvite = (form.get("discordInvite") as string)?.trim();
+
         try {
             await saveIntSetting(SETTING_KEYS.MAX_JUDGES_PER_TEAM, form.get("maxJudgesPerTeam") as string);
             await saveIntSetting(SETTING_KEYS.TIME_PER_TABLE, form.get("timePerTable") as string);
+            if (discordInvite) {
+                await Settings.set(SETTING_KEYS.DISCORD_INVITE, discordInvite);
+            } else {
+                await prisma.setting.deleteMany({ where: { key: SETTING_KEYS.DISCORD_INVITE } });
+            }
         } catch (e) {
             return fail(500, { error: "Failed to save settings" });
         }
