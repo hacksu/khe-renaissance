@@ -1,36 +1,11 @@
 <script lang="ts">
     import Card from "../../components/Card.svelte";
 
-    const scheduleEvents = [
-        // Saturday
-        { day: "Saturday", time: "10:00 AM", event: "Check-in", type: "event" },
-        { day: "Saturday", time: "10:00 AM", event: "Team Formation", type: "event" },
-        { day: "Saturday", time: "10:00 AM", event: "Sponsor Tables", type: "event" },
-        { day: "Saturday", time: "11:30 AM", event: "Opening Ceremony", type: "ceremony", highlight: true },
-        { day: "Saturday", time: "12:00 PM", event: "Start Hacking!", type: "milestone", highlight: true },
-        { day: "Saturday", time: "1:00 PM", event: "Lunch", type: "meal" },
-        { day: "Saturday", time: "2:00 PM", event: "Workshop 1: Github - Progressive", type: "workshop" },
-        { day: "Saturday", time: "4:00 PM", event: "Workshop 2: Github Copilot - MLH", type: "workshop" },
-        { day: "Saturday", time: "5:00 PM", event: "Workshop 3: Svelte & SvelteKit - Ian R", type: "workshop" },
-        { day: "Saturday", time: "6:00 PM", event: "Dinner", type: "meal" },
-        { day: "Saturday", time: "8:00 PM", event: "Workshop 4: Flask & MongoDB - Andrew", type: "workshop" },
-        { day: "Saturday", time: "10:00 PM", event: "Mini Event: Wiki Speedrun", type: "event" },
-        { day: "Saturday", time: "12:00 AM", event: "Initial Devpost Checkpoint", type: "milestone" },
-        { day: "Saturday", time: "12:00 AM", event: "Midnight Snack", type: "meal" },
-        { day: "Saturday", time: "1:00 AM", event: "F1 Japanese GP", type: "event" },
-        { day: "Saturday", time: "3:00 AM", event: "Mini Event: YouTube Deep Dive", type: "event" },
-        
-        // Sunday
-        { day: "Sunday", time: "9:30 AM", event: "Breakfast & Coffee", type: "meal" },
-        { day: "Sunday", time: "12:00 PM", event: "Hacking Ends", type: "milestone", highlight: true },
-        { day: "Sunday", time: "12:00 PM", event: "Lunch", type: "meal" },
-        { day: "Sunday", time: "12:45 PM", event: "Judging", type: "event" },
-        { day: "Sunday", time: "3:00 PM", event: "Closing Ceremony", type: "ceremony", highlight: true },
-    ];
+    let { data } = $props();
 
-    // Group events by day
-    const saturday = scheduleEvents.filter(e => e.day === "Saturday");
-    const sunday = scheduleEvents.filter(e => e.day === "Sunday");
+    // Group by day, preserving order from DB
+    const days = [...new Set(data.events.map((e: any) => e.day))];
+    const byDay = (day: string) => data.events.filter((e: any) => e.day === day);
 
     // Get dot color based on event type
     function getDotColor(type: string): string {
@@ -60,30 +35,26 @@
         </p>
     </div>
 
-    <!-- Saturday Schedule -->
-    <div class="fade-in" style="animation-delay: 0.2s;">
-        <h2 class="text-4xl font-bold text-center mb-8 text-castle-gold">~ Saturday ~</h2>
+    {#each days as day, di}
+    <div class="fade-in" style="animation-delay: {0.2 + di * 0.2}s;">
+        <h2 class="text-4xl font-bold text-center mb-8 text-castle-gold">~ {day} ~</h2>
         <Card padded>
             <div class="space-y-1">
-                {#each saturday as event, i}
-                    <div 
+                {#each byDay(day) as event, i}
+                    {@const eventsForDay = byDay(day)}
+                    <div
                         class="timeline-item flex items-start gap-3 py-3 relative {event.highlight ? 'bg-white/10 -mx-4 px-4 rounded-md' : ''} group transition-all duration-300 hover:bg-white/5 cursor-pointer"
-                        style="animation-delay: {0.3 + i * 0.05}s;"
+                        style="animation-delay: {0.3 + di * 0.8 + i * 0.05}s;"
                     >
-                        <!-- Timeline dot -->
                         <div class="flex flex-col items-center pt-1">
                             <div class="timeline-dot w-3 h-3 rounded-full {getDotColor(event.type)} ring-2 ring-white/30 transition-all duration-300 group-hover:ring-4 group-hover:scale-110"></div>
-                            {#if i < saturday.length - 1}
+                            {#if i < eventsForDay.length - 1}
                                 <div class="w-0.5 h-full min-h-[40px] bg-white/20 mt-1"></div>
                             {/if}
                         </div>
-
-                        <!-- Time -->
                         <div class="text-castle-torchOrange font-bold font-mono min-w-[90px] pt-0.5 text-sm md:text-base transition-colors duration-300 group-hover:text-castle-gold">
                             {event.time}
                         </div>
-
-                        <!-- Event details -->
                         <div class="flex-1">
                             <div class="text-white text-base md:text-lg font-semibold transition-transform duration-300 group-hover:translate-x-1">
                                 {event.event}
@@ -94,41 +65,7 @@
             </div>
         </Card>
     </div>
-
-    <!-- Sunday Schedule -->
-    <div class="fade-in" style="animation-delay: 0.4s;">
-        <h2 class="text-4xl font-bold text-center mb-8 text-castle-gold">~ Sunday ~</h2>
-        <Card padded>
-            <div class="space-y-1">
-                {#each sunday as event, i}
-                    <div 
-                        class="timeline-item flex items-start gap-3 py-3 relative {event.highlight ? 'bg-white/10 -mx-4 px-4 rounded-md' : ''} group transition-all duration-300 hover:bg-white/5 cursor-pointer"
-                        style="animation-delay: {1.2 + i * 0.05}s;"
-                    >
-                        <!-- Timeline dot -->
-                        <div class="flex flex-col items-center pt-1">
-                            <div class="timeline-dot w-3 h-3 rounded-full {getDotColor(event.type)} ring-2 ring-white/30 transition-all duration-300 group-hover:ring-4 group-hover:scale-110"></div>
-                            {#if i < sunday.length - 1}
-                                <div class="w-0.5 h-full min-h-[40px] bg-white/20 mt-1"></div>
-                            {/if}
-                        </div>
-
-                        <!-- Time -->
-                        <div class="text-castle-torchOrange font-bold font-mono min-w-[90px] pt-0.5 text-sm md:text-base transition-colors duration-300 group-hover:text-castle-gold">
-                            {event.time}
-                        </div>
-
-                        <!-- Event details -->
-                        <div class="flex-1">
-                            <div class="text-white text-base md:text-lg font-semibold transition-transform duration-300 group-hover:translate-x-1">
-                                {event.event}
-                            </div>
-                        </div>
-                    </div>
-                {/each}
-            </div>
-        </Card>
-    </div>
+    {/each}
 
     <!-- Footer Note -->
     <div class="text-center max-w-2xl mx-auto fade-in" style="animation-delay: 0.6s;">

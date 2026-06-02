@@ -3,11 +3,12 @@ import type { Actions, PageServerLoad } from "./$types";
 import { fail } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async () => {
-    const [sponsors, prizes] = await Promise.all([
+    const [sponsors, prizes, schedule] = await Promise.all([
         prisma.sponsor.findMany({ orderBy: { order: 'asc' } }),
         prisma.prize.findMany({ orderBy: { order: 'asc' } }),
+        prisma.scheduleEvent.findMany({ orderBy: { order: 'asc' } }),
     ]);
-    return { sponsors, prizes };
+    return { sponsors, prizes, schedule };
 };
 
 export const actions: Actions = {
@@ -94,6 +95,46 @@ export const actions: Actions = {
             await prisma.prize.delete({ where: { id } });
         } catch (e) {
             return fail(500, { error: "Failed to delete prize" });
+        }
+    },
+    createScheduleEvent: async ({ request }) => {
+        const form = await request.formData();
+        const day = (form.get("day") as string)?.trim();
+        const time = (form.get("time") as string)?.trim();
+        const event = (form.get("event") as string)?.trim();
+        const type = (form.get("type") as string) || "event";
+        const highlight = form.get("highlight") === "on";
+        const order = Number(form.get("order") || 0);
+        if (!day || !time || !event) return fail(400, { error: "Day, time, and event name are required" });
+        try {
+            await prisma.scheduleEvent.create({ data: { day, time, event, type, highlight, order } });
+        } catch (e) {
+            return fail(500, { error: "Failed to create schedule event" });
+        }
+    },
+    updateScheduleEvent: async ({ request }) => {
+        const form = await request.formData();
+        const id = form.get("id") as string;
+        const day = (form.get("day") as string)?.trim();
+        const time = (form.get("time") as string)?.trim();
+        const event = (form.get("event") as string)?.trim();
+        const type = (form.get("type") as string) || "event";
+        const highlight = form.get("highlight") === "on";
+        const order = Number(form.get("order") || 0);
+        if (!id || !day || !time || !event) return fail(400, { error: "Missing required fields" });
+        try {
+            await prisma.scheduleEvent.update({ where: { id }, data: { day, time, event, type, highlight, order } });
+        } catch (e) {
+            return fail(500, { error: "Failed to update schedule event" });
+        }
+    },
+    deleteScheduleEvent: async ({ request }) => {
+        const form = await request.formData();
+        const id = form.get("id") as string;
+        try {
+            await prisma.scheduleEvent.delete({ where: { id } });
+        } catch (e) {
+            return fail(500, { error: "Failed to delete schedule event" });
         }
     },
 };

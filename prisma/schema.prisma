@@ -329,3 +329,15 @@ model Prize {
 
   @@map("prize")
 }
+
+model ScheduleEvent {
+  id        String  @id @default(uuid())
+  day       String  // e.g. "Saturday", "Sunday"
+  time      String  // e.g. "10:00 AM"
+  event     String
+  type      String  @default("event") // "ceremony" | "meal" | "workshop" | "event" | "milestone"
+  highlight Boolean @default(false)
+  order     Int     @default(0)
+
+  @@map("schedule_event")
+}

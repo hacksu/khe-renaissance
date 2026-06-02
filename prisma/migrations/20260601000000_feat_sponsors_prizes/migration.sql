@@ -1,4 +1,4 @@
-CREATE TABLE "sponsor" (
+CREATE TABLE IF NOT EXISTS "sponsor" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "url" TEXT NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE "sponsor" (
     CONSTRAINT "sponsor_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "prize" (
+CREATE TABLE IF NOT EXISTS "prize" (
     "id" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "itemName" TEXT NOT NULL,
