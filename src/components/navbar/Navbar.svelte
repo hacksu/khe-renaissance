@@ -90,8 +90,8 @@
 
             <div class="hidden lg:flex items-center gap-3 flex-1 justify-end">
                 <NavbarItem 
-                    href="https://kent-hack-enough-2027.devpost.com/" 
-                    target="_blank" 
+                    href="https://khe-2027.devpost.com/"
+                    target="_blank"
                     rel="noopener noreferrer"
                     class="transition-transform duration-300 hover:scale-110 hover:rotate-6"
                 >
@@ -169,7 +169,7 @@
                 <div class="h-px bg-castle-stoneMid/40 my-4"></div>
 
                 <NavbarItem 
-                    href="https://kent-hack-enough-2027.devpost.com/" 
+                    href="https://khe-2027.devpost.com/"
                     target="_blank" 
                     rel="noopener noreferrer"
                     class="flex items-center gap-3 px-4 py-3 text-castle-stoneHighlight font-medium rounded-lg transition-all duration-300 hover:bg-castle-stoneMid/60 hover:text-castle-torchYellow"

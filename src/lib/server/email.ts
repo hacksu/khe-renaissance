@@ -12,7 +12,7 @@ In the meantime, be sure to join our community Discord:
 https://discord.gg/FHrw9AHtA8
 
 And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:
-https://kent-hack-enough-2027.devpost.com/
+https://khe-2027.devpost.com/
 
 If you have any questions at all, feel free to reach out. We are here to help.
 
@@ -26,7 +26,7 @@ const APPROVAL_EMAIL_HTML =
 <p>In the meantime, be sure to join our community Discord:<br>
 <a href="https://discord.gg/FHrw9AHtA8">https://discord.gg/FHrw9AHtA8</a></p>
 <p>And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:<br>
-<a href="https://kent-hack-enough-2027.devpost.com/">https://kent-hack-enough-2027.devpost.com/</a></p>
+<a href="https://khe-2027.devpost.com/">https://khe-2027.devpost.com/</a></p>
 <p>If you have any questions at all, feel free to reach out. We are here to help.</p>
 <p>Thanks,<br>
 <strong>Kent Hack Enough 2027 Team</strong></p>`;
