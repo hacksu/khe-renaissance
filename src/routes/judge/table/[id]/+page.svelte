@@ -41,7 +41,7 @@
 <div class="max-w-md mx-auto p-4 flex flex-col min-h-screen">
     <!-- Header -->
     <div class="mb-6 mt-2">
-        <a href="/judge" class="text-sm font-medium text-white/60 hover:text-white mb-4 block">← Dashboard</a>
+        <a href="/judge" class="text-sm font-medium text-white/60 hover:text-white mb-4 block">&larr; Dashboard</a>
         <h1 class="text-2xl font-bold text-white mb-1">{project.name}</h1>
         {#if project.tableNumber}
             <p class="text-white/60 text-lg">Table #{project.tableNumber}</p>

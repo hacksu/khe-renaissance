@@ -1,5 +1,6 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import Icon from "@iconify/svelte";
     import Checkbox from "$components/form/Checkbox.svelte";
     import Link from "$components/Link.svelte";
     import { authClient } from "$lib/client";
@@ -181,7 +182,7 @@
                              step === i && stepDone[i] ? 'bg-castle-torchOrange text-white shadow-[0_0_10px_rgba(255,107,26,0.6)]' :
                              step === i               ? 'border-2 border-castle-torchOrange text-castle-torchAmber' :
                                                         'border-2 border-castle-stoneMid text-castle-stoneHighlight hover:border-castle-stoneHighlight'}">
-                            {stepDone[i] ? '✓' : i + 1}
+                            {#if stepDone[i]}<Icon icon="mdi:check" />{:else}{i + 1}{/if}
                         </div>
                         <span class="text-xs hidden sm:block transition-colors duration-300 whitespace-nowrap
                             {step === i    ? 'text-white font-medium' :
@@ -588,7 +589,7 @@
                                     onclick={() => step--}
                                     class="text-sm text-white/50 hover:text-white transition-colors px-2 py-1"
                                 >
-                                    ← Back
+                                    &larr; Back
                                 </button>
                             {/if}
                         </div>

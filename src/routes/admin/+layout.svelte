@@ -6,7 +6,8 @@
         { href: "/admin/judges", label: "Judges", icon: "mdi:account-group" },
         { href: "/admin/scores", label: "Results", icon: "mdi:podium" },
         { href: "/admin/staff", label: "Staff", icon: "mdi:shield-account" },
-        { href: "/admin/config", label: "Config", icon: "mdi:cog" },
+        { href: "/admin/config", label: "Event", icon: "mdi:wrench" },
+        { href: "/admin/site", label: "Site", icon: "mdi:web" },
     ];
 </script>
 

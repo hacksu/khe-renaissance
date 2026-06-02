@@ -1,0 +1,1 @@
+ALTER TABLE "application" ADD COLUMN IF NOT EXISTS "checkedIn" BOOLEAN NOT NULL DEFAULT false;

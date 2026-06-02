@@ -120,7 +120,6 @@
                     <div class="h-px bg-castle-gold/20"></div>
                     {#if form?.success}
                         <div class="flex flex-col items-center gap-2 py-1 text-center">
-                            <span class="text-castle-torchOrange text-3xl select-none">⚔</span>
                             <p class="text-white font-semibold text-sm">
                                 {form.alreadySignedUp ? "Already on the list!" : "You're on the list!"}
                             </p>

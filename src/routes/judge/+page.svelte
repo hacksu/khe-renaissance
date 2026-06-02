@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import Icon from "@iconify/svelte";
 
     let { data } = $props();
     const judgeName = $page.data.session?.user?.name || "Judge";
@@ -9,7 +10,7 @@
 <div class="max-w-md mx-auto p-4 flex flex-col min-h-screen">
     <!-- Header -->
     <div class="mb-6 mt-2">
-        <a href="/" class="text-sm font-medium text-white/60 hover:text-white mb-4 block">← Back to Home</a>
+        <a href="/" class="text-sm font-medium text-white/60 hover:text-white mb-4 block">&larr; Back to Home</a>
         <h1 class="text-2xl font-bold text-white mb-1">Judging Dashboard</h1>
         <p class="text-white/80">Welcome, {judgeName}</p>
     </div>
@@ -30,7 +31,7 @@
                         href="/judge/table/{visit.id}"
                         class="block w-full py-3.5 px-6 bg-white text-castle-skyDeep font-bold rounded-xl text-center shadow-lg transition-all active:scale-[0.98] hover:bg-white/90"
                     >
-                        Continue Judging →
+                        Continue Judging &rarr;
                     </a>
                 {:else}
                     <form method="POST" action="?/start">
@@ -39,7 +40,7 @@
                             type="submit"
                             class="w-full py-3.5 px-6 bg-white text-castle-skyDeep font-bold rounded-xl text-center shadow-lg transition-all active:scale-[0.98] hover:bg-white/90"
                         >
-                            Start Judging →
+                            Start Judging &rarr;
                         </button>
                     </form>
                 {/if}
@@ -48,7 +49,7 @@
     {:else}
         <div class="flex-1 flex items-center justify-center">
             <div class="text-center bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/10">
-                <div class="text-4xl mb-4">✓</div>
+                <Icon icon="mdi:check-circle-outline" class="text-4xl mb-4" width="48" />
                 <p class="font-bold text-white text-lg mb-2">All done -- no more tables to judge.</p>
                 <p class="text-white/60 text-sm">Thank you!</p>
             </div>

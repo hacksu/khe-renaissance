@@ -1,38 +1,10 @@
 <script lang="ts">
-    interface Sponsor { name: string; url: string; image: any; tier?: "royal" | "knight" | "ally" }
+    interface Sponsor { id: string; name: string; url: string; imageUrl: string; tier: string; order: number; }
 
-    import Bawlslogo      from "../assets/sponsors/bawls.png";
-    import DeptLogo       from "../assets/sponsors/CSLogo.png";
-    import KSULogo        from "../assets/sponsors/ksu-logo.svg";
-    import BentTreeLogo   from "../assets/sponsors/bent_tree_coffee_roasters_logo.png";
-    import BarrioLogo     from "../assets/sponsors/barrio_logo.webp";
-    import EnbasisLogo    from "../assets/sponsors/enbasis_inc_logo.jpg";
-    import DaveyTreeLogo  from "../assets/sponsors/daveytree_logo.png";
-    import HacKSULogo     from "../assets/sponsors/hacksu_logo.svg";
-    import PureButtonsLogo from "../assets/sponsors/pure_buttons_logo.png";
-    import BoardAndBevyLogo from "../assets/sponsors/board_and_bevy.png";
-    import ProgressiveLogo from "../assets/sponsors/progressive.svg";
-    import ATRLabLogo     from "../assets/sponsors/atr.png";
+    let { barons, knights, squires }: { barons: Sponsor[]; knights: Sponsor[]; squires: Sponsor[] } = $props();
 
-    const royalPatrons: Sponsor[] = [
-        { image: DaveyTreeLogo, name: "DaveyTree",            url: "https://www.davey.com/" },
-        { image: EnbasisLogo,   name: "Enbasis",              url: "https://enbasis.com"    },
-        { image: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png",
-                                name: "Amazon Web Services",  url: "https://aws.amazon.com" },
-        { image: ATRLabLogo,    name: "Advanced Telerobotics Lab", url: "https://www.atr.cs.kent.edu/" },
-        { image: ProgressiveLogo, name: "Progressive Insurance", url: "https://progressive.com/" },
-    ];
-
-    const allies: Sponsor[] = [
-        { image: Bawlslogo,        name: "Bawls",               url: "https://bawls.com"                },
-        { image: BentTreeLogo,     name: "Bent Tree Coffee",     url: "https://www.benttreecoffee.com"   },
-        { image: BoardAndBevyLogo, name: "Board And Bevy",       url: "https://www.boardandbevy.com/"    },
-        { image: BarrioLogo,       name: "Barrio",               url: "https://barrio-tacos.com/locations/kent/" },
-        { image: PureButtonsLogo,  name: "Pure Buttons",         url: "https://mlh.io"                   },
-        { image: KSULogo,          name: "Kent State University", url: "https://www.kent.edu"             },
-        { image: HacKSULogo,       name: "HacKSU",               url: "https://hacksu.com"               },
-        { image: DeptLogo,         name: "CS Department",        url: "https://www.kent.edu/cs"          },
-    ];
+    const isSvg = (url: string) => url.toLowerCase().endsWith('.svg');
+    const svgUrl = (url: string) => `/api/svg?url=${encodeURIComponent(url)}`;
 </script>
 
 <div id="sponsors" class="flex flex-col gap-12">
@@ -47,35 +19,66 @@
         </p>
     </div>
 
-    <!-- Royal Patrons (larger tiles) -->
+    {#if barons.length > 0}
     <div class="flex flex-col gap-3">
-        <h3 class="tier-label">Royal Patrons</h3>
+        <h3 class="tier-label">Barons of the Realm</h3>
         <div class="flex flex-wrap gap-4 justify-center">
-            {#each royalPatrons as { image, name, url }}
+            {#each barons as { imageUrl, name, url }}
                 <a href={url} target="_blank" rel="noopener noreferrer"
-                   class="sponsor-tile royal">
-                    <img src={image} alt={name}
-                         class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                   class="sponsor-tile baron group">
+                    {#if isSvg(imageUrl)}
+                        <img src={svgUrl(imageUrl)} alt={name}
+                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                    {:else}
+                        <img src={imageUrl} alt={name}
+                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                    {/if}
                 </a>
             {/each}
         </div>
     </div>
+    {/if}
 
-    <!-- Allies (smaller tiles) -->
+    {#if knights.length > 0}
     <div class="flex flex-col gap-3">
-        <h3 class="tier-label">Allies of the Realm</h3>
+        <h3 class="tier-label">Knights of the Order</h3>
         <div class="flex flex-wrap gap-3 justify-center">
-            {#each allies as { image, name, url }}
+            {#each knights as { imageUrl, name, url }}
                 <a href={url} target="_blank" rel="noopener noreferrer"
-                   class="sponsor-tile ally group">
-                    <img src={image} alt={name}
-                         class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                   class="sponsor-tile knight group">
+                    {#if isSvg(imageUrl)}
+                        <img src={svgUrl(imageUrl)} alt={name}
+                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                    {:else}
+                        <img src={imageUrl} alt={name}
+                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                    {/if}
                 </a>
             {/each}
         </div>
     </div>
+    {/if}
 
-    <!-- Sponsorship CTA -->
+    {#if squires.length > 0}
+    <div class="flex flex-col gap-3">
+        <h3 class="tier-label">Squires of the Keep</h3>
+        <div class="flex flex-wrap gap-3 justify-center">
+            {#each squires as { imageUrl, name, url }}
+                <a href={url} target="_blank" rel="noopener noreferrer"
+                   class="sponsor-tile squire group">
+                    {#if isSvg(imageUrl)}
+                        <img src={svgUrl(imageUrl)} alt={name}
+                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                    {:else}
+                        <img src={imageUrl} alt={name}
+                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                    {/if}
+                </a>
+            {/each}
+        </div>
+    </div>
+    {/if}
+
     <p class="text-center text-castle-stoneHighlight text-sm">
         Interested in sponsoring?
         <a href="mailto:staff@khe.io" class="sponsor-cta">Contact us!</a>
@@ -112,8 +115,9 @@
         box-shadow: 0 0 20px rgba(201,168,76,0.12);
     }
 
-    .sponsor-tile.royal { width: 220px; height: 120px; }
-    .sponsor-tile.ally  { width: 160px; height: 90px;  }
+    .sponsor-tile.baron  { width: 220px; height: 120px; }
+    .sponsor-tile.knight { width: 180px; height: 100px; }
+    .sponsor-tile.squire { width: 150px; height: 85px;  }
 
     .sponsor-cta {
         color: #c9a84c;

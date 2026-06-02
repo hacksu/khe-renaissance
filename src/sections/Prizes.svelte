@@ -1,42 +1,21 @@
 <script lang="ts">
-    import itDevopsKit      from "../assets/prizes/it-devops-kit.png";
-    import hyperxCloudAlpha from "../assets/prizes/hyperx-cloud-alpha.png";
-    import redragonK732     from "../assets/prizes/redragon-k732.png";
-    import hyperxSolocast   from "../assets/prizes/hyperx-solocast.png";
-    import aioloDrive       from "../assets/prizes/aiolo-drive.png";
-    import miyooMiniPlus    from "../assets/prizes/miyoo-mini-plus.png";
-    import libreComputer    from "../assets/prizes/libre-computer.png";
-    import legoDino         from "../assets/prizes/lego-dino.png";
-    import yxkMonitor       from "../assets/prizes/yxk-monitor.png";
-    import dinoNuggetPlush  from "../assets/prizes/dino-nugget-plush.png";
-    import copperDino       from "../assets/prizes/copper-dino.png";
-    import raspBerry        from "../assets/prizes/atr.png";
+    interface Prize { id: string; category: string; itemName: string; detail: string; imageUrl: string; order: number; place?: string | null; accentColor?: string | null; crown?: string | null; trackName?: string | null; awardName?: string | null; }
 
-    const overall = [
-        { place: "1st",  crown: "👑", item: "HyperX Cloud Alpha Wireless",   detail: "Wireless Gaming Headset",    img: hyperxCloudAlpha, accent: "#c9a84c" },
-        { place: "2nd",  crown: "🥈", item: "Redragon K732 Keyboard",        detail: "Mechanical RGB Keyboard",    img: redragonK732,     accent: "#8e8ea8" },
-        { place: "3rd",  crown: "🥉", item: "HyperX SoloCast 2 Microphone",  detail: "USB Condenser Microphone",   img: hyperxSolocast,   accent: "#6b4f2f" },
-    ];
+    let { overall, tracks, special }: { overall: Prize[]; tracks: Prize[]; special: Prize[] } = $props();
 
-    const tracks = [
-        { track: "Cybersecurity",         item: "IT/Dev Ops Field Kit",         detail: "USB Drives, Lock Pick Set & more", img: itDevopsKit    },
-        { track: "Data Science",          item: "Aiolo Portable Drive",         detail: "1 TB External Hard Drive",        img: aioloDrive     },
-        { track: "Game Programming",      item: "Miyoo Mini Plus",              detail: "Retro Handheld Console",          img: miyooMiniPlus  },
-        { track: "Embedded Systems",      item: "Libre Computer Sweet Potato",  detail: "Modern Single Board Computer",    img: libreComputer  },
-        { track: "Physical AI / Robotics",item: "RasTech Raspberry Pi 5 Kit",   detail: "Raspberry Pi 5 Dev Kit",          img: raspBerry      },
-    ];
+    const isSvg = (url: string) => url.toLowerCase().endsWith('.svg');
+    const svgUrl = (url: string) => `/api/svg?url=${encodeURIComponent(url)}`;
 
-    const special = [
-        { name: "Hackathon Theme",  item: "LEGO Creator 3-in-1 Dino Set", detail: "Top 5 teams",          img: legoDino        },
-        { name: "Best Solo Hack",   item: "Yxk Portable Monitor",         detail: "",                     img: yxkMonitor      },
-        { name: "Best Attempt",     item: "Dino Nugget Pillow Plush",      detail: "Organizer Selected",   img: dinoNuggetPlush },
-        { name: "Coolest Hack",     item: "Solid Copper Dino Skeleton",    detail: "Organizer Selected",   img: copperDino      },
-    ];
+    // Podium order: 2nd, 1st, 3rd
+    const podium = $derived([
+        overall.find(p => p.place === '2nd'),
+        overall.find(p => p.place === '1st'),
+        overall.find(p => p.place === '3rd'),
+    ].filter(Boolean) as Prize[]);
 </script>
 
 <div id="prizes" class="flex flex-col gap-20">
 
-    <!-- Section heading -->
     <div class="flex flex-col items-center gap-3 text-center">
         <p class="eyebrow">Royal Tournament</p>
         <h2 class="text-5xl font-black text-castle-gold title-rule">Prizes</h2>
@@ -45,67 +24,74 @@
         </p>
     </div>
 
+    {#if overall.length > 0}
     <div class="flex flex-col gap-4">
         <h3 class="section-label">Overall Champions</h3>
-
-        <!-- Podium layout: 2nd | 1st | 3rd -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-            {#each [overall[1], overall[0], overall[2]] as prize, i}
+            {#each podium as prize, i}
                 <div class="trophy-card {i === 1 ? 'md:-translate-y-4 md:scale-[1.03]' : ''} transition-transform duration-300"
-                     style="--accent: {prize.accent};">
+                     style="--accent: {prize.accentColor ?? 'rgba(201,168,76,0.3)'};">
                     <div class="trophy-image-wrap">
-                        <img src={prize.img} alt={prize.item}
-                             class="w-full h-40 object-contain p-4" />
+                        {#if prize.imageUrl}
+                            {#if isSvg(prize.imageUrl)}
+                                <img src={svgUrl(prize.imageUrl)} alt={prize.itemName} class="w-full h-40 object-contain p-4" />
+                            {:else}
+                                <img src={prize.imageUrl} alt={prize.itemName} class="w-full h-40 object-contain p-4" />
+                            {/if}
+                        {/if}
                     </div>
                     <div class="flex flex-col items-center text-center gap-2 p-5">
-                        <span class="text-3xl">{prize.crown}</span>
+                        {#if prize.crown}<span class="text-3xl">{prize.crown}</span>{/if}
                         <p class="text-base font-black uppercase tracking-widest" style="color: var(--accent);">{prize.place} Place</p>
-                        <p class="text-white font-semibold">{prize.item}</p>
-                        <p class="text-castle-stoneLight text-xs">{prize.detail}</p>
+                        <p class="text-white font-semibold">{prize.itemName}</p>
+                        {#if prize.detail}<p class="text-castle-stoneLight text-xs">{prize.detail}</p>{/if}
                     </div>
                 </div>
             {/each}
         </div>
     </div>
+    {/if}
 
+    {#if tracks.length > 0}
     <div class="flex flex-col gap-4">
         <h3 class="section-label">Track Bounties</h3>
         <div class="bounty-board">
             {#each tracks as prize}
                 <div class="bounty-row">
-                    <img src={prize.img} alt={prize.item}
-                         class="w-14 h-14 object-contain flex-shrink-0 rounded" />
+                    {#if prize.imageUrl}
+                        <img src={isSvg(prize.imageUrl) ? svgUrl(prize.imageUrl) : prize.imageUrl} alt={prize.itemName} class="w-14 h-14 object-contain flex-shrink-0 rounded" />
+                    {/if}
                     <div class="flex flex-col gap-0.5 flex-1 min-w-0">
-                        <p class="text-castle-torchOrange font-bold text-sm uppercase tracking-wide">{prize.track}</p>
-                        <p class="text-white font-semibold text-sm truncate">{prize.item}</p>
-                        {#if prize.detail}
-                            <p class="text-castle-stoneLight text-xs">{prize.detail}</p>
-                        {/if}
+                        <p class="text-castle-torchOrange font-bold text-sm uppercase tracking-wide">{prize.trackName}</p>
+                        <p class="text-white font-semibold text-sm truncate">{prize.itemName}</p>
+                        {#if prize.detail}<p class="text-castle-stoneLight text-xs">{prize.detail}</p>{/if}
                     </div>
-                    <div class="text-castle-gold text-lg flex-shrink-0">⚔</div>
+                    <div class="text-castle-gold text-lg flex-shrink-0"></div>
                 </div>
             {/each}
         </div>
     </div>
+    {/if}
 
+    {#if special.length > 0}
     <div class="flex flex-col gap-4">
         <h3 class="section-label">Guild Rewards</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {#each special as prize}
                 <div class="guild-card">
-                    <img src={prize.img} alt={prize.item}
-                         class="w-20 h-20 object-contain flex-shrink-0 rounded" />
+                    {#if prize.imageUrl}
+                        <img src={isSvg(prize.imageUrl) ? svgUrl(prize.imageUrl) : prize.imageUrl} alt={prize.itemName} class="w-20 h-20 object-contain flex-shrink-0 rounded" />
+                    {/if}
                     <div class="flex flex-col gap-1 flex-1">
-                        <p class="text-castle-torchAmber font-bold text-sm">{prize.name}</p>
-                        <p class="text-white text-sm font-semibold">{prize.item}</p>
-                        {#if prize.detail}
-                            <p class="text-castle-stoneLight text-xs">{prize.detail}</p>
-                        {/if}
+                        <p class="text-castle-torchAmber font-bold text-sm">{prize.awardName}</p>
+                        <p class="text-white text-sm font-semibold">{prize.itemName}</p>
+                        {#if prize.detail}<p class="text-castle-stoneLight text-xs">{prize.detail}</p>{/if}
                     </div>
                 </div>
             {/each}
         </div>
     </div>
+    {/if}
 </div>
 
 <style>

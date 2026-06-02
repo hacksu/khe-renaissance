@@ -299,3 +299,33 @@ model CrowdBTState {
   @@index([criterionId])
   @@map("crowd_bt_state")
 }
+
+model Sponsor {
+  id       String @id @default(uuid())
+  name     String
+  url      String
+  imageUrl String
+  tier     String @default("ally") // "royal" | "ally"
+  order    Int    @default(0)
+
+  @@map("sponsor")
+}
+
+model Prize {
+  id          String  @id @default(uuid())
+  category    String  // "overall" | "track" | "special"
+  itemName    String
+  detail      String  @default("")
+  imageUrl    String  @default("")
+  order       Int     @default(0)
+  // overall-specific
+  place       String? // "1st" | "2nd" | "3rd"
+  accentColor String?
+  crown       String?
+  // track-specific
+  trackName   String?
+  // special-specific
+  awardName   String?
+
+  @@map("prize")
+}

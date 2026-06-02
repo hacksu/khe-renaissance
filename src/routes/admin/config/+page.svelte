@@ -15,8 +15,8 @@
 <div class="p-6 pt-24 min-h-screen space-y-8">
 
     <div>
-        <h1 class="text-2xl font-bold font-serif text-secondary mb-4">Configuration</h1>
-        <p class="text-secondary/70">Manage dynamic data for the event.</p>
+        <h1 class="text-2xl font-bold font-serif text-secondary mb-4">Event Config</h1>
+        <p class="text-secondary/70">Manage judging settings, tracks, and criteria.</p>
     </div>
 
     <!-- Tracks Manager -->
@@ -29,8 +29,8 @@
                     {#if editingTrack?.id === track.id}
                         <form method="POST" action="?/updateTrack" use:enhance={() => { return async ({ update }) => { editingTrack = null; await update(); }; }} class="bg-white/50 border border-accent/30 p-3 rounded-lg space-y-2">
                             <input type="hidden" name="id" value={track.id} />
-                            <input name="name" value={editingTrack.name} oninput={(e) => editingTrack.name = e.currentTarget.value} class="w-full text-sm rounded border-secondary/20 px-2 py-1" required />
-                            <input name="description" value={editingTrack.description || ""} oninput={(e) => editingTrack.description = e.currentTarget.value} placeholder="Description..." class="w-full text-sm rounded border-secondary/20 px-2 py-1" />
+                            <input name="name" bind:value={editingTrack.name} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" required />
+                            <input name="description" bind:value={editingTrack.description} placeholder="Description..." class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" />
                             <div class="flex gap-2 justify-end">
                                 <button type="button" onclick={() => editingTrack = null} class="text-xs text-secondary/60 hover:underline">Cancel</button>
                                 <button type="submit" class="text-xs text-accent font-bold hover:underline">Save</button>
@@ -127,23 +127,23 @@
                     {#if editingCriterion?.id === criterion.id}
                         <form method="POST" action="?/updateCriterion" use:enhance={() => { return async ({ update }) => { editingCriterion = null; await update(); }; }} class="bg-white/50 border border-accent/30 p-3 rounded-lg space-y-2">
                             <input type="hidden" name="id" value={criterion.id} />
-                            <input name="name" value={editingCriterion.name} oninput={(e) => editingCriterion.name = e.currentTarget.value} class="w-full text-sm rounded border-secondary/20 px-2 py-1" required />
+                            <input name="name" bind:value={editingCriterion.name} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" required />
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="text-xs text-secondary/60">Max Score</label>
-                                    <input name="maxScore" type="number" value={editingCriterion.maxScore} class="w-full text-sm rounded border-secondary/20 px-2 py-1" />
+                                    <input name="maxScore" type="number" bind:value={editingCriterion.maxScore} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" />
                                 </div>
                                 <div>
                                     <label class="text-xs text-secondary/60">Order</label>
-                                    <input name="order" type="number" value={editingCriterion.order} class="w-full text-sm rounded border-secondary/20 px-2 py-1" />
+                                    <input name="order" type="number" bind:value={editingCriterion.order} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" />
                                 </div>
                             </div>
                             <label class="flex items-center gap-2 text-sm text-secondary cursor-pointer">
-                                <input type="checkbox" name="optional" checked={editingCriterion.optional} class="rounded border-secondary/30 text-accent focus:ring-accent" />
+                                <input type="checkbox" name="optional" bind:checked={editingCriterion.optional} class="rounded border-secondary/30 text-accent focus:ring-accent" />
                                 <span>Optional</span>
                             </label>
                             <label class="flex items-center gap-2 text-sm text-secondary cursor-pointer">
-                                <input type="checkbox" name="allowOptOut" checked={editingCriterion.allowOptOut} class="rounded border-secondary/30 text-accent focus:ring-accent" />
+                                <input type="checkbox" name="allowOptOut" bind:checked={editingCriterion.allowOptOut} class="rounded border-secondary/30 text-accent focus:ring-accent" />
                                 <span>Allow opt-out (judges can skip this criterion)</span>
                             </label>
                             <div class="flex gap-2 justify-end">
@@ -205,5 +205,6 @@
             </Card>
         </div>
     </section>
+
 
 </div>

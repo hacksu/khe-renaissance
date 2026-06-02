@@ -201,7 +201,7 @@
                                         {formatTime(elapsed)} / {formatTime(total)}
                                     </span>
                                 {:else}
-                                    <span class="text-secondary/30 text-sm">—</span>
+                                    <span class="text-secondary/30 text-sm">-</span>
                                 {/if}
                             </td>
                         {/if}

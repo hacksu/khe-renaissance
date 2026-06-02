@@ -6,9 +6,9 @@
     import Sponsors from "../sections/Sponsors.svelte";
     import Prizes   from "../sections/Prizes.svelte";
     import Tools    from "../sections/Tools.svelte";
-    import type { ActionData } from "./$types";
+    import type { ActionData, PageData } from "./$types";
 
-    let { form }: { form: ActionData } = $props();
+    let { form, data }: { form: ActionData; data: PageData } = $props();
 </script>
 
 <Landing {form} />
@@ -22,17 +22,17 @@
         <Header />
     </section>
 
+    {#if data.prizes.overall.length > 0 || data.prizes.tracks.length > 0 || data.prizes.special.length > 0}
     <section class="relative z-10 px-6 md:px-16 lg:px-40 xl:px-56 py-20">
- <!--       <Prizes /> -->
+        <Prizes overall={data.prizes.overall} tracks={data.prizes.tracks} special={data.prizes.special} />
     </section>
+    {/if}
 
+    {#if data.sponsors.baron.length > 0 || data.sponsors.knight.length > 0 || data.sponsors.squire.length > 0}
     <section class="relative z-10 px-6 md:px-16 lg:px-40 xl:px-56 py-20">
-        <FAQ /> 
+        <Sponsors barons={data.sponsors.baron} knights={data.sponsors.knight} squires={data.sponsors.squire} />
     </section>
-
-    <section class="relative z-10 px-6 md:px-16 lg:px-40 xl:px-56 py-20">
-<!--        <Sponsors /> -->
-    </section>
+    {/if}
 
     <section class="relative z-10 px-6 md:px-16 lg:px-40 xl:px-56 py-20">
 <!--        <Tools /> -->
@@ -40,6 +40,10 @@
 
     <section class="relative z-10 px-6 md:px-16 lg:px-40 xl:px-56 py-20 pb-32">
         <Map />
+    </section>
+
+    <section class="relative z-10 px-6 md:px-16 lg:px-40 xl:px-56 py-20 pb-32">
+        <FAQ />
     </section>
 </div>
 

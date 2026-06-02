@@ -123,7 +123,7 @@
                         onclick={() => toggleOptional(criterion.id)}
                         class="px-3 py-1.5 transition-colors {isToggled ? 'bg-accent text-white' : 'bg-white/60 text-secondary/60 hover:bg-secondary/10'}"
                     >
-                        {isToggled ? '✓' : '+'} {criterion.name}
+                        {#if isToggled}<Icon icon="mdi:check" class="inline-block mr-1" />{:else}+{/if} {criterion.name}
                     </button>
                     <button
                         onclick={() => sortBy = isSorting ? 'display' : criterion.id}
@@ -187,7 +187,7 @@
                                         <td class="p-4 text-right font-mono text-sm text-accent/70">
                                             {result.optionalScores[criterion.id] != null
                                                 ? result.optionalScores[criterion.id]!.toFixed(4)
-                                                : '—'}
+                                                : '-'}
                                         </td>
                                     {/if}
                                 {/each}

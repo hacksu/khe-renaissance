@@ -218,7 +218,7 @@ export const Judging = {
 						}
 					});
 
-					// b. Upsert CrowdBTState rows for both projects × all criteria
+					// b. Upsert CrowdBTState rows for both projects x all criteria
 					const criteria = await tx.judgingCriterion.findMany({ select: { id: true } });
 					const projectIds = [prev.projectId, current.projectId];
 

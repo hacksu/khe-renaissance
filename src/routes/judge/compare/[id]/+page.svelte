@@ -40,7 +40,7 @@
 
     function getSelectionLabel(criterionId: string): string {
         const val = selections[criterionId];
-        if (!val) return '—';
+        if (!val) return '-';
         if (val === 'A') return projectA.name;
         if (val === 'B') return projectB.name;
         return val;
@@ -50,7 +50,7 @@
 <div class="max-w-md mx-auto p-4 flex flex-col min-h-screen">
     <!-- Header -->
     <div class="mb-4 mt-2">
-        <a href="/judge" class="text-sm font-medium text-white/60 hover:text-white mb-3 block">← Dashboard</a>
+        <a href="/judge" class="text-sm font-medium text-white/60 hover:text-white mb-3 block">&larr; Dashboard</a>
         <h1 class="text-xl font-bold text-white mb-1">Compare Projects</h1>
         <p class="text-white/60 text-sm">
             {projectA.name} {projectA.tableNumber ? `(Table #${projectA.tableNumber})` : ''} vs {projectB.name} {projectB.tableNumber ? `(Table #${projectB.tableNumber})` : ''}
@@ -119,7 +119,7 @@
                         disabled={isFirst}
                         class="flex-1 py-3 px-4 bg-white/10 text-white font-bold rounded-xl transition-all active:scale-[0.98] hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                        ← Prev
+                        &larr; Prev
                     </button>
                     <button
                         type="button"
@@ -127,7 +127,7 @@
                         disabled={!currentAnswered}
                         class="flex-2 flex-1 py-3 px-4 font-bold rounded-xl transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed {isLast ? 'bg-white text-castle-skyDeep' : 'bg-white/20 text-white hover:bg-white/30'}"
                     >
-                        {isLast ? 'Review & Submit →' : 'Next →'}
+                        {isLast ? 'Review &amp; Submit &rarr;' : 'Next &rarr;'}
                     </button>
                 </div>
             </div>
@@ -182,7 +182,7 @@
                         onclick={() => showReview = false}
                         class="py-3.5 px-4 bg-white/10 text-white/70 font-bold rounded-xl transition-all hover:bg-white/20"
                     >
-                        ← Back
+                        &larr; Back
                     </button>
                     <button
                         type="submit"

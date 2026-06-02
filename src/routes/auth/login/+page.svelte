@@ -67,6 +67,6 @@
             </div>
         </Card>
 
-        <p class="text-center text-white/20 text-xs">Spring 2027 · Free to attend · Open to all skill levels</p>
+        <p class="text-center text-white/20 text-xs">Spring 2027 - Free to attend - Open to all skill levels</p>
     </div>
 </div>

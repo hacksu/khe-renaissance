@@ -17,7 +17,7 @@ export const load: PageServerLoad = async () => {
     const [maxJudgesPerTeam, timePerTable, discordInvite] = await Promise.all([
         Settings.getMaxJudgesPerTeam(),
         Settings.getTimePerTable(),
-        Settings.getDiscordInvite()
+        Settings.getDiscordInvite(),
     ]);
 
     return { tracks, criteria, maxJudgesPerTeam, timePerTable, discordInvite };
