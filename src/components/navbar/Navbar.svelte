@@ -34,16 +34,11 @@
     }
 </script>
 
-<!-- <a href="https://mlh.io/seasons/2027/events" target="_blank" class="fixed top-0 left-0 z-50">
-    <img
-        decoding="async"
-        src="https://s3.amazonaws.com/logged-assets/trust-badge/2027/mlh-trust-badge-2027-red.svg"
-        alt="Major League Hacking 2027 Hackathon Season"
-        class="w-20"
-    >
-</a> -->
+<a href="https://mlh.io/seasons/2027/events" target="_blank" class="fixed top-0 left-0 z-50">
+    <img src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-blue.svg" alt="Major League Hacking 2027 Hackathon Season" class="w-20">
+</a>
 
-<nav 
+<nav
     class="fixed top-0 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ease-out"
     class:scrolled
     style="
