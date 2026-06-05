@@ -14,15 +14,13 @@ export const load: PageServerLoad = async () => {
         console.error("Failed to load metadata", e);
     }
 
-    const [maxTablesPerJudge, maxJudgesPerTeam, timePerTable, judgeCount, tableCount] = await Promise.all([
-        Settings.getMaxTablesPerJudge(),
+    const [maxJudgesPerTeam, timePerTable, discordInvite] = await Promise.all([
         Settings.getMaxJudgesPerTeam(),
         Settings.getTimePerTable(),
-        prisma.user.count({ where: { role: 'judge' } }),
-        prisma.project.count()
+        Settings.getDiscordInvite(),
     ]);
 
-    return { tracks, criteria, maxTablesPerJudge, maxJudgesPerTeam, timePerTable, judgeCount, tableCount };
+    return { tracks, criteria, maxJudgesPerTeam, timePerTable, discordInvite };
 };
 
 export const actions: Actions = {
@@ -74,14 +72,14 @@ export const actions: Actions = {
         const maxScore = Number(form.get("maxScore"));
         const order = Number(form.get("order"));
         const optional = form.get("optional") === "on";
-        // create a slug from name
+        const allowOptOut = form.get("allowOptOut") === "on";
         const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
 
         if (!name) return fail(400, { missing: true });
 
         try {
             await prisma.judgingCriterion.create({
-                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional }
+                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional, allowOptOut }
             });
         } catch (e) {
             return fail(500, { error: "Failed to create criterion" });
@@ -94,6 +92,7 @@ export const actions: Actions = {
         const maxScore = Number(form.get("maxScore"));
         const order = Number(form.get("order"));
         const optional = form.get("optional") === "on";
+        const allowOptOut = form.get("allowOptOut") === "on";
 
         if (!id || !name) return fail(400, { missing: true });
 
@@ -102,7 +101,7 @@ export const actions: Actions = {
         try {
             await prisma.judgingCriterion.update({
                 where: { id },
-                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional }
+                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional, allowOptOut }
             });
         } catch (e) {
             return fail(500, { error: "Failed to update criterion" });
@@ -131,10 +130,16 @@ export const actions: Actions = {
             }
         };
 
+        const discordInvite = (form.get("discordInvite") as string)?.trim();
+
         try {
-            await saveIntSetting(SETTING_KEYS.MAX_TABLES_PER_JUDGE, form.get("maxTablesPerJudge") as string);
             await saveIntSetting(SETTING_KEYS.MAX_JUDGES_PER_TEAM, form.get("maxJudgesPerTeam") as string);
             await saveIntSetting(SETTING_KEYS.TIME_PER_TABLE, form.get("timePerTable") as string);
+            if (discordInvite) {
+                await Settings.set(SETTING_KEYS.DISCORD_INVITE, discordInvite);
+            } else {
+                await prisma.setting.deleteMany({ where: { key: SETTING_KEYS.DISCORD_INVITE } });
+            }
         } catch (e) {
             return fail(500, { error: "Failed to save settings" });
         }

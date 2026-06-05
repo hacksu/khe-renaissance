@@ -35,10 +35,11 @@ export enum Role {
     JUDGE = "judge"
 }
 
-export const getRole = async (provider: SocialProvider, request: Request, session: Session): Promise<Role> => {
+export const getRole = async (provider: SocialProvider, request: Request, session: Session, currentRole?: string | null): Promise<Role> => {
     const handler = handlers[provider];
     if (handler && request && session) {
         return await handler(request, session);
     }
-    return Role.USER;
+    // Preserve the existing role for providers without a handler rather than demoting to USER
+    return (currentRole as Role) ?? Role.USER;
 };

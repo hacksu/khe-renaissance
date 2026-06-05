@@ -1,9 +1,9 @@
 import { prisma } from '$lib/server/prisma';
 
 export const SETTING_KEYS = {
-    MAX_TABLES_PER_JUDGE: 'maxTablesPerJudge',
     MAX_JUDGES_PER_TEAM: 'maxJudgesPerTeam',
-    TIME_PER_TABLE: 'timePerTable'
+    TIME_PER_TABLE: 'timePerTable',
+    DISCORD_INVITE: 'discordInvite'
 } as const;
 
 const getIntSetting = async (key: string) => {
@@ -27,7 +27,10 @@ export const Settings = {
         });
     },
 
-    getMaxTablesPerJudge: () => getIntSetting(SETTING_KEYS.MAX_TABLES_PER_JUDGE),
     getMaxJudgesPerTeam: () => getIntSetting(SETTING_KEYS.MAX_JUDGES_PER_TEAM),
-    getTimePerTable: () => getIntSetting(SETTING_KEYS.TIME_PER_TABLE)
+    getTimePerTable: () => getIntSetting(SETTING_KEYS.TIME_PER_TABLE),
+    getDiscordInvite: async () => {
+        const row = await prisma.setting.findUnique({ where: { key: SETTING_KEYS.DISCORD_INVITE } });
+        return row?.value ?? null;
+    }
 };

@@ -3,6 +3,6 @@
     let { children }: { children?: Snippet } = $props();
 </script>
 
-<span class="font-bold [text-shadow:0_0_10px_rgba(255_255_255/_0.6)]">
+<span class="font-bold text-castle-torchYellow [text-shadow:0_0_12px_rgba(255_176_71/_0.8)]">
     {@render children?.()}
 </span>

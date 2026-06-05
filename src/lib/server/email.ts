@@ -1,87 +1,91 @@
 import { env } from "$env/dynamic/private";
 import { google } from "googleapis";
+import { Settings } from "$lib/server/settings";
+import { prisma } from "$lib/server/prisma";
 
-const APPROVAL_EMAIL_TEXT =
+const approvalEmailText = (discordInvite: string | null) =>
     `Hi there,
 
-Great news! Your application to Kent Hack Enough 2026 has been approved.
+Great news! Your application to Kent Hack Enough 2027 has been approved.
 
-The event will take place on March 28–29th. More updates will be shared soon, so stay tuned.
-
+The event will take place on March 6-7th. More updates will be shared soon, so stay tuned.
+${discordInvite ? `
 In the meantime, be sure to join our community Discord:
-https://discord.gg/FHrw9AHtA8
-
+${discordInvite}
+` : ''}
 And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:
-https://kent-hack-enough-2026.devpost.com/
+https://khe-2027.devpost.com/
 
 If you have any questions at all, feel free to reach out. We are here to help.
 
 Thanks,
-Kent Hack Enough 2026 Team`;
+Kent Hack Enough 2027 Team`;
 
-const APPROVAL_EMAIL_HTML =
+const approvalEmailHtml = (discordInvite: string | null) =>
     `<p>Hi there,</p>
-<p>Great news! Your application to <strong>Kent Hack Enough 2026</strong> has been approved.</p>
-<p>The event will take place on <strong>March 28–29th</strong>. More updates will be shared soon, so stay tuned.</p>
-<p>In the meantime, be sure to join our community Discord:<br>
-<a href="https://discord.gg/FHrw9AHtA8">https://discord.gg/FHrw9AHtA8</a></p>
+<p>Great news! Your application to <strong>Kent Hack Enough 2027</strong> has been approved.</p>
+<p>The event will take place on <strong>March 6-7</strong>. More updates will be shared soon, so stay tuned.</p>
+${discordInvite ? `<p>In the meantime, be sure to join our community Discord:<br>
+<a href="${discordInvite}">${discordInvite}</a></p>` : ''}
 <p>And remember to sign up on our Devpost page so you will be able to submit your project during the hackathon:<br>
-<a href="https://kent-hack-enough-2026.devpost.com/">https://kent-hack-enough-2026.devpost.com/</a></p>
+<a href="https://khe-2027.devpost.com/">https://khe-2027.devpost.com/</a></p>
 <p>If you have any questions at all, feel free to reach out. We are here to help.</p>
 <p>Thanks,<br>
-<strong>Kent Hack Enough 2026 Team</strong></p>`;
+<strong>Kent Hack Enough 2027 Team</strong></p>`;
 
 const REVOKED_EMAIL_TEXT =
     `Hi there, 
 You have made changes to your application and that has caused your approval to be revoked.
 Please wait for staff to review your application again. If you have any questions, feel free to reach out.
 Thanks,
-Kent Hack Enough 2026 Team`;
+Kent Hack Enough 2027 Team`;
 
 const REVOKED_EMAIL_HTML =
     `<p>Hi there,</p>
 <p>You have made changes to your application and that has caused your approval to be revoked.</p>
 <p>Please wait for staff to review your application again. If you have any questions, feel free to reach out.</p>
 <p>Thanks,<br>
-<strong>Kent Hack Enough 2026 Team</strong></p>`;
+<strong>Kent Hack Enough 2027 Team</strong></p>`;
 
 const MANUALLY_REVOKED_EMAIL_TEXT =
     `Hi there,
 
-Due to a discrepancy in your application, we have had to revoke your approval for Kent Hack Enough 2026.
+Due to a discrepancy in your application, we have had to revoke your approval for Kent Hack Enough 2027.
 Please review your application and make any necessary changes. Once updated, our staff will review your application again.
 
 If you have any questions, feel free to reach out.
 Thanks,
-Kent Hack Enough 2026 Team`;
+Kent Hack Enough 2027 Team`;
 
 const MANUALLY_REVOKED_EMAIL_HTML =
     `<p>Hi there,</p>
-<p>Due to a discrepancy in your application, we have had to revoke your approval for <strong>Kent Hack Enough 2026</strong>.</p>
+<p>Due to a discrepancy in your application, we have had to revoke your approval for <strong>Kent Hack Enough 2027</strong>.</p>
 <p>Please review your application and make any necessary changes. Once updated, our staff will review your application again.</p>
 <p>If you have any questions, feel free to reach out.</p>
 <p>Thanks,<br>
-<strong>Kent Hack Enough 2026 Team</strong></p>`;
+<strong>Kent Hack Enough 2027 Team</strong></p>`;
 
-const JUDGE_FEEDBACK_EMAIL_SUBJECT = "Your Judge Feedback - Kent Hack Enough 2026";
+const JUDGE_FEEDBACK_EMAIL_SUBJECT = "Your Judge Feedback - Kent Hack Enough 2027";
 
-const createFeedbackEmailText = (projectName: string, feedback: string) => `Hi there,
+const feedbackEmailText = (projectName: string, snippets: string[]) =>
+    `Hi there,
 
-Here is the feedback for your project "${projectName}" at Kent Hack Enough 2026.
+Here is the judge feedback for your project "${projectName}" at Kent Hack Enough 2027.
 
-${feedback}
+${snippets.map((s, i) => `--- Feedback ${i + 1} ---\n${s}`).join('\n\n')}
 
 Thank you for participating!
 
 Best,
-Kent Hack Enough 2026 Team`;
+Kent Hack Enough 2027 Team`;
 
-const createFeedbackEmailHtml = (projectName: string, feedbackHtml: string) => `<p>Hi there,</p>
-<p>Here is the feedback for your project "<strong>${projectName}</strong>" at Kent Hack Enough 2026.</p>
-${feedbackHtml}
+const feedbackEmailHtml = (projectName: string, snippets: string[]) =>
+    `<p>Hi there,</p>
+<p>Here is the judge feedback for your project "<strong>${projectName}</strong>" at Kent Hack Enough 2027.</p>
+${snippets.map(s => `<blockquote style="border-left:3px solid #ccc;margin:12px 0;padding:8px 12px;color:#333;">${s.replace(/\n/g, '<br>')}</blockquote>`).join('\n')}
 <p>Thank you for participating!</p>
 <p>Best,<br>
-<strong>Kent Hack Enough 2026 Team</strong></p>`;
+<strong>Kent Hack Enough 2027 Team</strong></p>`;
 
 
 // Gmail API client for OAuth2
@@ -127,8 +131,9 @@ const createEmailMessage = (from: string, to: string, subject: string, text: str
 export const sendApprovalEmail = async (to: string) => {
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
     const subject = "Your application to KHE has been approved!";
-    const text = APPROVAL_EMAIL_TEXT;
-    const html = APPROVAL_EMAIL_HTML;
+    const discordInvite = await Settings.getDiscordInvite();
+    const text = approvalEmailText(discordInvite ?? '');
+    const html = approvalEmailHtml(discordInvite ?? '');
 
     try {
         const message = createEmailMessage(from, to, subject, text, html);
@@ -199,53 +204,82 @@ export const sendManualRevocationEmail = async (to: string) => {
     }
 };
 
-export const sendJudgeFeedbackEmail = async (to: string, projectName: string, feedbackText: string, feedbackHtml: string) => {
+export const sendProjectFeedbackEmails = async (projectId: string) => {
+    const project = await prisma.project.findUnique({
+        where: { id: projectId },
+        include: {
+            tableVisits: {
+                where: { status: 'completed', feedback: { not: null } },
+                select: { feedback: true }
+            },
+            members: {
+                include: { user: { select: { email: true } } }
+            }
+        }
+    });
+
+    if (!project) return;
+
+    const snippets = project.tableVisits
+        .map(v => v.feedback!)
+        .filter(f => f.trim())
+        .sort(() => Math.random() - 0.5);
+
+    if (snippets.length === 0) return;
+
+    const emails = project.members
+        .map(m => m.user.email)
+        .filter(Boolean);
+
+    if (emails.length === 0) return;
+
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
     const subject = JUDGE_FEEDBACK_EMAIL_SUBJECT;
-    const text = createFeedbackEmailText(projectName, feedbackText);
-    const html = createFeedbackEmailHtml(projectName, feedbackHtml);
-    try {
-        const message = createEmailMessage(from, to, subject, text, html);
-        const encodedMessage = Buffer.from(message)
-            .toString("base64")
-            .replace(/\+/g, "-")
-            .replace(/\//g, "_")
-            .replace(/=+$/, "");
+    const text = feedbackEmailText(project.name, snippets);
+    const html = feedbackEmailHtml(project.name, snippets);
 
-        await gmailClient.users.messages.send({
-            userId: "me",
-            requestBody: {
-                raw: encodedMessage,
-            },
-        });
-    } catch (error: any) {
-        console.error("Failed to send feedback email to " + to, error);
+    for (const to of emails) {
+        try {
+            const message = createEmailMessage(from, to, subject, text, html);
+            const encodedMessage = Buffer.from(message)
+                .toString("base64")
+                .replace(/\+/g, "-")
+                .replace(/\//g, "_")
+                .replace(/=+$/, "");
+
+            await gmailClient.users.messages.send({
+                userId: "me",
+                requestBody: { raw: encodedMessage },
+            });
+        } catch (error: any) {
+            console.error(`Failed to send feedback email to ${to}:`, error);
+        }
     }
 };
 
 const REMINDER_EMAIL_TEXT =
     `Hi there,
 
-We noticed you have started an account but haven't submitted your application for Kent Hack Enough 2026 yet!
+We noticed you have started an account but haven't submitted your application for Kent Hack Enough 2027 yet!
 
 The deadline is approaching fast, so please head over to our website (https://khe.io/profile) and complete your application as soon as possible.
 
 If you have any questions or need assistance, feel free to reply to this email.
 
 Best,
-Kent Hack Enough 2026 Team`;
+Kent Hack Enough 2027 Team`;
 
 const REMINDER_EMAIL_HTML =
     `<p>Hi there,</p>
-<p>We noticed you have started an account but haven't submitted your application for <strong>Kent Hack Enough 2026</strong> yet!</p>
+<p>We noticed you have started an account but haven't submitted your application for <strong>Kent Hack Enough 2027</strong> yet!</p>
 <p>The deadline is approaching fast, so please head over to our website (<a href="https://khe.io/profile">khe.io/profile</a>) and complete your application as soon as possible.</p>
 <p>If you have any questions or need assistance, feel free to reply to this email.</p>
 <p>Best,<br>
-<strong>Kent Hack Enough 2026 Team</strong></p>`;
+<strong>Kent Hack Enough 2027 Team</strong></p>`;
 
 export const sendReminderEmail = async (to: string) => {
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
-    const subject = "Don't forget to submit your application for KHE 2026!";
+    const subject = "Don't forget to submit your application for KHE 2027!";
     const text = REMINDER_EMAIL_TEXT;
     const html = REMINDER_EMAIL_HTML;
 
@@ -270,25 +304,25 @@ export const sendReminderEmail = async (to: string) => {
 
 const MAGIC_LINK_EMAIL_TEXT = (url: string) => `Hi there,
 
-Here is your magic link to log in to Kent Hack Enough 2026:
+Here is your magic link to log in to Kent Hack Enough 2027:
 ${url}
 
 If you did not request this, you can ignore this email.
 
 Thanks,
-Kent Hack Enough 2026 Team`;
+Kent Hack Enough 2027 Team`;
 
 const MAGIC_LINK_EMAIL_HTML = (url: string) => `<p>Hi there,</p>
-<p>Here is your magic link to log in to <strong>Kent Hack Enough 2026</strong>:</p>
-<p><a href="${url}" style="display:inline-block;background:#E11D48;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:bold;">Login to KHE 2026</a></p>
+<p>Here is your magic link to log in to <strong>Kent Hack Enough 2027</strong>:</p>
+<p><a href="${url}" style="display:inline-block;background:#E11D48;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:bold;">Login to KHE 2027</a></p>
 <p>Or copy and paste this link: <a href="${url}">${url}</a></p>
 <p>If you did not request this, you can ignore this email.</p>
 <p>Thanks,<br>
-<strong>Kent Hack Enough 2026 Team</strong></p>`;
+<strong>Kent Hack Enough 2027 Team</strong></p>`;
 
 const REMINDER_SIGNUP_TEXT = `Hi there,
 
-You're on the list! We'll send you an email when signups open for Kent Hack Enough 2027 (March 6–7, 2027).
+You're on the list! We'll send you an email when signups open for Kent Hack Enough 2027 (March 6-7, 2027).
 
 We can't wait to see you there.
 
@@ -296,7 +330,7 @@ Thanks,
 Kent Hack Enough Team`;
 
 const REMINDER_SIGNUP_HTML = `<p>Hi there,</p>
-<p>You're on the list! We'll send you an email when signups open for <strong>Kent Hack Enough 2027</strong> (March 6–7, 2027).</p>
+<p>You're on the list! We'll send you an email when signups open for <strong>Kent Hack Enough 2027</strong> (March 6-7, 2027).</p>
 <p>We can't wait to see you there.</p>
 <p>Thanks,<br>
 <strong>Kent Hack Enough Team</strong></p>`;
@@ -328,7 +362,7 @@ export const sendReminderSignupConfirmation = async (to: string) => {
 
 export const sendMagicLinkEmail = async (to: string, url: string) => {
     const from = env.GMAIL_FROM || env.GMAIL_USER || "staff@khe.io";
-    const subject = "Login to Kent Hack Enough 2026";
+    const subject = "Login to Kent Hack Enough 2027";
     const text = MAGIC_LINK_EMAIL_TEXT(url);
     const html = MAGIC_LINK_EMAIL_HTML(url);
 

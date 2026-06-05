@@ -1,6 +1,7 @@
 import { auth } from "$lib/server/auth";
 import { prisma } from "$lib/server/prisma";
 import { Role } from "$lib/server/external_roles";
+import { toCsv } from "$lib/exportUtils";
 import { error } from "@sveltejs/kit";
 import type { RequestEvent } from "@sveltejs/kit";
 import fs from "fs/promises";
@@ -49,6 +50,7 @@ export async function GET({ request }: RequestEvent) {
 
     const files: Record<string, Uint8Array> = {
         "competitors.json": strToU8(JSON.stringify(competitors, null, 2)),
+        "competitors.csv": strToU8(toCsv(competitors as Record<string, unknown>[])),
     };
 
     // Add each resume that exists

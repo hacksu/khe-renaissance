@@ -7,6 +7,6 @@ export namespace Utils {
         .reduce((obj, val) => ({ ...obj, [val[0]]: val[1] }), {} as any)
     export const concatExclude = (sep: string, ...items: string[]) => items.filter(x => !!x).join(sep);
     export const pluralize = (count: number, singular: string, plural: string) => count === 1 ? singular : plural;
-    export const APPLICATIONS_CLOSE_AT = new Date("2026-03-27T00:00:00.000Z");
+    export const APPLICATIONS_CLOSE_AT = new Date("2027-03-06T00:00:00.000Z");
     export const hasApplicationsClosed = (now: Date = new Date()) => now >= APPLICATIONS_CLOSE_AT;
 }

@@ -1,6 +1,8 @@
 import type { Actions, PageServerLoad } from './$types';
 import { fail } from '@sveltejs/kit';
 import { Judging } from '$lib/server/judging';
+import { sendProjectFeedbackEmails } from '$lib/server/email';
+import { prisma } from '$lib/server/prisma';
 
 export const load: PageServerLoad = async () => {
     const { results, optionalCriteria } = await Judging.getAllProjectScores();
@@ -8,42 +10,19 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-    clearAll: async ({ request }) => {
+    clearAll: async () => {
         try {
             await Judging.clearAllScores();
         } catch (e) {
             return fail(500, { message: "Failed to clear scores" });
         }
     },
-    emailResults: async ({ request }) => {
+    sendFeedback: async () => {
         try {
-            const projects = await Judging.getProjectsWithFeedback();
-            for (const project of projects) {
-                await Judging.sendFeedbackEmailToProject(project);
-            }
-
-            return { success: true };
+            const projects = await prisma.project.findMany({ select: { id: true } });
+            await Promise.all(projects.map(p => sendProjectFeedbackEmails(p.id)));
         } catch (e) {
-            console.error(e);
-            return fail(500, { message: "Failed to send emails" });
-        }
-    },
-    emailTeam: async ({ request }) => {
-        const formData = await request.formData();
-        const projectId = formData.get('id') as string;
-
-        if (!projectId) return fail(400, { message: "Missing project ID" });
-
-        try {
-            const projects = await Judging.getProjectsWithFeedback(projectId);
-            if (projects.length === 0) return fail(404, { message: "Project not found" });
-
-            await Judging.sendFeedbackEmailToProject(projects[0]);
-
-            return { success: true };
-        } catch (e) {
-            console.error(e);
-            return fail(500, { message: "Failed to send email to team" });
+            return fail(500, { message: 'Failed to send feedback emails' });
         }
     }
 };

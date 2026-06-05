@@ -8,8 +8,30 @@ import countries from "../../assets/json/countries.json";
 import schools from "../../assets/json/schools.json";
 import type { PageServerLoad } from "./$types";
 
+const PHONE_RE    = /^\+?[\d\s\-().]{7,15}$/;
+const GITHUB_RE   = /^https:\/\/github\.com\/.+/;
+const LINKEDIN_RE = /^https:\/\/(www\.)?linkedin\.com\/in\/.+/;
+const URL_RE      = /^https?:\/\/.+\..+/;
+
 const saveApplication = async (userId: string, form: FormData) => {
   const formValues = Utils.formToDict(form);
+  // Multi-value field -- getAll returns all checked boxes as an array
+  const areasOfInterest = (form.getAll("areas-of-interest") as string[]).join(",");
+
+  const phone = formValues["phone-number"] ?? "";
+  if (phone && !PHONE_RE.test(phone)) throw new Error("Invalid phone number format.");
+
+  const age = Utils.toNumber(formValues["age"]);
+  if (age && (age < 13 || age > 100)) throw new Error("Age must be between 13 and 100.");
+
+  const github = formValues["github-url"] ?? "";
+  if (github && !GITHUB_RE.test(github)) throw new Error("Invalid GitHub URL.");
+
+  const linkedin = formValues["linkedin-url"] ?? "";
+  if (linkedin && !LINKEDIN_RE.test(linkedin)) throw new Error("Invalid LinkedIn URL.");
+
+  const personal = formValues["personal-url"] ?? "";
+  if (personal && !URL_RE.test(personal)) throw new Error("Invalid personal website URL.");
 
   // Fetch current application to check for changes
   const currentApplication = await prisma.application.findUnique({
@@ -39,6 +61,16 @@ const saveApplication = async (userId: string, form: FormData) => {
     currentApplication.gender !== formValues["gender"] ||
     currentApplication.pronouns !== formValues["pronouns"] ||
     currentApplication.personalUrl !== formValues["personal-url"] ||
+    currentApplication.raceEthnicity !== formValues["race-ethnicity"] ||
+    currentApplication.firstGenStudent !== formValues["first-gen-student"] ||
+    currentApplication.hackatonsAttended !== formValues["hackathons-attended"] ||
+    currentApplication.experienceLevel !== formValues["experience-level"] ||
+    currentApplication.areasOfInterest !== areasOfInterest ||
+    currentApplication.heardAboutUs !== formValues["heard-about-us"] ||
+    currentApplication.linkedinUrl !== formValues["linkedin-url"] ||
+    currentApplication.interestedInSponsors !== formValues["interested-in-sponsors"] ||
+    currentApplication.teamPreference !== formValues["team-preference"] ||
+    currentApplication.tshirtSize !== formValues["tshirt-size"] ||
     currentApplication.mlhCodeOfConduct !== !!formValues["mlh-code"] ||
     currentApplication.mlhAuthorization !== !!formValues["mlh-authorization"] ||
     currentApplication.mlhEmails !== !!formValues["mlh-emails"];
@@ -61,6 +93,16 @@ const saveApplication = async (userId: string, form: FormData) => {
       gender: formValues["gender"],
       pronouns: formValues["pronouns"],
       personalUrl: formValues["personal-url"],
+      raceEthnicity: formValues["race-ethnicity"] ?? "",
+      firstGenStudent: formValues["first-gen-student"] ?? "",
+      hackatonsAttended: formValues["hackathons-attended"] ?? "",
+      experienceLevel: formValues["experience-level"] ?? "",
+      areasOfInterest: areasOfInterest,
+      heardAboutUs: formValues["heard-about-us"] ?? "",
+      linkedinUrl: formValues["linkedin-url"] ?? "",
+      interestedInSponsors: formValues["interested-in-sponsors"] ?? "",
+      teamPreference: formValues["team-preference"] ?? "",
+      tshirtSize: formValues["tshirt-size"] ?? "",
       mlhCodeOfConduct: !!formValues["mlh-code"],
       mlhAuthorization: !!formValues["mlh-authorization"],
       mlhEmails: !!formValues["mlh-emails"],
@@ -85,7 +127,7 @@ const saveApplication = async (userId: string, form: FormData) => {
 export const actions: Actions = {
   save: async ({ request }) => {
     if (Utils.hasApplicationsClosed()) {
-      throw error(403, "KHE 2026 has ended. Applications are now closed.");
+      throw error(403, "KHE 2027 has ended. Applications are now closed.");
     }
 
     const session = await auth.api.getSession(request);
@@ -95,30 +137,19 @@ export const actions: Actions = {
 
     const userId = session.user.id;
     const form = await request.formData();
-    const { application, hasChanges, previousApproved } = await saveApplication(
-      userId,
-      form,
-    );
-
-    // Matrix Logic:
-    // Approved, Save, no changes: Do nothing (already saved fields, keep approved)
-    // Approved, save, changes: Unapprove, send email
-    // unapproved, save, no changes: do nothing (already saved fields)
-    // unapproved, save, changes: save changes (already saved fields)
+    const { application, hasChanges, previousApproved } = await saveApplication(userId, form);
 
     if (previousApproved && hasChanges) {
-      // Approved + Changes -> Unapprove, Send Email
       await prisma.application.update({
         where: { id: application.id },
-        data: { approved: false },
+        data: { approved: false, submitted: false },
       });
       await sendApprovalRevokedEmail(application.email);
     }
-    // All other cases require no further action (fields are already saved by saveApplication)
   },
   submit: async ({ request }) => {
     if (Utils.hasApplicationsClosed()) {
-      throw error(403, "KHE 2026 has ended. Applications are now closed.");
+      throw error(403, "KHE 2027 has ended. Applications are now closed.");
     }
 
     const session = await auth.api.getSession(request);
@@ -128,35 +159,36 @@ export const actions: Actions = {
 
     const userId = session.user.id;
     const form = await request.formData();
+    const { application } = await saveApplication(userId, form);
 
-    // We need to know if we are "Submitting" or "Un-submitting".
-    // The button text toggles based on current state.
-    // If currently submitted -> Unsubmit.
-    // If currently NOT submitted -> Submit.
+    await prisma.application.update({
+      where: { id: application.id },
+      data: { submitted: true, submittedAt: new Date() },
+    });
+  },
 
-    // We call saveApplication first to save any potential edits made before clicking submit/unsubmit.
-    const { application, previousApproved, previousSubmitted } =
-      await saveApplication(userId, form);
+  unsubmit: async ({ request }) => {
+    if (Utils.hasApplicationsClosed()) {
+      throw error(403, "KHE 2027 has ended. Applications are now closed.");
+    }
 
-    const isUnsubmitting = previousSubmitted;
+    const session = await auth.api.getSession(request);
+    if (!session) {
+      throw error(401, "Your session has expired. Please re-login.");
+    }
 
-    if (isUnsubmitting) {
-      // Approved, unsubmit: unapprove, no email
-      // (Also applies if unapproved and unsubmit, just unsubmit)
-      await prisma.application.update({
-        where: { id: application.id },
-        data: {
-          submitted: false,
-          approved: false, // Always unapprove on unsubmit
-        },
-      });
-    } else {
-      // unaproved, submit: submit for approval.
-      // (If approved and submit... shouldn't happen if UI is correct, but if it does, ensure submitted=true)
-      await prisma.application.update({
-        where: { id: application.id },
-        data: { submitted: true },
-      });
+    const userId = session.user.id;
+    const application = await prisma.application.findUnique({ where: { userId } });
+    if (!application) throw error(404, "Application not found.");
+
+    const wasApproved = application.approved;
+    await prisma.application.update({
+      where: { id: application.id },
+      data: { submitted: false, submittedAt: null, approved: false, approvedAt: null },
+    });
+
+    if (wasApproved) {
+      await sendApprovalRevokedEmail(application.email);
     }
   },
 };
