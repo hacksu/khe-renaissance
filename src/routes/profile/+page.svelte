@@ -558,15 +558,19 @@
                         <h3 class="font-bold text-lg text-white">{STEPS[6].title}</h3>
                         <p class="text-white/50 text-sm">{STEPS[6].subtitle}</p>
                     </div>
+                    <p class="text-white/70 text-sm">
+                        We are currently in the process of partnering with MLH. The following 3 checkboxes are for this
+                        partnership. If we do not end up partnering with MLH, your information will not be shared.
+                    </p>
                     <div class="flex flex-col gap-3">
                         <Checkbox name="mlh-code" checked={application.mlhCodeOfConduct} onchange={(e) => mlhCodeChecked = e.currentTarget.checked}>
                             I have read and agree to the <Link href="https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md">MLH Code of Conduct</Link>. <span class="text-red-500">*</span>
                         </Checkbox>
                         <Checkbox name="mlh-authorization" checked={application.mlhAuthorization} onchange={(e) => mlhAuthChecked = e.currentTarget.checked}>
-                            I authorize you to share my application/registration information with Major League Hacking for event administration, ranking, and MLH administration in-line with the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>. I further agree to the terms of both the <Link href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md">MLH Contest Terms and Conditions</Link> and the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>. <span class="text-red-500">*</span>
+                            I authorize you to share my application/registration information with Major League Hacking for event administration, ranking, and administration (including the creation of linked accounts on MLH and DEV (dev.to)) in line with the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>. I further agree to the terms of both the <Link href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md">MLH Contest Terms and Conditions</Link> and the <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">MLH Privacy Policy</Link>. <span class="text-red-500">*</span>
                         </Checkbox>
                         <Checkbox name="mlh-emails" checked={application.mlhEmails}>
-                            I authorize MLH to send me occasional emails about relevant events, career opportunities, and community announcements.
+                            I authorize MLH + DEV to send me occasional emails about relevant events, career opportunities, and community announcements.
                         </Checkbox>
                     </div>
                     {#if !allStepsDone}
