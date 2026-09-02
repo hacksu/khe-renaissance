@@ -391,15 +391,6 @@
                             <option>No</option>
                             <option>N/A</option>
                         </Select>
-                        <Select label="Dietary Restriction" name="dietary-restriction" value={application.dietaryRestriction}>
-                            <option value="">None</option>
-                            <option>Vegetarian</option>
-                            <option>Vegan</option>
-                            <option>Celiac Disease</option>
-                            <option>Allergies</option>
-                            <option>Kosher</option>
-                            <option>Halal</option>
-                        </Select>
                     </div>
                 </div>
 
