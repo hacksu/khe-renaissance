@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 export const actions: Actions = {
     submit: async ({ request, params }) => {
         const { auth } = await import('$lib/server/auth');
-        const session = await auth.api.getSession(request);
+        const session = await auth.api.getSession({ headers: request.headers });
         if (!session) return fail(401);
         if (session.user.role !== Role.JUDGE) return fail(403);
 

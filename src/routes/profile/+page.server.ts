@@ -130,7 +130,7 @@ export const actions: Actions = {
       throw error(403, "KHE 2027 has ended. Applications are now closed.");
     }
 
-    const session = await auth.api.getSession(request);
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session) {
       throw error(401, "Your session has expired. Please re-login.");
     }
@@ -152,7 +152,7 @@ export const actions: Actions = {
       throw error(403, "KHE 2027 has ended. Applications are now closed.");
     }
 
-    const session = await auth.api.getSession(request);
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session) {
       throw error(401, "Your session has expired. Please re-login.");
     }
@@ -172,7 +172,7 @@ export const actions: Actions = {
       throw error(403, "KHE 2027 has ended. Applications are now closed.");
     }
 
-    const session = await auth.api.getSession(request);
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session) {
       throw error(401, "Your session has expired. Please re-login.");
     }
@@ -194,7 +194,7 @@ export const actions: Actions = {
 };
 
 export const load: PageServerLoad = async ({ request }) => {
-  const session = await auth.api.getSession(request);
+  const session = await auth.api.getSession({ headers: request.headers });
   if (!session) {
     throw redirect(301, "/auth/login");
   }
