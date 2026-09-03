@@ -7,7 +7,7 @@ import fs from "fs/promises";
 
 export async function GET({ params, request }: RequestEvent) {
     // Check authentication and staff role
-    const session = await auth.api.getSession(request);
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session) {
         throw error(401, "Unauthorized");
     }
