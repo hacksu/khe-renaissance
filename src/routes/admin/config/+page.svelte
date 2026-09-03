@@ -128,15 +128,9 @@
                         <form method="POST" action="?/updateCriterion" use:enhance={() => { return async ({ update }) => { editingCriterion = null; await update(); }; }} class="bg-white/50 border border-accent/30 p-3 rounded-lg space-y-2">
                             <input type="hidden" name="id" value={criterion.id} />
                             <input name="name" bind:value={editingCriterion.name} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" required />
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="text-xs text-secondary/60">Max Score</label>
-                                    <input name="maxScore" type="number" bind:value={editingCriterion.maxScore} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" />
-                                </div>
-                                <div>
-                                    <label class="text-xs text-secondary/60">Order</label>
-                                    <input name="order" type="number" bind:value={editingCriterion.order} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" />
-                                </div>
+                            <div>
+                                <label class="text-xs text-secondary/60">Order</label>
+                                <input name="order" type="number" bind:value={editingCriterion.order} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" />
                             </div>
                             <label class="flex items-center gap-2 text-sm text-secondary cursor-pointer">
                                 <input type="checkbox" name="optional" bind:checked={editingCriterion.optional} class="rounded border-secondary/30 text-accent focus:ring-accent" />
@@ -156,7 +150,6 @@
                             <div>
                                 <div class="flex gap-2 items-center">
                                     <span class="font-bold text-secondary">{criterion.name}</span>
-                                    <span class="text-xs bg-secondary/10 px-1 rounded font-mono">Max: {criterion.maxScore}</span>
                                     {#if criterion.optional}
                                         <span class="text-xs bg-secondary/20 text-secondary/80 px-1 rounded font-bold">Optional</span>
                                     {/if}
@@ -186,10 +179,7 @@
                 <form method="POST" action="?/createCriterion" use:enhance class="p-4 space-y-4">
                     <h3 class="font-bold text-lg mb-2">Add Criterion</h3>
                     <Input name="name" label="Name" placeholder="e.g. Innovation" required />
-                    <div class="grid grid-cols-2 gap-4">
-                        <Input name="maxScore" label="Max Score" type="number" value="5" />
-                        <Input name="order" label="Order" type="number" value="0" />
-                    </div>
+                    <Input name="order" label="Order" type="number" value="0" />
                     <label class="flex items-center gap-2 text-sm text-white/80 cursor-pointer">
                         <input type="checkbox" name="optional" class="rounded border-white/30 text-accent focus:ring-accent" />
                         <span>Optional (judges can submit without scoring this)</span>

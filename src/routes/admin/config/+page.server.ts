@@ -69,7 +69,6 @@ export const actions: Actions = {
     createCriterion: async ({ request }) => {
         const form = await request.formData();
         const name = form.get("name") as string;
-        const maxScore = Number(form.get("maxScore"));
         const order = Number(form.get("order"));
         const optional = form.get("optional") === "on";
         const allowOptOut = form.get("allowOptOut") === "on";
@@ -79,7 +78,7 @@ export const actions: Actions = {
 
         try {
             await prisma.judgingCriterion.create({
-                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional, allowOptOut }
+                data: { name, slug, order: order || 0, optional, allowOptOut }
             });
         } catch (e) {
             return fail(500, { error: "Failed to create criterion" });
@@ -89,7 +88,6 @@ export const actions: Actions = {
         const form = await request.formData();
         const id = form.get("id") as string;
         const name = form.get("name") as string;
-        const maxScore = Number(form.get("maxScore"));
         const order = Number(form.get("order"));
         const optional = form.get("optional") === "on";
         const allowOptOut = form.get("allowOptOut") === "on";
@@ -101,7 +99,7 @@ export const actions: Actions = {
         try {
             await prisma.judgingCriterion.update({
                 where: { id },
-                data: { name, slug, maxScore: maxScore || 5, order: order || 0, optional, allowOptOut }
+                data: { name, slug, order: order || 0, optional, allowOptOut }
             });
         } catch (e) {
             return fail(500, { error: "Failed to update criterion" });
