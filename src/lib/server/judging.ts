@@ -11,7 +11,6 @@ export type JudgeWithVisit = {
 	email: string;
 	role: string | null;
 	judgeTrack: string | null;
-	curve: number;
 	manualMode: boolean;
 	_count: { tableVisits: number };
 	tableVisits: (TableVisit & {
@@ -499,16 +498,6 @@ export const Judging = {
 			prisma.visitOptOut.deleteMany({}),
 			prisma.tableVisit.deleteMany({})
 		]);
-	},
-
-	/**
-	 * Update the curve value for a judge.
-	 */
-	updateJudgeCurve: async (userId: string, curve: number) => {
-		return await prisma.user.update({
-			where: { id: userId },
-			data: { curve }
-		});
 	},
 
 	setManualMode: async (userId: string, manualMode: boolean) => {

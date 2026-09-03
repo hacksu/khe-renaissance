@@ -278,11 +278,11 @@ async function main() {
 
     // --- Criteria ---
     const criteria = [
-        { slug: 'creativity',  name: 'Creativity',    order: 1, maxScore: 5 },
-        { slug: 'mostLearned', name: 'Most Learned',  order: 2, maxScore: 5 },
-        { slug: 'technicality',name: 'Technicality',  order: 3, maxScore: 5 },
-        { slug: 'overall',     name: 'Overall Score', order: 4, maxScore: 5 },
-        { slug: 'trackFit',    name: 'Track Fit',     order: 5, maxScore: 5 },
+        { slug: 'creativity',  name: 'Creativity',    order: 1 },
+        { slug: 'mostLearned', name: 'Most Learned',  order: 2 },
+        { slug: 'technicality',name: 'Technicality',  order: 3 },
+        { slug: 'overall',     name: 'Overall Score', order: 4 },
+        { slug: 'trackFit',    name: 'Track Fit',     order: 5 },
     ];
     for (const c of criteria) {
         await prisma.judgingCriterion.upsert({ where: { slug: c.slug }, update: {}, create: c });

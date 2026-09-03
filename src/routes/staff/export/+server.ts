@@ -8,7 +8,7 @@ import fs from "fs/promises";
 import { zipSync, strToU8 } from "fflate";
 
 export async function GET({ request }: RequestEvent) {
-    const session = await auth.api.getSession(request);
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session) {
         throw error(401, "Unauthorized");
     }
