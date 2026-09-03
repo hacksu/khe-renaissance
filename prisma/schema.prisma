@@ -29,7 +29,6 @@ model User {
   pairComparisons PairComparison[]
 
   role       String?
-  curve      Float   @default(0.0)
   manualMode Boolean @default(false)
   judgeTrack String? // null = general judge, set = track-specific judge (track name)
 
@@ -56,6 +55,7 @@ model Account {
   id                    String    @id @default(uuid())
   accountId             String
   providerId            String
+  issuer                String
   userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
@@ -68,6 +68,7 @@ model Account {
   createdAt             DateTime
   updatedAt             DateTime
 
+  @@unique([issuer, accountId])
   @@map("account")
 }
 
@@ -185,8 +186,6 @@ model JudgingCriterion {
   slug        String  @unique
   name        String
   description String?
-  maxScore    Int     @default(5)
-  weight      Float   @default(1.0)
   order       Int     @default(0)
   optional    Boolean @default(false)
   allowOptOut Boolean @default(false)
