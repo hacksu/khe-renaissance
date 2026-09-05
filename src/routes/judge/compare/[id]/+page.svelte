@@ -16,7 +16,7 @@
     const isLast = $derived(currentIndex === criteria.length - 1);
     const currentAnswered = $derived(!!selections[criterion?.id]);
     const allAnswered = $derived(criteria.every((c) => !!selections[c.id]));
-    const canSubmit = $derived(allAnswered && comment.trim().length > 0);
+    const canSubmit = $derived(allAnswered);
 
     function selectOption(value: string) {
         selections[criterion.id] = value;
@@ -164,7 +164,7 @@
 
                 <div class="space-y-2">
                     <label for="comment" class="block font-bold text-white">
-                        Overall Notes <span class="text-white/50">(required)</span>
+                        Overall Notes <span class="text-white/50">(optional)</span>
                     </label>
                     <textarea
                         id="comment"

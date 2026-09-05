@@ -30,10 +30,6 @@ export const actions: Actions = {
         const form = await request.formData();
         const comment = (form.get('comment') as string) ?? '';
 
-        if (!comment.trim()) {
-            return fail(400, { message: 'A comment is required.' });
-        }
-
         // Parse result_{criterionId} fields
         const results: { criterionId: string; winner: 'A' | 'B' | 'OPT_OUT_A' | 'OPT_OUT_B' }[] = [];
         for (const [key, value] of form.entries()) {
