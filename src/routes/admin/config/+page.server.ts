@@ -71,14 +71,13 @@ export const actions: Actions = {
         const name = form.get("name") as string;
         const order = Number(form.get("order"));
         const optional = form.get("optional") === "on";
-        const allowOptOut = form.get("allowOptOut") === "on";
         const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
 
         if (!name) return fail(400, { missing: true });
 
         try {
             await prisma.judgingCriterion.create({
-                data: { name, slug, order: order || 0, optional, allowOptOut }
+                data: { name, slug, order: order || 0, optional }
             });
         } catch (e) {
             return fail(500, { error: "Failed to create criterion" });
@@ -90,7 +89,6 @@ export const actions: Actions = {
         const name = form.get("name") as string;
         const order = Number(form.get("order"));
         const optional = form.get("optional") === "on";
-        const allowOptOut = form.get("allowOptOut") === "on";
 
         if (!id || !name) return fail(400, { missing: true });
 
@@ -99,7 +97,7 @@ export const actions: Actions = {
         try {
             await prisma.judgingCriterion.update({
                 where: { id },
-                data: { name, slug, order: order || 0, optional, allowOptOut }
+                data: { name, slug, order: order || 0, optional }
             });
         } catch (e) {
             return fail(500, { error: "Failed to update criterion" });
