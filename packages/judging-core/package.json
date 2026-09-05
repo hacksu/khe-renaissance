@@ -1,0 +1,19 @@
+{
+	"name": "judging-core",
+	"version": "0.0.1",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./prisma": "./src/prisma.ts",
+		"./crowdbt": "./src/crowdbt.ts",
+		"./settings": "./src/settings.ts",
+		"./judging": "./src/judging.ts"
+	},
+	"dependencies": {
+		"@prisma/client": "^6.19.3"
+	},
+	"devDependencies": {
+		"prisma": "^6.19.3",
+		"typescript": "^5.9.3"
+	}
+}

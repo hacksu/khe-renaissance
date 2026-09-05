@@ -10,6 +10,7 @@
         "better-auth": "^1.7.2",
         "fflate": "^0.8.3",
         "googleapis": "^166.0.0",
+        "judging-core": "workspace:*",
         "luxon": "^3.7.2",
         "nanostores": "^1.5.3",
         "qrcode": "^1.5.4",
@@ -33,6 +34,17 @@
         "tailwindcss": "^3.4.19",
         "typescript": "^5.9.3",
         "vite": "^5.4.21",
+      },
+    },
+    "packages/judging-core": {
+      "name": "judging-core",
+      "version": "0.0.1",
+      "dependencies": {
+        "@prisma/client": "^6.19.3",
+      },
+      "devDependencies": {
+        "prisma": "^6.19.3",
+        "typescript": "^5.9.3",
       },
     },
   },
@@ -470,6 +482,8 @@
     "jose": ["jose@6.2.10", "", {}, "sha512-iiW7J9qRFlGxvCOIBDBDxFePQSn7ZMAnrYGhrrOo6siO/MIqwfyilLR27pkfDgUk+raLuzADS8A3S/KLBisc0g=="],
 
     "json-bigint": ["json-bigint@1.0.0", "", { "dependencies": { "bignumber.js": "^9.0.0" } }, "sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ=="],
+
+    "judging-core": ["judging-core@workspace:packages/judging-core"],
 
     "jwa": ["jwa@2.0.1", "", { "dependencies": { "buffer-equal-constant-time": "^1.0.1", "ecdsa-sig-formatter": "1.0.11", "safe-buffer": "^5.0.1" } }, "sha512-hRF04fqJIP8Abbkq5NKGN0Bbr3JxlQ+qhZufXVr0DvujKy93ZCbXZMHDL4EOtodSbCWxOqR8MS1tXA5hwqCXDg=="],
 
