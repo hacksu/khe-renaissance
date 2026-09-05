@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
         prisma.tableVisit.findUnique({
             where: { id: params.id },
             include: {
-                project: { select: { id: true, name: true, tableNumber: true } }
+                project: { select: { id: true, name: true, tableNumber: true, trackId: true } }
             }
         }),
         prisma.judgingCriterion.findMany({
@@ -54,13 +54,23 @@ export const actions: Actions = {
         }
         const optOutCriterionIds = allOptionalIds.filter((id) => !attemptedIds.has(id));
 
+        const trackFitRaw = form.get('trackFitScore') as string | null;
+        const trackFitScore = trackFitRaw ? Number(trackFitRaw) : null;
+
+        const themeAttempted = form.get('themeAttempted') === 'on';
+        const themeScoreRaw = form.get('themeScore') as string | null;
+        const themeScore = themeAttempted && themeScoreRaw ? Number(themeScoreRaw) : null;
+
         let result;
         try {
             result = await Judging.submitFeedback(
                 session.user.id,
                 params.id,
                 feedback.trim(),
-                optOutCriterionIds
+                optOutCriterionIds,
+                trackFitScore,
+                themeAttempted,
+                themeScore
             );
         } catch (e) {
             console.error(e);

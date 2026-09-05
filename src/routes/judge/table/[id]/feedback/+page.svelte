@@ -5,6 +5,12 @@
 
     let feedback = $state('');
     let canSubmit = $derived(feedback.trim().length > 0);
+
+    let trackFitScore = $state<number | null>(null);
+    let themeAttempted = $state(false);
+    let themeScore = $state<number | null>(null);
+
+    const RATING_OPTIONS = [1, 2, 3, 4, 5];
 </script>
 
 <div class="max-w-md mx-auto p-4 flex flex-col min-h-screen">
@@ -45,6 +51,55 @@
                 {/each}
             </div>
         {/if}
+
+        {#if project.trackId}
+            <div class="space-y-2">
+                <input type="hidden" name="trackFitScore" value={trackFitScore ?? ''} />
+                <p class="font-bold text-white">Track Fit</p>
+                <p class="text-white/50 text-sm mt-0.5">How well does this project fit its track -- tangential (1) to core (5)?</p>
+                <div class="flex gap-2">
+                    {#each RATING_OPTIONS as n}
+                        <button
+                            type="button"
+                            onclick={() => trackFitScore = n}
+                            class="flex-1 py-3 rounded-xl font-bold text-lg border-2 transition-all active:scale-[0.98] {trackFitScore === n ? 'bg-white text-castle-skyDeep border-white' : 'bg-white/10 text-white border-white/10 hover:bg-white/20'}"
+                        >
+                            {n}
+                        </button>
+                    {/each}
+                </div>
+            </div>
+        {/if}
+
+        <div class="space-y-3">
+            <label class="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition-colors">
+                <input
+                    type="checkbox"
+                    name="themeAttempted"
+                    bind:checked={themeAttempted}
+                    class="w-5 h-5 rounded accent-white cursor-pointer"
+                />
+                <span class="text-white font-medium">Engages with the theme?</span>
+            </label>
+
+            {#if themeAttempted}
+                <div class="space-y-2">
+                    <input type="hidden" name="themeScore" value={themeScore ?? ''} />
+                    <p class="text-white/50 text-sm">How well? (1-5)</p>
+                    <div class="flex gap-2">
+                        {#each RATING_OPTIONS as n}
+                            <button
+                                type="button"
+                                onclick={() => themeScore = n}
+                                class="flex-1 py-3 rounded-xl font-bold text-lg border-2 transition-all active:scale-[0.98] {themeScore === n ? 'bg-white text-castle-skyDeep border-white' : 'bg-white/10 text-white border-white/10 hover:bg-white/20'}"
+                            >
+                                {n}
+                            </button>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+        </div>
 
         <div class="space-y-2">
             <label for="feedback" class="block font-bold text-white">

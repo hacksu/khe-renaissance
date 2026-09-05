@@ -174,7 +174,10 @@ export const Judging = {
 		judgeId: string,
 		visitId: string,
 		feedback: string,
-		optOutCriterionIds: string[] = []
+		optOutCriterionIds: string[] = [],
+		trackFitScore: number | null = null,
+		themeAttempted: boolean | null = null,
+		themeScore: number | null = null
 	): Promise<{ nextVisit: TableVisit | null; comparison: PairComparison | null }> => {
 		let nextVisit: TableVisit | null = null;
 		let comparison: PairComparison | null = null;
@@ -189,7 +192,14 @@ export const Judging = {
 			// Mark as completed
 			await tx.tableVisit.update({
 				where: { id: visitId },
-				data: { status: 'completed', completedAt: new Date(), feedback }
+				data: {
+					status: 'completed',
+					completedAt: new Date(),
+					feedback,
+					trackFitScore,
+					themeAttempted,
+					themeScore: themeAttempted ? themeScore : null
+				}
 			});
 
 			// Save opt-out records for optional criteria this team did not attempt
