@@ -5,8 +5,8 @@ import { sendProjectFeedbackEmails } from '$lib/server/email';
 import { prisma } from '$lib/server/prisma';
 
 export const load: PageServerLoad = async () => {
-    const { results, optionalCriteria } = await Judging.getAllProjectScores();
-    return { results, optionalCriteria };
+    const { results, optionalCriteria, theme } = await Judging.getAllProjectScores();
+    return { results, optionalCriteria, theme };
 };
 
 export const actions: Actions = {

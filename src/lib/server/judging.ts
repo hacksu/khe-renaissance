@@ -5,6 +5,9 @@ import type { TableVisit, PairComparison } from '@prisma/client';
 
 export type { TableVisit, PairComparison };
 
+const THEME_PRIOR_WEIGHT = 3;
+const THEME_PRIOR_SCORE = 2.0;
+
 export type JudgeWithVisit = {
 	id: string;
 	name: string;
@@ -415,22 +418,49 @@ export const Judging = {
 	 * Returns shape compatible with the admin scores UI.
 	 */
 	getAllProjectScores: async () => {
-		const [projects, allCriteria, allComparisons] = await Promise.all([
+		const [projects, allCriteria, allComparisons, allVisits] = await Promise.all([
 			prisma.project.findMany({
 				include: { Track: true, crowdBTStates: true }
 			}),
 			prisma.judgingCriterion.findMany({ orderBy: { order: 'asc' } }),
-			prisma.pairComparison.findMany({ select: { projectAId: true, projectBId: true } })
+			prisma.pairComparison.findMany({ select: { projectAId: true, projectBId: true } }),
+			prisma.tableVisit.findMany({
+				select: { projectId: true, trackFitScore: true, themeAttempted: true, themeScore: true }
+			})
 		]);
 
-		const optionalCriteria = allCriteria.filter((c) => c.allowOptOut);
-		const coreCriteria = allCriteria.filter((c) => !c.allowOptOut);
+		const optionalCriteria = allCriteria.filter((c) => c.optional);
+		const coreCriteria = allCriteria.filter((c) => !c.optional);
 
 		// Count comparisons per project (appears on either side)
 		const compCountMap = new Map<string, number>();
 		for (const c of allComparisons) {
 			compCountMap.set(c.projectAId, (compCountMap.get(c.projectAId) ?? 0) + 1);
 			compCountMap.set(c.projectBId, (compCountMap.get(c.projectBId) ?? 0) + 1);
+		}
+
+		type ThemeAgg = { yesCount: number; totalVotes: number; scoreSum: number; scoreCount: number };
+		const trackFitMap = new Map<string, { sum: number; count: number }>();
+		const themeMap = new Map<string, ThemeAgg>();
+		for (const v of allVisits) {
+			if (v.trackFitScore != null) {
+				const t = trackFitMap.get(v.projectId) ?? { sum: 0, count: 0 };
+				t.sum += v.trackFitScore;
+				t.count += 1;
+				trackFitMap.set(v.projectId, t);
+			}
+			if (v.themeAttempted != null) {
+				const t = themeMap.get(v.projectId) ?? { yesCount: 0, totalVotes: 0, scoreSum: 0, scoreCount: 0 };
+				t.totalVotes += 1;
+				if (v.themeAttempted) {
+					t.yesCount += 1;
+					if (v.themeScore != null) {
+						t.scoreSum += v.themeScore;
+						t.scoreCount += 1;
+					}
+				}
+				themeMap.set(v.projectId, t);
+			}
 		}
 
 		const calculated = projects.map((p) => {
@@ -448,6 +478,9 @@ export const Judging = {
 				optionalScores[c.id] = state ? crowdBTScore(state.alpha, state.beta) : null;
 			}
 
+			const trackFit = trackFitMap.get(p.id);
+			const theme = themeMap.get(p.id);
+
 			return {
 				id: p.id,
 				name: p.name,
@@ -455,7 +488,15 @@ export const Judging = {
 				tableNumber: p.tableNumber,
 				coreScore,
 				optionalScores,
-				judgementCount: compCountMap.get(p.id) ?? 0
+				judgementCount: compCountMap.get(p.id) ?? 0,
+				trackFitScore: trackFit ? trackFit.sum / trackFit.count : null,
+				themeAttemptedCount: theme?.yesCount ?? 0,
+				themeTotalVisits: theme?.totalVotes ?? 0,
+				themeScore:
+					theme && theme.totalVotes > 0
+						? (theme.scoreSum + THEME_PRIOR_WEIGHT * THEME_PRIOR_SCORE) /
+							(theme.totalVotes + THEME_PRIOR_WEIGHT)
+						: null
 			};
 		});
 
@@ -470,7 +511,11 @@ export const Judging = {
 			grouped[track].sort((a, b) => b.coreScore - a.coreScore);
 		}
 
-		return { results: grouped, optionalCriteria };
+		const theme = calculated
+			.filter((p) => p.themeAttemptedCount > 0)
+			.sort((a, b) => (b.themeScore ?? 0) - (a.themeScore ?? 0));
+
+		return { results: grouped, optionalCriteria, theme };
 	},
 
 	/**

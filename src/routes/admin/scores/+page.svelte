@@ -10,7 +10,7 @@
     let isSendingFeedback = $state(false);
     let toggledOptional = $state<string[]>([]);
     let sortBy = $state('display');
-    let viewMode = $state<'tracks' | 'overall'>('overall');
+    let viewMode = $state<'tracks' | 'overall' | 'theme'>('overall');
 
     let allResults = $derived(
         getSortedResults(Object.values(data.results).flat())
@@ -72,6 +72,12 @@
                     class="px-3 py-2 transition-colors {viewMode === 'overall' ? 'bg-secondary text-white' : 'bg-white/60 text-secondary/60 hover:bg-secondary/10'}"
                 >
                     Overall
+                </button>
+                <button
+                    onclick={() => viewMode = 'theme'}
+                    class="px-3 py-2 transition-colors {viewMode === 'theme' ? 'bg-secondary text-white' : 'bg-white/60 text-secondary/60 hover:bg-secondary/10'}"
+                >
+                    Theme
                 </button>
             </div>
 
@@ -148,7 +154,7 @@
     <!-- Leaderboard -->
     <div class="space-y-12">
 
-        {#snippet resultsTable(results: typeof allResults, showTrack: boolean)}
+        {#snippet resultsTable(results: typeof allResults, showTrack: boolean, showTrackFit: boolean)}
             <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-secondary/5 border-b border-secondary/10 text-secondary/60 uppercase tracking-widest text-xs">
@@ -157,6 +163,7 @@
                             <th class="p-4 font-bold">Team</th>
                             {#if showTrack}<th class="p-4 font-bold">Track</th>{/if}
                             <th class="p-4 font-bold text-center w-24">Comparisons</th>
+                            {#if showTrackFit}<th class="p-4 font-bold text-right w-28">Track Fit</th>{/if}
                             {#each data.optionalCriteria as criterion}
                                 {#if toggledOptional.includes(criterion.id) || sortBy === criterion.id}
                                     <th class="p-4 font-bold text-right w-32 text-accent/70">{criterion.name}</th>
@@ -182,6 +189,11 @@
                                         {result.judgementCount}
                                     </span>
                                 </td>
+                                {#if showTrackFit}
+                                    <td class="p-4 text-right font-mono text-sm text-secondary/70">
+                                        {result.trackFitScore != null ? result.trackFitScore.toFixed(1) : '-'}
+                                    </td>
+                                {/if}
                                 {#each data.optionalCriteria as criterion}
                                     {#if toggledOptional.includes(criterion.id) || sortBy === criterion.id}
                                         <td class="p-4 text-right font-mono text-sm text-accent/70">
@@ -206,13 +218,59 @@
             </div>
         {/snippet}
 
+        {#snippet themeTable(results: typeof data.theme)}
+            <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-secondary/5 border-b border-secondary/10 text-secondary/60 uppercase tracking-widest text-xs">
+                        <tr>
+                            <th class="p-4 font-bold w-16 text-center">Rank</th>
+                            <th class="p-4 font-bold">Team</th>
+                            <th class="p-4 font-bold">Track</th>
+                            <th class="p-4 font-bold text-center w-32">Attempted</th>
+                            <th class="p-4 font-bold text-right w-32">Theme Score</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-secondary/5">
+                        {#each results as result, i}
+                            <tr class="hover:bg-white/50 transition-colors">
+                                <td class="p-4 font-mono text-secondary/50 text-center">#{i + 1}</td>
+                                <td class="p-4 font-bold text-secondary">
+                                    {result.name}{#if result.tableNumber} <span class="font-normal text-secondary/50">(#{result.tableNumber})</span>{/if}
+                                </td>
+                                <td class="p-4 text-xs text-secondary/60 font-mono">{result.track}</td>
+                                <td class="p-4 text-center font-mono text-sm text-secondary/70">
+                                    {result.themeAttemptedCount}/{result.themeTotalVisits}
+                                </td>
+                                <td class="p-4 text-right font-mono font-bold text-lg text-accent">
+                                    {result.themeScore != null ? result.themeScore.toFixed(2) : '-'}
+                                </td>
+                            </tr>
+                        {/each}
+                        {#if results.length === 0}
+                            <tr>
+                                <td colspan="99" class="p-8 text-center text-secondary/40 italic">No theme votes recorded yet.</td>
+                            </tr>
+                        {/if}
+                    </tbody>
+                </table>
+            </div>
+        {/snippet}
+
         {#if viewMode === 'overall'}
             <div class="space-y-4">
                 <div class="flex items-center gap-4">
                     <h2 class="text-xl font-bold font-serif text-secondary">Overall</h2>
                     <div class="h-px flex-1 bg-secondary/10"></div>
                 </div>
-                {@render resultsTable(allResults, true)}
+                {@render resultsTable(allResults, true, false)}
+            </div>
+        {:else if viewMode === 'theme'}
+            <div class="space-y-4">
+                <div class="flex items-center gap-4">
+                    <h2 class="text-xl font-bold font-serif text-secondary">Theme</h2>
+                    <div class="h-px flex-1 bg-secondary/10"></div>
+                </div>
+                {@render themeTable(data.theme)}
             </div>
         {:else}
             {#each Object.entries(data.results) as [track, results]}
@@ -221,7 +279,7 @@
                         <h2 class="text-xl font-bold font-serif text-secondary">{track}</h2>
                         <div class="h-px flex-1 bg-secondary/10"></div>
                     </div>
-                    {@render resultsTable(getSortedResults(results), false)}
+                    {@render resultsTable(getSortedResults(results), false, true)}
                 </div>
             {/each}
             {#if Object.keys(data.results).length === 0}
