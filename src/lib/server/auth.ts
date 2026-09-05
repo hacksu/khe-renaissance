@@ -12,9 +12,18 @@ export const auth = betterAuth({
     basePath: "/api/auth",
     trustedOrigins: [
         "http://localhost:3000",
+        "http://localhost:3100",
+        "http://localhost.khe.io:3000",
+        "http://judge.localhost.khe.io:3100",
         "https://khe.io",
         "https://*.khe.io"
     ],
+    advanced: {
+        crossSubDomainCookies: {
+            enabled: true,
+            domain: env.COOKIE_DOMAIN || ".khe.io"
+        }
+    },
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
