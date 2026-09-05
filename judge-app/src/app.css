@@ -1,0 +1,12 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+    --font-family: "Inter", sans-serif;
+    background-color: theme('colors.castle.skyDeep');
+}
+
+a {
+  @apply text-castle-torchAmber hover:text-castle-torchYellow transition-colors;
+}

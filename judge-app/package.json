@@ -1,0 +1,29 @@
+{
+	"name": "judge-app",
+	"version": "0.0.1",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "bunx --bun vite dev --host 0.0.0.0 --port 3100",
+		"prod:build": "bunx --bun vite build",
+		"prod:start": "bun ./build/index.js",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+	},
+	"devDependencies": {
+		"@sveltejs/kit": "^2.70.3",
+		"@sveltejs/vite-plugin-svelte": "^4.0.4",
+		"@tailwindcss/forms": "^0.5.11",
+		"autoprefixer": "^10.5.4",
+		"svelte": "^5.57.0",
+		"svelte-check": "^4.7.6",
+		"tailwindcss": "^3.4.19",
+		"typescript": "^5.9.3",
+		"vite": "^5.4.21"
+	},
+	"dependencies": {
+		"@prisma/client": "^6.19.3",
+		"better-auth": "^1.7.2",
+		"judging-core": "workspace:*",
+		"svelte-adapter-bun": "^0.5.2"
+	}
+}

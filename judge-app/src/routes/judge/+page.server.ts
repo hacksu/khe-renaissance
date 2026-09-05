@@ -1,0 +1,47 @@
+import { redirect, fail } from '@sveltejs/kit';
+import type { PageServerLoad, Actions } from './$types';
+import { Judging } from '$lib/server/judging';
+import { prisma } from '$lib/server/prisma';
+import { Role } from '$lib/server/external_roles';
+
+export const load: PageServerLoad = async ({ parent }) => {
+    const { session } = await parent();
+    if (!session) throw redirect(301, '/auth/login');
+
+    const baseVisit = await Judging.assignNextTable(session.user.id);
+
+    if (!baseVisit) {
+        return { visit: null };
+    }
+
+    const visit = await prisma.tableVisit.findUnique({
+        where: { id: baseVisit.id },
+        include: {
+            project: { select: { id: true, name: true, tableNumber: true } }
+        }
+    });
+
+    return { visit };
+};
+
+export const actions: Actions = {
+    start: async ({ request }) => {
+        const { auth } = await import('$lib/server/auth');
+        const session = await auth.api.getSession({ headers: request.headers });
+        if (!session) return fail(401);
+        if (session.user.role !== Role.JUDGE) return fail(403);
+
+        const form = await request.formData();
+        const visitId = form.get('visitId') as string;
+        if (!visitId) return fail(400, { message: 'Missing visitId' });
+
+        let visit;
+        try {
+            visit = await Judging.startJudging(session.user.id, visitId);
+        } catch (e) {
+            console.error(e);
+            return fail(500, { message: 'Failed to start judging.' });
+        }
+        throw redirect(303, `/judge/table/${visit.id}`);
+    }
+};
