@@ -5,7 +5,11 @@
     import Icon from "@iconify/svelte";
     import { authClient } from "$lib/client";
     import { invalidateAll } from "$app/navigation";
+    import { env } from "$env/dynamic/public";
     import type { PageData } from './$types';
+
+    const judgeAppUrl = (path: string) =>
+        `${(env.PUBLIC_JUDGE_APP_URL ?? "").replace(/\/$/, "")}${path}`;
 
     let { data }: { data: PageData } = $props();
 
@@ -47,7 +51,7 @@
             });
             await authClient.signIn.magicLink({
                 email: newJudgeEmail,
-                callbackURL: "/judge",
+                callbackURL: judgeAppUrl("/judge"),
                 name: newJudgeEmail.split("@")[0]
             });
             alert("Invitation sent!");
@@ -72,7 +76,7 @@
             });
             await authClient.signIn.magicLink({
                 email: judge.email,
-                callbackURL: "/judge",
+                callbackURL: judgeAppUrl("/judge"),
                 name: judge.name
             });
             alert(`Magic link sent to ${judge.email}`);
