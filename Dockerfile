@@ -5,7 +5,8 @@ VOLUME ["/app/resumes"]
 
 WORKDIR /app
 
-COPY package*.json bun.lock* ./
+COPY package.json bun.lock* ./
+COPY packages/judging-core/package.json ./packages/judging-core/
 
 RUN bun install
 COPY . .
