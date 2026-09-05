@@ -187,8 +187,7 @@ model JudgingCriterion {
   name        String
   description String?
   order       Int     @default(0)
-  optional    Boolean @default(false)
-  allowOptOut Boolean @default(false)
+  optional    Boolean @default(false) // judge-skippable, and excluded from coreScore
 
   pairResults   PairCriterionResult[]
   crowdBTStates CrowdBTState[]
@@ -225,6 +224,10 @@ model TableVisit {
 
   startedAt   DateTime?
   completedAt DateTime?
+
+  trackFitScore  Int?     // 1-5, asked only when the visited project has a track
+  themeAttempted Boolean? // did this team engage with the theme at all?
+  themeScore     Int?     // 1-5, only meaningful when themeAttempted = true
 
   optOuts     VisitOptOut[]
 
