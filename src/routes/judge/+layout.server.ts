@@ -18,7 +18,7 @@ export const load: LayoutServerLoad = async ({ request }) => {
 
     // Only allow JUDGE access
     if (role !== Role.JUDGE) {
-        throw error(401, "You do not have the permissions to access the judging platform.");
+        throw error(401, `You do not have the permissions to access the judging platform. Expected role "${Role.JUDGE}", got "${role ?? "none"}" for ${session.user.email}.`);
     }
 
     return { session };
