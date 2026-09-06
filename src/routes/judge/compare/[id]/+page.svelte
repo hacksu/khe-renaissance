@@ -1,9 +1,10 @@
 <script lang="ts">
     let { data, form } = $props();
-    const { comparison, criteria } = data;
+    const comparison = $derived(data.comparison);
+    const criteria = $derived(data.criteria);
 
-    const projectA = comparison.projectA;
-    const projectB = comparison.projectB;
+    const projectA = $derived(comparison.projectA);
+    const projectB = $derived(comparison.projectB);
 
     // Client-side state
     let currentIndex = $state(0);

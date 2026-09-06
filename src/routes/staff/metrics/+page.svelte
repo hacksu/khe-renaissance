@@ -1,7 +1,15 @@
 <script lang="ts">
     const { data } = $props();
 
-    const { stats, timeSeries, demographics, education, experience, logistics, geography, referral, submittedCount } = data;
+    const stats = $derived(data.stats);
+    const timeSeries = $derived(data.timeSeries);
+    const demographics = $derived(data.demographics);
+    const education = $derived(data.education);
+    const experience = $derived(data.experience);
+    const logistics = $derived(data.logistics);
+    const geography = $derived(data.geography);
+    const referral = $derived(data.referral);
+    const submittedCount = $derived(data.submittedCount);
 
     const W = 800, H = 220, PL = 48, PR = 16, PT = 16, PB = 36;
     const chartW = W - PL - PR;

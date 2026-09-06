@@ -13,7 +13,7 @@ const config = {
 		},
 		adapter: adapter(),
 		csrf: {
-			checkOrigin: false // TODO: figure out a way to NOT have to do this, but for now Svelte just doesn't play nice with Compose
+			trustedOrigins: ['*'] // TODO: figure out a way to NOT have to do this, but for now Svelte just doesn't play nice with Compose
 		},
 	}
 };

@@ -2,10 +2,12 @@
     import { onMount, onDestroy } from 'svelte';
 
     let { data } = $props();
-    const { visit, criteria, timePerTable } = data;
+    const visit = $derived(data.visit);
+    const criteria = $derived(data.criteria);
+    const timePerTable = $derived(data.timePerTable);
 
-    const project = visit.project;
-    const startedAt = visit.startedAt ? new Date(visit.startedAt) : new Date();
+    const project = $derived(visit.project);
+    const startedAt = $derived(visit.startedAt ? new Date(visit.startedAt) : new Date());
 
     let elapsed = $state(0);
     let intervalId: ReturnType<typeof setInterval>;

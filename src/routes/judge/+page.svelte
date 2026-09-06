@@ -3,8 +3,8 @@
     import Icon from "@iconify/svelte";
 
     let { data } = $props();
-    const judgeName = $page.data.session?.user?.name || "Judge";
-    const { visit } = data;
+    const judgeName = $derived($page.data.session?.user?.name || "Judge");
+    const visit = $derived(data.visit);
 </script>
 
 <div class="max-w-md mx-auto p-4 flex flex-col min-h-screen">

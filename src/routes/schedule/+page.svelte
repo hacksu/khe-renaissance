@@ -4,7 +4,7 @@
     let { data } = $props();
 
     // Group by day, preserving order from DB
-    const days = [...new Set(data.events.map((e: any) => e.day))];
+    const days = $derived([...new Set(data.events.map((e: any) => e.day))]);
     const byDay = (day: string) => data.events.filter((e: any) => e.day === day);
 
     // Get dot color based on event type

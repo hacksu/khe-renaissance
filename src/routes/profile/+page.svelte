@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { untrack } from "svelte";
     import { enhance } from "$app/forms";
     import Icon from "@iconify/svelte";
     import Checkbox from "$components/form/Checkbox.svelte";
@@ -23,32 +24,34 @@
     const { data } = $props();
     const application = $derived(data.application);
 
-    let loading = $state(false);
-    let mlhCodeChecked = $state(application?.mlhCodeOfConduct ?? false);
-    let mlhAuthChecked = $state(application?.mlhAuthorization ?? false);
-    let schoolNotFound = $state(false);
-    let schoolValue = $state(application?.school ?? "");
+    const seed = untrack(() => data.application);
 
-    let firstName        = $state(application?.firstName ?? "");
-    let lastName         = $state(application?.lastName ?? "");
-    let phoneNumber      = $state(application?.phoneNumber ?? "");
+    let loading = $state(false);
+    let mlhCodeChecked = $state(seed?.mlhCodeOfConduct ?? false);
+    let mlhAuthChecked = $state(seed?.mlhAuthorization ?? false);
+    let schoolNotFound = $state(false);
+    let schoolValue = $state(seed?.school ?? "");
+
+    let firstName        = $state(seed?.firstName ?? "");
+    let lastName         = $state(seed?.lastName ?? "");
+    let phoneNumber      = $state(seed?.phoneNumber ?? "");
     const phoneValid     = $derived(phoneNumber === "" || /^\+?[\d\s\-().]{7,15}$/.test(phoneNumber));
-    let email            = $state(application?.email ?? "");
-    let countryOfResidence = $state(application?.countryOfResidence ?? "");
-    let age              = $state(application?.age ?? null as number | null);
+    let email            = $state(seed?.email ?? "");
+    let countryOfResidence = $state(seed?.countryOfResidence ?? "");
+    let age              = $state(seed?.age ?? null as number | null);
     const ageValid       = $derived(age === null || age === 0 || (age >= 13 && age <= 100));
-    let levelOfStudy     = $state(application?.levelOfStudy ?? "");
-    let fieldOfStudy     = $state(application?.fieldOfStudy ?? "");
-    let gender           = $state(application?.gender ?? "");
-    let pronouns         = $state(application?.pronouns ?? "");
-    let githubUrl        = $state(application?.githubUrl ?? "");
+    let levelOfStudy     = $state(seed?.levelOfStudy ?? "");
+    let fieldOfStudy     = $state(seed?.fieldOfStudy ?? "");
+    let gender           = $state(seed?.gender ?? "");
+    let pronouns         = $state(seed?.pronouns ?? "");
+    let githubUrl        = $state(seed?.githubUrl ?? "");
     const githubValid    = $derived(githubUrl === "" || /^https:\/\/github\.com\/.+/.test(githubUrl));
-    let linkedinUrl      = $state(application?.linkedinUrl ?? "");
+    let linkedinUrl      = $state(seed?.linkedinUrl ?? "");
     const linkedinValid  = $derived(linkedinUrl === "" || /^https:\/\/(www\.)?linkedin\.com\/in\/.+/.test(linkedinUrl));
-    let personalUrl      = $state(application?.personalUrl ?? "");
+    let personalUrl      = $state(seed?.personalUrl ?? "");
     const personalValid  = $derived(personalUrl === "" || /^https?:\/\/.+\..+/.test(personalUrl));
-    let tshirtSize       = $state(application?.tshirtSize ?? "");
-    let referral         = $state(application?.heardAboutUs ?? "");
+    let tshirtSize       = $state(seed?.tshirtSize ?? "");
+    let referral         = $state(seed?.heardAboutUs ?? "");
 
     const stepDone = $derived([
         !!(firstName && lastName && phoneNumber && phoneValid && email && countryOfResidence && ageValid),
@@ -169,6 +172,7 @@
                     <div
                         class="flex flex-col items-center gap-1 cursor-pointer"
                         role="button"
+                        tabindex="0"
                         onclick={() => {
                                 step = i;
                         }}

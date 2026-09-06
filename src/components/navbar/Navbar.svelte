@@ -34,6 +34,8 @@
     }
 </script>
 
+<svelte:window onkeydown={(e) => { if (e.key === "Escape") mobileMenuOpen = false; }} />
+
 <a href="https://mlh.io/seasons/2027/events" target="_blank" class="fixed top-0 left-0 z-50">
     <img src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-blue.svg" alt="Major League Hacking 2027 Hackathon Season" class="w-20">
 </a>
@@ -135,15 +137,16 @@
 </nav>
 
 {#if mobileMenuOpen}
-    <div 
-        class="fixed inset-0 z-[35] lg:hidden"
-        onclick={() => mobileMenuOpen = false}
-    >
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"></div>
-        
+    <div class="fixed inset-0 z-[35] lg:hidden">
+        <button
+            type="button"
+            aria-label="Close menu"
+            class="absolute inset-0 w-full h-full bg-black/50 backdrop-blur-sm animate-fade-in"
+            onclick={() => mobileMenuOpen = false}
+        ></button>
+
         <div
             class="absolute top-20 right-4 left-4 bg-castle-mortar/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-castle-stoneMid/30 overflow-hidden animate-slide-down"
-            onclick={(e) => e.stopPropagation()}
         >
             <div class="p-6 space-y-2">
                 {#each navLinks as link}

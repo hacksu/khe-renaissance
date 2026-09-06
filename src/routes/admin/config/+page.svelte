@@ -78,9 +78,10 @@
         <div class="bg-white/50 border border-secondary/10 p-4 rounded-lg max-w-sm">
             <form method="POST" action="?/updateJudgingSettings" use:enhance class="space-y-4">
                 <div class="space-y-1">
-                    <label class="text-sm font-bold text-secondary block">Max Judges Per Team</label>
+                    <label for="maxJudgesPerTeam" class="text-sm font-bold text-secondary block">Max Judges Per Team</label>
                     <p class="text-xs text-secondary/60">Limits how many judges a team can receive via auto-assignment. Leave blank for no limit.</p>
                     <input
+                        id="maxJudgesPerTeam"
                         type="number"
                         name="maxJudgesPerTeam"
                         min="1"
@@ -90,9 +91,10 @@
                     />
                 </div>
                 <div class="space-y-1">
-                    <label class="text-sm font-bold text-secondary block">Time Per Table (minutes)</label>
+                    <label for="timePerTable" class="text-sm font-bold text-secondary block">Time Per Table (minutes)</label>
                     <p class="text-xs text-secondary/60">Shows a live timer on the judging page. Leave blank to disable.</p>
                     <input
+                        id="timePerTable"
                         type="number"
                         name="timePerTable"
                         min="1"
@@ -102,9 +104,10 @@
                     />
                 </div>
                 <div class="space-y-1">
-                    <label class="text-sm font-bold text-secondary block">Discord Invite Link</label>
+                    <label for="discordInvite" class="text-sm font-bold text-secondary block">Discord Invite Link</label>
                     <p class="text-xs text-secondary/60">Included in approval emails. Leave blank to omit from emails.</p>
                     <input
+                        id="discordInvite"
                         type="url"
                         name="discordInvite"
                         value={data.discordInvite ?? ''}
@@ -129,8 +132,8 @@
                             <input type="hidden" name="id" value={criterion.id} />
                             <input name="name" bind:value={editingCriterion.name} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" required />
                             <div>
-                                <label class="text-xs text-secondary/60">Order</label>
-                                <input name="order" type="number" bind:value={editingCriterion.order} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" />
+                                <label for="criterion-order-{criterion.id}" class="text-xs text-secondary/60">Order</label>
+                                <input id="criterion-order-{criterion.id}" name="order" type="number" bind:value={editingCriterion.order} class="w-full text-sm rounded border-secondary/20 px-2 py-1 text-black bg-white" />
                             </div>
                             <label class="flex items-center gap-2 text-sm text-secondary cursor-pointer">
                                 <input type="checkbox" name="optional" bind:checked={editingCriterion.optional} class="rounded border-secondary/30 text-accent focus:ring-accent" />

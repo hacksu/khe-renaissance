@@ -240,8 +240,8 @@
         <Input name="name" label="Team Name" placeholder="e.g. The Hackers" required />
         <div class="grid grid-cols-2 gap-4">
              <div class="space-y-1">
-                <label class="text-sm font-bold text-secondary">Track</label>
-                <select name="track" class="w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent text-black">
+                <label for="create-project-track" class="text-sm font-bold text-secondary">Track</label>
+                <select id="create-project-track" name="track" class="w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent text-black">
                     {#each data.tracks as track}
                         <option value={track.id}>{track.name}</option>
                     {/each}
@@ -314,9 +314,10 @@
             <Input name="name" label="Team Name" value={selectedProjectForEdit.name} required />
             <div class="grid grid-cols-2 gap-4">
                  <div class="space-y-1">
-                    <label class="text-sm font-bold text-secondary">Track</label>
-                    <select 
-                        name="track" 
+                    <label for="edit-project-track" class="text-sm font-bold text-secondary">Track</label>
+                    <select
+                        id="edit-project-track"
+                        name="track"
                         value={selectedProjectForEdit.trackId || data.tracks.find(t => t.name === selectedProjectForEdit.track)?.id} 
                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent text-black"
                     >

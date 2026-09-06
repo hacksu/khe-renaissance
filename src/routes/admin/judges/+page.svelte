@@ -271,8 +271,9 @@
             Enter the judge's email address. They will receive a magic link to log in.
         </p>
         <div>
-            <label class="text-xs font-bold text-white/70 uppercase tracking-wider block mb-1">Email Address</label>
+            <label for="new-judge-email" class="text-xs font-bold text-white/70 uppercase tracking-wider block mb-1">Email Address</label>
             <input
+                id="new-judge-email"
                 bind:value={newJudgeEmail}
                 type="email"
                 placeholder="judge@example.com"

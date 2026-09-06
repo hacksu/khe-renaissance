@@ -203,8 +203,9 @@
             Enter the staff member's email address. They will receive a magic link to log in with staff access.
         </p>
         <div>
-            <label class="text-xs font-bold text-white/70 uppercase tracking-wider block mb-1">Email Address</label>
+            <label for="new-staff-email" class="text-xs font-bold text-white/70 uppercase tracking-wider block mb-1">Email Address</label>
             <input
+                id="new-staff-email"
                 bind:value={newStaffEmail}
                 type="email"
                 placeholder="staff@example.com"

@@ -155,6 +155,7 @@
             onkeydown={handleKeydown}
             onblur={handleBlur}
             onfocus={handleFocus}
+            role="combobox"
             aria-autocomplete="list"
             aria-controls={listId}
             aria-expanded={isOpen}

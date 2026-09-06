@@ -1,7 +1,8 @@
 <script lang="ts">
     let { data, form } = $props();
-    const { visit, optionalCriteria } = data;
-    const project = visit.project;
+    const visit = $derived(data.visit);
+    const optionalCriteria = $derived(data.optionalCriteria);
+    const project = $derived(visit.project);
 
     let feedback = $state('');
     let canSubmit = $derived(feedback.trim().length > 0);

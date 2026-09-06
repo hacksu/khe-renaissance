@@ -78,8 +78,8 @@
                     <Input name="imageUrl" label="Image URL" placeholder="https://dev.hacksu.com/f/..." required />
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-xs font-bold text-secondary/70 block mb-1">Tier</label>
-                            <select name="tier" class="w-full text-sm rounded border border-secondary/20 px-2 py-1 text-black bg-white">
+                            <label for="new-sponsor-tier" class="text-xs font-bold text-secondary/70 block mb-1">Tier</label>
+                            <select id="new-sponsor-tier" name="tier" class="w-full text-sm rounded border border-secondary/20 px-2 py-1 text-black bg-white">
                                 <option value="squire">Squire</option>
                                 <option value="knight">Knight</option>
                                 <option value="baron">Baron</option>
@@ -155,8 +155,8 @@
                 <form method="POST" action="?/createPrize" use:enhance class="p-4 space-y-3">
                     <h3 class="font-bold text-lg mb-2">Add Prize</h3>
                     <div>
-                        <label class="text-xs font-bold text-secondary/70 block mb-1">Category</label>
-                        <select name="category" class="w-full text-sm rounded border border-secondary/20 px-2 py-1 text-black" required>
+                        <label for="new-prize-category" class="text-xs font-bold text-secondary/70 block mb-1">Category</label>
+                        <select id="new-prize-category" name="category" class="w-full text-sm rounded border border-secondary/20 px-2 py-1 text-black" required>
                             <option value="overall">Overall</option>
                             <option value="track">Track</option>
                             <option value="special">Special</option>
@@ -245,8 +245,8 @@
                     <Input name="event" label="Event Name" placeholder="e.g. Opening Ceremony" required />
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-xs font-bold text-secondary/70 block mb-1">Type</label>
-                            <select name="type" class="w-full text-sm rounded border border-secondary/20 px-2 py-1 text-black bg-white">
+                            <label for="new-event-type" class="text-xs font-bold text-secondary/70 block mb-1">Type</label>
+                            <select id="new-event-type" name="type" class="w-full text-sm rounded border border-secondary/20 px-2 py-1 text-black bg-white">
                                 {#each EVENT_TYPES as t}<option value={t}>{t}</option>{/each}
                             </select>
                         </div>
