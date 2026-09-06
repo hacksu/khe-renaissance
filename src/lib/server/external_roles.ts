@@ -1,6 +1,7 @@
 import type { Session } from "better-auth";
 import type { SocialProvider } from "better-auth/social-providers";
 import { auth } from "./auth";
+import { prisma } from "./prisma";
 
 const DISCORD_GUILD_ID = "632634799303032852";
 const DISCORD_ROLES = ["1239730741882130542", "634455003834089513", "1362900867186950274"]
@@ -8,9 +9,15 @@ const DISCORD_ROLES = ["1239730741882130542", "634455003834089513", "13629008671
 type ExternalRoleHandler = (request: Request, session: Session) => Promise<Role>;
 const handlers: Partial<Record<SocialProvider, ExternalRoleHandler>> = {
     "discord": async (request: Request, session: Session) => {
+        const account = await prisma.account.findFirst({
+            where: { userId: session.userId, providerId: "discord" },
+            select: { id: true }
+        });
+        if (!account) return Role.USER;
+
         const tokens = await auth.api.getAccessToken({
             body: {
-                providerId: "discord",
+                accountId: account.id,
                 userId: session.userId
             },
             headers: request.headers

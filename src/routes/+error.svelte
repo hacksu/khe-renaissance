@@ -5,12 +5,8 @@
     import Button from "../components/Button.svelte";
     import Meteor from "../assets/castle/gargoyle.svg";
     
-    type Props = {
-        error?: Error & { status?: number; message?: string };
-        status?: number;
-    };
-    
-    const { error, status }: Props = $props();
+    const error = $derived($page.error as (App.Error & { status?: number }) | null);
+    const status = $derived($page.status);
     
     const errorMessages: Record<number, { title: string; message: string }> = {
         404: {
@@ -31,14 +27,15 @@
         }
     };
     
-    const errorCode = status || error?.status || 500;
-    const errorInfo = errorMessages[errorCode] || {
+    const errorCode = $derived(status || error?.status || 500);
+    const errorInfo = $derived(errorMessages[errorCode] || {
         title: "Oops!",
         message: "Something unexpected happened. Don't worry though - we're on it! Try refreshing the page or navigating back home."
-    };
-    
-    // Log error code to console for debugging
-    console.error(`Error ${errorCode}:`, error);
+    });
+
+    $effect(() => {
+        console.error(`Error ${errorCode}:`, error?.message ?? error);
+    });
 </script>
 
 <div class="min-h-[calc(100vh-12rem)] flex flex-col justify-center items-center py-24">
@@ -65,6 +62,12 @@
                 <p class="text-lg text-castle-stoneHighlight leading-relaxed max-w-lg">
                     {errorInfo.message}
                 </p>
+
+                {#if error?.message}
+                    <p class="text-sm text-castle-stoneLight/70 font-mono max-w-lg">
+                        {errorCode}: {error.message}
+                    </p>
+                {/if}
                 
                 <!-- Action Buttons -->
                 <div class="flex flex-col md:flex-row gap-3 w-full max-w-md mt-4">

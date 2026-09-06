@@ -98,11 +98,15 @@ export const auth = betterAuth({
             const newSession = ctx.context?.newSession;
             if (request && newSession) {
                 const { session, user } = newSession;
-                let role = await getRole(provider, request, session, user.role);
-                await prisma.user.update({
-                    data: { role },
-                    where: { id: user.id }
-                });
+                try {
+                    const role = await getRole(provider, request, session, user.role);
+                    await prisma.user.update({
+                        data: { role },
+                        where: { id: user.id }
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
             }
         })
     },
