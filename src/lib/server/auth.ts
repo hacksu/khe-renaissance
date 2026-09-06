@@ -94,7 +94,10 @@ export const auth = betterAuth({
             if (path != "/callback/:id") {
                 return;
             }
-            const provider = params.id as SocialProvider;
+            const provider = params?.id as SocialProvider | undefined;
+            if (!provider) {
+                return;
+            }
             const newSession = ctx.context?.newSession;
             if (request && newSession) {
                 const { session, user } = newSession;

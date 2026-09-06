@@ -16,7 +16,10 @@
 
     let hash      = $state("");
     let qrDataUrl = $state("");
-    let { form }  = $props<{ form?: { success?: boolean; alreadySignedUp?: boolean; error?: string } }>();
+    type LandingProps = {
+        form?: { success?: boolean; alreadySignedUp?: boolean; error?: string } | null;
+    };
+    let { form }: LandingProps = $props();
     let email     = $state("");
     let loading   = $state(false);
 
@@ -38,15 +41,15 @@
         setTimeout(() => { moonWobble = false; }, 700);
     }
 
-    onMount(async () => {
+    onMount(() => {
         hash = window.location.hash;
         const onHash = () => { hash = window.location.hash; };
         window.addEventListener("hashchange", onHash);
 
-        qrDataUrl = await QRCode.toDataURL("https://khe.io", {
+        QRCode.toDataURL("https://khe.io", {
             width: 364, margin: 2,
             color: { dark: "#2e2e3a", light: "#c9a84c" },
-        });
+        }).then((url) => { qrDataUrl = url; });
 
         return () => window.removeEventListener("hashchange", onHash);
     });

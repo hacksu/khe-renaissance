@@ -3,7 +3,7 @@
     import { twMerge } from "tailwind-merge";
 
     type ButtonSize = "md" | "lg";
-    type Props = { size?: ButtonSize } & HTMLButtonAttributes;
+    type Props = { size?: ButtonSize; class?: string } & Omit<HTMLButtonAttributes, "class">;
     const { children, size = "md", class: extraClass, ...others }: Props = $props();
 </script>
 

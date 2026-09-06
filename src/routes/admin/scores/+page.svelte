@@ -3,8 +3,11 @@
     import { invalidateAll } from "$app/navigation";
     import { onMount } from "svelte";
     import Icon from "@iconify/svelte";
+    import type { PageData } from './$types';
 
-    let { data } = $props();
+    let { data }: { data: PageData } = $props();
+
+    type ScoreRow = PageData['theme'][number];
 
     let isClearing = $state(false);
     let isSendingFeedback = $state(false);
@@ -24,7 +27,7 @@
         return score;
     }
 
-    function getSortedResults(results: typeof allResults) {
+    function getSortedResults(results: ScoreRow[]): ScoreRow[] {
         return [...results].sort((a, b) => {
             if (sortBy === 'display') return getDisplayScore(b) - getDisplayScore(a);
             const aScore = a.optionalScores[sortBy] ?? -Infinity;
@@ -154,7 +157,7 @@
     <!-- Leaderboard -->
     <div class="space-y-12">
 
-        {#snippet resultsTable(results: typeof allResults, showTrack: boolean, showTrackFit: boolean)}
+        {#snippet resultsTable(results: ScoreRow[], showTrack: boolean, showTrackFit: boolean)}
             <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-secondary/5 border-b border-secondary/10 text-secondary/60 uppercase tracking-widest text-xs">
@@ -218,7 +221,7 @@
             </div>
         {/snippet}
 
-        {#snippet themeTable(results: typeof data.theme)}
+        {#snippet themeTable(results: ScoreRow[])}
             <div class="bg-white/60 backdrop-blur-md rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-secondary/5 border-b border-secondary/10 text-secondary/60 uppercase tracking-widest text-xs">
