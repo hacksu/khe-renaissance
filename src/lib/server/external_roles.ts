@@ -22,16 +22,34 @@ const handlers: Partial<Record<SocialProvider, ExternalRoleHandler>> = {
             },
             headers: request.headers
         });
-        const member = await fetch(`https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`, {
+        const response = await fetch(`https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`, {
             headers: {
                 "Authorization": `Bearer ${tokens.accessToken}`
             },
-        })
-            .then(res => res.json())
-            .catch(_ => null);
+        }).catch((e) => {
+            console.error(`[discord-role] guild member request failed for ${session.userId}:`, e);
+            return null;
+        });
 
-        const hasLeaderRole = member?.roles?.some((role: string) => DISCORD_ROLES.includes(role));
-        if (hasLeaderRole) return Role.STAFF; // Staff implies Judge access usually, or we can make them distinct. 
+        const member = response ? await response.json().catch(() => null) : null;
+
+        if (!response?.ok) {
+            console.error(
+                `[discord-role] guild ${DISCORD_GUILD_ID} lookup returned ${response?.status ?? "no response"} for user ${session.userId}:`,
+                member
+            );
+            return Role.USER;
+        }
+
+        const actualRoles: string[] = member?.roles ?? [];
+        const hasLeaderRole = actualRoles.some((role: string) => DISCORD_ROLES.includes(role));
+
+        console.log(
+            `[discord-role] user ${session.userId} -> ${hasLeaderRole ? Role.STAFF : Role.USER}\n` +
+            `  expected any of: ${DISCORD_ROLES.join(", ")}\n` +
+            `  actual roles:    ${actualRoles.length ? actualRoles.join(", ") : "(none)"}`
+        );
+
         return hasLeaderRole ? Role.STAFF : Role.USER;
     }
 }
