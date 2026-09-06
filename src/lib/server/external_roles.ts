@@ -19,8 +19,7 @@ const handlers: Partial<Record<SocialProvider, ExternalRoleHandler>> = {
             body: {
                 accountId: account.id,
                 userId: session.userId
-            },
-            headers: request.headers
+            }
         });
         const response = await fetch(`https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`, {
             headers: {
