@@ -30,6 +30,7 @@ services:
       - ORIGIN=${ORIGIN:-http://0.0.0.0:3000}
       - PUBLIC_JUDGE_APP_URL=${PUBLIC_JUDGE_APP_URL:-http://localhost:3100}
       - COOKIE_DOMAIN=${COOKIE_DOMAIN:-.khe.io}
+      - EXTRA_TRUSTED_ORIGINS=${EXTRA_TRUSTED_ORIGINS:-}
     networks:
       - app_internal
     volumes:
@@ -49,6 +50,7 @@ services:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - MAIN_APP_URL=${MAIN_APP_URL:-http://localhost:3000}
       - COOKIE_DOMAIN=${COOKIE_DOMAIN:-.khe.io}
+      - EXTRA_TRUSTED_ORIGINS=${EXTRA_TRUSTED_ORIGINS:-}
     networks:
       - app_internal
 

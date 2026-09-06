@@ -4,6 +4,11 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "judging-core/prisma";
 import { magicLink } from "better-auth/plugins";
 
+const extraTrustedOrigins = (env.EXTRA_TRUSTED_ORIGINS ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
 export const auth = betterAuth({
     basePath: "/api/auth",
     trustedOrigins: [
@@ -12,7 +17,8 @@ export const auth = betterAuth({
         "http://localhost.khe.io:3000",
         "http://judge.localhost.khe.io:3100",
         "https://khe.io",
-        "https://*.khe.io"
+        "https://*.khe.io",
+        ...extraTrustedOrigins
     ],
     database: prismaAdapter(prisma, {
         provider: "postgresql",
