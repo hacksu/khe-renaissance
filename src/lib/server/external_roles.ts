@@ -25,31 +25,13 @@ const handlers: Partial<Record<SocialProvider, ExternalRoleHandler>> = {
             headers: {
                 "Authorization": `Bearer ${tokens.accessToken}`
             },
-        }).catch((e) => {
-            console.error(`[discord-role] guild member request failed for ${session.userId}:`, e);
-            return null;
-        });
+        }).catch(() => null);
 
-        const member = response ? await response.json().catch(() => null) : null;
+        const member = response?.ok ? await response.json().catch(() => null) : null;
+        if (!member) return Role.USER;
 
-        if (!response?.ok) {
-            console.error(
-                `[discord-role] guild ${DISCORD_GUILD_ID} lookup returned ${response?.status ?? "no response"} for user ${session.userId}:`,
-                member
-            );
-            return Role.USER;
-        }
-
-        const actualRoles: string[] = member?.roles ?? [];
-        const hasLeaderRole = actualRoles.some((role: string) => DISCORD_ROLES.includes(role));
-
-        console.log(
-            `[discord-role] user ${session.userId} -> ${hasLeaderRole ? Role.STAFF : Role.USER}\n` +
-            `  expected any of: ${DISCORD_ROLES.join(", ")}\n` +
-            `  actual roles:    ${actualRoles.length ? actualRoles.join(", ") : "(none)"}`
-        );
-
-        return hasLeaderRole ? Role.STAFF : Role.USER;
+        const actualRoles: string[] = member.roles ?? [];
+        return actualRoles.some((role: string) => DISCORD_ROLES.includes(role)) ? Role.STAFF : Role.USER;
     }
 }
 

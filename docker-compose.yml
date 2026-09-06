@@ -27,9 +27,11 @@ services:
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/khe}
-      - ORIGIN=${ORIGIN:-http://0.0.0.0:3000}
-      - PUBLIC_JUDGE_APP_URL=${PUBLIC_JUDGE_APP_URL:-http://localhost:3100}
-      - COOKIE_DOMAIN=${COOKIE_DOMAIN:-.khe.io}
+      - ORIGIN=${ORIGIN}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - PUBLIC_JUDGE_APP_URL=${PUBLIC_JUDGE_APP_URL}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
       - EXTRA_TRUSTED_ORIGINS=${EXTRA_TRUSTED_ORIGINS:-}
     networks:
       - app_internal
@@ -45,11 +47,11 @@ services:
       dockerfile: judge-app/Dockerfile
     environment:
       - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/khe}
-      - ORIGIN=${JUDGE_ORIGIN:-http://0.0.0.0:3000}
-      - BETTER_AUTH_URL=${JUDGE_BETTER_AUTH_URL:-http://localhost:3100}
+      - ORIGIN=${JUDGE_ORIGIN}
+      - BETTER_AUTH_URL=${JUDGE_BETTER_AUTH_URL}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
-      - MAIN_APP_URL=${MAIN_APP_URL:-http://localhost:3000}
-      - COOKIE_DOMAIN=${COOKIE_DOMAIN:-.khe.io}
+      - MAIN_APP_URL=${MAIN_APP_URL}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
       - EXTRA_TRUSTED_ORIGINS=${EXTRA_TRUSTED_ORIGINS:-}
     networks:
       - app_internal

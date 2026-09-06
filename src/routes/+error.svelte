@@ -63,11 +63,6 @@
                     {errorInfo.message}
                 </p>
 
-                {#if error?.message}
-                    <p class="text-sm text-castle-stoneLight/70 font-mono max-w-lg">
-                        {errorCode}: {error.message}
-                    </p>
-                {/if}
                 
                 <!-- Action Buttons -->
                 <div class="flex flex-col md:flex-row gap-3 w-full max-w-md mt-4">

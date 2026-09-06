@@ -16,7 +16,7 @@ export const load: LayoutServerLoad = async ({ request }) => {
     }
 
     if (role != Role.STAFF) {
-        throw error(401, `You do not have the permissions to access this page. Expected role "${Role.STAFF}", got "${role ?? "none"}" for ${session.user.email}.`);
+        throw error(401, "You do not have the permissions to access this page.");
     }
 
     return { session };
