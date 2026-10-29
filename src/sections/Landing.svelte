@@ -27,6 +27,18 @@
     const applicationsClosed = Utils.hasApplicationsClosed();
     const isQrMode = $derived(hash === "#qr");
 
+    // wall.svg and torch.svg geometry, in viewBox units
+    const WALL_WIDTH    = 1920;
+    const WALL_HEIGHT   = 440;
+    const MERLON_CENTER = 330;
+    const MERLON_FACE_Y = 57;
+    const TORCH_WIDTH   = 67.2;
+    const BRACKET_RISE  = TORCH_WIDTH * 2 * (50 / 320);
+
+    const torchWidth  = TORCH_WIDTH / WALL_WIDTH * 100;
+    const torchInset  = (MERLON_CENTER - TORCH_WIDTH / 2) / WALL_WIDTH * 100;
+    const torchBottom = (WALL_HEIGHT - MERLON_FACE_Y - BRACKET_RISE) / WALL_HEIGHT * 100;
+
     function clickMoon() {
         if (moonWobble) return;
         moonWobble = true;
@@ -75,16 +87,17 @@
     <img src={enchantedForestSvg} aria-hidden="true" alt=""
          class="absolute bottom-0 left-0 w-full h-auto z-[4] pointer-events-none" />
 
-    <img src={wallSvg} aria-hidden="true" alt=""
-         class="absolute bottom-0 left-0 w-full h-auto z-[5] pointer-events-none" />
+    <div class="absolute bottom-0 left-0 w-full z-[5] pointer-events-none">
+        <img src={wallSvg} aria-hidden="true" alt="" class="block w-full h-auto" />
 
-    <img src={torchSvg} aria-hidden="true" alt=""
-         class="absolute z-[9] pointer-events-none torch-l"
-         style="width: 3.5vw; min-width: 26px; bottom: calc(37.5vw - 14vw); left: 19%;" />
+        <img src={torchSvg} aria-hidden="true" alt=""
+             class="absolute torch-l"
+             style="width: {torchWidth}%; bottom: {torchBottom}%; left: {torchInset}%;" />
 
-    <img src={torchSvg} aria-hidden="true" alt=""
-         class="absolute z-[9] pointer-events-none torch-r"
-         style="width: 3.5vw; min-width: 26px; bottom: calc(37.5vw - 14vw); right: 19%; transform: scaleX(-1);" />
+        <img src={torchSvg} aria-hidden="true" alt=""
+             class="absolute torch-r"
+             style="width: {torchWidth}%; bottom: {torchBottom}%; right: {torchInset}%; transform: scaleX(-1);" />
+    </div>
 
     <!-- Fog 
     <img src={fogSvg} aria-hidden="true" alt=""
