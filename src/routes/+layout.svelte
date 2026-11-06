@@ -6,16 +6,21 @@
     let { children } = $props();
 
     let isJudgeRoute = $derived($page.url.pathname.startsWith('/judge'));
+    let isHomeRoute = $derived($page.url.pathname === '/');
 </script>
 
-<div class="text-white bg-castle-skyDeep min-h-screen flex flex-col">
-    {#if !isJudgeRoute}
+<svelte:head>
+    <title>{isHomeRoute ? "Kent Hack Enough 2027 - Hack the Kingdom" : "Kent Hack Enough"}</title>
+</svelte:head>
+
+<div class="site-shell" id={isHomeRoute ? undefined : "top"}>
+    {#if !isJudgeRoute && !isHomeRoute}
         <Navbar />
     {/if}
-    <div class="flex-1 {isJudgeRoute ? 'pt-0' : ($page.url.pathname === '/' ? 'pt-0' : 'pt-24')}">
+    <div class="route-content">
         {@render children()}
     </div>
-    {#if !isJudgeRoute}
+    {#if !isJudgeRoute && !isHomeRoute}
         <Footer />
     {/if}
 </div>

@@ -1,164 +1,120 @@
-<script>
-    import Link from "$components/Link.svelte";
-</script>
+<section id="map" aria-labelledby="map-title">
+    <h2 id="map-title">Find the Castle</h2>
+    <p>
+        The gates open at Crawford Hall, home of the Ambassador Crawford College of Business and Entrepreneurship. Navigate to us and join the siege.
+    </p>
 
-<div id="map" class="flex flex-col gap-12">
+    <div class="map-frame">
+        <iframe
+            title="Map to Ambassador Crawford College of Business and Entrepreneurship"
+            src="https://map.concept3d.com/?id=568&tbh&sbh#!m/1070689?share"
+        ></iframe>
+    </div>
 
-    <!-- Section heading -->
-    <div class="flex flex-col items-center gap-3 text-center">
-        <p class="eyebrow">The Kingdom's Location</p>
-        <h2 class="text-5xl font-black text-castle-gold" style="text-shadow: 0 0 30px rgba(201,168,76,0.4);">
-            Find the Castle
-        </h2>
-        <p class="text-castle-stoneHighlight text-sm max-w-md">
-            The gates open at Crawford Hall, home of the Ambassador Crawford College of Business and Entrepreneurship. Navigate to us and join the siege.
+    <div class="directions">
+        <h3>Directions</h3>
+        <p>
+            <a href="https://maps.app.goo.gl/j5j1cXnC6cy5ba4M7" target="_blank" rel="noopener noreferrer">
+                Crawford Hall<br />
+                Ambassador Crawford College of Business and Entrepreneurship<br />
+                100 Midway Dr., Kent, OH 44242
+            </a>
         </p>
+        <p>Nearby parking: <strong>R16 Lot on Terrace Drive</strong>, across from Crawford Hall.</p>
+        <p>Follow posted <strong>parking restrictions and permit requirements</strong>.</p>
+        <p>Use the campus map to walk to <strong>Crawford Hall at 100 Midway Drive</strong>.</p>
+        <a class="directions-link" href="https://maps.app.goo.gl/j5j1cXnC6cy5ba4M7" target="_blank" rel="noopener noreferrer">Get directions</a>
     </div>
-
-    <!-- Map + directions layout -->
-    <div class="map-grid">
-
-        <!-- Directions panel -->
-        <div class="directions-panel">
-            <div class="panel-header">
-                <span class="panel-title">Royal Directions</span>
-            </div>
-
-            <div class="directions-body">
-                <div class="destination-block">
-                    <p class="destination-label">Destination</p>
-                    <Link href="https://maps.app.goo.gl/j5j1cXnC6cy5ba4M7">
-                        Crawford Hall<br/>
-                        Ambassador Crawford College of Business and Entrepreneurship<br/>
-                        100 Midway Dr., Kent, OH 44242
-                    </Link>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="directions-list">
-                    <div class="direction-item">
-                        <p class="text-castle-stoneHighlight text-sm leading-relaxed">
-                            Nearby parking: <span class="text-white font-semibold">R16 Lot on Terrace Drive</span>,
-                            across from Crawford Hall.
-                        </p>
-                    </div>
-                    <div class="direction-item">
-                        <p class="text-castle-stoneHighlight text-sm leading-relaxed">
-                            Follow posted <span class="text-white font-semibold">parking restrictions and permit requirements</span>.
-                        </p>
-                    </div>
-                    <div class="direction-item">
-                        <p class="text-castle-stoneHighlight text-sm leading-relaxed">
-                            Use the campus map to walk to <span class="text-white font-semibold">Crawford Hall at 100 Midway Drive</span>.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Map embed -->
-        <div class="map-frame-wrap">
-            <iframe
-                class="w-full h-full rounded-lg"
-                title="Map to Ambassador Crawford College of Business and Entrepreneurship"
-                src="https://map.concept3d.com/?id=568&tbh&sbh#!m/1070689?share"
-                scrolling="no"
-                frameborder="0"
-                style="border: 0px;"
-            ></iframe>
-            <div class="map-border-glow"></div>
-        </div>
-    </div>
-</div>
+</section>
 
 <style>
-    .eyebrow {
-        font-size: 0.65rem; text-transform: uppercase;
-        letter-spacing: 0.5em; font-weight: 600; color: #ffb347;
+    section {
+        min-width: 0;
+        color: var(--paper);
     }
 
-    .map-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    @media (min-width: 1024px) {
-        .map-grid {
-            grid-template-columns: 360px 1fr;
-            align-items: stretch;
-        }
+    h2 {
+        margin: 0 0 28px;
+        font-size: 39px;
+        font-weight: 400;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
     }
 
-    .directions-panel {
-        display: flex;
-        flex-direction: column;
-        background: linear-gradient(160deg, #3a3a4e 0%, #2a2a38 100%);
-        border: 1px solid rgba(201,168,76,0.25);
-        border-radius: 0.75rem;
-        overflow: hidden;
+    h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.4;
     }
 
-    .panel-header {
-        display: flex;
-        align-items: center;
-        gap: 0.625rem;
-        padding: 0.875rem 1.25rem;
-        background: linear-gradient(90deg, rgba(201,168,76,0.12), transparent);
-        border-bottom: 1px solid rgba(201,168,76,0.18);
+    p {
+        margin: 0 0 19px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.65;
+        overflow-wrap: anywhere;
     }
 
-    .panel-title {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.35em;
-        font-weight: 700;
-        color: rgba(201,168,76,0.7);
+    strong,
+    a {
+        color: var(--paper);
     }
 
-    .directions-body {
-        padding: 1.25rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        flex: 1;
+    a {
+        text-decoration: underline;
+        text-underline-offset: 4px;
     }
 
-    .destination-block { display: flex; flex-direction: column; gap: 0.25rem; }
-
-    .destination-label {
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.3em;
-        color: rgba(201,168,76,0.5);
-        font-weight: 700;
+    a:hover {
+        text-decoration-thickness: 2px;
     }
 
-    .divider {
-        height: 1px;
-        background: linear-gradient(90deg, rgba(201,168,76,0.2), transparent);
+    a:focus-visible {
+        outline: 2px solid #e6c78b;
+        outline-offset: 6px;
     }
 
-    .directions-list { display: flex; flex-direction: column; gap: 1rem; }
-
-    .direction-item {
-        padding-left: 0.25rem;
-        border-left: 2px solid rgba(201,168,76,0.25);
+    .map-frame {
+        min-width: 0;
+        margin: 26px 0;
+        border: 1px solid #40516a;
     }
 
-    .map-frame-wrap {
-        position: relative;
+    iframe {
+        display: block;
+        width: 100%;
+        height: 400px;
         min-height: 360px;
-        border-radius: 0.75rem;
-        overflow: hidden;
-        border: 1px solid rgba(201,168,76,0.2);
+        border: 0;
     }
 
-    .map-border-glow {
-        position: absolute;
-        inset: 0;
-        border-radius: 0.75rem;
-        pointer-events: none;
-        box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+    .directions {
+        padding: 0 0 23px;
+    }
+
+    .directions-link {
+        display: inline-block;
+        margin-top: 3px;
+        font-size: 14px;
+    }
+
+    @media (max-width: 760px) {
+        h2 {
+            margin-bottom: 24px;
+            font-size: 31px;
+        }
+
+        h3 {
+            font-size: 17px;
+        }
+
+        .map-frame {
+            margin: 24px 0;
+        }
+
+        iframe {
+            height: 360px;
+        }
     }
 </style>

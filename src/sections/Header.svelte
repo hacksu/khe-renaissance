@@ -1,71 +1,31 @@
 <script lang="ts">
     import Shield from "../assets/castle/shield.svg";
-    import Banner from "../assets/castle/banner.svg";
 </script>
 
-<div class="flex flex-col items-center gap-16">
-
-    <div class="relative w-full flex flex-col items-center text-center gap-5">
-        <img src={Banner} aria-hidden="true" alt=""
-             class="hidden lg:block absolute left-0  top-0 h-72 w-auto opacity-60 -translate-x-2 pointer-events-none" />
-        <img src={Banner} aria-hidden="true" alt=""
-             class="hidden lg:block absolute right-0 top-0 h-72 w-auto opacity-60 translate-x-2 pointer-events-none" />
-
-        <h2 class="text-5xl md:text-6xl font-black text-white leading-tight">
-            KENT HACK ENOUGH
-        </h2>
-
-        <div class="flex items-center gap-4 w-full max-w-sm">
-            <span class="flex-1 h-px bg-castle-gold/30"></span>
-            <span class="text-castle-gold font-bold tracking-[0.4em] text-sm">2027</span>
-            <span class="flex-1 h-px bg-castle-gold/30"></span>
-        </div>
+<section class="intro" id="about" aria-labelledby="about-title">
+    <h2 id="about-title">Kent Hack Enough</h2>
+    <div class="intro-copy">
+        <img class="shield" src={Shield} alt="" />
+        <p>Kent Hack Enough storms the gates this year with our theme: <strong>Hack the Kingdom.</strong>
+            Sharpen your swords, marshal your code, and rule the kingdom!</p>
+        <p>This is our <strong>14th KHE!</strong> Whether you're <strong>completely new</strong> to tech &amp; design
+            or a <strong>seasoned veteran</strong>, spend a weekend making something legendary with us.</p>
     </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 items-center w-full mt-16 gap-5">
-        <div class="flex flex-col gap-6">
-            <div class="parchment-block">
-                <p class="text-lg md:text-xl leading-relaxed text-castle-stoneHighlight">
-                    Kent Hack Enough storms the gates this year with our theme:
-                    <span class="font-bold text-castle-torchYellow" style="text-shadow: 0 0 12px rgba(255,224,102,0.5);">
-                        Hack the Kingdom.
-                    </span>
-                    Sharpen your swords, marshal your code, and rule the kingdom!
-                </p>
-            </div>
-
-            <div class="parchment-block">
-                <p class="text-base text-castle-stoneHighlight leading-relaxed">
-                    This is our <span class="font-bold text-white">14th KHE!</span>
-                    Whether you're <span class="font-bold text-white">completely new</span> to
-                    tech & design or a <span class="font-bold text-white">seasoned veteran</span>,
-                    spend a weekend making something legendary with us.
-                </p>
-            </div>
-
-        </div>
-
-        <div class="flex justify-center lg:justify-end py-4">
-            <div class="shield-glow">
-                <img src={Shield} alt="Kingdom Shield"
-                     class="w-36 md:w-48 h-auto transition-transform duration-500 hover:scale-105 hover:rotate-3" />
-            </div>
-        </div>
-    </div>
-</div>
+</section>
 
 <style>
-
-    .parchment-block {
-        border-left: 3px solid rgba(201,168,76,0.4);
-        padding-left: 1.25rem;
-    }
-
-    .shield-glow {
-        filter: drop-shadow(0 0 20px rgba(201,168,76,0.35));
-        transition: filter 0.3s;
-    }
-    .shield-glow:hover {
-        filter: drop-shadow(0 0 36px rgba(201,168,76,0.6));
+    .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; padding: 88px 0; }
+    h2 { margin: 0; color: var(--paper); font-size: 39px; line-height: 1.15; }
+    .intro-copy { position: relative; padding-right: 85px; }
+    p { margin: 0 0 16px; color: var(--muted); font-size: 16px; line-height: 1.65; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--paper); font-weight: 400; }
+    .shield { position: absolute; top: 0; right: 0; width: 59px; height: auto; }
+    @media (max-width: 1100px) { .intro { gap: 55px; } }
+    @media (max-width: 760px) {
+        .intro { grid-template-columns: 1fr; gap: 28px; padding: 43px 0; }
+        h2 { font-size: 31px; }
+        .intro-copy { padding-right: 65px; }
+        .shield { width: 43px; }
     }
 </style>

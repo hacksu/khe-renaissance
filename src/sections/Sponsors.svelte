@@ -3,127 +3,86 @@
 
     let { barons, knights, squires }: { barons: Sponsor[]; knights: Sponsor[]; squires: Sponsor[] } = $props();
 
-    const isSvg = (url: string) => url.toLowerCase().endsWith('.svg');
-    const svgUrl = (url: string) => `/api/svg?url=${encodeURIComponent(url)}`;
+    const isSvg = (url: string) => /\.svg(?:[?#]|$)/i.test(url);
+    const imageSource = (url: string) => isSvg(url) ? `/api/svg?url=${encodeURIComponent(url)}` : url;
+    const tiers = $derived([
+        { name: 'Barons of the Realm', className: 'barons', sponsors: barons },
+        { name: 'Knights of the Order', className: 'knights', sponsors: knights },
+        { name: 'Squires of the Keep', className: 'squires', sponsors: squires },
+    ]);
 </script>
 
-<div id="sponsors" class="flex flex-col gap-12">
+<section id="sponsors" class="sponsor-section" aria-labelledby="sponsors-title">
+    <header class="sponsor-heading">
+        <h2 id="sponsors-title">Sponsors</h2>
+        <p>Without the generous support of these allies, the kingdom could not stand.</p>
+    </header>
 
-    <div class="flex flex-col items-center gap-3 text-center">
-        <p class="eyebrow">The Kingdom's Allies</p>
-        <h2 class="text-5xl font-black text-castle-gold" style="text-shadow: 0 0 30px rgba(201,168,76,0.4);">
-            Sponsors
-        </h2>
-        <p class="text-castle-stoneHighlight text-sm max-w-md">
-            Without the generous support of these allies, the kingdom could not stand.
-        </p>
+    <div class="sponsor-board">
+        {#each tiers as tier (tier.className)}
+            {#if tier.sponsors.length > 0}
+                <div class="sponsor-tier {tier.className}">
+                    <h3>{tier.name}</h3>
+                    <div class="sponsor-logos">
+                        {#each tier.sponsors as sponsor (sponsor.id)}
+                            <a href={sponsor.url} target="_blank" rel="noopener noreferrer">
+                                {#if sponsor.imageUrl}
+                                    <img src={imageSource(sponsor.imageUrl)} alt={sponsor.name} loading="lazy" />
+                                {:else}
+                                    <span>{sponsor.name}</span>
+                                {/if}
+                            </a>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+        {/each}
     </div>
 
-    {#if barons.length > 0}
-    <div class="flex flex-col gap-3">
-        <h3 class="tier-label">Barons of the Realm</h3>
-        <div class="flex flex-wrap gap-4 justify-center">
-            {#each barons as { imageUrl, name, url }}
-                <a href={url} target="_blank" rel="noopener noreferrer"
-                   class="sponsor-tile baron group">
-                    {#if isSvg(imageUrl)}
-                        <img src={svgUrl(imageUrl)} alt={name}
-                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-                    {:else}
-                        <img src={imageUrl} alt={name}
-                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-                    {/if}
-                </a>
-            {/each}
-        </div>
-    </div>
-    {/if}
-
-    {#if knights.length > 0}
-    <div class="flex flex-col gap-3">
-        <h3 class="tier-label">Knights of the Order</h3>
-        <div class="flex flex-wrap gap-3 justify-center">
-            {#each knights as { imageUrl, name, url }}
-                <a href={url} target="_blank" rel="noopener noreferrer"
-                   class="sponsor-tile knight group">
-                    {#if isSvg(imageUrl)}
-                        <img src={svgUrl(imageUrl)} alt={name}
-                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-                    {:else}
-                        <img src={imageUrl} alt={name}
-                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-                    {/if}
-                </a>
-            {/each}
-        </div>
-    </div>
-    {/if}
-
-    {#if squires.length > 0}
-    <div class="flex flex-col gap-3">
-        <h3 class="tier-label">Squires of the Keep</h3>
-        <div class="flex flex-wrap gap-3 justify-center">
-            {#each squires as { imageUrl, name, url }}
-                <a href={url} target="_blank" rel="noopener noreferrer"
-                   class="sponsor-tile squire group">
-                    {#if isSvg(imageUrl)}
-                        <img src={svgUrl(imageUrl)} alt={name}
-                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-                    {:else}
-                        <img src={imageUrl} alt={name}
-                             class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-                    {/if}
-                </a>
-            {/each}
-        </div>
-    </div>
-    {/if}
-
-    <p class="text-center text-castle-stoneHighlight text-sm">
-        Interested in sponsoring?
-        <a href="mailto:staff@khe.io" class="sponsor-cta">Contact us!</a>
+    <p class="sponsor-contact">
+        Interested in sponsoring? <a href="mailto:staff@khe.io">Contact us!</a>
     </p>
-</div>
+</section>
 
 <style>
-    .eyebrow {
-        font-size: 0.65rem; text-transform: uppercase;
-        letter-spacing: 0.5em; font-weight: 600; color: #ffb347;
+    .sponsor-section {
+        padding: 68px 0 75px;
+        color: var(--paper, #f0eee5);
+        font-size: 16px;
+        line-height: 1.65;
+        scroll-margin-top: 32px;
     }
 
-    .tier-label {
-        font-size: 0.65rem; text-transform: uppercase;
-        letter-spacing: 0.4em; font-weight: 700;
-        color: rgba(201,168,76,0.5);
-        padding-bottom: 0.4rem;
-        border-bottom: 1px solid rgba(201,168,76,0.12);
+    h2, h3, p { margin: 0; }
+    .sponsor-heading { max-width: 600px; margin: 0 auto 35px; text-align: center; }
+    .sponsor-heading h2 { font-size: 39px; line-height: 1.15; letter-spacing: -.035em; font-weight: 400; margin-bottom: 18px; }
+    .sponsor-heading > p { color: var(--muted, #b0b9c7); }
+    .sponsor-tier { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: center; gap: 35px; padding: 25px 0; }
+    .sponsor-tier h3 { font-size: 18px; font-weight: 400; line-height: 1.4; letter-spacing: -.015em; color: var(--muted, #b0b9c7); }
+    .sponsor-logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-around; gap: 30px; min-width: 0; }
+    .sponsor-logos a { display: flex; align-items: center; justify-content: center; padding: 8px 12px; max-width: 100%; min-width: 0; color: var(--paper, #f0eee5); text-decoration: none; overflow-wrap: anywhere; }
+    .sponsor-logos img { display: block; width: 185px; max-width: 100%; height: 75px; object-fit: contain; filter: brightness(0) invert(.88); opacity: .85; transition: opacity .15s; }
+    .knights .sponsor-logos img { width: 155px; height: 65px; }
+    .squires .sponsor-logos img { width: 130px; height: 55px; }
+    .sponsor-logos a:hover img, .sponsor-logos a:focus-visible img { opacity: 1; }
+    a:focus-visible { outline: 2px solid var(--paper, #f0eee5); outline-offset: 5px; }
+    .sponsor-contact { color: var(--muted, #b0b9c7); text-align: center; margin-top: 28px; }
+    .sponsor-contact a { text-decoration: underline; text-underline-offset: 4px; color: var(--paper, #f0eee5); }
+
+    @media (max-width: 1100px) {
+        .sponsor-tier { grid-template-columns: 180px minmax(0, 1fr); gap: 20px; }
+        .sponsor-logos { gap: 20px; }
     }
 
-    .sponsor-tile {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(145deg, #545468, #3e3e52);
-        border: 1px solid rgba(201,168,76,0.15);
-        border-radius: 0.5rem;
-        padding: 1rem;
-        transition: border-color 0.25s, box-shadow 0.25s;
-        overflow: hidden;
+    @media (max-width: 760px) {
+        .sponsor-section { padding: 42px 0; }
+        .sponsor-heading h2 { font-size: 31px; }
+        .sponsor-tier { grid-template-columns: 1fr; gap: 15px; padding: 27px 0; }
+        .sponsor-tier h3 { font-size: 18px; text-align: center; }
+        .sponsor-logos { gap: 12px; }
+        .sponsor-logos a { padding: 5px; flex: 0 1 140px; }
+        .sponsor-logos img { width: 130px; height: 60px; }
+        .knights .sponsor-logos img { width: 118px; height: 55px; }
+        .squires .sponsor-logos img { width: 105px; height: 50px; }
     }
-    .sponsor-tile:hover {
-        border-color: rgba(201,168,76,0.4);
-        box-shadow: 0 0 20px rgba(201,168,76,0.12);
-    }
-
-    .sponsor-tile.baron  { width: 220px; height: 120px; }
-    .sponsor-tile.knight { width: 180px; height: 100px; }
-    .sponsor-tile.squire { width: 150px; height: 85px;  }
-
-    .sponsor-cta {
-        color: #c9a84c;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        transition: color 0.2s;
-    }
-    .sponsor-cta:hover { color: #ffb347; }
 </style>

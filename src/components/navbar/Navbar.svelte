@@ -1,222 +1,132 @@
 <script lang="ts">
     import { authClient } from "$lib/client";
-    import { onMount } from "svelte";
-    import { page } from "$app/stores";
     import Logo from "../../assets/2027logo.png";
-    import devPost from "../../assets/devPost.png";
-    import NavbarItem from "./NavbarItem.svelte";
+    import MlhBadge from "../../assets/mlh-trust-badge-2027-blue.svg";
 
-    let session = authClient.useSession();
-    let scrolled = $state(false);
+    type Sections = { prizes: boolean; tracks: boolean; sponsors: boolean };
+    let { home = false, sections = { prizes: true, tracks: true, sponsors: true } } = $props<{
+        home?: boolean;
+        sections?: Sections;
+    }>();
+
+    const session = authClient.useSession();
     let mobileMenuOpen = $state(false);
-
-
-    // Navigation links - some are pages, some are homepage sections, sorry, nothing I can do about that.
-    const navLinks = [
-        { href: "/", label: "Home", type: "page" },
-        { href: "/schedule", label: "Schedule", type: "page" },
-        { href: "/#prizes", label: "Prizes", type: "section" },
-        { href: "/#faq", label: "FAQ", type: "section" },
-        { href: "/#sponsors", label: "Sponsors", type: "section" }
-    ];
-
-    onMount(() => {
-        const handleScroll = () => {
-            scrolled = window.scrollY > 100;
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    });
-
-    function isActive(href: string): boolean {
-        return $page.url.pathname === href;
-    }
+    const links = $derived([
+        { href: "/schedule", label: "Schedule" },
+        ...(sections.prizes ? [{ href: "/#prizes", label: "Prizes" }] : []),
+        ...(sections.tracks ? [{ href: "/#tracks", label: "Tracks" }] : []),
+        ...(sections.sponsors ? [{ href: "/#sponsors", label: "Sponsors" }] : []),
+        { href: "/#faq", label: "FAQ" },
+    ]);
 </script>
 
-<a href="https://mlh.io/seasons/2027/events" target="_blank" class="fixed top-0 left-0 z-50">
-    <img src="https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-blue.svg" alt="Major League Hacking 2027 Hackathon Season" class="w-20">
-</a>
+<header class="site-header site-container" class:homepage={home}>
+    <a class="brand" href="/" aria-label="Kent Hack Enough home">
+        <span class="brand-logo"><img src={Logo} alt="" /></span>
+        <span>Kent Hack Enough<small>KENT STATE UNIVERSITY / 2027</small></span>
+    </a>
 
-<nav
-    class="fixed top-0 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ease-out"
-    class:scrolled
-    style="
-        margin-top: {scrolled ? '0' : '1.5rem'};
-        width: {scrolled ? '100%' : 'min(90%, 900px)'};
-        border-radius: {scrolled ? '0' : '9999px'};
-    "
->
-    <div 
-        class="relative backdrop-blur-sm bg-castle-stoneDark/80 border border-castle-stoneMid/40 shadow-lg transition-all duration-500"
-        style="border-radius: inherit;"
-    >
-        <div 
-            class="absolute inset-0 bg-gradient-to-r from-castle-torchOrange/5 via-transparent to-castle-gold/10 pointer-events-none transition-opacity duration-500"
-            style="border-radius: inherit; opacity: {scrolled ? '1' : '0.5'};"
-        ></div>
-
-        <div class="relative px-6 py-3 flex items-center justify-center gap-4">
-            <div class="hidden lg:flex items-center gap-1 flex-1 justify-end" style="padding-left: {$page.url.pathname === '/' ? '0' : (scrolled ? '100px' : '0')};">
-                {#each navLinks.slice(1) as link}
-                    <NavbarItem 
-                        href={link.href}
-                        class="relative px-3 py-2 text-castle-stoneHighlight font-medium transition-all duration-300 hover:text-castle-torchYellow group text-sm"
-                    >
-                        <span class="relative z-10">{link.label}</span>
-                        
-                        {#if isActive(link.href)}
-                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-castle-torchOrange rounded-full"></div>
-                        {/if}
-                        
-                        <div class="absolute inset-0 bg-castle-stoneMid/30 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></div>
-                    </NavbarItem>
-                {/each}
-            </div>
-
-            <NavbarItem href="/" class="flex-shrink-0 mx-4">
-                <img 
-                    src={Logo} 
-                    width={scrolled ? 60 : 70} 
-                    alt="Kent Hack Enough" 
-                    class="transition-all duration-500 hover:scale-110 hover:rotate-3"
-                />
-            </NavbarItem>
-
-            <div class="hidden lg:flex items-center gap-3 flex-1 justify-end">
-                <NavbarItem 
-                    href="https://khe-2027.devpost.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="transition-transform duration-300 hover:scale-110 hover:rotate-6"
-                >
-                    <img src={devPost} width={40} alt="DevPost" />
-                </NavbarItem>
-                
-                {#if $session.data}
-                    <NavbarItem
-                        href="/profile"
-                        class="px-4 py-2 text-castle-torchYellow font-medium bg-castle-torchOrange/20 hover:bg-castle-torchOrange/30 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-castle-torchOrange/50 text-sm"
-                    >
-                        {$session.data.user.email}
-                    </NavbarItem>
-                {:else}
-                    <NavbarItem
-                        href="/auth/login"
-                        class="px-5 py-2 text-white font-semibold bg-castle-torchOrange rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-castle-torchOrange/50 hover:scale-105 hover:bg-castle-torchAmber text-sm"
-                    >
-                        Login
-                    </NavbarItem>
-                {/if}
-            </div>
-
-            <button
-                class="lg:hidden absolute right-4 w-10 h-10 flex flex-col justify-center items-center gap-1.5 group"
-                onclick={() => mobileMenuOpen = !mobileMenuOpen}
-                aria-label="Toggle menu"
-            >
-                <span 
-                    class="w-6 h-0.5 bg-castle-stoneHighlight rounded-full transition-all duration-300 group-hover:bg-castle-torchYellow"
-                    class:rotate-45={mobileMenuOpen}
-                    class:translate-y-2={mobileMenuOpen}
-                ></span>
-                <span 
-                    class="w-6 h-0.5 bg-castle-stoneHighlight rounded-full transition-all duration-300 group-hover:bg-castle-torchYellow"
-                    class:opacity-0={mobileMenuOpen}
-                ></span>
-                <span 
-                    class="w-6 h-0.5 bg-castle-stoneHighlight rounded-full transition-all duration-300 group-hover:bg-castle-torchYellow"
-                    class:-rotate-45={mobileMenuOpen}
-                    class:-translate-y-2={mobileMenuOpen}
-                ></span>
-            </button>
+    <nav class="navigation" aria-label="Main navigation">
+        <div class="desktop-links">
+            {#each links as link (link.href)}
+                <a href={link.href}>{link.label}</a>
+            {/each}
         </div>
-    </div>
-</nav>
-
-{#if mobileMenuOpen}
-    <div 
-        class="fixed inset-0 z-[35] lg:hidden"
-        onclick={() => mobileMenuOpen = false}
-    >
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"></div>
-        
-        <div
-            class="absolute top-20 right-4 left-4 bg-castle-mortar/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-castle-stoneMid/30 overflow-hidden animate-slide-down"
-            onclick={(e) => e.stopPropagation()}
-        >
-            <div class="p-6 space-y-2">
-                {#each navLinks as link}
-                    <NavbarItem 
-                        href={link.href}
-                        class="block px-4 py-3 text-castle-stoneHighlight font-medium rounded-lg transition-all duration-300 hover:bg-castle-stoneMid/60 hover:text-castle-torchYellow hover:translate-x-2"
-                        onclick={() => mobileMenuOpen = false}
-                    >
-                        <span class="flex items-center gap-3">
-                            {#if isActive(link.href)}
-                                <span class="w-1.5 h-1.5 bg-castle-torchOrange rounded-full"></span>
-                            {/if}
-                            {link.label}
-                        </span>
-                    </NavbarItem>
+        <details class="mobile-links" bind:open={mobileMenuOpen}>
+            <summary>Menu</summary>
+            <div class="mobile-menu">
+                <a href="/" onclick={() => mobileMenuOpen = false}>Home</a>
+                {#each links as link (link.href)}
+                    <a href={link.href} onclick={() => mobileMenuOpen = false}>{link.label}</a>
                 {/each}
-
-                <div class="h-px bg-castle-stoneMid/40 my-4"></div>
-
-                <NavbarItem 
-                    href="https://khe-2027.devpost.com/"
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    class="flex items-center gap-3 px-4 py-3 text-castle-stoneHighlight font-medium rounded-lg transition-all duration-300 hover:bg-castle-stoneMid/60 hover:text-castle-torchYellow"
-                >
-                    <img src={devPost} width={24} alt="DevPost" />
-                    Submit on DevPost
-                </NavbarItem>
-
-                {#if $session.data}
-                    <NavbarItem
-                        href="/profile"
-                        class="block px-4 py-3 text-center text-castle-torchYellow font-semibold bg-castle-torchOrange/20 hover:bg-castle-torchOrange/30 rounded-lg transition-all duration-300"
-                        onclick={() => mobileMenuOpen = false}
-                    >
-                        {$session.data.user.email}
-                    </NavbarItem>
-                {:else}
-                    <NavbarItem
-                        href="/auth/login"
-                        class="block px-4 py-3 text-center text-white font-bold bg-gradient-to-r from-castle-torchOrange to-castle-gold hover:from-castle-gold hover:to-castle-torchOrange rounded-lg transition-all duration-300 hover:shadow-lg"
-                        onclick={() => mobileMenuOpen = false}
-                    >
-                        Login
-                    </NavbarItem>
-                {/if}
+                <a href="https://khe-2027.devpost.com/" target="_blank" rel="noopener noreferrer"
+                   onclick={() => mobileMenuOpen = false}>Submit on Devpost</a>
             </div>
-        </div>
-    </div>
-{/if}
+        </details>
+        <a class="login" href={$session.data ? "/profile" : "/auth/login"}>
+            {$session.data ? "Profile" : "Login"}
+        </a>
+    </nav>
+
+    <a class="mlh-badge" href="https://mlh.io/seasons/2027/events" target="_blank" rel="noopener noreferrer">
+        <img src={MlhBadge} alt="Major League Hacking 2027 Official Season" />
+    </a>
+</header>
 
 <style>
-    @keyframes fade-in {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    .site-header {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+        min-height: 100px;
+        padding-right: 92px;
     }
-
-    @keyframes slide-down {
-        from {
-            opacity: 0;
-            transform: translateY(-1rem);
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        flex-shrink: 0;
+        color: var(--paper);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.25;
+        text-decoration: none;
+    }
+    .brand-logo { position: relative; width: 53px; height: 39px; overflow: hidden; }
+    .brand-logo img { position: absolute; width: 61px; max-width: none; left: -4px; top: -9px; }
+    .brand small { display: block; margin-top: 4px; color: #adb6c5; font-size: 9px; letter-spacing: .06em; font-weight: 400; }
+    .navigation, .desktop-links { display: flex; align-items: center; gap: 30px; }
+    .navigation { font-size: 14px; }
+    .navigation a { color: #c4ccd6; text-decoration: none; }
+    .navigation a:hover { color: #fff; }
+    .navigation .login { padding: 10px 17px; border: 1px solid #ffffff35; border-radius: 3px; color: var(--paper); }
+    .mlh-badge { position: absolute; top: 0; right: 0; width: 64px; }
+    .mlh-badge img { display: block; width: 100%; height: auto; }
+    .mobile-links { display: none; }
+    @media (max-width: 1100px) {
+        .navigation, .desktop-links { gap: 18px; }
+        .brand { font-size: 13px; }
+    }
+    @media (max-width: 900px) {
+        .desktop-links { display: none; }
+        .mobile-links { display: block; }
+        .mobile-links summary { list-style: none; cursor: pointer; padding: 10px 0; font: inherit; letter-spacing: 0; }
+        .mobile-links summary::-webkit-details-marker { display: none; }
+        .mobile-menu {
+            position: absolute;
+            z-index: 30;
+            top: 82px;
+            right: 88px;
+            width: 200px;
+            display: grid;
+            gap: 2px;
+            padding: 10px;
+            border: 1px solid #435069;
+            border-radius: 3px;
+            background: #111d30;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .mobile-menu a { padding: 10px 12px; }
+        .mobile-menu a:hover { background: #202d42; }
     }
-
-    .animate-fade-in {
-        animation: fade-in 0.3s ease-out;
+    @media (max-width: 760px) {
+        .site-header { min-height: 77px; padding-right: 0; gap: 14px; }
+        .brand { font-size: 11px; gap: 8px; }
+        .brand-logo { width: 40px; height: 31px; }
+        .brand-logo img { width: 47px; left: -3px; top: -7px; }
+        .brand small { font-size: 8px; letter-spacing: .02em; }
+        .navigation { gap: 14px; font-size: 12px; }
+        .navigation .login { padding: 8px 12px; }
+        .mlh-badge { top: 77px; width: 42px; }
+        .mobile-menu { top: 66px; right: 0; }
+        .site-header:not(.homepage) { margin-bottom: 76px; }
     }
-
-    .animate-slide-down {
-        animation: slide-down 0.3s ease-out;
+    @media (max-width: 360px) {
+        .brand { font-size: 10px; }
+        .brand small { font-size: 7px; }
+        .navigation { gap: 10px; }
+        .navigation .login { padding: 8px 10px; }
     }
 </style>

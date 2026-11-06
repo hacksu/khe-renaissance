@@ -1,162 +1,156 @@
 <script lang="ts">
+    import shield from '../assets/castle/shield.svg';
+    import banner from '../assets/castle/banner.svg';
+
     interface Prize { id: string; category: string; itemName: string; detail: string; imageUrl: string; order: number; place?: string | null; accentColor?: string | null; crown?: string | null; trackName?: string | null; awardName?: string | null; }
 
     let { overall, tracks, special }: { overall: Prize[]; tracks: Prize[]; special: Prize[] } = $props();
 
-    const isSvg = (url: string) => url.toLowerCase().endsWith('.svg');
-    const svgUrl = (url: string) => `/api/svg?url=${encodeURIComponent(url)}`;
-
-    // Podium order: 2nd, 1st, 3rd
-    const podium = $derived([
-        overall.find(p => p.place === '2nd'),
-        overall.find(p => p.place === '1st'),
-        overall.find(p => p.place === '3rd'),
-    ].filter(Boolean) as Prize[]);
+    const isSvg = (url: string) => /\.svg(?:[?#]|$)/i.test(url);
+    const imageSource = (url: string) => isSvg(url) ? `/api/svg?url=${encodeURIComponent(url)}` : url;
+    const podiumRank = (prize: Prize) => {
+        if (prize.place === '2nd') return 0;
+        if (prize.place === '1st') return 1;
+        if (prize.place === '3rd') return 2;
+        return 3;
+    };
+    const podium = $derived([...overall].sort((a, b) => podiumRank(a) - podiumRank(b) || a.order - b.order));
 </script>
 
-<div id="prizes" class="flex flex-col gap-20">
+{#if overall.length > 0 || special.length > 0}
+    <section id="prizes" class="tournament" aria-labelledby="prizes-title">
+        <header class="tournament-heading">
+            <h2 id="prizes-title">Prizes</h2>
+            <p>Prove your worth in the kingdom. The greatest hackers walk away with legendary loot.</p>
+        </header>
 
-    <div class="flex flex-col items-center gap-3 text-center">
-        <p class="eyebrow">Royal Tournament</p>
-        <h2 class="text-5xl font-black text-castle-gold title-rule">Prizes</h2>
-        <p class="text-castle-stoneHighlight max-w-xl text-sm leading-relaxed">
-            Prove your worth in the kingdom. The greatest hackers walk away with legendary loot.
-        </p>
-    </div>
+        {#if overall.length > 0}
+            <h3 class="overall-label">Overall Champions</h3>
+            <div class="podium" class:partial={podium.length < 3}>
+                {#each podium as prize (prize.id)}
+                    <article class="podium-prize" class:winner={prize.place === '1st'}>
+                        <img class="prize-image" src={prize.imageUrl ? imageSource(prize.imageUrl) : shield} alt={prize.imageUrl ? prize.itemName : ''} loading="lazy" />
+                        {#if prize.place}<p class="place">{prize.place} Place</p>{/if}
+                        <h4>{prize.itemName}</h4>
+                        {#if prize.detail}<p class="prize-detail">{prize.detail}</p>{/if}
+                    </article>
+                {/each}
+            </div>
+        {/if}
 
-    {#if overall.length > 0}
-    <div class="flex flex-col gap-4">
-        <h3 class="section-label">Overall Champions</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-            {#each podium as prize, i}
-                <div class="trophy-card {i === 1 ? 'md:-translate-y-4 md:scale-[1.03]' : ''} transition-transform duration-300"
-                     style="--accent: {prize.accentColor ?? 'rgba(201,168,76,0.3)'};">
-                    <div class="trophy-image-wrap">
-                        {#if prize.imageUrl}
-                            {#if isSvg(prize.imageUrl)}
-                                <img src={svgUrl(prize.imageUrl)} alt={prize.itemName} class="w-full h-40 object-contain p-4" />
-                            {:else}
-                                <img src={prize.imageUrl} alt={prize.itemName} class="w-full h-40 object-contain p-4" />
-                            {/if}
-                        {/if}
-                    </div>
-                    <div class="flex flex-col items-center text-center gap-2 p-5">
-                        {#if prize.crown}<span class="text-3xl">{prize.crown}</span>{/if}
-                        <p class="text-base font-black uppercase tracking-widest" style="color: var(--accent);">{prize.place} Place</p>
-                        <p class="text-white font-semibold">{prize.itemName}</p>
-                        {#if prize.detail}<p class="text-castle-stoneLight text-xs">{prize.detail}</p>{/if}
-                    </div>
+        {#if special.length > 0}
+            <section class="guild" aria-labelledby="guild-title">
+                <h3 id="guild-title">Guild Rewards</h3>
+                <div class="guild-list">
+                    {#each special as prize (prize.id)}
+                        <article class="guild-reward">
+                            <img src={prize.imageUrl ? imageSource(prize.imageUrl) : shield} alt={prize.imageUrl ? prize.itemName : ''} loading="lazy" />
+                            <div>
+                                {#if prize.awardName}<h4>{prize.awardName}</h4>{/if}
+                                {#if prize.place}<p class="place">{prize.place} Place</p>{/if}
+                                <p class="reward-name">{prize.itemName}</p>
+                                {#if prize.detail}<p class="prize-detail">{prize.detail}</p>{/if}
+                            </div>
+                        </article>
+                    {/each}
                 </div>
+            </section>
+        {/if}
+    </section>
+{/if}
+
+{#if tracks.length > 0}
+    <section id="tracks" class="tracks" aria-labelledby="tracks-title">
+        <header class="track-heading">
+            <h2 id="tracks-title">Tracks</h2>
+            <img class="track-standard" src={banner} alt="" loading="lazy" />
+        </header>
+        <div class="track-list">
+            {#each tracks as prize, index (prize.id)}
+                <article class="track-row">
+                    <span class="track-number">{String(index + 1).padStart(2, '0')}</span>
+                    <div class="track-copy">
+                        {#if prize.trackName}<h3>{prize.trackName}</h3>{/if}
+                        {#if prize.detail}<p class="prize-detail">{prize.detail}</p>{/if}
+                    </div>
+                    <div class="track-award">
+                        <img src={prize.imageUrl ? imageSource(prize.imageUrl) : shield} alt={prize.imageUrl ? prize.itemName : ''} loading="lazy" />
+                        <p>{prize.itemName}</p>
+                        {#if prize.place}<p class="place">{prize.place} Place</p>{/if}
+                    </div>
+                </article>
             {/each}
         </div>
-    </div>
-    {/if}
-
-    {#if tracks.length > 0}
-    <div class="flex flex-col gap-4">
-        <h3 class="section-label">Track Bounties</h3>
-        <div class="bounty-board">
-            {#each tracks as prize}
-                <div class="bounty-row">
-                    {#if prize.imageUrl}
-                        <img src={isSvg(prize.imageUrl) ? svgUrl(prize.imageUrl) : prize.imageUrl} alt={prize.itemName} class="w-14 h-14 object-contain flex-shrink-0 rounded" />
-                    {/if}
-                    <div class="flex flex-col gap-0.5 flex-1 min-w-0">
-                        <p class="text-castle-torchOrange font-bold text-sm uppercase tracking-wide">{prize.trackName}</p>
-                        <p class="text-white font-semibold text-sm truncate">{prize.itemName}</p>
-                        {#if prize.detail}<p class="text-castle-stoneLight text-xs">{prize.detail}</p>{/if}
-                    </div>
-                    <div class="text-castle-gold text-lg flex-shrink-0"></div>
-                </div>
-            {/each}
-        </div>
-    </div>
-    {/if}
-
-    {#if special.length > 0}
-    <div class="flex flex-col gap-4">
-        <h3 class="section-label">Guild Rewards</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {#each special as prize}
-                <div class="guild-card">
-                    {#if prize.imageUrl}
-                        <img src={isSvg(prize.imageUrl) ? svgUrl(prize.imageUrl) : prize.imageUrl} alt={prize.itemName} class="w-20 h-20 object-contain flex-shrink-0 rounded" />
-                    {/if}
-                    <div class="flex flex-col gap-1 flex-1">
-                        <p class="text-castle-torchAmber font-bold text-sm">{prize.awardName}</p>
-                        <p class="text-white text-sm font-semibold">{prize.itemName}</p>
-                        {#if prize.detail}<p class="text-castle-stoneLight text-xs">{prize.detail}</p>{/if}
-                    </div>
-                </div>
-            {/each}
-        </div>
-    </div>
-    {/if}
-</div>
+    </section>
+{/if}
 
 <style>
-    .eyebrow {
-        font-size: 0.65rem; text-transform: uppercase;
-        letter-spacing: 0.5em; font-weight: 600; color: #ffb347;
+    .tournament, .tracks {
+        color: var(--paper, #f0eee5);
+        font-size: 16px;
+        line-height: 1.65;
+        scroll-margin-top: 32px;
     }
 
-    .title-rule {
-        text-shadow: 0 0 30px rgba(201,168,76,0.4);
+    .tournament { padding: 64px 0 58px; }
+    h2, h3, h4, p { margin: 0; }
+    h2 { font-size: 39px; font-weight: 400; line-height: 1.15; letter-spacing: -.035em; }
+    .tournament-heading { text-align: center; }
+    .tournament-heading > p { max-width: 540px; margin: 20px auto 0; color: var(--muted, #b0b9c7); }
+    .overall-label { margin: 38px 0 28px; text-align: center; font-size: 18px; font-weight: 400; }
+    .podium { display: grid; grid-template-columns: 1fr 1.15fr 1fr; align-items: end; gap: 30px; max-width: 930px; margin: auto; text-align: center; }
+    .podium.partial { display: flex; flex-wrap: wrap; justify-content: center; }
+    .podium.partial .podium-prize { flex: 0 1 290px; }
+    .podium-prize { min-width: 0; padding: 0 15px 25px; overflow-wrap: anywhere; }
+    .prize-image { display: block; width: 100%; max-width: 150px; height: 110px; margin: 0 auto 20px; object-fit: contain; }
+    .winner { padding-bottom: 53px; }
+    .winner .prize-image { max-width: 190px; height: 150px; margin-bottom: 22px; }
+    .place { color: #d6bd87; font-size: 16px; }
+    .podium-prize h4 { margin: 10px 0 9px; font-size: 21px; font-weight: 400; line-height: 1.4; }
+    .prize-detail { color: var(--muted, #b0b9c7); font-size: 16px; }
+    .guild { margin-top: 46px; }
+    .guild > h3 { font-size: 24px; font-weight: 400; margin-bottom: 26px; }
+    .guild-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 48px; }
+    .guild-reward { display: flex; align-items: flex-start; gap: 20px; min-width: 0; overflow-wrap: anywhere; }
+    .guild-reward > img { width: 64px; height: 76px; object-fit: contain; flex-shrink: 0; }
+    .guild-reward h4 { font-size: 18px; font-weight: 400; margin-bottom: 6px; }
+    .reward-name { margin-bottom: 4px; }
+    .tracks { display: grid; grid-template-columns: .8fr 1.5fr; gap: 90px; padding: 62px 0 75px; }
+    .track-heading { position: relative; padding-right: 95px; min-height: 100px; }
+    .track-standard { position: absolute; right: 0; top: 0; width: 75px; height: auto; }
+    .track-row { display: grid; grid-template-columns: 25px minmax(0, 1fr) minmax(100px, 150px); gap: 18px; padding: 23px 0; align-items: start; }
+    .track-row:first-child { padding-top: 0; }
+    .track-number { color: #97a7bd; font-size: 16px; }
+    .track-copy, .track-award { overflow-wrap: anywhere; }
+    .track-copy h3 { font-size: 18px; font-weight: 400; line-height: 1.4; margin-bottom: 8px; }
+    .track-award { text-align: right; color: #dac28f; }
+    .track-award img { display: block; width: 64px; height: 64px; object-fit: contain; margin: 0 0 10px auto; }
+
+    @media (max-width: 1000px) {
+        .tracks { grid-template-columns: .7fr 1.5fr; gap: 40px; }
+        .track-row { grid-template-columns: 22px minmax(0, 1fr) minmax(90px, 120px); gap: 12px; }
     }
 
-    .section-label {
-        font-size: 0.7rem; text-transform: uppercase;
-        letter-spacing: 0.4em; font-weight: 700;
-        color: rgba(201,168,76,0.6);
-        border-bottom: 1px solid rgba(201,168,76,0.15);
-        padding-bottom: 0.5rem;
+    @media (max-width: 760px) {
+        .tournament { padding: 43px 0 35px; }
+        h2 { font-size: 31px; }
+        .podium { gap: 8px; }
+        .podium-prize { padding: 0 0 12px; }
+        .prize-image { max-width: 76px; height: 76px; }
+        .winner { padding-bottom: 32px; }
+        .winner .prize-image { max-width: 100px; height: 100px; }
+        .podium-prize h4 { font-size: 14px; }
+        .podium-prize .place { font-size: 11px; }
+        .podium-prize .prize-detail { font-size: 12px; }
+        .tracks { grid-template-columns: 1fr; gap: 28px; padding: 43px 0; }
+        .track-heading { min-height: 76px; }
+        .track-standard { width: 52px; }
+        .guild-list { grid-template-columns: 1fr; }
     }
 
-    .trophy-card {
-        background: linear-gradient(160deg, #3a3a4e 0%, #2a2a38 100%);
-        border: 1px solid var(--accent, rgba(201,168,76,0.3));
-        border-radius: 0.75rem;
-        overflow: hidden;
-        box-shadow: 0 0 20px rgba(0,0,0,0.4), 0 0 40px rgba(0,0,0,0.2);
-        transition: box-shadow 0.3s;
-    }
-    .trophy-card:hover {
-        box-shadow: 0 0 20px rgba(0,0,0,0.4), 0 0 40px color-mix(in srgb, var(--accent) 30%, transparent);
-    }
-
-    .trophy-image-wrap {
-        background: linear-gradient(180deg, #1e1e28 0%, #2e2e3a 100%);
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .bounty-board {
-        background: linear-gradient(160deg, #2a2a38, #1e1e2c);
-        border: 1px solid rgba(201,168,76,0.2);
-        border-radius: 0.75rem;
-        overflow: hidden;
-    }
-    .bounty-row {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem 1.25rem;
-        border-bottom: 1px solid rgba(46,46,58,0.8);
-        transition: background 0.2s;
-    }
-    .bounty-row:last-child { border-bottom: none; }
-    .bounty-row:hover { background: rgba(255,107,26,0.05); }
-
-    .guild-card {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem 1.25rem;
-        background: linear-gradient(135deg, #3a3a4e, #2a2a38);
-        border: 1px solid rgba(255,179,71,0.2);
-        border-radius: 0.75rem;
-        transition: border-color 0.2s;
-    }
-    .guild-card:hover {
-        border-color: rgba(255,179,71,0.4);
+    @media (max-width: 480px) {
+        .track-row { grid-template-columns: 22px minmax(0, 1fr); }
+        .track-award { grid-column: 2; text-align: left; }
+        .track-award img { float: left; width: 44px; height: 44px; margin: 0 12px 4px 0; }
     }
 </style>
