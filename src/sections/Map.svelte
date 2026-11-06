@@ -11,7 +11,7 @@
             Find the Castle
         </h2>
         <p class="text-castle-stoneHighlight text-sm max-w-md">
-            The gates open at the Design Innovation Hub. Navigate to us and join the siege.
+            The gates open at Crawford Hall, home of the Ambassador Crawford College of Business and Entrepreneurship. Navigate to us and join the siege.
         </p>
     </div>
 
@@ -27,8 +27,10 @@
             <div class="directions-body">
                 <div class="destination-block">
                     <p class="destination-label">Destination</p>
-                    <Link href="https://goo.gl/maps/gNiw3U7YgymbPA1k6">
-                        Design Innovation Hub<br/>Art Bldg, Kent, OH 44243
+                    <Link href="https://maps.app.goo.gl/j5j1cXnC6cy5ba4M7">
+                        Crawford Hall<br/>
+                        Ambassador Crawford College of Business and Entrepreneurship<br/>
+                        100 Midway Dr., Kent, OH 44242
                     </Link>
                 </div>
 
@@ -37,18 +39,18 @@
                 <div class="directions-list">
                     <div class="direction-item">
                         <p class="text-castle-stoneHighlight text-sm leading-relaxed">
-                            Best parking: <span class="text-white font-semibold">Student Center Visitor Lot</span>,
-                            R19 Lot, or R7 Lot next to Satterfield.
+                            Nearby parking: <span class="text-white font-semibold">R16 Lot on Terrace Drive</span>,
+                            across from Crawford Hall.
                         </p>
                     </div>
                     <div class="direction-item">
                         <p class="text-castle-stoneHighlight text-sm leading-relaxed">
-                            Walk toward the visitor center, then head <span class="text-white font-semibold">left between the buildings</span>.
+                            Follow posted <span class="text-white font-semibold">parking restrictions and permit requirements</span>.
                         </p>
                     </div>
                     <div class="direction-item">
                         <p class="text-castle-stoneHighlight text-sm leading-relaxed">
-                            The DI Hub is located near the <span class="text-white font-semibold">Honors College</span>.
+                            Use the campus map to walk to <span class="text-white font-semibold">Crawford Hall at 100 Midway Drive</span>.
                         </p>
                     </div>
                 </div>
@@ -59,8 +61,8 @@
         <div class="map-frame-wrap">
             <iframe
                 class="w-full h-full rounded-lg"
-                title="Map to Design Innovation Hub"
-                src="https://map.concept3d.com/?id=568&tbh&sbh#!m/613809?lh/?ct/44418,5603"
+                title="Map to Ambassador Crawford College of Business and Entrepreneurship"
+                src="https://map.concept3d.com/?id=568&tbh&sbh#!m/1070689?share"
                 scrolling="no"
                 frameborder="0"
                 style="border: 0px;"
